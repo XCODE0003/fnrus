@@ -328,7 +328,7 @@ Route::get('/my/referral', function () {
 | 'admin' + '2fa' middleware. Anyone hitting /<prefix>/* without a JWT will
 | see the SPA shell and be redirected to /login by the JS bootstrap.
 */
-Route::middleware(['ip.whitelist'])
+Route::middleware(['ip.whitelist', 'admin.web'])
     ->prefix(config('admin.prefix', 'admin'))
     ->group(function () {
         Route::get('/', function () {

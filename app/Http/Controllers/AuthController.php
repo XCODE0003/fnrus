@@ -168,6 +168,18 @@ class AuthController
             }
 
             $user = Auth::user();
+
+            // Server-side admin gate: when an admin logs in, persist the user
+            // ID in the session so AdminWebGuard can return real Blade pages
+            // for /<admin>/* and 404 for everyone else. Same-origin XHR/fetch
+            // honour the session cookie automatically.
+            $minRole = (int) config('admin.min_role_id', 1);
+            if ((int) ($user->role_id ?? 0) >= $minRole) {
+                $request->session()->put('admin_session_user_id', $user->id);
+            } else {
+                $request->session()->forget('admin_session_user_id');
+            }
+
             return response()->json([
                 'ok' => true,
                 'description' => 'Входим в систему',
@@ -351,10 +363,13 @@ class AuthController
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         try {
             Auth::logout();
+            try {
+                $request->session()->forget(['admin_session_user_id', '2fa_passed_at']);
+            } catch (\Throwable $e) {}
             return response()->json([ 'ok' => true,'description' => 'Выходим из системы',]);
 
         } catch (QueryException $qe) {
