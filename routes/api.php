@@ -59,6 +59,13 @@ Route::middleware(['auth', 'admin', '2fa'])->prefix('admin/access')->group(funct
     Route::get('login/attempts',[\App\Http\Controllers\AdminAccessController::class, 'loginAttempts']);
 });
 
+// Sidebar: navigation only, no sensitive data — exempt from 2FA so a freshly
+// logged-in admin (with no 2FA set up yet) can still see the menu and
+// navigate to /admin/2fa for enrolment.
+Route::middleware(['admin'])->group(function () {
+    Route::get('/sidebar', [SidebarController::class, 'index']);
+});
+
 // Для админов
 Route::middleware(['admin', '2fa'])->group(function () {
 
@@ -72,8 +79,6 @@ Route::middleware(['admin', '2fa'])->group(function () {
         Route::get('{id}/active/update', 'active_update')->where('id','[0-9]+');
         Route::post('{id}/update', 'update')->where('id','[0-9]+');
     });
-
-    Route::get('/sidebar', [SidebarController::class, 'index']);
     // Управление заказами
     Route::controller(OrderController::class)->prefix('orders')->group(function () {
         Route::post('payment', 'payment');

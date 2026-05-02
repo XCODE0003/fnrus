@@ -378,6 +378,20 @@
     };
 </script>
 <script src="/assets/jquery/jquery.min.js"></script>
+<script>
+// Global 2FA gate: when any /api/admin/* call returns 423 with
+// action=2fa_required or action=setup_required, redirect the SPA to the
+// 2FA setup page so the user can either enroll or verify their TOTP.
+$(document).ajaxComplete(function (event, xhr) {
+    if (xhr.status !== 423) return;
+    let action = '';
+    try { action = (xhr.responseJSON || JSON.parse(xhr.responseText || '{}')).action || ''; } catch (e) {}
+    if (action !== '2fa_required' && action !== 'setup_required') return;
+    var prefix = @json(trim(config('admin.prefix', 'admin'), '/'));
+    if (window.location.pathname === '/' + prefix + '/2fa') return;
+    window.location.href = '/' + prefix + '/2fa';
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
