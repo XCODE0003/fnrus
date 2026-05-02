@@ -47,6 +47,11 @@ class Kernel extends HttpKernel
             'api_request_limit',
 //            \App\Http\Middleware\VerifyCsrfToken::class,
 //            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // EncryptCookies must run alongside StartSession so the session
+            // cookie produced by API endpoints (e.g. /api/auth/login) can be
+            // decrypted by the web group on subsequent navigation to /<admin>/*.
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \App\Http\Middleware\SetLang::class,
         ],
