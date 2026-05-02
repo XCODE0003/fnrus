@@ -1,0 +1,81 @@
+/public/assets/fontawesome-pro
+/public/assets/datatables
+/public/assets/fonts
+/public/assets/jquery
+/public/assets/jquery-easing
+/public/assets/js
+/public/assets/libs
+/public/assets/stylus
+/public/assets/vendor.zip
+/public/assets/bootstrap
+/public/assets.zip
+/vendor
+
+# --- Environment files (never commit) ---
+.env
+.env.*
+!.env.example
+.env.backup
+.env.production
+.env.bak*
+
+# --- TLS / SSL keys & certs (must NEVER be committed) ---
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.ca
+paysonkeys.*
+80.240.21.211.conf
+
+# --- Editor / IDE ---
+/.idea
+/.vscode
+/.fleet
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# --- Backup files left by old developer ---
+*.bak
+*.bak[._-]*
+*.bak[0-9]
+*.orig
+*.old
+/storage/backups/
+
+# --- Database dumps & data files ---
+*.sql
+*.sql.gz
+*.dump
+/app/pages.sql
+/data/
+
+# --- Laravel runtime ---
+/node_modules
+/public/storage
+/public/hot
+/storage/*.key
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/framework/cache/data
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/composer.phar
+
+# --- Local TZ doc ---
+/тз

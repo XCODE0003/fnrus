@@ -1,0 +1,62 @@
+$jsonData = [
+    [
+        "analytics" => [
+            "html" => "<li class=\"nav-item\" data-id=\"analytics\"><a class=\"nav-link\" href=\"/admin/stats\"><i class=\"fal fa-fw fa-analytics\"></i><span>Статистика</span></a></li>"
+        ]
+    ],
+    [
+        "orders" => [
+            "html" => "<li class=\"nav-item\" data-id=\"orders\"><a class=\"nav-link\" href=\"/admin/orders\"><i class=\"fal fa-fw fa-clipboard-list\"></i><span>Заказы</span></a></li>"
+        ]
+    ],
+    [
+        "tickets" => [
+            "html" => "<li class=\"nav-item\" data-id=\"tickets\"><a class=\"nav-link\" href=\"/admin/tickets\"><i class=\"fal fa-fw fa-headset\"></i><span>Тикеты</span></a></li>"
+        ]
+    ],
+    [
+        "withdrawal" => [
+            "html" => "<li class=\"nav-item\" data-id=\"withdrawal\"><a class=\"nav-link\" href=\"/admin/withdrawal\"><i class=\"fal fa-fw fa-comments-dollar\"></i><span>Выводы</span></a></li>"
+        ]
+    ],
+    [
+        "statuses" => [
+            "html" => "<li class=\"nav-item\" data-id=\"statuses\"><a class=\"nav-link\" href=\"/admin/statuses\"><i class=\"fal fa-fw fa-toggle-on\"></i><span>Статусы</span></a></li>"
+        ]
+    ],
+    [
+        "products" => [
+            "html" => "<li class=\"nav-item\" data-id=\"products\"><a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseTwo\" aria-expanded=\"true\" aria-controls=\"collapseTwo\"><i class=\"fal fa-fw fa-shopping-bag\"></i><span>Товары</span></a><div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordionSidebar\"><div class=\"py-3 mt-3 collapse-inner shadow\"><a class=\"collapse-item\" data-id=\"products\" href=\"/admin/products\">Товары</a><a class=\"collapse-item\" data-id=\"categories\" href=\"/admin/categories\">Категории</a><a class=\"collapse-item\" data-id=\"materials\" href=\"/admin/materials\">Материалы</a><hr class=\"my-2\"><a class=\"collapse-item\" data-id=\"promocodes\" href=\"/admin/promocodes\">Промокоды</a><a class=\"collapse-item\" data-id=\"exports\" href=\"/admin/exports\">История экспорта</a></div></div></li>"
+        ]
+    ],
+    [
+        "members" => [
+            "html" => "<li class=\"nav-item\" data-id=\"members\"><a class=\"nav-link\" href=\"/admin/members\"><i class=\"fal fa-fw fa-users\"></i><span>Пользователи</span></a></li>"
+        ]
+    ],
+    [
+        "senders" => [
+            "html" => "<li class=\"nav-item\" data-id=\"senders\"><a class=\"nav-link\" href=\"/admin/senders\"><i class=\"fal fa-fw fa-envelope\"></i><span>Рассылки</span></a></li>"
+        ]
+    ],
+    [
+        "instructions" => [
+            "html" => "<li class=\"nav-item\" data-id=\"instructions\"><a class=\"nav-link\" href=\"/admin/instructions\"><i class=\"fal fa-fw fa-file\"></i><span>Инструкции</span></a></li>"
+        ]
+    ],
+    [
+        "faq" => [
+            "html" => "<li class=\"nav-item\" data-id=\"faq\"><a class=\"nav-link\" href=\"/admin/faq\"><i class=\"fal fa-fw fa-question-circle\"></i><span>Вопрос-ответ</span></a></li>"
+        ]
+    ],
+    [
+        "ads" => [
+            "html" => "<li class=\"nav-item\" data-id=\"ads\"><a class=\"nav-link\" href=\"/admin/links\"><i class=\"fal fa-fw fa-link\"></i><span>Рекламные ссылки</span></a></li>"
+        ]
+    ],
+    [
+        "settings" => [
+            "html" => "<li class=\"nav-item\" data-id=\"settings\"><a class=\"nav-link collapsed\" href=\"#\" data-toggle=\"collapse\" data-target=\"#collapseUtilities\" aria-expanded=\"true\" aria-controls=\"collapseUtilities\"><i class=\"fal fa-fw fa-cog\"></i><span>Настройки</span></a><div id=\"collapseUtilities\" class=\"collapse\" aria-labelledby=\"headingUtilities\" data-parent=\"#accordionSidebar\"><div class=\"py-3 mt-3 collapse-inner shadow\"><a class=\"collapse-item\" data-id=\"constructor\" href=\"/admin/settings/constructor\">Конструктор</a><a class=\"collapse-item\" data-id=\"payments\" href=\"/admin/settings/payments\">Способы оплаты</a><a class=\"collapse-item\" href=\"#\" data-toggle=\"modal\" data-target=\"#allSettings\">Общие настройки</a><a class=\"collapse-item\" href=\"#\" data-toggle=\"modal\" data-target=\"#secretToken\">Секретный токен</a><a class=\"collapse-item\" href=\"#\" data-toggle=\"modal\" data-target=\"#refModal\">Реф. программа</a><a class=\"collapse-item\" href=\"#\" data-toggle=\"modal\" data-target=\"#modulesModal\">Модули</a><a class=\"collapse-item\" href=\"#\" data-toggle=\"modal\" data-target=\"#notifySettings\">Уведомления</a></div></div></li>"
+        ]
+    ]
+];

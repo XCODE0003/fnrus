@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="MobileOptimized" content="176" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Оплата заказа #{{ $hash }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+    <style>
+        body {
+            --bg-color: var(--tg-theme-bg-color, #fff);
+            font-family: sans-serif;
+            background-color: var(--bg-color);
+            color: var(--tg-theme-text-color, #222);
+            font-size: 15px;
+            margin: 0;
+            padding: 0;
+            color-scheme: var(--tg-color-scheme);
+        }
+        body.gray {
+            background-color: var(--tg-theme-secondary-bg-color, #efefef);
+        }
+
+        a {
+            color: var(--tg-theme-link-color, #2678b6);
+        }
+        .btn {
+            font-size: 14px;
+            padding: 10px 17px;
+        }
+        .btn-primary {
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            font-size: 14px;
+            margin: 15px 0;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            cursor: pointer;
+        }
+        .main-container {
+            padding: 15px;
+        }
+        .list-header {
+            text-transform: uppercase;
+            font-size: .92em;
+            color: var(--tg-theme-hint-color, #ccc);
+            margin: 0 0 10px;
+        }
+        a.list-group-item,
+        button.list-group-item {
+            color: var(--tg-theme-text-color, #222);
+        }
+        .main-container p {
+            margin: 0 0 10px;
+        }
+        .main-container pre,
+        .main-container > .btn {
+            margin: 0 0 7px;
+        }
+        .main-container pre + .hint,
+        .main-container > .btn + .hint {
+            text-align: center;
+            margin: 0 0 15px;
+        }
+
+        button[disabled] {
+            opacity: 0.6;
+            cursor: auto;
+            pointer-events: none;
+        }
+
+        button.close_btn {
+            /*position: fixed;*/
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 16px 20px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        .input[contenteditable] {
+            display: block;
+            box-sizing: border-box;
+            font-size: 14px;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 15px 0;
+            border: 1px solid var(--tg-theme-link-color, #000);
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 4px;
+            color: var(--tg-theme-text-color, #222222);
+            text-align: start;
+        }
+        input[type="text"]::-webkit-input-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+        input[type="text"]::-moz-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+        input[type="text"]:-ms-input-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+        .input[data-placeholder] {
+            position: relative;
+        }
+        .input[data-placeholder]:empty:before {
+            position: absolute;
+            left: 0;
+            right: 0;
+            content: attr(data-placeholder);
+            color: var(--tg-theme-hint-color, #ccc);
+            padding: 0 20px;
+            font-weight: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+        section {
+            padding: 25px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        section#top_sect {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+        }
+        section#top_sect.second {
+            background-color: var(--tg-theme-secondary-bg-color, #efefef);
+        }
+        section .sect_row {
+            margin: 10px 0;
+        }
+        section + section {
+
+            padding: 0 15px 25px;
+        }
+        p {
+            margin: 40px 0 15px;
+        }
+        ul {
+            text-align: left;
+        }
+        li {
+            color: var(--tg-theme-hint-color, #a8a8a8);
+        }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px;
+        }
+        pre {
+            background: rgba(0, 0, 0, .07);
+            color: var(--tg-theme-text-color, #222);
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 7px 0;
+            word-break: break-word;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+        .dark pre {
+            background: rgba(255, 255, 255, .15);
+        }
+        .chat_img {
+            width: 30px;
+            border-radius: 15px;
+            margin-right: 10px;
+        }
+        .columns {
+            display: flex;
+        }
+        .columns>* {
+            flex-grow: 1;
+        }
+        .hint {
+            font-size: .8em;
+            color: var(--tg-theme-hint-color, #a8a8a8);
+        }
+        .ok {
+            color: green;
+        }
+        .err {
+            color: red;
+        }
+        .status_need {
+            display: none;
+        }
+        #fixed_wrap {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            transform: translateY(100vh);
+        }
+        .viewport-container {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: var(--tg-viewport-stable-height, 100vh);
+            transition: height .2s ease;
+        }
+        .viewport-container .main-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .viewport-container .main-container button {
+            width: auto;
+        }
+        .viewport-border,
+        .viewport-stable_border {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: var(--tg-viewport-height, 100vh);
+            pointer-events: none;
+        }
+        .viewport-stable_border {
+            height: var(--tg-viewport-stable-height, 100vh);
+        }
+        .viewport-border:before,
+        .viewport-stable_border:before {
+            content: attr(text);
+            display: inline-block;
+            position: absolute;
+            background: gray;
+            right: 0;
+            top: 0;
+            font-size: 7px;
+            padding: 2px 4px;
+            vertical-align: top;
+        }
+        .viewport-stable_border:before {
+            background: green;
+            left: 0;
+            right: auto;
+        }
+        .viewport-border:after,
+        .viewport-stable_border:after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            border: 2px dashed gray;
+        }
+        .viewport-stable_border:after {
+            border-color: green;
+        }
+
+        small {
+            font-size: 12px;
+        }
+
+        .method-payment {
+            padding: 25px;
+            background: transparent;
+            border-radius: 10px;
+            border: 1px solid var(--tg-theme-secondary-bg-color, #fff);
+        }
+        .method-payment:hover {
+            background: var(--tg-theme-secondary-bg-color);
+            /*border: 3px solid var(--tg-theme-hint-color);*/
+        }
+    </style>
+</head>
+
+<body>
+
+<section class="px-4 pb-3" style="border-bottom: 1px solid var(--tg-theme-secondary-bg-color);">
+    <div class="p-0 mb-1" style="color: var(--tg-theme-hint-color, #222)">Заказ: <span class="font-weight-600">#{{ $hash }}</span></div>
+    <h5 class="p-0"><b>К оплате: {{ $amount }} ₽</b></h5>
+</section>
+<div id="result">
+    @if(count($methods_1) > 0)
+        <section class="pt-4 px-4">
+            <h6 class="">Электронные кошельки:</h6>
+            <div class="row g-3">
+                @foreach($methods_1 as $method)
+
+                    @if($method['type'] == 'qw')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/187f9706f6aa08da7efc3.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'ym')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/93b83907aabdfe8c68608.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'cb')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/cae50935c653b466563fe.png" />
+                            </a>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    @if(count($methods_2) > 0)
+        <section class="px-4">
+            <h6 class="">Платёжные системы:</h6>
+            <div class="row g-3">
+                @foreach($methods_2 as $method)
+                    @if($method['type'] == 'et')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/87131b7a0e2284f762db9.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'lv')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/9bee396a49f3d8a7123e7.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'fk')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/ac955ed6385a4f546169b.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'rk')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/eea07cdc7c8493dbeb9e2.png" />
+                            </a>
+                        </div>
+                    @endif
+                    @if($method['type'] == 'ap')
+                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">
+                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">
+                                <img class="img-fluid my-auto" src="https://telegra.ph/file/6d3454dfe075c6d1d2f15.png" />
+                            </a>
+                        </div>
+                    @endif
+
+{{--                    @if($method['type'] == 'po')--}}
+{{--                        <div class="col-6 col-xs-4 col-md-4 col-sm-4 col-xl-4">--}}
+{{--                            <a href="/invoice/{{ $hash }}/{{ $method['type'] }}" class="card method-payment h-100">--}}
+{{--                                <img class="img-fluid my-auto" src="https://telegra.ph/file/6d3454dfe075c6d1d2f15.png" />--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
+                @endforeach
+
+            </div>
+            {{--    <button class="btn btn-primary" onclick="DemoApp.close()">Close window</button>--}}
+        </section>
+    @endif
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+
+<script type="application/javascript">
+
+    const DemoApp = {
+        initData: Telegram.WebApp.initData || '',
+        initDataUnsafe: Telegram.WebApp.initDataUnsafe || {},
+
+        init(options) {
+            document.body.style.visibility = '';
+            Telegram.WebApp.ready();
+        },
+        expand() {
+            Telegram.WebApp.expand();
+        },
+        close() {
+            Telegram.WebApp.close();
+        },
+
+    }
+
+    setInterval(function () {
+        getOrder();
+    }, 1000);
+
+    function getOrder() {
+
+        $.ajax({
+            type: "GET",
+            url: '/invoice/{{ $hash }}/status',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: true,
+            success: function(data) {
+                if(data.ok == 'paid'){
+                    Telegram.WebApp.close();
+                } else if(data.ok == 'is_sent' || data.ok == 'paid'){
+                    var html = '<div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#4ABD5C" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M243.8 339.8C232.9 350.7 215.1 350.7 204.2 339.8L140.2 275.8C129.3 264.9 129.3 247.1 140.2 236.2C151.1 225.3 168.9 225.3 179.8 236.2L224 280.4L332.2 172.2C343.1 161.3 360.9 161.3 371.8 172.2C382.7 183.1 382.7 200.9 371.8 211.8L243.8 339.8zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/></svg></div> <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">Заказ оплачен</div>';
+                    $('#result').html('<div class="my-5 text-center" style="width: 200px;margin:0 auto">'+html+'</div>');
+                }
+            }
+
+        });
+
+    }
+</script>
+
+</body>
+</html>

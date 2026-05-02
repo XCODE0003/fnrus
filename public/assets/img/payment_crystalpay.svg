@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+  <rect width="120" height="40" rx="6" fill="#1B1F3B"/>
+  <path d="M18 12l6 3.5v7L18 26l-6-3.5v-7L18 12z" fill="#00D4FF" opacity="0.9"/>
+  <path d="M18 12l6 3.5-6 3.5-6-3.5L18 12z" fill="#00E5FF"/>
+  <path d="M18 19l6-3.5v7L18 26V19z" fill="#0099CC"/>
+  <text x="32" y="24.5" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#FFFFFF">Crystal</text>
+  <text x="85" y="24.5" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#00D4FF">Pay</text>
+</svg>

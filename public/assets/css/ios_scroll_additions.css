@@ -1,0 +1,224 @@
+
+/* game-cards-slider: gap before FAQ on game pages */
+.game-cards-slider {
+    margin-bottom:30px
+}
+
+/* =================================================================
+   Carousels Outside .content — Width Constraint
+   Carousels #1-5 were moved outside .content for full-width iOS scroll.
+   On non-iOS (desktop/Android), constrain them to content-width so
+   Swiper calculates correct slidesPerView and buttons stay active.
+   ================================================================= */
+
+/* Default: match .content width */
+.reviews-slider:not(.js-carousel),
+.game-cheats-slider:not(.js-carousel),
+.game-cards-slider:not(.js-carousel),
+.swiper-functional:not(.js-carousel),
+.section2__slider:not(.js-carousel),
+.reviews-slider,
+.game-cheats-slider,
+.game-cards-slider,
+.swiper-functional,
+.section2__slider {
+    width: var(--content-width);
+    max-width: calc(100% - 160px);
+    margin-left: auto;
+    margin-right: auto;
+}
+@media screen and (max-width: 1400px) {
+    .reviews-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .swiper-functional,
+    .section2__slider {
+        max-width: calc(100% - 80px);
+    }
+}
+@media screen and (max-width: 767px) {
+    .reviews-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .swiper-functional,
+    .section2__slider {
+        max-width: calc(100% - 60px);
+    }
+}
+@media screen and (max-width: 427px) {
+    .reviews-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .swiper-functional,
+    .section2__slider {
+        max-width: calc(100% - 50px);
+    }
+}
+/* iOS override: full-width for native scroll + left margin */
+html.is-ios .js-carousel.reviews-slider,
+html.is-ios .js-carousel.game-cheats-slider,
+html.is-ios .js-carousel.game-cards-slider,
+html.is-ios .js-carousel.swiper-functional,
+html.is-ios .js-carousel.section2__slider {
+    width: calc(100% - 10px) !important;
+    max-width: calc(100% - 10px) !important;
+    margin-left: 10px !important;
+}
+
+/* Hide about history slider prev/next buttons — user confirmed not needed */
+.about-section__history__slider-btn {
+    display: none !important;
+}
+
+/* =================================================================
+   iOS Native Scroll Carousels
+   Carousels moved outside .content for full-width on iOS.
+   On non-iOS, Swiper handles layout. On iOS, native CSS scroll.
+   ================================================================= */
+
+/* --- iOS only: carousels outside .content need content-width padding --- */
+html.is-ios .reviews-slider.js-carousel,
+html.is-ios .game-cheats-slider.js-carousel,
+html.is-ios .game-cards-slider.js-carousel,
+html.is-ios .swiper-functional.js-carousel,
+html.is-ios .section2__slider.js-carousel {
+    padding-left: max(30px, calc((100% - var(--content-width)) / 2));
+    padding-right: max(30px, calc((100% - var(--content-width)) / 2));
+    box-sizing: border-box;
+}
+
+/* --- iOS: Native scroll for all .js-carousel elements --- */
+html.is-ios .js-carousel {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+}
+
+html.is-ios .js-carousel .swiper-wrapper {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: max-content !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+html.is-ios .js-carousel .swiper-slide {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+
+/* Hide scrollbar on iOS */
+html.is-ios .js-carousel::-webkit-scrollbar {
+    display: none;
+}
+html.is-ios .js-carousel {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --- Per-carousel slide widths on iOS mobile (≤767px) --- */
+@media (max-width: 767px) {
+    /* Reviews: auto-width slides, add gap */
+    html.is-ios .reviews-slider.js-carousel {
+        padding-left: 5px;
+        padding-right: 30px;
+        gap: 0;
+    }
+    html.is-ios .reviews-slider.js-carousel .swiper-wrapper {
+        gap: 25px;
+    }
+    html.is-ios .reviews-slider .swiper-slide {
+        width: 280px;
+        flex: 0 0 280px;
+    }
+
+    /* Section2 features: auto-width */
+    html.is-ios .section2__slider.js-carousel {
+        padding-left: 5px;
+        padding-right: 30px;
+    }
+    html.is-ios .section2__slider.js-carousel .swiper-wrapper {
+        gap: 12px;
+    }
+
+    /* Game cheats slider: auto on mobile */
+    html.is-ios .game-cheats-slider.js-carousel {
+        padding-left: 5px;
+        padding-right: 30px;
+    }
+    html.is-ios .game-cheats-slider.js-carousel .swiper-wrapper {
+        gap: 13px;
+    }
+
+    /* Game cards slider: 2 per view on mobile */
+    html.is-ios .game-cards-slider.js-carousel {
+        padding-left: 5px;
+        padding-right: 30px;
+    }
+    html.is-ios .game-cards-slider.js-carousel .swiper-wrapper {
+        gap: 20px;
+    }
+    html.is-ios .game-cards-slider .swiper-slide {
+        flex: 0 0 calc(50vw - 40px);
+    }
+
+    /* Cheat functions: auto-width */
+    html.is-ios .swiper-functional.js-carousel {
+        padding-left: 5px;
+        padding-right: 30px;
+    }
+    html.is-ios .swiper-functional.js-carousel .swiper-wrapper {
+        gap: 18px;
+    }
+
+    /* History slider (about page) — inside .content, fix all clipping parents on iOS */
+
+    /* Override parent overflow:hidden that clips carousels */
+    html.is-ios .reviews {
+        overflow: visible !important;
+    }
+    html.is-ios .game-cheats {
+        overflow: visible !important;
+    }
+    html.is-ios .cheat-block__slider {
+        overflow: visible !important;
+    }
+}
+
+/* --- iOS tablet/desktop sizes (≥768px) — larger slide counts --- */
+@media (min-width: 768px) {
+    html.is-ios .game-cheats-slider.js-carousel .swiper-wrapper {
+        gap: 17px;
+    }
+    html.is-ios .game-cheats-slider .swiper-slide {
+        flex: 0 0 calc(33.333% - 12px);
+    }
+
+    html.is-ios .game-cards-slider.js-carousel .swiper-wrapper {
+        gap: 20px;
+    }
+    html.is-ios .game-cards-slider .swiper-slide {
+        flex: 0 0 calc(33.333% - 14px);
+    }
+}
+
+@media (min-width: 1000px) {
+    html.is-ios .game-cheats-slider .swiper-slide {
+        flex: 0 0 calc(25% - 13px);
+    }
+}
+
+@media (min-width: 1439px) {
+    html.is-ios .game-cards-slider .swiper-slide {
+        flex: 0 0 calc(25% - 15px);
+    }
+}
+
+@media (min-width: 1601px) {
+    html.is-ios .game-cheats-slider .swiper-slide {
+        flex: 0 0 calc(20% - 14px);
+    }
+}
