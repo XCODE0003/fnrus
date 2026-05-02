@@ -382,6 +382,8 @@
 // Global 2FA gate: when any /api/admin/* call returns 423 with
 // action=2fa_required or action=setup_required, redirect the SPA to the
 // 2FA setup page so the user can either enroll or verify their TOTP.
+// Also suppresses DataTables alert popups (raised when 423 hits a
+// DataTable-driven endpoint) since we handle the error via redirect.
 $(document).ajaxComplete(function (event, xhr) {
     if (xhr.status !== 423) return;
     let action = '';
@@ -390,6 +392,11 @@ $(document).ajaxComplete(function (event, xhr) {
     var prefix = @json(trim(config('admin.prefix', 'admin'), '/'));
     if (window.location.pathname === '/' + prefix + '/2fa') return;
     window.location.href = '/' + prefix + '/2fa';
+});
+$(function () {
+    if (window.jQuery && jQuery.fn && jQuery.fn.dataTable) {
+        jQuery.fn.dataTable.ext.errMode = 'none';
+    }
 });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>

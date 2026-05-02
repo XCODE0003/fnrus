@@ -68,8 +68,12 @@
 (function () {
     const $ = (id) => document.getElementById(id);
     const apiBase = '/api/admin/access';
+    const getCookie = (name) => {
+        const m = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]*)'));
+        return m ? decodeURIComponent(m[2]) : '';
+    };
     const headers = (json) => {
-        const t = localStorage.getItem('token') || localStorage.getItem('admin_token') || '';
+        const t = getCookie('session_token');
         const h = {
             'Accept': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',

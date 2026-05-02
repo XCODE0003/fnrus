@@ -100,8 +100,14 @@
             $('tfa-msg').innerHTML = '<div class="alert alert-' + (ok ? 'success' : 'danger') + '">' + text + '</div>';
         };
         const apiBase = '/api/admin/2fa';
+        // JWT is stored in the `session_token` cookie by the existing app
+        // (see public/assets/js/main.js setAuthorization()).
+        const getCookie = (name) => {
+            const m = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]*)'));
+            return m ? decodeURIComponent(m[2]) : '';
+        };
         const headers = () => {
-            const t = localStorage.getItem('token') || localStorage.getItem('admin_token') || '';
+            const t = getCookie('session_token');
             return {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
