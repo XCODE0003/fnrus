@@ -377,6 +377,9 @@
 
     };
 </script>
+<script>
+window.ADMIN_PREFIX = @json(trim(config('admin.prefix', 'admin'), '/'));
+</script>
 <script src="/assets/jquery/jquery.min.js"></script>
 <script>
 // Global 2FA gate: when any /api/admin/* call returns 423 with
