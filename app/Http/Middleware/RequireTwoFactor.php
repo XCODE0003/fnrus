@@ -44,8 +44,20 @@ class RequireTwoFactor
             return $this->deny($request, 'setup_required', 'Включите двухфакторную аутентификацию.');
         }
 
-        $passedAt = (int) ($request->session()->get(self::SESSION_KEY) ?? 0);
-        if ($passedAt > 0 && (time() - $passedAt) < self::TTL_SECONDS) {
+        $now = time();
+
+        // Fast path: session marker still warm.
+        $sessionAt = (int) ($request->session()->get(self::SESSION_KEY) ?? 0);
+        if ($sessionAt > 0 && ($now - $sessionAt) < self::TTL_SECONDS) {
+            return $next($request);
+        }
+
+        // Persistent path: saved on the user row by TwoFactorController::verify.
+        // Survives Laravel session GC (SESSION_LIFETIME=120min) since JWT
+        // (15-day TTL) re-authenticates the user and we restore the marker.
+        $userAt = (int) ($user->two_factor_passed_at ?? 0);
+        if ($userAt > 0 && ($now - $userAt) < self::TTL_SECONDS) {
+            try { $request->session()->put(self::SESSION_KEY, $userAt); } catch (\Throwable $e) {}
             return $next($request);
         }
 

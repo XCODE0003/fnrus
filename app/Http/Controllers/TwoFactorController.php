@@ -66,14 +66,16 @@ class TwoFactorController extends Controller
         $recoveryPlain = $this->totp->generateRecoveryCodes();
         $recoveryHashed = $this->totp->hashRecoveryCodes($recoveryPlain);
 
+        $now = time();
         DB::table('users')->where('id', $user->id)->update([
             'two_factor_secret'         => $this->totp->encryptSecret($secret),
             'two_factor_recovery_codes' => json_encode($recoveryHashed),
-            'two_factor_confirmed_at'   => time(),
+            'two_factor_confirmed_at'   => $now,
+            'two_factor_passed_at'      => $now,
         ]);
 
         $request->session()->forget('2fa_pending_secret');
-        $request->session()->put('2fa_passed_at', time());
+        $request->session()->put('2fa_passed_at', $now);
 
         return response()->json([
             'ok' => true,
@@ -108,7 +110,10 @@ class TwoFactorController extends Controller
             }
         }
 
-        $request->session()->put('2fa_passed_at', time());
+        $now = time();
+        // Persist on user row so the 12h grace period survives session GC.
+        DB::table('users')->where('id', $user->id)->update(['two_factor_passed_at' => $now]);
+        $request->session()->put('2fa_passed_at', $now);
         return response()->json(['ok' => true, 'description' => 'Подтверждено.']);
     }
 
@@ -204,6 +209,7 @@ class TwoFactorController extends Controller
             'two_factor_secret'                      => null,
             'two_factor_recovery_codes'              => null,
             'two_factor_confirmed_at'                => null,
+            'two_factor_passed_at'                   => null,
             'two_factor_recovery_email_code'         => null,
             'two_factor_recovery_email_expires_at'   => null,
             'two_factor_recovery_email_requested_at' => null,
@@ -247,6 +253,7 @@ class TwoFactorController extends Controller
             'two_factor_secret'         => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at'   => null,
+            'two_factor_passed_at'      => null,
         ]);
         $request->session()->forget('2fa_passed_at');
 
