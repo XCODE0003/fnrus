@@ -110,7 +110,9 @@ Route::get('/p/{shortname}', function ($shortname) {
 });
 
 
-Route::get('/file/{hash}', [StorageController::class, 'file'])->where('hash', '[a-zA-Z0-9-_]+');
+Route::get('/file/{hash}', [StorageController::class, 'file'])
+    ->middleware('file.purchased')
+    ->where('hash', '[a-zA-Z0-9-_]+');
 
 
 Route::get('/i{hash}', [StorageController::class, 'image'])->where('hash', '[a-zA-Z0-9-_]+');
@@ -184,6 +186,24 @@ Route::get('/delivery/{hash}', function ($hash) {
     if ($instruction) {
         $instruction_body = $instruction->body;
     }
+
+    // Grant the current browser session permission to download every
+    // /file/{X} that this purchase references — picked up by the
+    // EnsureFilePurchased middleware on the /file/{hash} route.
+    $accessible = (array) session('access.files', []);
+    foreach ([$material, $instruction_body] as $blob) {
+        if (preg_match_all('~/file/([a-zA-Z0-9_-]+)~', (string) $blob, $m)) {
+            foreach ($m[1] as $fid) {
+                if (!in_array($fid, $accessible, true)) {
+                    $accessible[] = $fid;
+                }
+            }
+        }
+    }
+    if (count($accessible) > 500) {
+        $accessible = array_slice($accessible, -500);
+    }
+    session(['access.files' => $accessible]);
 
     if ($instruction){
         $faq = Faq::getListByInstruction($instruction->id);

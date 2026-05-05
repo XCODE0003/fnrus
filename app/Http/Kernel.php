@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         '2fa' => \App\Http\Middleware\RequireTwoFactor::class,
         'login.throttle' => \App\Http\Middleware\LoginThrottle::class,
         'admin.web' => \App\Http\Middleware\AdminWebGuard::class,
+        'file.purchased' => \App\Http\Middleware\EnsureFilePurchased::class,
         'cors' => \App\Http\Middleware\CorsMiddleware::class,
         'api_request_limit' => \App\Http\Middleware\ApiRequestLimitMiddleware::class,
 //        'moderator' => \App\Http\Middleware\ModeratorMiddleware::class,
