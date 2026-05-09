@@ -4,6 +4,9 @@
 /public/assets/jquery
 /public/assets/jquery-easing
 /public/assets/js
+# Admin-panel JS lives with the backend code that serves it — track it.
+!/public/assets/js/admin/
+!/public/assets/js/admin/**
 /public/assets/libs
 /public/assets/stylus
 /public/assets/vendor.zip
@@ -79,3 +82,4 @@ yarn-error.log
 
 # --- Local TZ doc ---
 /тз
+.phpunit.result.cache

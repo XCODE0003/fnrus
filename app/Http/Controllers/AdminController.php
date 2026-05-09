@@ -21,9 +21,6 @@ class AdminController
         $username = $request->input('username');
         $password = $request->input('password');
 
-        if($request->filled($username)){return response()->json(['ok' => false, 'description' => 'No username!'], 200);}
-        if($request->filled($password)){return response()->json(['ok' => false, 'description' => 'No password!'], 200);}
-
         $s = [
             'pid' => 0,
             'tid' => 0,
@@ -44,11 +41,13 @@ class AdminController
 
     public function login(Request $request){
 
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
         $username = $request->input('username');
         $password = $request->input('password');
-
-        if($request->filled($username)){return response()->json(['ok' => false, 'description' => 'No username!'], 200);}
-        if($request->filled($password)){return response()->json(['ok' => false, 'description' => 'No password!'], 200);}
 
         $u = DB::table('admins')->where('username', $username)->first();
 
@@ -56,5 +55,6 @@ class AdminController
             return response()->json(['ok' => true], 200);
         }
 
+        return response()->json(['ok' => false, 'description' => 'Invalid credentials'], 200);
     }
 }

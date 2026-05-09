@@ -193,7 +193,7 @@ class ChannelSubController extends Controller
 
     public function sort(Request $request){
         try {
-            if($request->filled($request->sort)){
+            if(!$request->filled('sort')){
                 throw new Exception('Сортировка не определена.');
             }
 

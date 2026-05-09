@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\SenderController;
+use App\Jobs\BroadcastStatusChange;
 use App\Models\Category;
 use App\Models\Member;
 use App\Models\RolePermission;
 use App\Models\ShopSettings;
 use App\Models\StatusCheat;
+use App\Models\TelegramChannel;
 use Exception;
 use App\Models\Shop;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -117,6 +120,19 @@ class StatusCheatController extends Controller
 
             $status->games = $games_all;
 
+            // Connected Telegram channels — frontend renders quick on/off list.
+            $shop = Shop::getDefault();
+            $status->channels = $shop
+                ? TelegramChannel::where('sid', $shop->id)
+                    ->orderBy('sort_order')->orderBy('id')
+                    ->get(['id', 'title', 'chat_id', 'type', 'is_active'])
+                : [];
+
+            // Public URL for the previously uploaded image, if any.
+            $status->image_url = $status->image_path
+                ? asset('storage/' . ltrim($status->image_path, '/'))
+                : null;
+
             return response()->json([
                 'ok' => true,
                 'result' => $status,
@@ -209,10 +225,12 @@ class StatusCheatController extends Controller
             if (!$access) {throw new Exception('Access Denied');}
 
             $validator = Validator::make($request->all(), [
-                'title' => 'required|string|min:4|max:255',
-                'game_id' => 'required|int|min:1',
-                'status' => 'required|int|min:1|max:4',
-                'is_notify' => 'required|int|between:0,1',
+                'title'            => 'required|string|min:4|max:255',
+                'game_id'          => 'required|int|min:1',
+                'status'           => 'required|int|min:1|max:4',
+                'is_notify'        => 'required|int|between:0,1',
+                'message_template' => 'nullable|string|max:8000',
+                'image_path'       => 'nullable|string|max:500',
             ]);
 
             if ($validator->fails()) {
@@ -222,70 +240,23 @@ class StatusCheatController extends Controller
             }
 
             $status = StatusCheat::find($id);
-
             if (!$status) {
                 throw new Exception('Чит не найден.', 1);
             }
 
             $status_db = $status->status;
 
-            $status->cid = $request->game_id;
-            $status->title = $request->title;
-            $status->status = $request->status;
-            $status->updated_at = strtotime('NOW');
+            $status->cid              = $request->game_id;
+            $status->title            = $request->title;
+            $status->status           = $request->status;
+            $status->message_template = $request->input('message_template');
+            $status->image_path       = $request->input('image_path');
+            $status->updated_at       = strtotime('NOW');
             $status->save();
 
-            if($status_db != $request->status) {
-
-                if ($request->status == 1) {
-                    $block_status = 'Рекомендуем к использованию';
-                }
-                if ($request->status == 2) {
-                    $block_status = 'Не рекомендуем к использованию';
-                }
-                if ($request->status == 3) {
-                    $block_status = 'На обновлении';
-                }
-                if ($request->status == 4) {
-                    $block_status = 'На свой страх и риск';
-                }
-
-                $title = $request->title;
-
-                if($request->is_notify == 1) {
-
-//                    $members = Member::where('email', '!=', '')->get();
-//
-//                    foreach ($members as $m) {
-//
-//                        if($m->email_notify_status_changed == 1) {
-//                            Mail::send('emails.status-changed', ['title' => $title, 'status' => $block_status], function ($message) use ($m, $title) {
-//                                $message->to($m->email, $m->username)
-//                                    ->subject('Изменился статус: ' . $title);
-//                            });
-//                        }
-//                    }
-
-                    $senderController = app(SenderController::class);
-                    $started_at = date('Y-m-d\TH:i');
-
-                    $message = "<p>♻️Изменение статус чита</p><p>├ Чит: <strong>".$title."</strong></p><p>└ Статус: <strong>".$block_status."</strong></p>";
-
-                    $newRequest = new \Illuminate\Http\Request();
-                    $newRequest->merge([
-                        'type' => 1,
-                        'title' => 'Изменение статуса: ' . $title,
-                        'message' => $message,
-                        'buttons' => '[]',
-                        'disable_web_page_preview' => 0,
-                        'has_spoiler' => 0,
-                        'type_time' => '0',
-                        'started_at' => $started_at,
-                    ]);
-                    $response = $senderController->create($newRequest);
-                }
+            if ($status_db != $request->status && (int) $request->is_notify === 1) {
+                $this->dispatchTelegramBroadcast($status, $request->input('message_template'));
             }
-
 
             return response()->json([
                 'ok' => true,
@@ -294,6 +265,77 @@ class StatusCheatController extends Controller
 
         } catch (Exception $e) {
             return response()->json(['ok' => false, 'description' => $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Build the rendered message (placeholders applied) and queue a Telegram broadcast.
+     * Falls back to a sane default template when none is configured.
+     */
+    private function dispatchTelegramBroadcast(StatusCheat $status, ?string $template): void
+    {
+        $game = Category::where('id', $status->cid)->value('title') ?? '';
+        $statusLabel = StatusCheat::statusLabel((int) $status->status);
+
+        $template = $template !== null && trim($template) !== ''
+            ? $template
+            : "<p>\u{267B}\u{FE0F} Изменение статуса софта</p><p>├ Игра: <b>{game}</b></p><p>├ Софт: <b>{product}</b></p><p>└ Статус: <b>{status}</b></p>";
+
+        $publisher = app(\App\Services\TelegramPublisher::class);
+        $rendered = $publisher->applyPlaceholders($template, [
+            'game'    => $game,
+            'product' => $status->title,
+            'status'  => $statusLabel,
+        ]);
+
+        $imageUrl = $status->image_path
+            ? asset('storage/' . ltrim($status->image_path, '/'))
+            : null;
+
+        try {
+            BroadcastStatusChange::dispatch($rendered, $imageUrl);
+        } catch (\Throwable $e) {
+            // Fallback: queue not configured, run synchronously so the change still ships.
+            Log::warning('StatusCheatController: queue dispatch failed, running sync', [
+                'error' => $e->getMessage(),
+            ]);
+            try {
+                $publisher->broadcast($rendered, $imageUrl);
+            } catch (\Throwable $inner) {
+                Log::error('StatusCheatController: sync broadcast failed', [
+                    'error' => $inner->getMessage(),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Upload an image attached to a status post. Stored under storage/app/public/status-posts.
+     */
+    public function uploadImage(Request $request)
+    {
+        try {
+            $access = RolePermission::getByPermission($this->user->role_id, 'statuses.edit')->allow;
+            if (!$access) {throw new Exception('Access Denied');}
+
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            ]);
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            $path = $request->file('image')->store('status-posts', 'public');
+
+            return response()->json([
+                'ok' => true,
+                'result' => [
+                    'path' => $path,
+                    'url'  => asset('storage/' . $path),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'description' => $e->getMessage()]);
         }
     }
 

@@ -161,7 +161,7 @@ class MethodPaymentController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'settings.payments')->allow;
             if (!$access) {throw new Exception('Access Denied');}
 
-            if($request->filled($request->id)){
+            if(!$request->filled('id')){
                 throw new Exception('ID не найден.');
             }
 
@@ -205,7 +205,7 @@ class MethodPaymentController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'settings.payments')->allow;
             if (!$access) {throw new Exception('Access Denied');}
 
-            if($request->filled($request->id)){throw new Exception('ID не найден.');}
+            if(!$request->filled('id')){throw new Exception('ID не найден.');}
 
             $shop = Shop::getDefault();
             if(!$shop){throw new Exception('Shop not found!');}
@@ -242,7 +242,7 @@ class MethodPaymentController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'settings.payments')->allow;
             if (!$access) {throw new Exception('Access Denied');}
 
-            if($request->filled($request->sort)){
+            if(!$request->filled('sort')){
                 throw new Exception('Сортировка не определена.');
             }
 

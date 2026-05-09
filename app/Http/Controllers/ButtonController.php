@@ -237,7 +237,7 @@ class ButtonController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'settings.constructor')->allow;
             if (!$access) {throw new Exception('Access Denied');}
 
-            if($request->filled($request->sort)){throw new Exception('Сортировка не определена.');}
+            if(!$request->filled('sort')){throw new Exception('Сортировка не определена.');}
 
             foreach ($request->sort as $i => $row) {
                 $sql = ['sort' => ++$i];

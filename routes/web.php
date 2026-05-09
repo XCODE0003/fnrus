@@ -79,6 +79,15 @@ Route::get('/lang/{locale}', [LocalizationController::class, 'change'])
 Route::get('/api/locale/current', [LocalizationController::class, 'getCurrent'])
     ->name('locale.current');
 
+// Public one-click unsubscribe (RFC 8058). No auth — protected by opaque token.
+Route::match(['GET', 'POST'], '/unsubscribe/{token}', [\App\Http\Controllers\UnsubscribeController::class, 'unsubscribe'])
+    ->where('token', '[A-Za-z0-9]{16,64}');
+
+// Public password-reset form (force-reset issued by an admin). Token verified server-side.
+Route::get('/password-reset/{token}', function ($token) {
+    return view('user.password-reset', ['token' => $token]);
+})->where('token', '[A-Za-z0-9]{64}');
+
 Route::get('/fk-verify.html', function () {
     return response(file_get_contents(public_path('fk-verify.html')))->header('Content-Type', 'text/plain');
 });
@@ -419,6 +428,12 @@ Route::middleware(['ip.whitelist', 'admin.web'])
             });
             Route::get('/statuses', function () {
                 return view('admin.dashboard.statuses', ['title' => 'Статусы читов']);
+            });
+            Route::get('/maintenance', function () {
+                return view('admin.dashboard.maintenance', ['title' => 'Обслуживание']);
+            });
+            Route::get('/email-broadcasts', function () {
+                return view('admin.dashboard.email-broadcasts', ['title' => 'Email-рассылки']);
             });
             Route::get('/roles', function () {
                 return view('admin.dashboard.roles', ['title' => 'Управление ролями']);

@@ -490,7 +490,7 @@ class CouponController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'coupons.delete')->allow;
             if(!$access){throw new Exception('Access Denied');}
 
-            if($request->filled($request->id)){
+            if(!$request->filled('id')){
                 throw new Exception('ID не найден.');
             }
 

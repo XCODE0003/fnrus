@@ -169,6 +169,19 @@ class AuthController
 
             $user = Auth::user();
 
+            // Force-reset gate: if an admin has flagged this account for a
+            // password reset, block the session and ask the user to use the
+            // emailed reset link. Done after Auth::attempt so a wrong
+            // password still says "wrong password" — does not leak the flag.
+            if ((int) ($user->force_password_reset ?? 0) === 1) {
+                Auth::logout();
+                return response()->json([
+                    'ok'          => false,
+                    'description' => 'Ваш пароль сброшен администратором. Проверьте email — мы отправили ссылку для установки нового пароля.',
+                    'code'        => 'force_password_reset_required',
+                ], 200);
+            }
+
             // Server-side admin gate: when an admin logs in, persist the user
             // ID in the session so AdminWebGuard can return real Blade pages
             // for /<admin>/* and 404 for everyone else. Same-origin XHR/fetch
@@ -366,11 +379,29 @@ class AuthController
     public function logout(Request $request)
     {
         try {
+            // Invalidate the JWT in the blacklist so AdminWebGuard::reauthenticateViaJwt()
+            // cannot resurrect a session from a still-valid cookie. Best-effort: a
+            // missing/expired token must not block logout.
+            try {
+                $token = $request->cookie('session_token')
+                    ?: \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::getToken();
+                if ($token) {
+                    \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::setToken($token)->invalidate();
+                }
+            } catch (\Throwable $e) {
+                \Log::info('logout: jwt invalidate skipped: ' . $e->getMessage());
+            }
+
             Auth::logout();
             try {
                 $request->session()->forget(['admin_session_user_id', '2fa_passed_at']);
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
             } catch (\Throwable $e) {}
-            return response()->json([ 'ok' => true,'description' => 'Выходим из системы',]);
+
+            return response()
+                ->json(['ok' => true, 'description' => 'Выходим из системы'])
+                ->withCookie(cookie()->forget('session_token'));
 
         } catch (QueryException $qe) {
             \Log::error("Register SQL error: " . $qe->getMessage());

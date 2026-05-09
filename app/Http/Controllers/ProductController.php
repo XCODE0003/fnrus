@@ -392,7 +392,7 @@ class ProductController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'products.sort')->allow;
             if(!$access){throw new Exception('Access Denied');}
 
-            if($request->filled($request->sort)){
+            if(!$request->filled('sort')){
                 throw new Exception('Сортировка не определена.');
             }
 

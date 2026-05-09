@@ -696,7 +696,7 @@ class MemberController extends Controller
                 throw new Exception('Access Denied');
             }
 
-            if($request->filled($request->id)){throw new Exception('ID not found!');}
+            if(!$request->filled('id')){throw new Exception('ID not found!');}
 
             $shop = Shop::getDefault();
             if(!$shop){throw new Exception('Shop not found!');}
@@ -720,7 +720,7 @@ class MemberController extends Controller
             $access = RolePermission::getByPermission($this->user->role_id, 'members.block')->allow;
             if (!$access) {throw new Exception('Access Denied');}
 
-            if($request->filled($request->id)){
+            if(!$request->filled('id')){
                 throw new Exception('ID not found!');
             }
 

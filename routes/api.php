@@ -50,6 +50,10 @@ Route::group([], function () {
 Route::post('/cheats/search', [CheatController::class, 'search']);
 Route::post('/search', [ProductController::class, 'search']);
 
+// Публичный завершающий шаг принудительного сброса пароля (без auth, by token).
+Route::post('/password-reset/{token}', [\App\Http\Controllers\PasswordResetController::class, 'complete'])
+    ->where('token', '[A-Za-z0-9]{64}');
+
 // Главного-админа управление безопасностью (IP-whitelist + разблокировка login).
 Route::middleware(['auth', 'admin', '2fa'])->prefix('admin/access')->group(function () {
     Route::get('ips',           [\App\Http\Controllers\AdminAccessController::class, 'ips']);
@@ -188,9 +192,55 @@ Route::middleware(['admin', '2fa'])->group(function () {
         Route::get('select/all', 'select_all');
         Route::post('create', 'create');
         Route::get('games/all', 'games_all');
+        Route::post('upload-image', 'uploadImage');
         Route::post('{id}/update', 'update')->where('id','[0-9]+');
         Route::get('{id}/fullinfo', 'fullinfo')->where('id','[0-9]+');
         Route::delete('{id}/delete', 'delete')->where('id','[0-9]+');
+    });
+
+    // Telegram каналы для публикаций
+    Route::controller(\App\Http\Controllers\TelegramChannelController::class)
+        ->prefix('telegram-channels')
+        ->group(function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::post('{id}/update', 'update')->where('id','[0-9]+');
+            Route::post('{id}/toggle', 'toggle')->where('id','[0-9]+');
+            Route::delete('{id}', 'destroy')->where('id','[0-9]+');
+        });
+
+    // Сервисное обслуживание: сброс аналитики, массовые очистки, аудит-лог
+    Route::controller(\App\Http\Controllers\MaintenanceController::class)
+        ->prefix('maintenance')
+        ->group(function () {
+            Route::get('stats', 'stats');
+            Route::get('log', 'auditLog');
+            Route::post('analytics/reset', 'resetAnalytics');
+            Route::post('cleanup/orders',  'cleanupOrders');
+            Route::post('cleanup/coupons', 'cleanupCoupons');
+            Route::post('cleanup/files',   'cleanupFiles');
+            Route::post('cleanup/exports', 'cleanupExports');
+        });
+
+    // Email-рассылки: CRUD черновиков, запуск, прогресс
+    Route::controller(\App\Http\Controllers\EmailBroadcastController::class)
+        ->prefix('email-broadcasts')
+        ->group(function () {
+            Route::get('/',           'index');
+            Route::get('audience',    'audience');
+            Route::post('preview',    'preview');
+            Route::post('/',          'store');
+            Route::get('{id}',        'show')->where('id','[0-9]+');
+            Route::post('{id}/update','update')->where('id','[0-9]+');
+            Route::post('{id}/send',  'send')->where('id','[0-9]+');
+            Route::delete('{id}',     'destroy')->where('id','[0-9]+');
+        });
+
+    // Принудительный сброс пароля (admin endpoints)
+    Route::controller(\App\Http\Controllers\PasswordResetController::class)->group(function () {
+        Route::post('members/{id}/force-password-reset',        'forceForMember')->where('id','[0-9]+');
+        Route::post('members/{id}/force-password-reset/cancel', 'cancelForMember')->where('id','[0-9]+');
+        Route::post('admins/{id}/force-password-reset',         'forceForAdmin')->where('id','[0-9]+');
     });
 
     // Управление инструкциями
