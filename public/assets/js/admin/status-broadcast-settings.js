@@ -27,13 +27,25 @@
         return ed ? ed.getContent() : ($(TINY_SELECTOR).val() || '');
     }
 
+    // Pending content set before the editor finished initialising —
+    // applied from init_instance_callback so the seed isn't lost to a
+    // race between the AJAX response and TinyMCE's asynchronous init.
+    var _pendingContent = null;
+
     function setTinyContent(html) {
         var ed = tinyEditor();
-        if (ed) ed.setContent(html || ''); else $(TINY_SELECTOR).val(html || '');
+        if (ed && ed.initialized) {
+            ed.setContent(html || '');
+        } else {
+            _pendingContent = html || '';
+            $(TINY_SELECTOR).val(html || '');
+        }
     }
 
     function initTinyMCE() {
-        if (typeof tinymce === 'undefined') return;
+        if (typeof tinymce === 'undefined') {
+            return setTimeout(initTinyMCE, 50);
+        }
         if (tinymce.get('sb_template')) return;
         tinymce.init({
             selector: TINY_SELECTOR,
@@ -45,7 +57,13 @@
             plugins: 'lists link emoticons autolink',
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | link emoticons | removeformat',
             skin: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'oxide-dark' : 'oxide',
-            content_css: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'default'
+            content_css: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'default',
+            init_instance_callback: function (editor) {
+                if (_pendingContent !== null) {
+                    editor.setContent(_pendingContent);
+                    _pendingContent = null;
+                }
+            }
         }).catch(function (err) { console.warn('TinyMCE init failed:', err); });
     }
 
