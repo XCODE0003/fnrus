@@ -5,9 +5,15 @@
  * Modal-based CRUD for draft broadcasts plus a styled confirmation
  * for sending. The actual fan-out runs in the queue (SendBroadcastEmail
  * job per recipient); this UI only schedules and polls progress.
+ *
+ * waitForJQuery: see same note in maintenance.js.
  */
-(function () {
+(function waitForJQuery() {
     'use strict';
+    if (typeof window.jQuery === 'undefined') {
+        return setTimeout(waitForJQuery, 30);
+    }
+    var $ = window.jQuery;
 
     var ENDPOINT = '/email-broadcasts';
     var TINY_SELECTOR = '#bcast_body';

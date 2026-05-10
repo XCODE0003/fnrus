@@ -8,9 +8,18 @@
  *
  * Overrides the legacy `changeCheat()` in main.js so the PUT payload
  * carries the new fields (message_template, image_path).
+ *
+ * Bootstrapping: this file is included inside @section('content') which
+ * renders BEFORE the layout's footer scripts (jQuery, etc). The
+ * waitForJQuery loop polls until jQuery is loaded so the IIFE never
+ * runs against an undefined `$`.
  */
-(function () {
+(function waitForJQuery() {
     'use strict';
+    if (typeof window.jQuery === 'undefined') {
+        return setTimeout(waitForJQuery, 30);
+    }
+    var $ = window.jQuery;
 
     var TINY_SELECTOR = '#changeCheat #message_template';
     var IMAGE_PATH_INPUT = '#changeCheat #cheat_image_path';

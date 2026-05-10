@@ -20,11 +20,15 @@ return new class extends Migration {
 
         $maxSort = (int) DB::table('menu')->where('mid', '')->max('sort');
 
+        // Use the configured admin URL prefix so the menu link matches
+        // the actual route (the prefix already includes "admin" for fnrus).
+        $prefix = trim((string) (env('ADMIN_URL_PREFIX') ?: 'admin'), '/');
+
         DB::table('menu')->insert([
             'alias' => self::ALIAS,
             'mid'   => '',
             'title' => 'Обслуживание',
-            'link'  => '/admin/maintenance',
+            'link'  => '/' . $prefix . '/maintenance',
             'icon'  => 'tools',
             'sort'  => $maxSort + 1,
         ]);

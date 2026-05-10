@@ -6,9 +6,17 @@
  * can re-validate the phrase server-side. The UI uses a styled modal
  * fallback (window.confirm) for the "are you sure" prompt; the
  * server-side phrase check is the actual safety net.
+ *
+ * waitForJQuery: this file is rendered inside @section('content'),
+ * before the layout's footer-loaded jQuery. Poll until jQuery exists
+ * to avoid `$ is not defined`.
  */
-(function () {
+(function waitForJQuery() {
     'use strict';
+    if (typeof window.jQuery === 'undefined') {
+        return setTimeout(waitForJQuery, 30);
+    }
+    var $ = window.jQuery;
 
     function escapeHtml(str) {
         return String(str == null ? '' : str).replace(/[<>&"']/g, function (s) {

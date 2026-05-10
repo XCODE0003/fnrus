@@ -14,11 +14,13 @@ return new class extends Migration {
 
         $maxSort = (int) DB::table('menu')->where('mid', '')->max('sort');
 
+        $prefix = trim((string) (env('ADMIN_URL_PREFIX') ?: 'admin'), '/');
+
         DB::table('menu')->insert([
             'alias' => self::ALIAS,
             'mid'   => '',
             'title' => 'Email-рассылки',
-            'link'  => '/admin/email-broadcasts',
+            'link'  => '/' . $prefix . '/email-broadcasts',
             'icon'  => 'envelope-open-text',
             'sort'  => $maxSort + 1,
         ]);
