@@ -504,4 +504,80 @@ class ShopSettingsController extends Controller
         }
     }
 
+    /**
+     * Global status-broadcast template (used as fallback when a status row
+     * has no per-row template). Returns the current value plus an URL for
+     * the attached image, if any.
+     */
+    public function info_status_broadcast()
+    {
+        try {
+            $row = RolePermission::getByPermission($this->user->role_id, 'settings.notify');
+            if (!$row || !$row->allow) { throw new Exception('Access Denied'); }
+
+            $imagePath = $this->set_shop->status_broadcast_image_path;
+
+            return response()->json([
+                'ok' => true,
+                'result' => [
+                    'template'   => $this->set_shop->status_broadcast_template,
+                    'image_path' => $imagePath,
+                    'image_url'  => $imagePath ? asset('storage/' . ltrim($imagePath, '/')) : null,
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'description' => $e->getMessage()]);
+        }
+    }
+
+    public function update_status_broadcast(\Illuminate\Http\Request $request)
+    {
+        try {
+            $row = RolePermission::getByPermission($this->user->role_id, 'settings.notify');
+            if (!$row || !$row->allow) { throw new Exception('Access Denied'); }
+
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                'template'   => 'nullable|string|max:8000',
+                'image_path' => 'nullable|string|max:500',
+            ]);
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            $shop_set = ShopSettings::getDefault();
+            if (!$shop_set) { throw new Exception('Настройки не найдены.'); }
+
+            $shop_set->status_broadcast_template = $request->input('template');
+            $shop_set->status_broadcast_image_path = $request->input('image_path');
+            $shop_set->save();
+
+            return response()->json(['ok' => true, 'description' => 'Сохранено']);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'description' => $e->getMessage()]);
+        }
+    }
+
+    public function upload_status_broadcast_image(\Illuminate\Http\Request $request)
+    {
+        try {
+            $row = RolePermission::getByPermission($this->user->role_id, 'settings.notify');
+            if (!$row || !$row->allow) { throw new Exception('Access Denied'); }
+
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            ]);
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            $path = $request->file('image')->store('status-posts', 'public');
+
+            return response()->json([
+                'ok'     => true,
+                'result' => ['path' => $path, 'url' => asset('storage/' . $path)],
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'description' => $e->getMessage()]);
+        }
+    }
 }

@@ -114,6 +114,9 @@ Route::middleware(['admin', '2fa'])->group(function () {
         Route::get('topup', 'info_topup');
         Route::post('display/save', 'update_display');
         Route::post('notify/save', 'update_notify');
+        Route::get('status-broadcast', 'info_status_broadcast');
+        Route::post('status-broadcast/save', 'update_status_broadcast');
+        Route::post('status-broadcast/upload-image', 'upload_status_broadcast_image');
         Route::post('referral/save', 'update_referral');
         Route::post('topup/save', 'update_topup');
         Route::get('buttons', 'info_buttons');

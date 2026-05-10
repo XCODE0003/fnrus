@@ -46,7 +46,9 @@ class ShopSettings extends Model
         'support_btn2_text',
         'support_btn2_url',
         'support_btn3_text',
-        'support_btn3_url'
+        'support_btn3_url',
+        'status_broadcast_template',
+        'status_broadcast_image_path',
     ];
 
     public static function getDefault(){

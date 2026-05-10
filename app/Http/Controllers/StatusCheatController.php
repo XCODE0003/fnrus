@@ -277,9 +277,13 @@ class StatusCheatController extends Controller
         $game = Category::where('id', $status->cid)->value('title') ?? '';
         $statusLabel = StatusCheat::statusLabel((int) $status->status);
 
-        $template = $template !== null && trim($template) !== ''
-            ? $template
-            : "<p>\u{267B}\u{FE0F} Изменение статуса софта</p><p>├ Игра: <b>{game}</b></p><p>├ Софт: <b>{product}</b></p><p>└ Статус: <b>{status}</b></p>";
+        // Fallback chain: per-status template → global ShopSettings template → hardcoded default.
+        if ($template === null || trim($template) === '') {
+            $globalTemplate = ShopSettings::getDefault()?->status_broadcast_template ?? null;
+            $template = $globalTemplate && trim($globalTemplate) !== ''
+                ? $globalTemplate
+                : "<p>Изменение статуса чита</p><p>├ Игра: <b>{game}</b></p><p>├ Чит: <b>{product}</b></p><p>└ Статус: <b>{status}</b></p>";
+        }
 
         $publisher = app(\App\Services\TelegramPublisher::class);
         $rendered = $publisher->applyPlaceholders($template, [
@@ -288,8 +292,13 @@ class StatusCheatController extends Controller
             'status'  => $statusLabel,
         ]);
 
-        $imageUrl = $status->image_path
-            ? asset('storage/' . ltrim($status->image_path, '/'))
+        // Same fallback for the attached image: per-status → global → none.
+        $imagePath = $status->image_path;
+        if (!$imagePath) {
+            $imagePath = ShopSettings::getDefault()?->status_broadcast_image_path ?? null;
+        }
+        $imageUrl = $imagePath
+            ? asset('storage/' . ltrim($imagePath, '/'))
             : null;
 
         try {
