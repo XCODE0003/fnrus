@@ -14,10 +14,13 @@
  * waitForJQuery loop polls until jQuery is loaded so the IIFE never
  * runs against an undefined `$`.
  */
-(function waitForJQuery() {
+(function waitForDeps() {
     'use strict';
-    if (typeof window.jQuery === 'undefined') {
-        return setTimeout(waitForJQuery, 30);
+    if (typeof window.jQuery === 'undefined'
+        || typeof api_url === 'undefined'
+        || typeof setAuthorization !== 'function'
+        || typeof messageSystem !== 'function') {
+        return setTimeout(waitForDeps, 30);
     }
     var $ = window.jQuery;
 

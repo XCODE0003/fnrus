@@ -11,10 +11,14 @@
  * before the layout's footer-loaded jQuery. Poll until jQuery exists
  * to avoid `$ is not defined`.
  */
-(function waitForJQuery() {
+(function waitForDeps() {
     'use strict';
-    if (typeof window.jQuery === 'undefined') {
-        return setTimeout(waitForJQuery, 30);
+    // Wait for jQuery + main.js globals (api_url / setAuthorization / messageSystem).
+    if (typeof window.jQuery === 'undefined'
+        || typeof api_url === 'undefined'
+        || typeof setAuthorization !== 'function'
+        || typeof messageSystem !== 'function') {
+        return setTimeout(waitForDeps, 30);
     }
     var $ = window.jQuery;
 
