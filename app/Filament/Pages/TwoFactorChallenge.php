@@ -111,11 +111,22 @@ class TwoFactorChallenge extends Page implements HasForms
 
     private static function redirectAfter(): string
     {
-        $next = session()->pull('2fa_redirect');
-        if (is_string($next) && $next !== '') {
-            return $next;
-        }
         $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
+        $next = session()->pull('2fa_redirect');
+
+        // Only honour the stored redirect target if it's actually under our
+        // panel and is not the 2FA flow itself (otherwise we ping-pong or
+        // 404 on a stale URL from a previous deploy that used /admin/...).
+        if (is_string($next) && $next !== '') {
+            $path = parse_url($next, PHP_URL_PATH) ?: $next;
+            $needle = '/' . $panelPath . '/';
+            $sentinelOk = str_starts_with($path, $needle)
+                && ! str_contains($path, '/two-factor');
+            if ($sentinelOk) {
+                return $next;
+            }
+        }
+
         return '/' . $panelPath;
     }
 
