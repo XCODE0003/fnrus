@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\FilamentSiteAuthBridge;
 use App\Http\Middleware\FilamentTwoFactorChallenge;
 use App\Http\Middleware\VerifyCsrfToken;
 use Filament\Http\Middleware\Authenticate;
@@ -30,7 +31,6 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path(env('FILAMENT_PATH', 'xoalfjamapfn/admin'))
-            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -60,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                FilamentSiteAuthBridge::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
