@@ -83,3 +83,8 @@ yarn-error.log
 # --- Local TZ doc ---
 /тз
 .phpunit.result.cache
+
+# --- Local debug / agent artifacts ---
+/.playwright-mcp/
+/password-reset-form.png
+/config/*.unused.*

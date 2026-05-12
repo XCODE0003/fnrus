@@ -25,7 +25,9 @@ class Coupon extends Model
         'count_expired',
         'count_expired_type',
         'is_new_users',
-        'is_one_time'
+        'is_one_time',
+        'created_at',
+        'updated_at',
     ];
 
     public static function getByID($sid, $id){

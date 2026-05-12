@@ -357,6 +357,19 @@ Route::get('/my/referral', function () {
 | 'admin' + '2fa' middleware. Anyone hitting /<prefix>/* without a JWT will
 | see the SPA shell and be redirected to /login by the JS bootstrap.
 */
+// Filament migration: when LEGACY_ADMIN_ENABLED=false (default), the old
+// Blade-based admin is replaced by a redirect to the new Filament panel
+// at config('filament.path'). The full route group stays in this file so
+// it can be re-enabled by flipping the env flag without code changes.
+$legacyAdminEnabled = filter_var(env('LEGACY_ADMIN_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
+
+if (! $legacyAdminEnabled) {
+    Route::any(config('admin.prefix', 'admin') . '/{any?}', function () {
+        return redirect('/' . trim((string) config('filament.path', 'admin'), '/'));
+    })->where('any', '.*');
+}
+
+if ($legacyAdminEnabled) {
 Route::middleware(['ip.whitelist', 'admin.web'])
     ->prefix(config('admin.prefix', 'admin'))
     ->group(function () {
@@ -476,6 +489,7 @@ Route::middleware(['ip.whitelist', 'admin.web'])
             return view('admin.dashboard.access', ['title' => 'Контроль доступа']);
         })->name('admin.access.page');
     });
+} // end legacy admin gate
 
 Route::get('/{alias}', function ($alias) {
     $shop = Shop::getDefault();

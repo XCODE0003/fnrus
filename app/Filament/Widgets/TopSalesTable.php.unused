@@ -1,0 +1,66 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Widgets;
+
+use App\Models\Product;
+use App\Models\Shop;
+use App\Models\ShopSettings;
+use App\Services\DashboardStatsService;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+
+class TopSalesTable extends BaseWidget
+{
+    protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Топ продаж';
+
+    public function table(Table $table): Table
+    {
+        $shop = Shop::getDefault();
+        $shopId = $shop?->id ?? 0;
+        $set = ShopSettings::getDefault();
+        $currency = match ($set?->currency) {
+            'USD' => '$',
+            default => '₽',
+        };
+
+        return $table
+            ->query(
+                Product::query()
+                    ->when($shopId > 0, fn (Builder $q) => $q->where('sid', $shopId))
+                    ->where('count_sales', '!=', 0)
+                    ->orderByDesc('count_sales')
+                    ->limit(5)
+            )
+            ->paginated(false)
+            ->columns([
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Товар')
+                    ->wrap()
+                    ->weight('bold'),
+                Tables\Columns\TextColumn::make('count_sales')
+                    ->label('Заказов')
+                    ->numeric()
+                    ->color('success'),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Сумма')
+                    ->formatStateUsing(function ($state) use ($shopId, $currency): string {
+                        $sum = (float) DB::table('orders')
+                            ->where('sid', $shopId)
+                            ->where('pid', $state)
+                            ->where('status', 2)
+                            ->sum('amount');
+                        return number_format($sum, 2, '.', ' ') . $currency;
+                    }),
+                Tables\Columns\TextColumn::make('count_views')
+                    ->label('Просмотров')
+                    ->numeric(),
+            ]);
+    }
+}

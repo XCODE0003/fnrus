@@ -8,9 +8,25 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, FilamentUser, HasName
 {
+    public function canAccessPanel(Panel $panel): bool
+    {
+        $minRole = (int) config('admin.min_role_id', 1);
+        return !$this->is_ban
+            && (int) ($this->is_active ?? 1) === 1
+            && (int) ($this->role_id ?? 0) >= $minRole;
+    }
+
+    public function getFilamentName(): string
+    {
+        return (string) ($this->username ?: $this->email ?: ('user#' . $this->getKey()));
+    }
+
     use HasApiTokens, HasFactory, Notifiable;
 
     public $timestamps = false;
