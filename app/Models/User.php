@@ -16,9 +16,10 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasName
 {
     public function canAccessPanel(Panel $panel): bool
     {
+        // Match AdminWebGuard: only is_ban + role_id, no is_active gate
+        // (legacy admins kept access regardless of is_active).
         $minRole = (int) config('admin.min_role_id', 1);
         return !$this->is_ban
-            && (int) ($this->is_active ?? 1) === 1
             && (int) ($this->role_id ?? 0) >= $minRole;
     }
 

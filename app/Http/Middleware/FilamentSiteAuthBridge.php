@@ -71,15 +71,15 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
             abort(404);
         }
 
+        // Match AdminWebGuard exactly: only is_ban + role_id, no is_active gate.
         $minRole = (int) config('admin.min_role_id', 1);
         $row = DB::table('users')
-            ->select('id', 'role_id', 'is_ban', 'is_active')
+            ->select('id', 'role_id', 'is_ban')
             ->where('id', $userId)
             ->first();
 
         if (! $row
             || (int) $row->is_ban === 1
-            || (int) ($row->is_active ?? 1) !== 1
             || (int) $row->role_id < $minRole) {
             $log('role_check_failed', [
                 'user_id' => $userId,
@@ -88,7 +88,6 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
                 'role_id' => $row->role_id ?? null,
                 'min_role' => $minRole,
                 'is_ban' => $row->is_ban ?? null,
-                'is_active' => $row->is_active ?? null,
             ]);
             $request->session()->forget('admin_session_user_id');
             abort(404);
