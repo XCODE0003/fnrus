@@ -38,18 +38,36 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
      */
     protected function authenticate($request, array $guards): void
     {
+        $debug = filter_var(env('FILAMENT_AUTH_DEBUG', false), FILTER_VALIDATE_BOOLEAN);
+        $log = function (string $step, array $ctx = []) use ($debug, $request): void {
+            if (! $debug) {
+                return;
+            }
+            \Log::channel('single')->info('filament_bridge: ' . $step, $ctx + [
+                'ip' => $request->ip(),
+                'path' => $request->path(),
+                'has_session_token_cookie' => $request->cookie('session_token') !== null,
+                'has_admin_session' => (int) $request->session()->get('admin_session_user_id', 0) > 0,
+                'web_check' => Auth::guard('web')->check(),
+            ]);
+        };
+
         if (Auth::guard('web')->check()) {
+            $log('web_guard_already_authed');
             parent::authenticate($request, $guards);
             return;
         }
 
         $userId = (int) $request->session()->get('admin_session_user_id', 0);
+        $sourceTried = 'session';
 
         if ($userId <= 0) {
             $userId = $this->resolveFromJwtCookie($request);
+            $sourceTried = 'jwt_cookie';
         }
 
         if ($userId <= 0) {
+            $log('no_user_resolved', ['tried' => $sourceTried]);
             abort(404);
         }
 
@@ -63,10 +81,20 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
             || (int) $row->is_ban === 1
             || (int) ($row->is_active ?? 1) !== 1
             || (int) $row->role_id < $minRole) {
+            $log('role_check_failed', [
+                'user_id' => $userId,
+                'source' => $sourceTried,
+                'row_exists' => (bool) $row,
+                'role_id' => $row->role_id ?? null,
+                'min_role' => $minRole,
+                'is_ban' => $row->is_ban ?? null,
+                'is_active' => $row->is_active ?? null,
+            ]);
             $request->session()->forget('admin_session_user_id');
             abort(404);
         }
 
+        $log('admitting_user', ['user_id' => $userId, 'source' => $sourceTried]);
         Auth::guard('web')->loginUsingId($userId);
         $request->session()->put('admin_session_user_id', $userId);
 
