@@ -51,7 +51,7 @@ class FilamentTwoFactorChallenge
 
         $hasSecret = ! empty($user->two_factor_secret) && ! empty($user->two_factor_confirmed_at);
         if (! $hasSecret) {
-            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
             return redirect('/' . $panelPath . '/two-factor/setup');
         }
 
@@ -70,7 +70,7 @@ class FilamentTwoFactorChallenge
             return $next($request);
         }
 
-        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
 
         // Remember the URL the user actually wanted so the challenge page
         // can bounce them back after a successful code entry.
@@ -83,7 +83,7 @@ class FilamentTwoFactorChallenge
 
     private function isAllowlistedPath(Request $request): bool
     {
-        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
 
         $path = trim($request->path(), '/');
         $allowExactSuffixes = ['two-factor', 'two-factor/setup', 'login', 'logout'];

@@ -115,13 +115,13 @@ class TwoFactorChallenge extends Page implements HasForms
         if (is_string($next) && $next !== '') {
             return $next;
         }
-        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
         return '/' . $panelPath;
     }
 
     private static function loginUrl(): string
     {
-        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
         return '/' . $panelPath . '/login';
     }
 }

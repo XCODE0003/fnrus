@@ -43,7 +43,7 @@ class TwoFactorSetup extends Page implements HasForms
 
         // Already configured → straight to challenge / dashboard.
         if ($user && $user->two_factor_secret && $user->two_factor_confirmed_at) {
-            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
             $this->redirect('/' . $panelPath, navigate: false);
             return;
         }
@@ -90,7 +90,7 @@ class TwoFactorSetup extends Page implements HasForms
 
         if (! $user) {
             Notification::make()->danger()->title('Сессия истекла. Войдите снова.')->send();
-            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+            $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
             $this->redirect('/' . $panelPath . '/login', navigate: false);
             return;
         }
@@ -131,7 +131,7 @@ class TwoFactorSetup extends Page implements HasForms
 
     public function done(): void
     {
-        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'admin')), '/');
+        $panelPath = trim((string) config('filament.path', env('FILAMENT_PATH', 'xoalfjamapfn/admin')), '/');
         $this->redirect('/' . $panelPath, navigate: false);
     }
 
