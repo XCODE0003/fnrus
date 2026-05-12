@@ -60,9 +60,9 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                FilamentSiteAuthBridge::class,
             ])
             ->authMiddleware([
+                FilamentSiteAuthBridge::class,
                 Authenticate::class,
                 FilamentTwoFactorChallenge::class,
             ]);
