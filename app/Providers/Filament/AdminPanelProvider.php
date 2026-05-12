@@ -8,7 +8,6 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\FilamentSiteAuthBridge;
 use App\Http\Middleware\FilamentTwoFactorChallenge;
 use App\Http\Middleware\VerifyCsrfToken;
-use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -63,7 +62,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 FilamentSiteAuthBridge::class,
-                Authenticate::class,
                 FilamentTwoFactorChallenge::class,
             ]);
     }

@@ -4,36 +4,43 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Closure;
+use Filament\Http\Middleware\Authenticate as FilamentAuthenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Bridges the SPA's JWT-based auth into Filament's web-guard session.
+ * Replacement for Filament\Http\Middleware\Authenticate that bridges the
+ * SPA's JWT auth into Filament's web-guard session.
  *
  * Filament uses the `web` guard (cookie session) but the rest of the
- * site authenticates via JWT — stored both in the JWT auth guard and
- * as a `session_token` cookie set by the SPA after /api/auth/login.
- * Without a bridge, an admin already logged in on the site would still
- * see Filament's own login form.
+ * site authenticates via JWT — stored both in the JWT auth guard and as
+ * a `session_token` cookie set by public/assets/js/main.js after
+ * /api/auth/login. Without this bridge, an admin already logged in on
+ * the site would still hit Filament's login UI / get redirected to
+ * /api/login.
  *
  * Resolution order (mirrors AdminWebGuard so behaviour is identical):
- *   1. Session key `admin_session_user_id` (set by AuthController::login
+ *   1. Auth::guard('web')->check() — already authenticated this session.
+ *   2. Session key `admin_session_user_id` (set by AuthController::login
  *      for admin-role users).
- *   2. JWT in cookie `session_token` (set by the SPA, 15-day lifetime).
+ *   3. JWT in cookie `session_token` (set by the SPA, 15-day lifetime).
  *
- * If either path resolves to an active admin, we Auth::guard('web')->login
- * them for this request — Filament then renders normally. If neither
- * resolves, abort(404) — indistinguishable from a non-existent path so the
- * admin panel cannot be enumerated.
+ * If any path resolves to an active admin, log them into the web guard
+ * and let Filament's parent class handle the canAccessPanel() role
+ * check. If nothing resolves, abort(404) — indistinguishable from a
+ * non-existent path so the admin panel cannot be enumerated.
  */
-class FilamentSiteAuthBridge
+class FilamentSiteAuthBridge extends FilamentAuthenticate
 {
-    public function handle(Request $request, Closure $next)
+    /**
+     * @param  array<string>  $guards
+     */
+    protected function authenticate($request, array $guards): void
     {
         if (Auth::guard('web')->check()) {
-            return $next($request);
+            parent::authenticate($request, $guards);
+            return;
         }
 
         $userId = (int) $request->session()->get('admin_session_user_id', 0);
@@ -63,7 +70,7 @@ class FilamentSiteAuthBridge
         Auth::guard('web')->loginUsingId($userId);
         $request->session()->put('admin_session_user_id', $userId);
 
-        return $next($request);
+        parent::authenticate($request, $guards);
     }
 
     private function resolveFromJwtCookie(Request $request): int
