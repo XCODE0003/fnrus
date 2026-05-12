@@ -63,6 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 FilamentSiteAuthBridge::class,
                 FilamentTwoFactorChallenge::class,
-            ]);
+            ], isPersistent: true);
     }
 }
