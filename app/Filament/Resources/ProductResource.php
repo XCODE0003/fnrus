@@ -254,14 +254,14 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('count_sales')->label('Продаж')->sortable(),
                 Tables\Columns\TextColumn::make('materials_available')
                     ->label('Материалов')
-                    ->state(fn (Product $record): int => \App\Models\Material::where('pid', $record->id)->where('status', 1)->count())
+                    ->state(fn (Product $record): string => self::materialsBreakdownLabel($record->id))
                     ->badge()
-                    ->color(fn ($state) => match (true) {
-                        (int) $state <= 0   => 'danger',
-                        (int) $state < 5    => 'warning',
-                        default             => 'success',
+                    ->color(fn ($state, Product $record) => match (true) {
+                        \App\Models\Material::where('pid', $record->id)->where('status', 1)->count() <= 0 => 'danger',
+                        \App\Models\Material::where('pid', $record->id)->where('status', 1)->count() < 5  => 'warning',
+                        default => 'success',
                     })
-                    ->tooltip('Доступно к продаже (status=1)'),
+                    ->tooltip(fn (Product $record): string => self::materialsBreakdownTooltip($record->id)),
                 Tables\Columns\BadgeColumn::make('visibility')
                     ->label('Видим.')
                     ->formatStateUsing(fn ($state) => self::VISIBILITY_OPTIONS[$state] ?? $state)
@@ -275,6 +275,13 @@ class ProductResource extends Resource
                     ->searchable(),
             ])
             ->actions([
+                Tables\Actions\Action::make('materials')
+                    ->label('Материалы')
+                    ->icon('heroicon-o-archive-box')
+                    ->color('gray')
+                    ->url(fn (Product $record): string => MaterialResource::getUrl('index', [
+                        'tableFilters[pid][value]' => $record->id,
+                    ])),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -283,6 +290,61 @@ class ProductResource extends Resource
             ])
             ->reorderable('sort')
             ->defaultSort('sort', 'asc');
+    }
+
+    /** "5 / 12 / 30 / 61" — counts of available materials per tariff (sorted by days). */
+    private static function materialsBreakdownLabel(int $pid): string
+    {
+        $rows = self::materialsBreakdownData($pid);
+        if ($rows === []) {
+            return '0';
+        }
+        $parts = array_map(static fn (array $r): string => (string) $r['count'], $rows);
+        return implode(' / ', $parts);
+    }
+
+    private static function materialsBreakdownTooltip(int $pid): string
+    {
+        $rows = self::materialsBreakdownData($pid);
+        if ($rows === []) {
+            return 'Нет доступных материалов (status=1)';
+        }
+        $lines = ['Доступно к продаже (status=1):'];
+        foreach ($rows as $r) {
+            $lines[] = '• ' . Tariff::num_decline((int) $r['title'], ['день', 'дня', 'дней']) . ' — ' . $r['count'];
+        }
+        return implode("\n", $lines);
+    }
+
+    /**
+     * Per-tariff breakdown of status=1 materials for this product, sorted
+     * by the tariff's day count (1 → 7 → 30 → 60 …).
+     *
+     * @return array<int, array{title: int, count: int}>
+     */
+    private static function materialsBreakdownData(int $pid): array
+    {
+        $rows = \App\Models\Material::query()
+            ->where('pid', $pid)
+            ->where('status', 1)
+            ->selectRaw('tid, COUNT(*) as cnt')
+            ->groupBy('tid')
+            ->pluck('cnt', 'tid')
+            ->all();
+
+        if ($rows === []) {
+            return [];
+        }
+
+        $tariffs = Tariff::whereIn('id', array_keys($rows))->get(['id', 'title'])->keyBy('id');
+
+        $out = [];
+        foreach ($rows as $tid => $count) {
+            $title = (int) ($tariffs[$tid]->title ?? 0);
+            $out[] = ['title' => $title, 'count' => (int) $count];
+        }
+        usort($out, static fn ($a, $b) => $a['title'] <=> $b['title']);
+        return $out;
     }
 
     public static function getPages(): array

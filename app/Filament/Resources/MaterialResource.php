@@ -102,8 +102,13 @@ class MaterialResource extends Resource
                     ->formatStateUsing(fn ($state) => Product::where('id', $state)->value('title') ?? '#' . $state)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tid')
-                    ->label('Тариф')
-                    ->formatStateUsing(fn ($state, Material $r) => self::tariffLabel((int) $r->tid, (int) $r->pid)),
+                    ->label('Срок')
+                    ->badge()
+                    ->color('info')
+                    ->formatStateUsing(fn ($state, Material $r) => self::tariffLabel((int) $r->tid, (int) $r->pid))
+                    ->sortable(query: function (\Illuminate\Database\Eloquent\Builder $q, string $direction) {
+                        $q->orderBy('tid', $direction);
+                    }),
                 Tables\Columns\TextColumn::make('body')->label('Содержимое')->limit(60),
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('Статус')
@@ -119,6 +124,28 @@ class MaterialResource extends Resource
                 Tables\Filters\SelectFilter::make('pid')
                     ->label('Товар')
                     ->options(fn () => Product::orderBy('id', 'desc')->limit(500)->pluck('title', 'id')->all())
+                    ->searchable(),
+                Tables\Filters\SelectFilter::make('tid')
+                    ->label('Срок (тариф)')
+                    ->options(function (): array {
+                        // Group all tariffs by their day-count title so the
+                        // filter is meaningful across products. Distinct
+                        // titles → choose by days, not by tariff id.
+                        $opts = [];
+                        $tariffs = Tariff::query()
+                            ->select(['id', 'title'])
+                            ->get();
+                        foreach ($tariffs as $t) {
+                            $opts[$t->id] = Tariff::num_decline((int) $t->title, ['день', 'дня', 'дней']) . ' (#' . $t->id . ')';
+                        }
+                        // Order by parsed integer days.
+                        uasort($opts, static function ($a, $b) {
+                            preg_match('/^(\d+)/', $a, $ma);
+                            preg_match('/^(\d+)/', $b, $mb);
+                            return (int) ($ma[1] ?? 0) <=> (int) ($mb[1] ?? 0);
+                        });
+                        return $opts;
+                    })
                     ->searchable(),
             ])
             ->actions([
