@@ -8,14 +8,18 @@ use App\Filament\Resources\MaterialResource;
 use App\Filament\Resources\ProductResource;
 use App\Models\Material;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\Tariff;
 use Filament\Actions;
+use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Filament\Tables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Level 2 page in the product → tariff → material drill-down.
@@ -126,11 +130,146 @@ class ProductTariffs extends Page implements HasTable
                     ->label('Управление ключами')
                     ->icon('heroicon-o-key')
                     ->color('primary')
+                    ->modalHeading(fn (Tariff $r): string => 'Ключи: ' . ($this->record->title ?? '#' . $this->record->id)
+                        . ' — ' . Tariff::num_decline((int) $r->title, ['день', 'дня', 'дней']))
+                    ->modalDescription(
+                        'Каждая строка — отдельный ключ. Удалённые строки удаляют доступные '
+                        . 'ключи со склада, добавленные — создают новые. '
+                        . 'Зарезервированные / отключённые ключи не трогаем.'
+                    )
+                    ->modalWidth('5xl')
+                    ->modalSubmitActionLabel('Сохранить')
+                    ->form(fn (Tariff $r): array => [
+                        Forms\Components\Textarea::make('keys_manage')
+                            ->label('Ключи (один в строке)')
+                            ->default($this->seedKeysForTariff($r))
+                            ->rows(20)
+                            ->extraAttributes(['style' => 'font-family: ui-monospace, SFMono-Regular, monospace; white-space: pre;'])
+                            ->dehydrated(true)
+                            ->rules(['nullable', 'string']),
+                    ])
+                    ->action(fn (Tariff $r, array $data) => $this->applyKeysBulkEdit($r, (string) ($data['keys_manage'] ?? ''))),
+
+                Tables\Actions\Action::make('viewMaterials')
+                    ->label('Открыть таблицу')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('gray')
                     ->url(fn (Tariff $r): string => MaterialResource::getUrl('index', [
                         'tableFilters[pid][value]' => $this->record->id,
                         'tableFilters[tid][value]' => $r->id,
                     ])),
             ])
             ->paginated(false);
+    }
+
+    /**
+     * Текст для textarea — все доступные (status=1) ключи выбранного срока.
+     */
+    private function seedKeysForTariff(Tariff $tariff): string
+    {
+        $bodies = Material::query()
+            ->where('pid', $this->record->id)
+            ->where('tid', $tariff->id)
+            ->where('status', 1)
+            ->orderBy('id', 'asc')
+            ->pluck('body')
+            ->all();
+
+        return implode("\n", array_map(fn ($b) => (string) $b, $bodies));
+    }
+
+    /**
+     * Diff submitted textarea against the available pool (status=1)
+     * for this tariff and apply: missing lines delete status=1 rows,
+     * new lines insert as status=1, count_all adjusted by net delta.
+     */
+    private function applyKeysBulkEdit(Tariff $tariff, string $rawText): void
+    {
+        $pid = (int) $this->record->id;
+        $tid = (int) $tariff->id;
+
+        $newLines = [];
+        foreach (preg_split('/\r\n|\r|\n/', $rawText) ?: [] as $line) {
+            $line = trim((string) $line);
+            if ($line !== '') {
+                $newLines[] = $line;
+            }
+        }
+
+        $existing = Material::query()
+            ->where('pid', $pid)
+            ->where('tid', $tid)
+            ->where('status', 1)
+            ->orderBy('id', 'asc')
+            ->get(['id', 'body']);
+
+        $existingByBody = [];
+        foreach ($existing as $row) {
+            $body = (string) $row->body;
+            $existingByBody[$body] = $existingByBody[$body] ?? [];
+            $existingByBody[$body][] = (int) $row->id;
+        }
+
+        $keepIds = [];
+        $toInsert = [];
+        foreach ($newLines as $line) {
+            $encoded = htmlspecialchars($line, ENT_QUOTES);
+            $candidates = $existingByBody[$encoded] ?? $existingByBody[$line] ?? null;
+            if ($candidates) {
+                $keepIds[] = array_shift($candidates);
+                if ($candidates) {
+                    if (isset($existingByBody[$encoded])) {
+                        $existingByBody[$encoded] = $candidates;
+                    } else {
+                        $existingByBody[$line] = $candidates;
+                    }
+                }
+                continue;
+            }
+            $toInsert[] = $encoded;
+        }
+
+        $deleteIds = $existing->pluck('id')->map(fn ($v) => (int) $v)
+            ->reject(fn (int $id) => in_array($id, $keepIds, true))
+            ->values()
+            ->all();
+
+        DB::transaction(function () use ($pid, $tid, $toInsert, $deleteIds): void {
+            if ($deleteIds) {
+                Material::whereIn('id', $deleteIds)->where('status', 1)->delete();
+            }
+            if ($toInsert) {
+                $shop = Shop::getDefault();
+                $sid = $shop?->id ?? 0;
+                $now = time();
+                $rows = [];
+                foreach ($toInsert as $body) {
+                    $rows[] = [
+                        'sid'        => $sid,
+                        'pid'        => $pid,
+                        'tid'        => $tid,
+                        'eid'        => 0,
+                        'oid'        => 0,
+                        'bid'        => 0,
+                        'body'       => $body,
+                        'status'     => 1,
+                        'created_at' => (string) $now,
+                    ];
+                }
+                DB::table('materials')->insert($rows);
+            }
+
+            $delta = count($toInsert) - count($deleteIds);
+            if ($delta !== 0) {
+                DB::table('products')
+                    ->where('id', $pid)
+                    ->update(['count_all' => DB::raw('GREATEST(0, count_all + (' . $delta . '))')]);
+            }
+        });
+
+        Notification::make()
+            ->title(sprintf('Готово: добавлено %d, удалено %d.', count($toInsert), count($deleteIds)))
+            ->success()
+            ->send();
     }
 }

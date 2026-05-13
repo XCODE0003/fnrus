@@ -29,12 +29,13 @@ class EditOrder extends EditRecord
     }
 
     /**
-     * Whenever an order moves into a terminal state — "Отменен" (3) or
-     * "Истек срок" (4) — release every material that points at that
-     * order back to the warehouse: reserved (status=4) ones from a
-     * pending order AND issued (status=2) ones from a paid order.
-     *
-     * Also bumps the product's stock counter to match.
+     * Sync materials with the new order status:
+     *  - 1|2 → 3|4 (terminal): return every pinned material to the pool
+     *    (status 2|4 → 1, oid cleared) and restore product.count_all.
+     *  - !2 → 2 (paid): mark reserved-or-available materials as sold so
+     *    the buyer's /delivery/{hash} page actually receives a key.
+     *    Without this, admins flipping an order to "Оплачен" by hand
+     *    leave the key reserved and the customer sees an empty modal.
      */
     protected function afterSave(): void
     {
@@ -54,6 +55,29 @@ class EditOrder extends EditRecord
                 'from'     => $prev,
                 'to'       => $newStatus,
                 'returned' => $returned,
+            ]);
+            return;
+        }
+
+        if ($newStatus === 2 && $prev !== 2) {
+            $count = max(1, (int) ($this->record->count_all ?? 1));
+            $sold = Material::markSoldForOrder(
+                (int) $this->record->pid,
+                (int) $this->record->tid,
+                (int) $this->record->id,
+                $count,
+            );
+
+            if ($sold > 0 && empty($this->record->payment_at)) {
+                $this->record->forceFill(['payment_at' => time()])->save();
+            }
+
+            Log::info('order_status_transition_mark_sold', [
+                'order_id' => $this->record->id,
+                'from'     => $prev,
+                'to'       => $newStatus,
+                'requested'=> $count,
+                'sold'     => $sold,
             ]);
         }
     }
