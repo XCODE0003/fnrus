@@ -29,10 +29,10 @@ class EditOrder extends EditRecord
     }
 
     /**
-     * When an order moves from "Оплачен" (2) into "Отменен" (3) or
-     * "Истек срок" (4), the issued materials are still pinned to that
-     * order via `oid` and their status is "sold" (2). Return them to
-     * the available pool so they can be re-issued.
+     * Whenever an order moves into a terminal state — "Отменен" (3) or
+     * "Истек срок" (4) — release every material that points at that
+     * order back to the warehouse: reserved (status=4) ones from a
+     * pending order AND issued (status=2) ones from a paid order.
      *
      * Also bumps the product's stock counter to match.
      */
@@ -41,7 +41,10 @@ class EditOrder extends EditRecord
         $newStatus = (int) $this->record->status;
         $prev = (int) ($this->previousStatus ?? 0);
 
-        if ($prev === 2 && in_array($newStatus, [3, 4], true)) {
+        $isExitingActive = in_array($prev, [1, 2], true);
+        $isEnteringTerminal = in_array($newStatus, [3, 4], true);
+
+        if ($isExitingActive && $isEnteringTerminal) {
             $returned = Material::returnToStockFromOrder((int) $this->record->id);
             if ($returned > 0 && $this->record->pid > 0) {
                 Product::where('id', $this->record->pid)->increment('count_all', $returned);

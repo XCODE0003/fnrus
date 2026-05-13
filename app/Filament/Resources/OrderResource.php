@@ -176,6 +176,31 @@ class OrderResource extends Resource
                         4 => 'gray',
                         default => 'gray',
                     }),
+
+                Tables\Columns\TextColumn::make('issued_material')
+                    ->label('Выданный материал')
+                    ->state(function (Order $record): string {
+                        $bodies = Material::query()
+                            ->where('oid', $record->id)
+                            ->whereIn('status', [2, 4])
+                            ->orderBy('id')
+                            ->pluck('body')
+                            ->all();
+                        return $bodies ? implode("\n", array_map(fn ($b) => (string) $b, $bodies)) : '—';
+                    })
+                    ->wrap()
+                    ->limit(80)
+                    ->tooltip(function (Order $record): ?string {
+                        $bodies = Material::query()
+                            ->where('oid', $record->id)
+                            ->whereIn('status', [2, 4])
+                            ->orderBy('id')
+                            ->pluck('body')
+                            ->all();
+                        return $bodies ? implode("\n", array_map(fn ($b) => (string) $b, $bodies)) : null;
+                    })
+                    ->copyable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('status')
