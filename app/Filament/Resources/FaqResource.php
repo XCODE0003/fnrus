@@ -63,7 +63,6 @@ class FaqResource extends Resource
                 ])
                 ->disk('public')
                 ->directory('covers')
-                ->maxLength(8000)
                 ->columnSpanFull(),
 
             TiptapEditor::make('answer_en')
@@ -78,7 +77,6 @@ class FaqResource extends Resource
                 ])
                 ->disk('public')
                 ->directory('covers')
-                ->maxLength(8000)
                 ->columnSpanFull(),
 
             Forms\Components\Select::make('visibility')

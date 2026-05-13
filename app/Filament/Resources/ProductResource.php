@@ -100,7 +100,6 @@ class ProductResource extends Resource
                         ->directory('covers')
                         ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
                         ->maxFileSize(5120)
-                        ->maxLength(8000)
                         ->columnSpanFull(),
 
                     Forms\Components\Textarea::make('advantages')
