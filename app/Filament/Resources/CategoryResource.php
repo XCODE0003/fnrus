@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\AttachmentImageUpload;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use Filament\Forms;
@@ -40,22 +41,12 @@ class CategoryResource extends Resource
         return $form->schema([
             Forms\Components\Section::make()->schema([
 
-                Forms\Components\FileUpload::make('image_site')
+                AttachmentImageUpload::make('image_site')
                     ->label('Обложка для сайта')
-                    ->image()
-                    ->directory('categories')
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                     ->required(),
 
-                Forms\Components\FileUpload::make('image')
-                    ->label('Обложка для бота')
-                    ->image()
-                    ->directory('categories')
-                    ->disk('public')
-                    ->maxSize(5120)
-                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp']),
+                AttachmentImageUpload::make('image')
+                    ->label('Обложка для бота'),
 
                 Forms\Components\TextInput::make('title')
                     ->label('Название')

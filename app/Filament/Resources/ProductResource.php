@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\AttachmentImageUpload;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Category;
 use App\Models\Product;
@@ -51,39 +52,15 @@ class ProductResource extends Resource
                 // ─── Левая колонка ───────────────────────────────────────────
                 Forms\Components\Group::make()->schema([
 
-                    Forms\Components\FileUpload::make('image_site')
+                    AttachmentImageUpload::make('image_site')
                         ->label('Обложка для сайта')
-                        ->image()
-                        ->directory('products')
-                        ->disk('public')
-                        ->maxSize(5120)
-                        ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                         ->required(),
 
-                    Forms\Components\FileUpload::make('image')
-                        ->label('Обложка для бота')
-                        ->image()
-                        ->directory('products')
-                        ->disk('public')
-                        ->maxSize(5120)
-                        ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp']),
+                    AttachmentImageUpload::make('image')
+                        ->label('Обложка для бота'),
 
-                    Forms\Components\FileUpload::make('gallery')
-                        ->label('Галерея изображений')
-                        ->image()
-                        ->multiple()
-                        ->reorderable()
-                        ->directory('products/gallery')
-                        ->disk('public')
-                        ->maxSize(5120)
-                        ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
-                        ->afterStateHydrated(function (Forms\Components\FileUpload $component, $state): void {
-                            if (is_string($state) && $state !== '') {
-                                $decoded = json_decode($state, true);
-                                $component->state(is_array($decoded) ? array_values($decoded) : []);
-                            }
-                        })
-                        ->dehydrateStateUsing(fn ($state) => json_encode(array_values((array) $state), JSON_UNESCAPED_UNICODE)),
+                    AttachmentImageUpload::makeMultiple('gallery')
+                        ->label('Галерея изображений'),
 
                     Forms\Components\TextInput::make('title')
                         ->label('Название')
