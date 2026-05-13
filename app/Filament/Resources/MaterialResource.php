@@ -114,7 +114,23 @@ class MaterialResource extends Resource
                     ->label('Статус')
                     ->formatStateUsing(fn ($state) => self::STATUS_OPTIONS[$state] ?? $state)
                     ->colors(['success' => 1, 'secondary' => 2, 'danger' => 3, 'warning' => 4]),
-                Tables\Columns\TextColumn::make('oid')->label('Заказ'),
+                Tables\Columns\TextColumn::make('oid')
+                    ->label('Заказ')
+                    ->formatStateUsing(function ($state) {
+                        $oid = (int) $state;
+                        if ($oid <= 0) {
+                            return '—';
+                        }
+                        return \App\Models\Order::query()->where('id', $oid)->value('hash') ?: '#' . $oid;
+                    })
+                    ->copyable()
+                    ->url(function ($state) {
+                        $oid = (int) $state;
+                        if ($oid <= 0) {
+                            return null;
+                        }
+                        return OrderResource::getUrl('edit', ['record' => $oid]);
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Создан')
                     ->formatStateUsing(fn ($state) => $state ? date('Y-m-d H:i', (int) $state) : '—'),
