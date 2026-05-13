@@ -275,26 +275,21 @@ class ProductResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\Action::make('materials')
-                    ->label('Материалы')
+                Tables\Actions\Action::make('tariffs')
+                    ->label('Сроки и ключи')
                     ->icon('heroicon-o-archive-box')
+                    ->color('primary')
+                    ->url(fn (Product $record): string => static::getUrl('tariffs', ['record' => $record->id])),
+                Tables\Actions\Action::make('bulkCopy')
+                    ->label('Экспорт')
+                    ->icon('heroicon-o-clipboard-document')
                     ->color('gray')
                     ->modalHeading(fn (Product $record): string => 'Материалы: ' . $record->title)
                     ->modalWidth('5xl')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Закрыть')
                     ->fillForm(fn (): array => ['tariff_filter' => null, 'status_filter' => 1])
-                    ->form(fn (Product $record): array => self::materialsModalForm($record))
-                    ->extraModalFooterActions(fn (Product $record): array => [
-                        Tables\Actions\Action::make('openFullPage')
-                            ->label('Открыть полную страницу')
-                            ->icon('heroicon-o-arrow-top-right-on-square')
-                            ->color('gray')
-                            ->url(MaterialResource::getUrl('index', [
-                                'tableFilters[pid][value]' => $record->id,
-                            ]))
-                            ->openUrlInNewTab(),
-                    ]),
+                    ->form(fn (Product $record): array => self::materialsModalForm($record)),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -471,6 +466,7 @@ class ProductResource extends Resource
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'tariffs' => Pages\ProductTariffs::route('/{record}/tariffs'),
         ];
     }
 }
