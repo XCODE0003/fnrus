@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
+use App\Models\Material;
 use App\Models\Member;
 use App\Models\Order;
 use App\Models\PaymentSystem;
@@ -66,6 +67,31 @@ class OrderResource extends Resource
                     ->formatStateUsing(fn ($state) => $state ? date('d.m.Y H:i', (int) $state) : '—')
                     ->disabled(),
             ])->columns(2),
+
+            Forms\Components\Section::make('Выданный материал')
+                ->description('Что получил покупатель (ключи/строки из материалов).')
+                ->schema([
+                    Forms\Components\Textarea::make('_delivered_materials')
+                        ->label('')
+                        ->rows(6)
+                        ->disabled()
+                        ->dehydrated(false)
+                        ->afterStateHydrated(function (Forms\Components\Textarea $component, $state, ?Order $record): void {
+                            if (! $record) {
+                                $component->state('');
+                                return;
+                            }
+                            $bodies = Material::query()
+                                ->where('oid', $record->id)
+                                ->whereIn('status', [2, 4])
+                                ->orderBy('id')
+                                ->pluck('body')
+                                ->all();
+                            $component->state($bodies ? implode("\n", array_map(fn ($b) => (string) $b, $bodies)) : '— ещё не выдано —');
+                        })
+                        ->columnSpanFull(),
+                ])
+                ->collapsible(),
         ]);
     }
 

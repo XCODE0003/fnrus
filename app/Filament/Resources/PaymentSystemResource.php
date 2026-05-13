@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaymentSystemResource\Pages;
 use App\Models\PaymentSystem;
+use App\Models\ShopSettings;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -44,6 +45,36 @@ class PaymentSystemResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                Tables\Actions\Action::make('paymentTimer')
+                    ->label('Таймер оплаты')
+                    ->icon('heroicon-o-clock')
+                    ->color('warning')
+                    ->modalHeading('Время на оплату товара')
+                    ->modalWidth('md')
+                    ->fillForm(fn (): array => [
+                        'booking_time' => (int) (ShopSettings::getDefault()?->booking_time ?? 20),
+                    ])
+                    ->form([
+                        Forms\Components\TextInput::make('booking_time')
+                            ->label('Минут на оплату')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(1440)
+                            ->required()
+                            ->helperText('После создания заказа у покупателя есть это число минут на оплату. Истёкшие заказы переводятся в статус «Истёк срок».'),
+                    ])
+                    ->action(function (array $data): void {
+                        $s = ShopSettings::getDefault();
+                        if ($s) {
+                            $s->booking_time = (int) $data['booking_time'];
+                            $s->save();
+                            Notification::make()->success()->title('Сохранено')->send();
+                        } else {
+                            Notification::make()->danger()->title('Настройки магазина не найдены')->send();
+                        }
+                    }),
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
                 Tables\Columns\TextColumn::make('title')->label('Название')->searchable(),

@@ -75,7 +75,7 @@ class InstructionResource extends Resource
                 ->maxLength(20000)
                 ->columnSpanFull(),
 
-            Forms\Components\Repeater::make('buttons_data')
+            Forms\Components\Repeater::make('buttons')
                 ->label('Кнопки')
                 ->schema([
                     Forms\Components\TextInput::make('text')->label('Текст')->required()->maxLength(64),
@@ -83,23 +83,29 @@ class InstructionResource extends Resource
                 ])
                 ->columns(2)
                 ->addActionLabel('Добавить кнопку')
-                ->dehydrated(false)
-                ->afterStateHydrated(function (Forms\Components\Repeater $component, ?Instruction $record): void {
-                    if (! $record || ! $record->buttons) {
-                        return;
-                    }
-                    $decoded = json_decode((string) $record->buttons, true) ?: [];
-                    $state = [];
-                    foreach ($decoded as $btn) {
-                        $state[] = [
-                            'text' => $btn['text'] ?? '',
-                            'url' => $btn['url'] ?? '',
-                        ];
-                    }
-                    $component->state($state);
-                })
+                ->dehydrateStateUsing(fn ($state) => self::buildButtonsJson($state))
                 ->columnSpanFull(),
         ]);
+    }
+
+    /** Decode the JSON 'buttons' column into the array shape the Repeater expects. */
+    public static function decodeButtonsForForm(?string $raw): array
+    {
+        if ($raw === null || $raw === '') {
+            return [];
+        }
+        $decoded = json_decode($raw, true);
+        if (! is_array($decoded)) {
+            return [];
+        }
+        $rows = [];
+        foreach ($decoded as $btn) {
+            $rows[] = [
+                'text' => (string) ($btn['text'] ?? ''),
+                'url'  => (string) ($btn['url']  ?? ''),
+            ];
+        }
+        return $rows;
     }
 
     public static function table(Table $table): Table
@@ -123,10 +129,15 @@ class InstructionResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->mutateFormDataUsing(static function (array $data, Instruction $record): array {
-                        $buttons = self::buildButtonsJson($data['buttons_data'] ?? null);
-                        unset($data['buttons_data']);
-                        $data['buttons'] = $buttons;
+                    ->mutateRecordDataUsing(static function (array $data): array {
+                        // Convert the JSON 'buttons' column into the array
+                        // shape the Repeater expects BEFORE Filament fills
+                        // the form (avoids Repeater::getChildComponents()
+                        // doing a foreach on a string).
+                        $data['buttons'] = self::decodeButtonsForForm($data['buttons'] ?? null);
+                        return $data;
+                    })
+                    ->mutateFormDataUsing(static function (array $data): array {
                         $data['updated_at'] = time();
                         return $data;
                     }),

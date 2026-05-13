@@ -248,6 +248,16 @@ class ProductResource extends Resource
                     ->formatStateUsing(fn ($state) => Category::where('id', $state)->value('title') ?? '#' . $state)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('count_sales')->label('Продаж')->sortable(),
+                Tables\Columns\TextColumn::make('materials_available')
+                    ->label('Материалов')
+                    ->state(fn (Product $record): int => \App\Models\Material::where('pid', $record->id)->where('status', 1)->count())
+                    ->badge()
+                    ->color(fn ($state) => match (true) {
+                        (int) $state <= 0   => 'danger',
+                        (int) $state < 5    => 'warning',
+                        default             => 'success',
+                    })
+                    ->tooltip('Доступно к продаже (status=1)'),
                 Tables\Columns\BadgeColumn::make('visibility')
                     ->label('Видим.')
                     ->formatStateUsing(fn ($state) => self::VISIBILITY_OPTIONS[$state] ?? $state)

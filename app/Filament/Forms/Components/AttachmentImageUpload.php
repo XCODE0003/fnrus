@@ -101,7 +101,7 @@ class AttachmentImageUpload
                     $component->state([$path]);
                 }
             })
-            ->dehydrateStateUsing(function ($state) use ($upload) {
+            ->dehydrateStateUsing(function ($state, FileUpload $component) {
                 if ($state === null || $state === '' || $state === []) {
                     return null;
                 }
@@ -116,12 +116,21 @@ class AttachmentImageUpload
                     return $base !== '' ? $base : null;
                 };
 
-                if (is_array($state)) {
-                    $hashes = array_values(array_filter(array_map($extract, $state), fn ($v) => $v !== null && $v !== ''));
-                    return $hashes === [] ? null : json_encode($hashes);
+                // FileUpload normalises state to an array internally even
+                // for single-mode (one element). Multi-mode keeps the array
+                // as-is, JSON-encoded into the column.
+                $hashes = array_values(array_filter(
+                    array_map($extract, is_array($state) ? $state : [$state]),
+                    fn ($v) => $v !== null && $v !== ''
+                ));
+
+                if ($hashes === []) {
+                    return null;
                 }
 
-                return $extract($state);
+                return $component->isMultiple()
+                    ? json_encode($hashes)
+                    : $hashes[0];
             })
             ->deleteUploadedFileUsing(function (string $file): void {
                 // file = "covers/{hash}.{ext}" if user just uploaded; or raw "covers/x.jpg"
