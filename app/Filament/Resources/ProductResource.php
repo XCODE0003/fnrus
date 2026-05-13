@@ -279,9 +279,22 @@ class ProductResource extends Resource
                     ->label('Материалы')
                     ->icon('heroicon-o-archive-box')
                     ->color('gray')
-                    ->url(fn (Product $record): string => MaterialResource::getUrl('index', [
-                        'tableFilters[pid][value]' => $record->id,
-                    ])),
+                    ->modalHeading(fn (Product $record): string => 'Материалы: ' . $record->title)
+                    ->modalWidth('5xl')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Закрыть')
+                    ->fillForm(fn (): array => ['tariff_filter' => null, 'status_filter' => 1])
+                    ->form(fn (Product $record): array => self::materialsModalForm($record))
+                    ->extraModalFooterActions(fn (Product $record): array => [
+                        Tables\Actions\Action::make('openFullPage')
+                            ->label('Открыть полную страницу')
+                            ->icon('heroicon-o-arrow-top-right-on-square')
+                            ->color('gray')
+                            ->url(MaterialResource::getUrl('index', [
+                                'tableFilters[pid][value]' => $record->id,
+                            ]))
+                            ->openUrlInNewTab(),
+                    ]),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -290,6 +303,111 @@ class ProductResource extends Resource
             ])
             ->reorderable('sort')
             ->defaultSort('sort', 'asc');
+    }
+
+    /** @return array<int, \Filament\Forms\Components\Component> */
+    private static function materialsModalForm(Product $record): array
+    {
+        return [
+            Forms\Components\Grid::make()
+                ->columns(2)
+                ->schema([
+                    Forms\Components\Select::make('tariff_filter')
+                        ->label('Срок (тариф)')
+                        ->options(function () use ($record): array {
+                            $opts = ['' => 'Все сроки'];
+                            $tariffs = Tariff::where('pid', $record->id)
+                                ->orderByRaw('CAST(title AS UNSIGNED) ASC')
+                                ->get(['id', 'title']);
+                            foreach ($tariffs as $t) {
+                                $opts[(string) $t->id] = Tariff::num_decline((int) $t->title, ['день', 'дня', 'дней']);
+                            }
+                            return $opts;
+                        })
+                        ->placeholder('Все сроки')
+                        ->live(),
+                    Forms\Components\Select::make('status_filter')
+                        ->label('Статус')
+                        ->options([
+                            '' => 'Все статусы',
+                            '1' => 'Доступен',
+                            '2' => 'Продан',
+                            '3' => 'Отключён',
+                            '4' => 'Зарезервирован',
+                        ])
+                        ->default('1')
+                        ->live(),
+                ]),
+
+            Forms\Components\Placeholder::make('materials_list')
+                ->label('')
+                ->columnSpanFull()
+                ->content(function (Forms\Get $get) use ($record): \Illuminate\Support\HtmlString {
+                    $tariff = $get('tariff_filter');
+                    $status = $get('status_filter');
+                    return new \Illuminate\Support\HtmlString(self::renderMaterialsExport(
+                        $record->id,
+                        ($tariff !== null && $tariff !== '' && $tariff !== '0') ? (int) $tariff : null,
+                        ($status !== null && $status !== '' && $status !== '0') ? (int) $status : null,
+                    ));
+                }),
+        ];
+    }
+
+    private static function renderMaterialsExport(int $pid, ?int $tid, ?int $status): string
+    {
+        $query = \App\Models\Material::query()
+            ->where('pid', $pid)
+            ->orderByDesc('id');
+
+        if ($tid !== null) {
+            $query->where('tid', $tid);
+        }
+        if ($status !== null) {
+            $query->where('status', $status);
+        }
+
+        $total = (clone $query)->count();
+        // Whole result set — admin needs to copy all rows, not a paginated slice.
+        $bodies = $query->pluck('body')->all();
+
+        if ($total === 0) {
+            return '<div style="padding: 1rem; text-align: center; color: #6b7280;">Материалов не найдено</div>';
+        }
+
+        // One material per line. Bodies are typically single-line license keys,
+        // but trim trailing whitespace just in case.
+        $text = implode("\n", array_map(static fn ($b) => rtrim((string) $b, "\r\n"), $bodies));
+        $encoded = e($text);
+
+        $textareaId = 'fnr-materials-export-' . $pid;
+
+        $copyJs = "var ta=document.getElementById('{$textareaId}');"
+            . "ta.focus();ta.select();ta.setSelectionRange(0, ta.value.length);"
+            . "try{navigator.clipboard.writeText(ta.value).then(function(){"
+            . "var btn=event.currentTarget; var orig=btn.innerText;"
+            . "btn.innerText='✓ Скопировано'; setTimeout(function(){btn.innerText=orig;}, 1500);"
+            . "});}catch(e){document.execCommand('copy');}";
+
+        $selectJs = "this.focus();this.select();this.setSelectionRange(0, this.value.length);";
+
+        $countLine = '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">'
+            . '<div style="color: #374151; font-size: 0.875rem;">Всего материалов: <strong>' . $total . '</strong> (по одному в строке)</div>'
+            . '<button type="button" onclick="' . htmlspecialchars($copyJs, ENT_QUOTES) . '" '
+            . 'style="background: rgb(217 119 6); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 500;">'
+            . '📋 Скопировать всё</button>'
+            . '</div>';
+
+        $textarea = '<textarea id="' . $textareaId . '" readonly onclick="' . htmlspecialchars($selectJs, ENT_QUOTES) . '" '
+            . 'style="width: 100%; min-height: 400px; padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8125rem; line-height: 1.5; border: 1px solid #d1d5db; border-radius: 0.5rem; resize: vertical; white-space: pre; overflow: auto; background: #f9fafb; color: #111827;">'
+            . $encoded
+            . '</textarea>';
+
+        $hint = '<div style="padding: 0.5rem 0 0; color: #6b7280; font-size: 0.75rem;">'
+            . 'Клик по полю — выделит всё. Кнопка «Скопировать всё» — копирует в буфер обмена.'
+            . '</div>';
+
+        return $countLine . $textarea . $hint;
     }
 
     /** "5 / 12 / 30 / 61" — counts of available materials per tariff (sorted by days). */
