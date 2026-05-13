@@ -42,32 +42,67 @@ class AttachmentImageUpload
             ->maxSize(5120);
 
         return $upload
-            ->getUploadedFileNameForStorageUsing(function (UploadedFile $file): string {
-                // Generate legacy-style hash (40 chars, [a-zA-Z0-9]) — same shape
-                // as Storage::hashName() but stable so we can insert before move.
-                $hash = (string) Str::random(40);
-                return $hash . '.' . $file->extension();
-            })
             ->saveUploadedFileUsing(function (UploadedFile $file, FileUpload $component) {
+                // Generate legacy-style 40-char hash.
                 $hash = (string) Str::random(40);
-                $ext = (string) $file->extension();
-                $stored = $file->storeAs('covers', $hash . '.' . $ext, [
-                    'disk' => 'public',
-                    'visibility' => 'public',
-                ]);
-                if ($stored === false) {
+
+                // Resolve extension defensively — Livewire's TemporaryUploadedFile
+                // sometimes returns an empty extension() and we need a fallback.
+                $ext = strtolower((string) $file->guessExtension());
+                if ($ext === '') {
+                    $ext = strtolower((string) $file->getClientOriginalExtension());
+                }
+                if ($ext === '') {
+                    // Last resort — derive from mime.
+                    $ext = match ($file->getMimeType()) {
+                        'image/png'  => 'png',
+                        'image/jpeg' => 'jpg',
+                        'image/webp' => 'webp',
+                        'image/gif'  => 'gif',
+                        default      => 'bin',
+                    };
+                }
+
+                try {
+                    $stored = $file->storeAs('covers', $hash . '.' . $ext, [
+                        'disk' => 'public',
+                        'visibility' => 'public',
+                    ]);
+                } catch (\Throwable $e) {
+                    \Log::error('AttachmentImageUpload storeAs failed', [
+                        'error'    => $e->getMessage(),
+                        'original' => $file->getClientOriginalName(),
+                    ]);
                     return null;
                 }
 
-                DB::table('attachments')->insert([
-                    'id'          => $hash,
-                    'title'       => (string) $file->getClientOriginalName(),
-                    'uid'         => 0,
-                    'ext'         => $ext,
-                    'size'        => (int) $file->getSize(),
-                    'type'        => 0,
-                    'uploaded_at' => time(),
-                ]);
+                if ($stored === false) {
+                    \Log::error('AttachmentImageUpload storeAs returned false', [
+                        'original' => $file->getClientOriginalName(),
+                    ]);
+                    return null;
+                }
+
+                try {
+                    DB::table('attachments')->insert([
+                        'id'          => $hash,
+                        'title'       => (string) $file->getClientOriginalName(),
+                        'uid'         => 0,
+                        'ext'         => $ext,
+                        'size'        => (int) $file->getSize(),
+                        'type'        => 0,
+                        'uploaded_at' => time(),
+                    ]);
+                } catch (\Throwable $e) {
+                    \Log::error('AttachmentImageUpload attachments insert failed', [
+                        'error' => $e->getMessage(),
+                        'hash'  => $hash,
+                    ]);
+                    // Clean up the file we just stored so we don't leave
+                    // orphans, then propagate failure to the UI.
+                    \Storage::disk('public')->delete('covers/' . $hash . '.' . $ext);
+                    return null;
+                }
 
                 return $hash;
             })
