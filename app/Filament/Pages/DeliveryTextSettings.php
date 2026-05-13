@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Filament\Pages\Concerns\SavesShopSettings;
+use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -38,15 +39,31 @@ class DeliveryTextSettings extends Page implements HasForms
                 ->content('Этот текст показывается на странице доставки ключа после оплаты (блок «Внимание»).'),
 
             Forms\Components\Section::make('Русский')->schema([
-                Forms\Components\RichEditor::make('delivery_text_ru')
+                TiptapEditor::make('delivery_text_ru')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'link', 'bulletList', 'orderedList'])
+                    ->profile('default')
+                    ->tools([
+                        'heading', 'bullet-list', 'ordered-list', '|',
+                        'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                        'link', 'media', '|',
+                        'undo', 'redo',
+                    ])
+                    ->disk('public')
+                    ->directory('covers')
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                Forms\Components\RichEditor::make('delivery_text_en')
+                TiptapEditor::make('delivery_text_en')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'link', 'bulletList', 'orderedList'])
+                    ->profile('default')
+                    ->tools([
+                        'heading', 'bullet-list', 'ordered-list', '|',
+                        'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                        'link', 'media', '|',
+                        'undo', 'redo',
+                    ])
+                    ->disk('public')
+                    ->directory('covers')
                     ->columnSpanFull(),
             ])->collapsible()->collapsed(true),
         ])->statePath('data');

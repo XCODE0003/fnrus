@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InstructionResource\Pages;
 use App\Models\Instruction;
 use App\Models\Product;
+use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -65,14 +66,24 @@ class InstructionResource extends Resource
                 ->maxLength(100)
                 ->placeholder('Введите короткий адрес'),
 
-            Forms\Components\RichEditor::make('body')
+            TiptapEditor::make('body')
                 ->label('Текст инструкции')
                 ->required()
-                ->toolbarButtons([
-                    'bold', 'italic', 'underline', 'strike',
-                    'bulletList', 'orderedList', 'link', 'redo', 'undo',
+                ->profile('default')
+                ->tools([
+                    'heading', 'bullet-list', 'ordered-list', 'blockquote',
+                    'hr', '|',
+                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                    'align-left', 'align-center', 'align-right', '|',
+                    'link', 'media', 'oembed', '|',
+                    'code', 'code-block', '|',
+                    'undo', 'redo',
                 ])
-                ->maxLength(20000)
+                ->disk('public')
+                ->directory('covers')
+                ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
+                ->maxFileSize(5120)
+                ->maxContentWidth('5xl')
                 ->columnSpanFull(),
 
             Forms\Components\Repeater::make('buttons')

@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Filament\Forms\Components\AttachmentImageUpload;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
+use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -76,12 +77,20 @@ class CategoryResource extends Resource
                     ->default(0)
                     ->required(),
 
-                Forms\Components\RichEditor::make('description')
+                TiptapEditor::make('description')
                     ->label('Описание')
-                    ->toolbarButtons([
-                        'bold', 'italic', 'underline', 'strike',
-                        'bulletList', 'orderedList', 'link', 'redo', 'undo',
+                    ->profile('default')
+                    ->tools([
+                        'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
+                        'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                        'align-left', 'align-center', 'align-right', '|',
+                        'link', 'media', '|',
+                        'undo', 'redo',
                     ])
+                    ->disk('public')
+                    ->directory('covers')
+                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
+                    ->maxFileSize(5120)
                     ->maxLength(8000)
                     ->columnSpanFull(),
 

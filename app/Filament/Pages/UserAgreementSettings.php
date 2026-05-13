@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Filament\Pages\Concerns\SavesShopSettings;
+use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -32,17 +33,31 @@ class UserAgreementSettings extends Page implements HasForms
 
     public function form(Form $form): Form
     {
+        $tools = [
+            'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
+            'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+            'align-left', 'align-center', 'align-right', '|',
+            'link', 'media', '|',
+            'undo', 'redo',
+        ];
+
         return $form->schema([
             Forms\Components\Section::make('Русский')->schema([
-                Forms\Components\RichEditor::make('policy_content_ru')
+                TiptapEditor::make('policy_content_ru')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'bulletList', 'orderedList', 'link', 'h2', 'h3', 'redo', 'undo'])
+                    ->profile('default')
+                    ->tools($tools)
+                    ->disk('public')
+                    ->directory('covers')
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                Forms\Components\RichEditor::make('policy_content_en')
+                TiptapEditor::make('policy_content_en')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'bulletList', 'orderedList', 'link', 'h2', 'h3', 'redo', 'undo'])
+                    ->profile('default')
+                    ->tools($tools)
+                    ->disk('public')
+                    ->directory('covers')
                     ->columnSpanFull(),
             ])->collapsible()->collapsed(true),
         ])->statePath('data');

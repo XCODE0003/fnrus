@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\FaqResource\Pages;
 use App\Models\Faq;
 use App\Models\Instruction;
+use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -50,21 +51,33 @@ class FaqResource extends Resource
                 ->maxLength(255)
                 ->placeholder('Опционально — для англоязычной локали'),
 
-            Forms\Components\RichEditor::make('answer')
+            TiptapEditor::make('answer')
                 ->label('Ответ')
-                ->toolbarButtons([
-                    'bold', 'italic', 'underline', 'strike',
-                    'bulletList', 'orderedList', 'link', 'redo', 'undo',
+                ->profile('default')
+                ->tools([
+                    'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
+                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                    'align-left', 'align-center', 'align-right', '|',
+                    'link', 'media', '|',
+                    'undo', 'redo',
                 ])
+                ->disk('public')
+                ->directory('covers')
                 ->maxLength(8000)
                 ->columnSpanFull(),
 
-            Forms\Components\RichEditor::make('answer_en')
+            TiptapEditor::make('answer_en')
                 ->label('Ответ (en)')
-                ->toolbarButtons([
-                    'bold', 'italic', 'underline', 'strike',
-                    'bulletList', 'orderedList', 'link', 'redo', 'undo',
+                ->profile('default')
+                ->tools([
+                    'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
+                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
+                    'align-left', 'align-center', 'align-right', '|',
+                    'link', 'media', '|',
+                    'undo', 'redo',
                 ])
+                ->disk('public')
+                ->directory('covers')
                 ->maxLength(8000)
                 ->columnSpanFull(),
 
