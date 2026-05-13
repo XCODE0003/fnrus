@@ -32,6 +32,18 @@ class MaterialResource extends Resource
         4 => 'Зарезервирован',
     ];
 
+    /**
+     * Statuses shown on the warehouse view. Sold (2) materials are
+     * tracked inside their order and are intentionally excluded here.
+     */
+    public const WAREHOUSE_STATUSES = [1, 3, 4];
+
+    public const WAREHOUSE_STATUS_OPTIONS = [
+        1 => 'Доступен',
+        3 => 'Отключён',
+        4 => 'Зарезервирован',
+    ];
+
     public static function form(Form $form): Form
     {
         // Форма повторяет модалку #addMaterial из старой админки:
@@ -95,6 +107,7 @@ class MaterialResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $q) => $q->whereIn('status', self::WAREHOUSE_STATUSES))
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
                 Tables\Columns\TextColumn::make('pid')
@@ -136,7 +149,7 @@ class MaterialResource extends Resource
                     ->formatStateUsing(fn ($state) => $state ? date('Y-m-d H:i', (int) $state) : '—'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')->options(self::STATUS_OPTIONS),
+                Tables\Filters\SelectFilter::make('status')->options(self::WAREHOUSE_STATUS_OPTIONS),
                 Tables\Filters\SelectFilter::make('pid')
                     ->label('Товар')
                     ->options(fn () => Product::orderBy('id', 'desc')->limit(500)->pluck('title', 'id')->all())

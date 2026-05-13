@@ -97,5 +97,18 @@ class Material extends Model
         return $sold;
     }
 
+    /**
+     * Return materials issued to an order back to the warehouse.
+     * Resets status 2→1 (and any leftover status 4 reservations to 1),
+     * clears oid/bid so they can be sold again. Used when an order is
+     * canceled or its booking expires after issuance.
+     */
+    public static function returnToStockFromOrder($oid){
+        if ($oid <= 0) { return 0; }
+        return Material::where('oid', $oid)
+            ->whereIn('status', [2, 4])
+            ->update(['status' => 1, 'oid' => 0, 'bid' => 0]);
+    }
+
 }
 
