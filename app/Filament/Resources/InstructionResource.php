@@ -76,6 +76,8 @@ class InstructionResource extends Resource
                 ->fileAttachmentsDisk('public')
                 ->fileAttachmentsDirectory('covers')
                 ->fileAttachmentsVisibility('public')
+                ->saveUploadedFileAttachmentsUsing(fn ($file) => \App\Support\AttachmentSaver::save($file))
+                ->getUploadedAttachmentUrlUsing(fn ($file) => \App\Support\AttachmentSaver::url($file))
                 ->maxLength(20000)
                 ->columnSpanFull(),
 
