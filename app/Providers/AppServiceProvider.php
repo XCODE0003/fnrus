@@ -36,6 +36,13 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('plural', function ($expression) {
             return "<?php echo \App\Providers\AppServiceProvider::pluralize($expression); ?>";
         });
+
+        // @richHtml($value) — unwraps Trix attachment embeds (video, oEmbed)
+        // back into raw <iframe>/<video> tags so the public site can render
+        // them. See App\Support\RichHtml for the full transform.
+        Blade::directive('richHtml', function ($expression) {
+            return "<?php echo \\App\\Support\\RichHtml::render({$expression}); ?>";
+        });
     }
 
     public static function pluralize($count, $one, $few, $many)

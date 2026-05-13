@@ -10,7 +10,7 @@
                 @endforeach
             </div>
             <div style="line-height: 1.7;color: #b5b5b5;">
-                {!! $instruction !!}
+                @richHtml($instruction)
             </div>
         </div>
     </section>

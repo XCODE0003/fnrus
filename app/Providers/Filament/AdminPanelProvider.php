@@ -15,7 +15,9 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -24,6 +26,15 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
+    public function boot(): void
+    {
+        // Custom Trix toolbar extensions (color picker, video/image embed).
+        // Loaded once on every Filament admin page; no-op outside it.
+        FilamentAsset::register([
+            Js::make('fnrus-trix-extensions', asset('js/admin/trix-extensions.js')),
+        ]);
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel

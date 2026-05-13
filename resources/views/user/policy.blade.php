@@ -97,7 +97,7 @@
                     font-style: italic;
                 }
             </style>
-            <div class="policy__content">{!! $policy_content !!}</div>
+            <div class="policy__content">@richHtml($policy_content)</div>
             @else
             <p class="policy__part-caption">{{ __('site.policy_1_title') }}</p>
 

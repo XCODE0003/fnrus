@@ -47,7 +47,7 @@
                 @endforeach
             </div>
             <div style="color: #b5b5b5;">
-                {!! $instruction_body !!}
+                @richHtml($instruction_body)
             </div>
         </div>
     </section>
