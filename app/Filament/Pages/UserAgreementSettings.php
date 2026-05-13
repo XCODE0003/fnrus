@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Filament\Pages\Concerns\SavesShopSettings;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -33,31 +32,29 @@ class UserAgreementSettings extends Page implements HasForms
 
     public function form(Form $form): Form
     {
-        $tools = [
-            'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
-            'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-            'align-left', 'align-center', 'align-right', '|',
-            'link', 'media', '|',
-            'undo', 'redo',
+        $toolbar = [
+            'attachFiles', 'blockquote', 'bold', 'bulletList',
+            'codeBlock', 'h2', 'h3', 'italic', 'link',
+            'orderedList', 'strike', 'underline', 'redo', 'undo',
         ];
 
         return $form->schema([
             Forms\Components\Section::make('Русский')->schema([
-                TiptapEditor::make('policy_content_ru')
+                Forms\Components\RichEditor::make('policy_content_ru')
                     ->label('')
-                    ->profile('default')
-                    ->tools($tools)
-                    ->disk('public')
-                    ->directory('covers')
+                    ->toolbarButtons($toolbar)
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('covers')
+                    ->fileAttachmentsVisibility('public')
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                TiptapEditor::make('policy_content_en')
+                Forms\Components\RichEditor::make('policy_content_en')
                     ->label('')
-                    ->profile('default')
-                    ->tools($tools)
-                    ->disk('public')
-                    ->directory('covers')
+                    ->toolbarButtons($toolbar)
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('covers')
+                    ->fileAttachmentsVisibility('public')
                     ->columnSpanFull(),
             ])->collapsible()->collapsed(true),
         ])->statePath('data');

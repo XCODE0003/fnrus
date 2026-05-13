@@ -7,7 +7,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InstructionResource\Pages;
 use App\Models\Instruction;
 use App\Models\Product;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -66,24 +65,18 @@ class InstructionResource extends Resource
                 ->maxLength(100)
                 ->placeholder('Введите короткий адрес'),
 
-            TiptapEditor::make('body')
+            Forms\Components\RichEditor::make('body')
                 ->label('Текст инструкции')
                 ->required()
-                ->profile('default')
-                ->tools([
-                    'heading', 'bullet-list', 'ordered-list', 'blockquote',
-                    'hr', '|',
-                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                    'align-left', 'align-center', 'align-right', '|',
-                    'link', 'media', 'oembed', '|',
-                    'code', 'code-block', '|',
-                    'undo', 'redo',
+                ->toolbarButtons([
+                    'attachFiles', 'blockquote', 'bold', 'bulletList',
+                    'codeBlock', 'h2', 'h3', 'italic', 'link',
+                    'orderedList', 'strike', 'underline', 'redo', 'undo',
                 ])
-                ->disk('public')
-                ->directory('covers')
-                ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
-                ->maxFileSize(5120)
-                ->maxContentWidth('5xl')
+                ->fileAttachmentsDisk('public')
+                ->fileAttachmentsDirectory('covers')
+                ->fileAttachmentsVisibility('public')
+                ->maxLength(20000)
                 ->columnSpanFull(),
 
             Forms\Components\Repeater::make('buttons')

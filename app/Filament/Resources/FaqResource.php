@@ -7,7 +7,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\FaqResource\Pages;
 use App\Models\Faq;
 use App\Models\Instruction;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -51,32 +50,30 @@ class FaqResource extends Resource
                 ->maxLength(255)
                 ->placeholder('Опционально — для англоязычной локали'),
 
-            TiptapEditor::make('answer')
+            Forms\Components\RichEditor::make('answer')
                 ->label('Ответ')
-                ->profile('default')
-                ->tools([
-                    'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
-                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                    'align-left', 'align-center', 'align-right', '|',
-                    'link', 'media', '|',
-                    'undo', 'redo',
+                ->toolbarButtons([
+                    'attachFiles', 'blockquote', 'bold', 'bulletList',
+                    'codeBlock', 'h2', 'h3', 'italic', 'link',
+                    'orderedList', 'strike', 'underline', 'redo', 'undo',
                 ])
-                ->disk('public')
-                ->directory('covers')
+                ->fileAttachmentsDisk('public')
+                ->fileAttachmentsDirectory('covers')
+                ->fileAttachmentsVisibility('public')
+                ->maxLength(8000)
                 ->columnSpanFull(),
 
-            TiptapEditor::make('answer_en')
+            Forms\Components\RichEditor::make('answer_en')
                 ->label('Ответ (en)')
-                ->profile('default')
-                ->tools([
-                    'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
-                    'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                    'align-left', 'align-center', 'align-right', '|',
-                    'link', 'media', '|',
-                    'undo', 'redo',
+                ->toolbarButtons([
+                    'attachFiles', 'blockquote', 'bold', 'bulletList',
+                    'codeBlock', 'h2', 'h3', 'italic', 'link',
+                    'orderedList', 'strike', 'underline', 'redo', 'undo',
                 ])
-                ->disk('public')
-                ->directory('covers')
+                ->fileAttachmentsDisk('public')
+                ->fileAttachmentsDirectory('covers')
+                ->fileAttachmentsVisibility('public')
+                ->maxLength(8000)
                 ->columnSpanFull(),
 
             Forms\Components\Select::make('visibility')

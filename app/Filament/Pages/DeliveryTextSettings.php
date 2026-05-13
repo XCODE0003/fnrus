@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Filament\Pages\Concerns\SavesShopSettings;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -39,31 +38,21 @@ class DeliveryTextSettings extends Page implements HasForms
                 ->content('Этот текст показывается на странице доставки ключа после оплаты (блок «Внимание»).'),
 
             Forms\Components\Section::make('Русский')->schema([
-                TiptapEditor::make('delivery_text_ru')
+                Forms\Components\RichEditor::make('delivery_text_ru')
                     ->label('')
-                    ->profile('default')
-                    ->tools([
-                        'heading', 'bullet-list', 'ordered-list', '|',
-                        'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                        'link', 'media', '|',
-                        'undo', 'redo',
-                    ])
-                    ->disk('public')
-                    ->directory('covers')
+                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'attachFiles', 'redo', 'undo'])
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('covers')
+                    ->fileAttachmentsVisibility('public')
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                TiptapEditor::make('delivery_text_en')
+                Forms\Components\RichEditor::make('delivery_text_en')
                     ->label('')
-                    ->profile('default')
-                    ->tools([
-                        'heading', 'bullet-list', 'ordered-list', '|',
-                        'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                        'link', 'media', '|',
-                        'undo', 'redo',
-                    ])
-                    ->disk('public')
-                    ->directory('covers')
+                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'attachFiles', 'redo', 'undo'])
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('covers')
+                    ->fileAttachmentsVisibility('public')
                     ->columnSpanFull(),
             ])->collapsible()->collapsed(true),
         ])->statePath('data');

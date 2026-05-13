@@ -10,7 +10,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\StatusCheat;
 use App\Models\Tariff;
-use FilamentTiptapEditor\TiptapEditor;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -86,20 +85,17 @@ class ProductResource extends Resource
                         ->searchable()
                         ->required(),
 
-                    TiptapEditor::make('description')
+                    Forms\Components\RichEditor::make('description')
                         ->label('Описание')
-                        ->profile('default')
-                        ->tools([
-                            'heading', 'bullet-list', 'ordered-list', 'blockquote', '|',
-                            'bold', 'italic', 'underline', 'strike', 'color', 'highlight', '|',
-                            'align-left', 'align-center', 'align-right', '|',
-                            'link', 'media', '|',
-                            'undo', 'redo',
+                        ->toolbarButtons([
+                            'attachFiles', 'blockquote', 'bold', 'bulletList',
+                            'codeBlock', 'h2', 'h3', 'italic', 'link',
+                            'orderedList', 'strike', 'underline', 'redo', 'undo',
                         ])
-                        ->disk('public')
-                        ->directory('covers')
-                        ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
-                        ->maxFileSize(5120)
+                        ->fileAttachmentsDisk('public')
+                        ->fileAttachmentsDirectory('covers')
+                        ->fileAttachmentsVisibility('public')
+                        ->maxLength(8000)
                         ->columnSpanFull(),
 
                     Forms\Components\Textarea::make('advantages')
