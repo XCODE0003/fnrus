@@ -28,6 +28,17 @@ class AdminPanelProvider extends PanelProvider
 {
     public function boot(): void
     {
+        // Expose runtime config to the Trix extension JS via a tiny
+        // inline script. Has to be registered before trix-extensions.js
+        // so the latter can read window.fnrTrix.{maxUploadMb,csrf,uploadUrl}.
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            \Filament\View\PanelsRenderHook::HEAD_END,
+            fn (): string => '<script>window.fnrTrix=Object.assign({},window.fnrTrix,{'
+                . 'maxUploadMb:' . (int) (\App\Models\ShopSettings::getDefault()->editor_max_upload_mb ?? 100) . ','
+                . 'uploadUrl:' . json_encode(route('admin.editor-upload'), JSON_UNESCAPED_SLASHES) . ','
+                . 'csrf:' . json_encode(csrf_token()) . '});</script>',
+        );
+
         // Custom Trix toolbar extensions (color picker, video/image embed).
         // Loaded once on every Filament admin page; no-op outside it.
         FilamentAsset::register([

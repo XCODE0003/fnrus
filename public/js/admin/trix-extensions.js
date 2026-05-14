@@ -155,26 +155,60 @@
         }
     }
 
-    function videoEmbed(url) {
-        if (!url) return null;
-        url = url.trim();
+    /**
+     * Direct multipart upload to /admin-editor-upload (custom controller)
+     * that mirrors AttachmentSaver and returns a stable /i{hash} URL.
+     * The endpoint is gated by the Filament auth bridge.
+     *
+     * @param {File} file
+     * @returns {Promise<{ok:boolean, url?:string, kind?:'image'|'video'|'file', mime?:string, error?:string}>}
+     */
+    async function uploadEditorFile(file) {
+        const cfg = window.fnrTrix || {};
+        const maxMb = parseInt(cfg.maxUploadMb || 100, 10);
+        if (file.size > maxMb * 1024 * 1024) {
+            return { ok: false, error: 'Файл больше ' + maxMb + ' MB' };
+        }
+        if (!cfg.uploadUrl) {
+            return { ok: false, error: 'Endpoint загрузки не настроен' };
+        }
+        const fd = new FormData();
+        fd.append('file', file);
 
-        // YouTube
-        let m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
-        if (m) {
-            return '<iframe src="https://www.youtube.com/embed/' + m[1] + '" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        try {
+            const resp = await fetch(cfg.uploadUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRF-TOKEN': cfg.csrf || '',
+                    'Accept': 'application/json',
+                },
+                body: fd,
+            });
+            if (!resp.ok) {
+                const text = await resp.text().catch(() => '');
+                return { ok: false, error: 'HTTP ' + resp.status + (text ? ': ' + text.slice(0, 200) : '') };
+            }
+            return await resp.json();
+        } catch (e) {
+            return { ok: false, error: (e && e.message) || 'network error' };
         }
-        // Vimeo
-        m = url.match(/vimeo\.com\/(\d+)/);
-        if (m) {
-            return '<iframe src="https://player.vimeo.com/video/' + m[1] + '" width="560" height="315" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
-        }
-        // Direct mp4/webm
-        if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
-            return '<video controls width="560" src="' + url.replace(/"/g, '&quot;') + '"></video>';
-        }
-        // Fallback iframe
-        return '<iframe src="' + url.replace(/"/g, '&quot;') + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>';
+    }
+
+    function pickFile(accept) {
+        return new Promise(function (resolve) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = accept;
+            input.style.display = 'none';
+            input.addEventListener('change', function () {
+                const file = input.files && input.files[0];
+                document.body.removeChild(input);
+                resolve(file || null);
+            }, { once: true });
+            document.body.appendChild(input);
+            input.click();
+        });
     }
 
     /**
@@ -269,38 +303,60 @@
         });
         textGroup.appendChild(hiBtn);
 
-        // --- Video embed ---
+        // --- Upload image (file picker, NOT URL prompt) ---
         const target = blockGroup || textGroup;
-        const vidBtn = makeButton({
-            title: 'Вставить видео (YouTube / Vimeo / .mp4)',
-            cls: 'fnr-trix-video',
-            icon: svgIcon('<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>'),
-            onClick: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const url = window.prompt('URL видео (YouTube, Vimeo или .mp4/.webm):');
-                if (!url) return;
-                const html = videoEmbed(url);
-                if (html) insertEmbedAttachment(editor, html);
-            },
-        });
-        target.appendChild(vidBtn);
-
-        // --- Image by URL ---
-        const imgUrlBtn = makeButton({
-            title: 'Вставить картинку по URL',
-            cls: 'fnr-trix-image-url',
+        const imgBtn = makeButton({
+            title: 'Загрузить изображение',
+            cls: 'fnr-trix-image',
             icon: svgIcon('<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
-            onClick: function (e) {
+            onClick: async function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                const url = window.prompt('URL изображения:');
-                if (!url) return;
-                const safe = url.replace(/"/g, '&quot;');
+                const file = await pickFile('image/*');
+                if (!file) return;
+                imgBtn.disabled = true;
+                const prevIcon = imgBtn.innerHTML;
+                imgBtn.innerHTML = '…';
+                const result = await uploadEditorFile(file);
+                imgBtn.disabled = false;
+                imgBtn.innerHTML = prevIcon;
+                if (!result.ok || !result.url) {
+                    window.alert('Не удалось загрузить: ' + (result.error || 'unknown'));
+                    return;
+                }
+                const safe = result.url.replace(/"/g, '&quot;');
                 insertRawHtml(editorEl, '<img src="' + safe + '" alt="" style="max-width: 100%; height: auto;">');
             },
         });
-        target.appendChild(imgUrlBtn);
+        target.appendChild(imgBtn);
+
+        // --- Upload video (file picker) ---
+        const vidBtn = makeButton({
+            title: 'Загрузить видео (mp4 / webm / mov)',
+            cls: 'fnr-trix-video',
+            icon: svgIcon('<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>'),
+            onClick: async function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const file = await pickFile('video/*');
+                if (!file) return;
+                vidBtn.disabled = true;
+                const prevIcon = vidBtn.innerHTML;
+                vidBtn.innerHTML = '…';
+                const result = await uploadEditorFile(file);
+                vidBtn.disabled = false;
+                vidBtn.innerHTML = prevIcon;
+                if (!result.ok || !result.url) {
+                    window.alert('Не удалось загрузить: ' + (result.error || 'unknown'));
+                    return;
+                }
+                const safe = result.url.replace(/"/g, '&quot;');
+                const mime = (result.mime || '').replace(/"/g, '&quot;');
+                const html = '<video controls preload="metadata" style="max-width: 100%;" src="' + safe + '"' + (mime ? ' type="' + mime + '"' : '') + '></video>';
+                insertEmbedAttachment(editor, html);
+            },
+        });
+        target.appendChild(vidBtn);
     }
 
     document.addEventListener('trix-initialize', function (event) {

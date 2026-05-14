@@ -49,6 +49,7 @@ class ShopSettings extends Model
         'support_btn3_url',
         'status_broadcast_template',
         'status_broadcast_image_path',
+        'editor_max_upload_mb',
     ];
 
     public static function getDefault(){

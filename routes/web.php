@@ -125,6 +125,18 @@ Route::get('/file/{hash}', [StorageController::class, 'file'])
 
 
 Route::get('/i{hash}', [StorageController::class, 'image'])->where('hash', '[a-zA-Z0-9-_]+');
+
+// Custom-Trix-toolbar upload — gated by the Filament admin auth bridge
+// so only authenticated admins can hit it. Hosted off the panel path
+// to avoid colliding with Filament's own Livewire routes.
+Route::post('/admin-editor-upload', [\App\Http\Controllers\EditorUploadController::class, 'upload'])
+    ->middleware([
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \App\Http\Middleware\FilamentSiteAuthBridge::class,
+    ])
+    ->name('admin.editor-upload');
 Route::post('/s/{shop_id}', [BotController::class, 'main'])->where('shop_id', '[0-9]+');
 Route::get('/inv', [InvoiceController::class, 'inv']);
 Route::post('/payment/check/qw/{id}', [InvoiceController::class, 'qwCheck'])->where('id', '[0-9]+');
