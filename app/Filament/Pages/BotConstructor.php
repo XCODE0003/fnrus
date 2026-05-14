@@ -85,11 +85,12 @@ class BotConstructor extends Page implements HasForms
             'buttons_columns' => (int) ($buttonSettings->count_columns ?? 1),
             'buttons'         => $buttons
                 ->map(fn (Button $b) => [
-                    'id'      => (int) $b->id,
-                    'title'   => (string) $b->title,
-                    'text'    => (string) $b->text,
-                    'image'   => $b->image ?: null,
-                    'visible' => (bool) $b->visible,
+                    'id'           => (int) $b->id,
+                    'title'        => (string) $b->title,
+                    'text'         => (string) $b->text,
+                    'image'        => $b->image ?: null,
+                    'visible'      => (bool) $b->visible,
+                    'link_buttons' => self::decodeLinkButtons($b->buttons),
                 ])
                 ->all(),
 
@@ -204,6 +205,27 @@ class BotConstructor extends Page implements HasForms
                             ->label('Текст при нажатии')
                             ->toolbarButtons(['bold', 'italic', 'underline', 'link', 'bulletList', 'orderedList'])
                             ->maxLength(4096)
+                            ->columnSpanFull(),
+                        Forms\Components\Repeater::make('link_buttons')
+                            ->label('Кнопки-ссылки под сообщением')
+                            ->schema([
+                                Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\TextInput::make('text')
+                                        ->label('Текст кнопки')
+                                        ->required()
+                                        ->maxLength(64),
+                                    Forms\Components\TextInput::make('url')
+                                        ->label('Ссылка')
+                                        ->required()
+                                        ->url()
+                                        ->maxLength(255),
+                                ]),
+                            ])
+                            ->reorderable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
+                            ->addActionLabel('Добавить кнопку-ссылку')
                             ->columnSpanFull(),
                     ])
                     ->reorderable()
@@ -354,6 +376,7 @@ class BotConstructor extends Page implements HasForms
                     'image'                    => (string) ($row['image'] ?? ''),
                     'disable_web_page_preview' => 0,
                     'image_spoiler'            => 0,
+                    'buttons'                  => self::encodeLinkButtons($row['link_buttons'] ?? []),
                     'visible'                  => (int) (bool) ($row['visible'] ?? true),
                     'sort'                     => $sort++,
                     'updated_at'               => $now,
@@ -367,7 +390,6 @@ class BotConstructor extends Page implements HasForms
 
                 $payload['created_at'] = $now;
                 $payload['type']       = 0;
-                $payload['buttons']    = '[]';
                 $newId = DB::table('buttons')->insertGetId($payload);
                 $keepIds[] = (int) $newId;
             }
@@ -390,5 +412,54 @@ class BotConstructor extends Page implements HasForms
         $payload['sid']        = $sid;
         $payload['created_at'] = $payload['updated_at'];
         DB::table('texts')->insert($payload);
+    }
+
+    /**
+     * Парсит JSON из `buttons.buttons` в массив для Repeater'а.
+     * Принимает только пары text+url (callback_data игнорируем — они
+     * привязаны к старому бот-роутингу и редактируются отдельно).
+     */
+    private static function decodeLinkButtons(?string $raw): array
+    {
+        if ($raw === null || $raw === '' || $raw === '[]' || $raw === '{}') {
+            return [];
+        }
+        $decoded = json_decode($raw, true);
+        if (! is_array($decoded)) {
+            return [];
+        }
+        $out = [];
+        foreach ($decoded as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            $text = (string) ($item['text'] ?? '');
+            $url  = (string) ($item['url'] ?? '');
+            if ($text === '' || $url === '') {
+                continue;
+            }
+            $out[] = ['text' => $text, 'url' => $url];
+        }
+        return $out;
+    }
+
+    /**
+     * Сериализует массив [{text,url},…] в JSON для колонки `buttons.buttons`.
+     * Возвращает "[]" для пустого набора — колонка NOT NULL.
+     */
+    private static function encodeLinkButtons(mixed $rows): string
+    {
+        if (! is_array($rows) || $rows === []) {
+            return '[]';
+        }
+        $clean = [];
+        foreach ($rows as $row) {
+            if (! is_array($row)) { continue; }
+            $text = trim((string) ($row['text'] ?? ''));
+            $url  = trim((string) ($row['url']  ?? ''));
+            if ($text === '' || $url === '') { continue; }
+            $clean[] = ['text' => $text, 'url' => $url];
+        }
+        return json_encode(array_values($clean), JSON_UNESCAPED_UNICODE);
     }
 }
