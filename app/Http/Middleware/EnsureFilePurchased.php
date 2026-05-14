@@ -90,37 +90,49 @@ class EnsureFilePurchased
         // Approach: scan instructions/materials whose body references
         // /file/{hash}, then verify the user has bought one of the
         // products tied to those instructions/orders.
+        //
+        // A single file URL can legitimately live in multiple
+        // instructions / multiple materials at once (a shared PDF
+        // manual, for example). We MUST aggregate across all matches —
+        // a previous version did ->first() and silently denied access
+        // whenever the first match wasn't the buyer's instruction.
         $like = '%/file/' . $hash . '%';
 
         // Instructions reference products via a JSON `pids` column.
-        $instruction = DB::table('instructions')
+        $instructionPids = DB::table('instructions')
             ->where('body', 'like', $like)
-            ->select('pids')
-            ->first();
+            ->pluck('pids');
 
-        if ($instruction) {
-            $pids = (array) json_decode((string) $instruction->pids, true);
-            $pids = array_filter(array_map('intval', $pids));
-            if (!empty($pids)) {
-                $hit = DB::table('products_purchased')
-                    ->where('chat_id', $tid)
-                    ->whereIn('product_id', $pids)
-                    ->exists();
-                if ($hit) {
-                    return true;
-                }
+        $allPids = [];
+        foreach ($instructionPids as $raw) {
+            $decoded = json_decode((string) $raw, true);
+            if (! is_array($decoded)) { continue; }
+            foreach ($decoded as $pid) {
+                $pid = (int) $pid;
+                if ($pid > 0) { $allPids[$pid] = true; }
+            }
+        }
+        if ($allPids !== []) {
+            $hit = DB::table('products_purchased')
+                ->where('chat_id', $tid)
+                ->whereIn('product_id', array_keys($allPids))
+                ->exists();
+            if ($hit) {
+                return true;
             }
         }
 
         // Materials are linked to a specific order; the buyer is bid.
-        $material = DB::table('materials')
+        $orderIds = DB::table('materials')
             ->where('body', 'like', $like)
-            ->select('oid')
-            ->first();
+            ->pluck('oid')
+            ->filter()
+            ->unique()
+            ->values();
 
-        if ($material) {
+        if ($orderIds->isNotEmpty()) {
             $hit = DB::table('orders')
-                ->where('id', $material->oid)
+                ->whereIn('id', $orderIds)
                 ->where('bid', $tid)
                 ->exists();
             if ($hit) {
