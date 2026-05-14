@@ -665,8 +665,17 @@ Route::get('/{alias}/{alias_two}/{alias_product}', function ($alias, $alias_two,
     }
 
     $recommendations = Product::list_web_recommendations($product->id);
+    $recommendations_json = [];
     if ($recommendations) {
-        $recommendations_json = $recommendations->getData()->result;
+        // list_web_recommendations may swallow an exception and return
+        // {ok: false, description: ...} without a "result" key — guard
+        // so an unrelated rec failure does not 500 the whole product page.
+        $payload = $recommendations->getData();
+        if (isset($payload->result) && is_array($payload->result)) {
+            $recommendations_json = $payload->result;
+        } elseif (isset($payload->result)) {
+            $recommendations_json = (array) $payload->result;
+        }
     }
 
     $status_title = '';

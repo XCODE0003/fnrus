@@ -271,9 +271,15 @@ class Product extends Model
             ]);
 
         } catch (Exception $e){
+            \Log::warning('Product::list_web_recommendations failed', [
+                'except_id' => $except_id,
+                'error'     => $e->getMessage(),
+                'file'      => $e->getFile() . ':' . $e->getLine(),
+            ]);
             return response()->json([
                 'ok' => false,
-                'description' => $e->getMessage()
+                'description' => $e->getMessage(),
+                'result' => [],
             ]);
         }
 
