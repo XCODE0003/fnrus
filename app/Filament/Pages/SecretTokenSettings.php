@@ -50,7 +50,7 @@ class SecretTokenSettings extends Page implements HasForms
                 ->label('Username бота')
                 ->maxLength(255)
                 ->placeholder('mybot'),
-        ]);
+        ])->statePath('data');
     }
 
     public function save(): void
