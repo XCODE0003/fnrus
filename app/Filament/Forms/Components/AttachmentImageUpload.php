@@ -137,8 +137,14 @@ class AttachmentImageUpload
                 }
             })
             ->dehydrateStateUsing(function ($state, FileUpload $component) {
+                // Legacy columns `image`, `image_site`, `gallery` are NOT
+                // NULL — return empty scalar/JSON array rather than null
+                // when the field was cleared, so SQL doesn't reject the
+                // update with a 23000 constraint violation.
+                $emptyValue = $component->isMultiple() ? '[]' : '';
+
                 if ($state === null || $state === '' || $state === []) {
-                    return null;
+                    return $emptyValue;
                 }
 
                 $extract = static function ($pathOrHash): ?string {
@@ -160,7 +166,7 @@ class AttachmentImageUpload
                 ));
 
                 if ($hashes === []) {
-                    return null;
+                    return $emptyValue;
                 }
 
                 return $component->isMultiple()
