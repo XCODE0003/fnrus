@@ -24,8 +24,21 @@ class Sender extends Model
     public static function getAllBySID($sid){
         return Sender::where('sid', $sid)->orderByDesc('created_at')->get();
     }
+    /**
+     * Все рассылки, которые УЖЕ должны были запуститься, но ещё в очереди.
+     * Раньше тут было `where('started_at', $started_at)` (строгое равенство),
+     * из-за чего если cron пропускал минуту по любой причине — рассылка
+     * зависала в status=1 навсегда. Теперь сравниваем по `<=` и берём
+     * первую, чтобы за один тик cron не пытался стартовать сразу
+     * несколько тяжёлых задач параллельно.
+     */
     public static function getByDate($started_at){
-        return Sender::where('started_at', $started_at)->where('status', 1)->orderBy('id')->get();
+        return Sender::where('started_at', '<=', $started_at)
+            ->where('status', 1)
+            ->orderBy('started_at')
+            ->orderBy('id')
+            ->limit(1)
+            ->get();
     }
     public static function changeByID($id, $sql){
         return Sender::where('id', $id)->update($sql);

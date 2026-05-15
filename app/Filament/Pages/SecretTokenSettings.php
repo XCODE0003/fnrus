@@ -11,6 +11,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Crypt;
 
 class SecretTokenSettings extends Page implements HasForms
 {
@@ -31,9 +32,26 @@ class SecretTokenSettings extends Page implements HasForms
     {
         $shop = Shop::getDefault();
         $this->form->fill([
-            'token' => $shop?->token,
+            // The column stores a Laravel-encrypted blob — decrypt for
+            // display so the admin sees the actual @BotFather token.
+            // Old rows that were saved in plaintext (regression of the
+            // legacy form) will fail to decrypt; fall back to the raw
+            // value so the admin can see what's in the column.
+            'token' => self::decryptTokenSafe($shop?->token),
             'username' => $shop?->username,
         ]);
+    }
+
+    private static function decryptTokenSafe(?string $stored): string
+    {
+        if ($stored === null || $stored === '') {
+            return '';
+        }
+        try {
+            return (string) Crypt::decryptString($stored);
+        } catch (\Throwable $e) {
+            return $stored;
+        }
     }
 
     public function form(Form $form): Form
@@ -61,8 +79,13 @@ class SecretTokenSettings extends Page implements HasForms
             Notification::make()->danger()->title('Магазин не настроен')->send();
             return;
         }
+        $rawToken = trim((string) ($data['token'] ?? ''));
         $shop->fill([
-            'token' => $data['token'] ?? '',
+            // The whole codebase (SenderController, BotController,
+            // InvoiceController etc.) calls Crypt::decryptString on
+            // shops.token — we MUST encrypt here, otherwise the bot
+            // dies with "The payload is invalid".
+            'token' => $rawToken === '' ? '' : Crypt::encryptString($rawToken),
             'username' => $data['username'] ?? '',
             'updated_at' => time(),
         ])->save();

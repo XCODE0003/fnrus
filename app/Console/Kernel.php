@@ -21,8 +21,43 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call([Order::class, 'changeStatusByExpiredAt'])->everyMinute();
         $schedule->call([Currency::class, 'cron_convert'])->everyTwoHours();
-        $schedule->call([SenderController::class, 'cron_start'])->everyMinute();
+        // withoutOverlapping: рассылка на 40k подписчиков идёт ~20+ мин,
+        // без этого cron каждую минуту запускал бы новые параллельные
+        // start_sender'ы и плодил зависших.
+        $schedule->call([SenderController::class, 'cron_start'])
+            ->everyMinute()
+            ->withoutOverlapping(30);
         $schedule->call([TicketController::class, 'autoCloseCron'])->everyMinute();
+
+        // Подбираем рассылки, чей status=4 повис без увеличения счётчиков
+        // (cron упал / PHP вылетел по timeout). Через 60 минут без
+        // прогресса возвращаем в очередь.
+        $schedule->call(function () {
+            \DB::table('senders')
+                ->where('status', 4)
+                ->where('started_at', '<', time() - 3600)
+                ->update(['status' => 1]);
+        })->everyFifteenMinutes();
+
+        // Cron-based queue worker — поднимаем воркер на 55 секунд, потом
+        // выходим, чтобы следующий cron tick подхватил. Так email-рассылка
+        // (job SendBroadcastEmail) запускается асинхронно без supervisord.
+        $schedule->command('queue:work --stop-when-empty --max-time=55 --tries=3 --sleep=2')
+            ->everyMinute()
+            ->withoutOverlapping(2)
+            ->runInBackground();
+
+        // Подбираем счётчики email-рассылок (recipients_sent / failed)
+        // — статус STATUS_SENT когда все письма обработаны.
+        $schedule->call(function () {
+            $ids = \DB::table('email_broadcasts')
+                ->whereIn('status', [\App\Models\EmailBroadcast::STATUS_QUEUED, \App\Models\EmailBroadcast::STATUS_SENDING])
+                ->pluck('id');
+            $svc = app(\App\Services\EmailBroadcastService::class);
+            foreach ($ids as $id) {
+                try { $svc->tickStatus((int) $id); } catch (\Throwable $e) {}
+            }
+        })->everyMinute();
     }
 
     /**
