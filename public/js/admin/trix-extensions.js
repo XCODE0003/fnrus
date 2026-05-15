@@ -357,6 +357,186 @@
             },
         });
         target.appendChild(vidBtn);
+
+        // --- Image resize (drag handle + width presets popover) ----
+        attachImageResize(editorEl, editor);
+    }
+
+    /**
+     * Make every <img> inside the editor resizable via:
+     *   • drag handle in the bottom-right corner (sets inline width:px)
+     *   • click on the image → preset popover (25/50/75/100% + manual px)
+     *
+     * Width is stored as an inline `style="width: ...; height: auto;"`
+     * — Trix preserves inline styles through save/load, and on the
+     * public site the same style renders as-is.
+     */
+    function attachImageResize(editorEl, editor) {
+        const HANDLE_CLS = 'fnr-img-handle';
+        const wrapImage = function (img) {
+            if (img.dataset.fnrResizable === '1') return;
+            img.dataset.fnrResizable = '1';
+            img.style.cursor = 'pointer';
+            img.style.boxShadow = img.style.boxShadow || '';
+
+            const handle = document.createElement('span');
+            handle.className = HANDLE_CLS;
+            Object.assign(handle.style, {
+                position: 'absolute', width: '14px', height: '14px',
+                right: '-7px', bottom: '-7px',
+                background: '#3b82f6', border: '2px solid #fff',
+                borderRadius: '50%', cursor: 'nwse-resize',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.3)', zIndex: 2,
+                pointerEvents: 'auto',
+            });
+            // Make handle a sibling positioned over the image. Trix wraps
+            // images in <figure data-trix-attachment> or leaves them bare
+            // depending on insert path — handle both.
+            const parent = img.parentElement;
+            if (!parent) return;
+            const cs = window.getComputedStyle(parent);
+            if (cs.position === 'static') {
+                parent.style.position = 'relative';
+            }
+            parent.appendChild(handle);
+
+            let startX = 0, startW = 0, dragging = false;
+            handle.addEventListener('pointerdown', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragging = true;
+                startX = e.clientX;
+                startW = img.getBoundingClientRect().width;
+                handle.setPointerCapture(e.pointerId);
+            });
+            handle.addEventListener('pointermove', function (e) {
+                if (!dragging) return;
+                const delta = e.clientX - startX;
+                const newW = Math.max(40, Math.round(startW + delta));
+                img.style.width = newW + 'px';
+                img.style.height = 'auto';
+                img.style.maxWidth = '100%';
+            });
+            const endDrag = function (e) {
+                if (!dragging) return;
+                dragging = false;
+                try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+                // Tell Trix the document changed so save / live-preview pick up the new style.
+                if (editor && typeof editor.recordUndoEntry === 'function') {
+                    editor.recordUndoEntry('Resize image');
+                }
+                // Force Trix to re-serialise: a no-op selection change triggers it.
+                if (editor && typeof editor.setSelectedRange === 'function') {
+                    try { editor.setSelectedRange(editor.getSelectedRange()); } catch (_) {}
+                }
+            };
+            handle.addEventListener('pointerup', endDrag);
+            handle.addEventListener('pointercancel', endDrag);
+
+            // Click the image itself → quick preset popover (25/50/75/100% + manual).
+            img.addEventListener('click', function (e) {
+                if (e.target === handle) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const rect = img.getBoundingClientRect();
+                const pop = makeWidthPresetPopover(function (value) {
+                    applyImageWidth(img, value);
+                    if (editor && typeof editor.recordUndoEntry === 'function') {
+                        editor.recordUndoEntry('Set image width');
+                    }
+                });
+                pop.style.left = (window.scrollX + rect.left) + 'px';
+                pop.style.top = (window.scrollY + rect.bottom + 6) + 'px';
+                document.body.appendChild(pop);
+            });
+        };
+
+        const sweepImages = function () {
+            editorEl.querySelectorAll('img').forEach(wrapImage);
+        };
+        sweepImages();
+
+        // Re-wrap after Trix re-renders content.
+        editorEl.addEventListener('trix-change', sweepImages);
+        // Also catch images added later via attachment-add.
+        editorEl.addEventListener('trix-attachment-add', function () {
+            // Trix builds the attachment DOM asynchronously — wait a tick.
+            setTimeout(sweepImages, 60);
+        });
+    }
+
+    function applyImageWidth(img, value) {
+        // value: '25%' | '50%' | '75%' | '100%' | 'auto' | 'NNNpx'
+        if (value === 'auto' || value === null) {
+            img.style.removeProperty('width');
+        } else {
+            img.style.width = value;
+        }
+        img.style.height = 'auto';
+        img.style.maxWidth = '100%';
+    }
+
+    function makeWidthPresetPopover(onPick) {
+        const wrap = document.createElement('div');
+        Object.assign(wrap.style, {
+            position: 'absolute', zIndex: 9999, background: '#fff',
+            border: '1px solid #d1d5db', borderRadius: '8px',
+            padding: '8px', display: 'flex', flexDirection: 'column',
+            gap: '4px', boxShadow: '0 8px 24px rgba(0,0,0,.18)',
+            minWidth: '180px',
+        });
+        const close = function () {
+            document.removeEventListener('click', outside, true);
+            if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+        };
+        const outside = function (e) { if (!wrap.contains(e.target)) close(); };
+        setTimeout(function () { document.addEventListener('click', outside, true); }, 0);
+
+        ['25%', '50%', '75%', '100%', 'auto'].forEach(function (preset) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = 'Ширина: ' + preset;
+            Object.assign(btn.style, {
+                padding: '6px 10px', borderRadius: '6px',
+                border: '1px solid #d1d5db', background: '#f9fafb',
+                cursor: 'pointer', fontSize: '13px', color: '#374151',
+                textAlign: 'left',
+            });
+            btn.addEventListener('click', function () { onPick(preset); close(); });
+            wrap.appendChild(btn);
+        });
+
+        const customWrap = document.createElement('div');
+        Object.assign(customWrap.style, { display: 'flex', gap: '4px', alignItems: 'center', marginTop: '4px' });
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = 'px';
+        input.min = '40';
+        input.max = '4000';
+        Object.assign(input.style, {
+            flex: '1', padding: '4px 6px', borderRadius: '4px',
+            border: '1px solid #d1d5db', fontSize: '13px',
+        });
+        const apply = document.createElement('button');
+        apply.type = 'button';
+        apply.textContent = 'OK';
+        Object.assign(apply.style, {
+            padding: '4px 10px', borderRadius: '4px',
+            border: '1px solid #3b82f6', background: '#3b82f6',
+            color: '#fff', cursor: 'pointer', fontSize: '13px',
+        });
+        apply.addEventListener('click', function () {
+            const v = parseInt(input.value, 10);
+            if (v && v >= 40 && v <= 4000) { onPick(v + 'px'); close(); }
+        });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); apply.click(); }
+        });
+        customWrap.appendChild(input);
+        customWrap.appendChild(apply);
+        wrap.appendChild(customWrap);
+
+        return wrap;
     }
 
     document.addEventListener('trix-initialize', function (event) {
