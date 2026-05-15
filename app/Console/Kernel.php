@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         // без этого cron каждую минуту запускал бы новые параллельные
         // start_sender'ы и плодил зависших.
         $schedule->call([SenderController::class, 'cron_start'])
+            ->name('senders_cron_start')
             ->everyMinute()
             ->withoutOverlapping(30);
         $schedule->call([TicketController::class, 'autoCloseCron'])->everyMinute();
@@ -43,6 +44,7 @@ class Kernel extends ConsoleKernel
         // выходим, чтобы следующий cron tick подхватил. Так email-рассылка
         // (job SendBroadcastEmail) запускается асинхронно без supervisord.
         $schedule->command('queue:work --stop-when-empty --max-time=55 --tries=3 --sleep=2')
+            ->name('queue_worker')
             ->everyMinute()
             ->withoutOverlapping(2)
             ->runInBackground();
