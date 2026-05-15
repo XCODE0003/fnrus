@@ -49,6 +49,17 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping(2)
             ->runInBackground();
 
+        // Telegram bot polling — webhook to /s/{sid} is blocked by the
+        // edge WAF (Mitelis returns 403 to incoming POSTs). We pull
+        // updates outbound via getUpdates and re-inject them through
+        // Apache on the loopback IP every minute. The command itself
+        // long-polls for up to 55 seconds.
+        $schedule->command('bot:poll --timeout=25')
+            ->name('bot_poll')
+            ->everyMinute()
+            ->withoutOverlapping(2)
+            ->runInBackground();
+
         // Подбираем счётчики email-рассылок (recipients_sent / failed)
         // — статус STATUS_SENT когда все письма обработаны.
         $schedule->call(function () {
