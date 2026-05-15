@@ -363,120 +363,176 @@
     }
 
     /**
-     * Make every <img> inside the editor resizable via:
-     *   • drag handle in the bottom-right corner (sets inline width:px)
-     *   • click on the image → preset popover (25/50/75/100% + manual px)
+     * Image-resize UX:
      *
-     * Width is stored as an inline `style="width: ...; height: auto;"`
-     * — Trix preserves inline styles through save/load, and on the
-     * public site the same style renders as-is.
+     *   1. Click on an image inside the editor → a floating popover
+     *      anchored to the document.body opens with width presets
+     *      (25/50/75/100% / auto) and a manual px input.
+     *   2. While the popover is open, a blue dashed outline is drawn
+     *      over the image.
+     *   3. Trix represents inserted images in two ways and we handle
+     *      both:
+     *        • Attachment image (Filament's "attachFiles" / our
+     *          "Upload image" via Trix.insertAttachment) — lives inside
+     *          a <figure data-trix-attachment>. Use Attachment.setAttributes
+     *          ({ width, height }) so the value survives every Trix
+     *          re-render of the attachment HTML.
+     *        • Raw <img> inserted via loadHTML — directly set inline
+     *          style on the <img>. Trix preserves inline styles in this
+     *          path.
+     *   4. After mutating, force re-serialisation via Trix's input
+     *      element so Livewire picks up the new HTML.
      */
     function attachImageResize(editorEl, editor) {
-        const HANDLE_CLS = 'fnr-img-handle';
-        const wrapImage = function (img) {
-            if (img.dataset.fnrResizable === '1') return;
-            img.dataset.fnrResizable = '1';
-            img.style.cursor = 'pointer';
-            img.style.boxShadow = img.style.boxShadow || '';
-
-            const handle = document.createElement('span');
-            handle.className = HANDLE_CLS;
-            Object.assign(handle.style, {
-                position: 'absolute', width: '14px', height: '14px',
-                right: '-7px', bottom: '-7px',
-                background: '#3b82f6', border: '2px solid #fff',
-                borderRadius: '50%', cursor: 'nwse-resize',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.3)', zIndex: 2,
-                pointerEvents: 'auto',
-            });
-            // Make handle a sibling positioned over the image. Trix wraps
-            // images in <figure data-trix-attachment> or leaves them bare
-            // depending on insert path — handle both.
-            const parent = img.parentElement;
-            if (!parent) return;
-            const cs = window.getComputedStyle(parent);
-            if (cs.position === 'static') {
-                parent.style.position = 'relative';
-            }
-            parent.appendChild(handle);
-
-            let startX = 0, startW = 0, dragging = false;
-            handle.addEventListener('pointerdown', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dragging = true;
-                startX = e.clientX;
-                startW = img.getBoundingClientRect().width;
-                handle.setPointerCapture(e.pointerId);
-            });
-            handle.addEventListener('pointermove', function (e) {
-                if (!dragging) return;
-                const delta = e.clientX - startX;
-                const newW = Math.max(40, Math.round(startW + delta));
-                img.style.width = newW + 'px';
-                img.style.height = 'auto';
-                img.style.maxWidth = '100%';
-            });
-            const endDrag = function (e) {
-                if (!dragging) return;
-                dragging = false;
-                try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
-                // Tell Trix the document changed so save / live-preview pick up the new style.
-                if (editor && typeof editor.recordUndoEntry === 'function') {
-                    editor.recordUndoEntry('Resize image');
-                }
-                // Force Trix to re-serialise: a no-op selection change triggers it.
-                if (editor && typeof editor.setSelectedRange === 'function') {
-                    try { editor.setSelectedRange(editor.getSelectedRange()); } catch (_) {}
-                }
-            };
-            handle.addEventListener('pointerup', endDrag);
-            handle.addEventListener('pointercancel', endDrag);
-
-            // Click the image itself → quick preset popover (25/50/75/100% + manual).
-            img.addEventListener('click', function (e) {
-                if (e.target === handle) return;
-                e.preventDefault();
-                e.stopPropagation();
-                const rect = img.getBoundingClientRect();
-                const pop = makeWidthPresetPopover(function (value) {
-                    applyImageWidth(img, value);
-                    if (editor && typeof editor.recordUndoEntry === 'function') {
-                        editor.recordUndoEntry('Set image width');
-                    }
-                });
-                pop.style.left = (window.scrollX + rect.left) + 'px';
-                pop.style.top = (window.scrollY + rect.bottom + 6) + 'px';
-                document.body.appendChild(pop);
-            });
-        };
-
-        const sweepImages = function () {
-            editorEl.querySelectorAll('img').forEach(wrapImage);
-        };
-        sweepImages();
-
-        // Re-wrap after Trix re-renders content.
-        editorEl.addEventListener('trix-change', sweepImages);
-        // Also catch images added later via attachment-add.
-        editorEl.addEventListener('trix-attachment-add', function () {
-            // Trix builds the attachment DOM asynchronously — wait a tick.
-            setTimeout(sweepImages, 60);
+        // Single delegated click listener — no per-image setup that
+        // Trix can later wipe during a re-render.
+        editorEl.addEventListener('click', function (e) {
+            const img = e.target && e.target.tagName === 'IMG' ? e.target : null;
+            if (!img || !editorEl.contains(img)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            openResizePopover(img, editorEl, editor);
         });
     }
 
-    function applyImageWidth(img, value) {
-        // value: '25%' | '50%' | '75%' | '100%' | 'auto' | 'NNNpx'
-        if (value === 'auto' || value === null) {
-            img.style.removeProperty('width');
+    function highlightImage(img, on) {
+        if (on) {
+            img.dataset.fnrPrevOutline = img.style.outline || '';
+            img.style.outline = '2px dashed #3b82f6';
+            img.style.outlineOffset = '2px';
         } else {
-            img.style.width = value;
+            img.style.outline = img.dataset.fnrPrevOutline || '';
+            img.style.outlineOffset = '';
+            delete img.dataset.fnrPrevOutline;
         }
-        img.style.height = 'auto';
-        img.style.maxWidth = '100%';
     }
 
-    function makeWidthPresetPopover(onPick) {
+    function openResizePopover(img, editorEl, editor) {
+        highlightImage(img, true);
+
+        const rect = img.getBoundingClientRect();
+        const pop = makeWidthPresetPopover(
+            function (value) {
+                applyImageWidth(img, value, editorEl, editor);
+            },
+            function () { highlightImage(img, false); },
+        );
+        pop.style.left = (window.scrollX + Math.max(8, rect.left)) + 'px';
+        pop.style.top = (window.scrollY + rect.bottom + 6) + 'px';
+        document.body.appendChild(pop);
+    }
+
+    /**
+     * Apply the chosen width to an image, handling both attachment and
+     * raw paths. value: '25%' | '50%' | '75%' | '100%' | 'auto' | 'NNNpx'.
+     */
+    function applyImageWidth(img, value, editorEl, editor) {
+        const figure = img.closest('figure[data-trix-attachment]');
+
+        if (figure && editor) {
+            // Attachment path — find the Attachment object and call
+            // setAttributes so Trix persists width/height into the
+            // attachment metadata and re-renders the figure with the
+            // correct img width/height attributes.
+            const attachment = findAttachmentForFigure(editor, figure);
+            if (attachment) {
+                const dims = computeDimensions(img, value);
+                if (dims === null) {
+                    attachment.setAttributes({ width: null, height: null });
+                } else {
+                    attachment.setAttributes(dims);
+                }
+                // Trix's "input" event is what Livewire/Filament listen
+                // for; recordUndoEntry plus a synthetic input dispatch
+                // makes sure the form sees the change.
+                if (typeof editor.recordUndoEntry === 'function') {
+                    editor.recordUndoEntry('Resize image');
+                }
+                editorEl.dispatchEvent(new Event('input', { bubbles: true }));
+                editorEl.dispatchEvent(new Event('change', { bubbles: true }));
+                return;
+            }
+        }
+
+        // Raw <img> path.
+        if (value === 'auto' || value === null) {
+            img.style.removeProperty('width');
+            img.style.removeProperty('height');
+        } else {
+            img.style.width = value;
+            img.style.height = 'auto';
+            img.style.maxWidth = '100%';
+        }
+        if (editor && typeof editor.recordUndoEntry === 'function') {
+            editor.recordUndoEntry('Resize image');
+        }
+        // For raw images we need to write the change back into the
+        // hidden <input> that Trix maintains, otherwise loadHTML on
+        // next render will revert it.
+        try {
+            const inputId = editorEl.getAttribute('input');
+            const hidden = inputId && document.getElementById(inputId);
+            if (hidden && editorEl.innerHTML) {
+                hidden.value = editorEl.innerHTML;
+            }
+        } catch (_) {}
+        editorEl.dispatchEvent(new Event('input', { bubbles: true }));
+        editorEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function findAttachmentForFigure(editor, figure) {
+        try {
+            const id = figure.getAttribute('data-trix-id');
+            const doc = editor.getDocument();
+            const attachments = doc.getAttachments();
+            for (let i = 0; i < attachments.length; i++) {
+                const a = attachments[i];
+                if (id && String(a.id) === String(id)) return a;
+            }
+            // Fallback: match by URL.
+            const innerImg = figure.querySelector('img');
+            const src = innerImg ? innerImg.getAttribute('src') : null;
+            if (src) {
+                for (let i = 0; i < attachments.length; i++) {
+                    const attrs = attachments[i].getAttributes();
+                    if (attrs && (attrs.url === src || attrs.href === src)) {
+                        return attachments[i];
+                    }
+                }
+            }
+        } catch (_) {}
+        return null;
+    }
+
+    /**
+     * Convert a width preset/value into {width, height} pixels that
+     * preserve the image's natural aspect ratio. Trix attachments need
+     * both dimensions in pixels — percentages aren't supported.
+     */
+    function computeDimensions(img, value) {
+        if (value === 'auto' || value === null) return null;
+
+        const naturalW = img.naturalWidth || img.getBoundingClientRect().width || 600;
+        const naturalH = img.naturalHeight || img.getBoundingClientRect().height || 400;
+        const aspect = naturalH / naturalW;
+
+        let targetW;
+        const m = String(value).match(/^(\d+)%$/);
+        if (m) {
+            const pct = parseInt(m[1], 10) / 100;
+            // Resolve % against the editor's content width so the
+            // resulting pixel value reflects the actual rendered size.
+            const editorWidth = (img.closest('trix-editor')?.clientWidth) || naturalW;
+            targetW = Math.max(40, Math.round(editorWidth * pct));
+        } else {
+            const px = parseInt(value, 10);
+            targetW = Math.max(40, isFinite(px) ? px : naturalW);
+        }
+        const targetH = Math.max(20, Math.round(targetW * aspect));
+        return { width: targetW, height: targetH };
+    }
+
+    function makeWidthPresetPopover(onPick, onClose) {
         const wrap = document.createElement('div');
         Object.assign(wrap.style, {
             position: 'absolute', zIndex: 9999, background: '#fff',
@@ -488,6 +544,7 @@
         const close = function () {
             document.removeEventListener('click', outside, true);
             if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+            if (typeof onClose === 'function') onClose();
         };
         const outside = function (e) { if (!wrap.contains(e.target)) close(); };
         setTimeout(function () { document.addEventListener('click', outside, true); }, 0);
