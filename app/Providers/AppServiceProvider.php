@@ -43,6 +43,41 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('richHtml', function ($expression) {
             return "<?php echo \\App\\Support\\RichHtml::render({$expression}); ?>";
         });
+
+        // Universal audit log — every create/update/delete on these models
+        // by an authenticated web admin gets recorded into maintenance_logs
+        // and surfaces on /xoalfjamapfn/admin/maintenance-logs. Skips when
+        // there is no web-authed user (cron, queue, bot webhook), so this
+        // doesn't add system noise.
+        $observed = [
+            \App\Models\Product::class,
+            \App\Models\Category::class,
+            \App\Models\Tariff::class,
+            \App\Models\Material::class,
+            \App\Models\Order::class,
+            \App\Models\Instruction::class,
+            \App\Models\Sender::class,
+            \App\Models\EmailBroadcast::class,
+            \App\Models\Text::class,
+            \App\Models\Button::class,
+            \App\Models\ButtonSettings::class,
+            \App\Models\ChannelSub::class,
+            \App\Models\ChannelSubSettings::class,
+            \App\Models\TelegramChannel::class,
+            \App\Models\StatusCheat::class,
+            \App\Models\User::class,
+            \App\Models\Member::class,
+            \App\Models\Shop::class,
+            \App\Models\ShopSettings::class,
+            \App\Models\Faq::class,
+            \App\Models\Review::class,
+            \App\Models\Attach::class,
+        ];
+        foreach ($observed as $modelClass) {
+            if (class_exists($modelClass)) {
+                $modelClass::observe(\App\Observers\AuditObserver::class);
+            }
+        }
     }
 
     public static function pluralize($count, $one, $few, $many)
