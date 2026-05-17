@@ -154,6 +154,13 @@ class TelegramPublisher
      * change notifications which target one configured channel instead
      * of fanning out to every row in telegram_channels.
      *
+     * Image handling: if $imageUrl looks like one of our own
+     * https://fnrus.com/... links, we try to resolve it to a local
+     * file on disk and upload via multipart. Telegram-fetch-by-URL
+     * fails on this host because the edge WAF blocks the bot's IP
+     * with 403, which surfaces as "Bad Request: wrong type of the
+     * web page content".
+     *
      * @return array{ok: bool, errors: array<int, string>, sent: int}
      */
     public function sendToChat(string $chatId, string $messageHtml, ?string $imageUrl = null, ?int $shopId = null): array
@@ -176,28 +183,40 @@ class TelegramPublisher
         }
 
         $payload = $this->sanitizeForTelegram($messageHtml);
-        $endpoint = $imageUrl
-            ? self::API_BASE . $token . '/sendPhoto'
-            : self::API_BASE . $token . '/sendMessage';
-
-        $body = $imageUrl
-            ? [
-                'chat_id'    => $chatId,
-                'photo'      => $imageUrl,
-                'caption'    => mb_substr($payload, 0, 1024),
-                'parse_mode' => 'HTML',
-            ]
-            : [
-                'chat_id'                  => $chatId,
-                'text'                     => mb_substr($payload, 0, 4096),
-                'parse_mode'               => 'HTML',
-                'disable_web_page_preview' => true,
-            ];
+        $localFile = $imageUrl ? $this->resolveLocalFileFromUrl($imageUrl) : null;
 
         try {
-            $response = Http::timeout(self::HTTP_TIMEOUT)
-                ->asForm()
-                ->post($endpoint, $body);
+            if ($imageUrl && $localFile !== null) {
+                // Multipart upload — bot doesn't have to fetch our domain.
+                $endpoint = self::API_BASE . $token . '/sendPhoto';
+                $response = Http::timeout(self::HTTP_TIMEOUT)
+                    ->attach('photo', fopen($localFile, 'r'), basename($localFile))
+                    ->asMultipart()
+                    ->post($endpoint, [
+                        'chat_id'    => $chatId,
+                        'caption'    => mb_substr($payload, 0, 1024),
+                        'parse_mode' => 'HTML',
+                    ]);
+            } elseif ($imageUrl) {
+                // Remote URL fallback — Telegram fetches it itself.
+                $response = Http::timeout(self::HTTP_TIMEOUT)
+                    ->asForm()
+                    ->post(self::API_BASE . $token . '/sendPhoto', [
+                        'chat_id'    => $chatId,
+                        'photo'      => $imageUrl,
+                        'caption'    => mb_substr($payload, 0, 1024),
+                        'parse_mode' => 'HTML',
+                    ]);
+            } else {
+                $response = Http::timeout(self::HTTP_TIMEOUT)
+                    ->asForm()
+                    ->post(self::API_BASE . $token . '/sendMessage', [
+                        'chat_id'                  => $chatId,
+                        'text'                     => mb_substr($payload, 0, 4096),
+                        'parse_mode'               => 'HTML',
+                        'disable_web_page_preview' => true,
+                    ]);
+            }
         } catch (\Throwable $e) {
             Log::error('TelegramPublisher::sendToChat: HTTP threw', [
                 'chat_id' => $chatId,
@@ -209,13 +228,46 @@ class TelegramPublisher
         if (!$response->successful() || data_get($response->json(), 'ok') !== true) {
             $description = (string) data_get($response->json(), 'description', $response->body());
             Log::warning('TelegramPublisher::sendToChat: send failed', [
-                'chat_id'  => $chatId,
-                'status'   => $response->status(),
-                'response' => substr($response->body(), 0, 400),
+                'chat_id'    => $chatId,
+                'used_local' => $localFile !== null,
+                'status'     => $response->status(),
+                'response'   => substr($response->body(), 0, 400),
             ]);
             return ['ok' => false, 'errors' => [$description], 'sent' => 0];
         }
 
         return ['ok' => true, 'errors' => [], 'sent' => 1];
+    }
+
+    /**
+     * Maps a public URL on our own host (asset("storage/...") or
+     * /i{hash}) back to the file on disk so we can multipart-upload it
+     * to Telegram and skip the edge WAF.
+     */
+    private function resolveLocalFileFromUrl(string $url): ?string
+    {
+        $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+        $urlHost = parse_url($url, PHP_URL_HOST);
+        if ($appHost && $urlHost && $appHost !== $urlHost) {
+            return null;
+        }
+
+        $path = (string) parse_url($url, PHP_URL_PATH);
+
+        // /storage/{rel} → storage/app/public/{rel}
+        if (preg_match('~^/storage/(.+)$~', $path, $m)) {
+            $abs = storage_path('app/public/' . $m[1]);
+            return is_file($abs) ? $abs : null;
+        }
+        // /i{hash} → covers/{hash}.{ext}
+        if (preg_match('~^/i([A-Za-z0-9_-]+)$~', $path, $m)) {
+            $row = \DB::table('attachments')->where('id', $m[1])->first();
+            if ($row && !empty($row->ext)) {
+                $abs = storage_path('app/public/covers/' . $row->id . '.' . $row->ext);
+                return is_file($abs) ? $abs : null;
+            }
+        }
+
+        return null;
     }
 }
