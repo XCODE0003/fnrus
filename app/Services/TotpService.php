@@ -49,10 +49,21 @@ class TotpService
         }
 
         $timeSlice = (int) floor(time() / self::PERIOD);
-        for ($i = -$window; $i <= $window; $i++) {
-            if (hash_equals($this->codeAt($secret, $timeSlice + $i), $code)) {
-                return true;
+        try {
+            for ($i = -$window; $i <= $window; $i++) {
+                if (hash_equals($this->codeAt($secret, $timeSlice + $i), $code)) {
+                    return true;
+                }
             }
+        } catch (\Throwable $e) {
+            // Corrupt or non-Base32 secret stored in users.two_factor_secret
+            // (e.g. a stale debugging placeholder). Don't 500 the challenge
+            // page — return false so the user is treated as failed-code,
+            // and the bridge / setup flow can recover them.
+            \Log::warning('TotpService::verify: secret malformed', [
+                'error' => $e->getMessage(),
+            ]);
+            return false;
         }
         return false;
     }
