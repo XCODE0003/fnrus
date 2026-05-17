@@ -436,7 +436,10 @@ class AuthController
                     throw new Exception('Не введен новый пароль!');
                 }
                 if ($request->code == '' && $request->new_password == ''){
-                    $code = Str::random(32);
+                    // 6-значный числовой код — именно его ждёт форма
+                    // (placeholder "Введите 6-значный код") и валидатор
+                    // ниже по этому же методу: min:6|max:6.
+                    $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                     $member->remember_code = $code;
                     $member->save();
 
@@ -444,7 +447,7 @@ class AuthController
                     // HTML-шаблон с layout-картинкой от telegra.ph
                     // классифицируется Proton/Gmail как фишинг и глушится,
                     // тогда как Mail::raw plain-text доходит до Inbox.
-                    $body = "Код для восстановления пароля: " . strtoupper($code) . "\n\n"
+                    $body = "Код для восстановления пароля: " . $code . "\n\n"
                           . "Введите этот код на странице восстановления.\n\n"
                           . "Если заявку на восстановление подали не Вы — просто проигнорируйте письмо.\n\n"
                           . "— Fnrus";
