@@ -43,7 +43,11 @@ class Kernel extends ConsoleKernel
         // Cron-based queue worker — поднимаем воркер на 55 секунд, потом
         // выходим, чтобы следующий cron tick подхватил. Так email-рассылка
         // (job SendBroadcastEmail) запускается асинхронно без supervisord.
-        $schedule->command('queue:work --stop-when-empty --max-time=55 --tries=3 --sleep=2')
+        // queue:work падал, потому что Hestia блокирует pcntl_signal в
+        // disable_functions, а Worker.php решает "supportsAsyncSignals"
+        // по extension_loaded('pcntl') и зовёт сигналы безусловно.
+        // Используем безсигнальный queue:drain — он жив на shared-хостах.
+        $schedule->command('queue:drain --max-time=55 --max-jobs=200')
             ->name('queue_worker')
             ->everyMinute()
             ->withoutOverlapping(2)
