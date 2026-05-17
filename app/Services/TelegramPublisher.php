@@ -148,4 +148,74 @@ class TelegramPublisher
             'sent'   => $sent,
         ];
     }
+
+    /**
+     * Send a single message (one chat, one HTTP call) — used by status
+     * change notifications which target one configured channel instead
+     * of fanning out to every row in telegram_channels.
+     *
+     * @return array{ok: bool, errors: array<int, string>, sent: int}
+     */
+    public function sendToChat(string $chatId, string $messageHtml, ?string $imageUrl = null, ?int $shopId = null): array
+    {
+        $chatId = trim($chatId);
+        if ($chatId === '') {
+            return ['ok' => false, 'errors' => ['chat_id is empty'], 'sent' => 0];
+        }
+
+        $shop = $shopId ? Shop::getByID($shopId) : Shop::getDefault();
+        if (!$shop) {
+            return ['ok' => false, 'errors' => ['Shop not found'], 'sent' => 0];
+        }
+
+        try {
+            $token = Crypt::decryptString($shop->token);
+        } catch (\Throwable $e) {
+            Log::error('TelegramPublisher::sendToChat: cannot decrypt shop token', ['shop_id' => $shop->id]);
+            return ['ok' => false, 'errors' => ['Invalid shop token'], 'sent' => 0];
+        }
+
+        $payload = $this->sanitizeForTelegram($messageHtml);
+        $endpoint = $imageUrl
+            ? self::API_BASE . $token . '/sendPhoto'
+            : self::API_BASE . $token . '/sendMessage';
+
+        $body = $imageUrl
+            ? [
+                'chat_id'    => $chatId,
+                'photo'      => $imageUrl,
+                'caption'    => mb_substr($payload, 0, 1024),
+                'parse_mode' => 'HTML',
+            ]
+            : [
+                'chat_id'                  => $chatId,
+                'text'                     => mb_substr($payload, 0, 4096),
+                'parse_mode'               => 'HTML',
+                'disable_web_page_preview' => true,
+            ];
+
+        try {
+            $response = Http::timeout(self::HTTP_TIMEOUT)
+                ->asForm()
+                ->post($endpoint, $body);
+        } catch (\Throwable $e) {
+            Log::error('TelegramPublisher::sendToChat: HTTP threw', [
+                'chat_id' => $chatId,
+                'error'   => $e->getMessage(),
+            ]);
+            return ['ok' => false, 'errors' => [$e->getMessage()], 'sent' => 0];
+        }
+
+        if (!$response->successful() || data_get($response->json(), 'ok') !== true) {
+            $description = (string) data_get($response->json(), 'description', $response->body());
+            Log::warning('TelegramPublisher::sendToChat: send failed', [
+                'chat_id'  => $chatId,
+                'status'   => $response->status(),
+                'response' => substr($response->body(), 0, 400),
+            ]);
+            return ['ok' => false, 'errors' => [$description], 'sent' => 0];
+        }
+
+        return ['ok' => true, 'errors' => [], 'sent' => 1];
+    }
 }

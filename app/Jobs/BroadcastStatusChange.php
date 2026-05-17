@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ShopSettings;
 use App\Services\TelegramPublisher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,10 +35,20 @@ class BroadcastStatusChange implements ShouldQueue
 
     public function handle(TelegramPublisher $publisher): void
     {
-        $result = $publisher->broadcast($this->messageHtml, $this->imageUrl, $this->shopId);
+        // Status-change notifications go to ONE configured channel
+        // (shops_settings.status_broadcast_chat_id) — not to every row
+        // in telegram_channels. Skip silently when not configured so
+        // admins can disable the feature by clearing the field.
+        $chatId = trim((string) (ShopSettings::getDefault()?->status_broadcast_chat_id ?? ''));
+        if ($chatId === '') {
+            Log::info('BroadcastStatusChange: no chat_id configured, skipping');
+            return;
+        }
+
+        $result = $publisher->sendToChat($chatId, $this->messageHtml, $this->imageUrl, $this->shopId);
 
         if (!$result['ok']) {
-            Log::warning('BroadcastStatusChange: completed with errors', $result);
+            Log::warning('BroadcastStatusChange: completed with errors', $result + ['chat_id' => $chatId]);
         }
     }
 

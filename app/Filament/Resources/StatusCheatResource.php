@@ -190,7 +190,10 @@ class StatusCheatResource extends Resource
                 'error' => $e->getMessage(),
             ]);
             try {
-                $publisher->broadcast($rendered, $imageUrl);
+                $chatId = trim((string) (ShopSettings::getDefault()?->status_broadcast_chat_id ?? ''));
+                if ($chatId !== '') {
+                    $publisher->sendToChat($chatId, $rendered, $imageUrl);
+                }
             } catch (\Throwable $inner) {
                 Log::error('Filament StatusCheat: sync broadcast failed', [
                     'error' => $inner->getMessage(),

@@ -33,6 +33,7 @@ class StatusBroadcastTemplate extends Page implements HasForms
         $this->form->fill([
             'template' => $settings?->status_broadcast_template ?? '',
             'image_path' => $settings?->status_broadcast_image_path,
+            'chat_id' => $settings?->status_broadcast_chat_id ?? '',
         ]);
     }
 
@@ -40,6 +41,16 @@ class StatusBroadcastTemplate extends Page implements HasForms
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('chat_id')
+                    ->label('Куда отправлять (chat_id / @username канала)')
+                    ->placeholder('-1001234567890 или @my_channel')
+                    ->helperText(
+                        'ID канала или его @username. Бот должен быть админом этого канала. '
+                        . 'Получить chat_id: добавьте бота в канал, перешлите любое сообщение из канала боту @userinfobot — он покажет chat_id (отрицательное число для каналов).'
+                    )
+                    ->maxLength(64)
+                    ->columnSpanFull(),
+
                 Forms\Components\Placeholder::make('hint')
                     ->label('Доступные плейсхолдеры')
                     ->content('{game}, {product}, {status} — будут подставлены автоматически. Используется как fallback, когда у конкретного статуса свой шаблон не задан.'),
@@ -78,6 +89,7 @@ class StatusBroadcastTemplate extends Page implements HasForms
 
         $settings->status_broadcast_template = $data['template'] ?? '';
         $settings->status_broadcast_image_path = $data['image_path'] ?: null;
+        $settings->status_broadcast_chat_id = trim((string) ($data['chat_id'] ?? '')) ?: null;
         $settings->save();
 
         Notification::make()
