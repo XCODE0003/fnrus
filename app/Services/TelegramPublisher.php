@@ -66,6 +66,27 @@ class TelegramPublisher
         $allowed = '<b><i><u><s><a><code><pre>';
         $text = strip_tags($text, $allowed);
 
+        // Decode HTML entities Telegram doesn't understand (it only
+        // recognises &lt; &gt; &amp; &quot;). Anything else — &nbsp;
+        // &mdash; &hellip; etc. — would otherwise render literally in
+        // the channel ("✅ &nbsp;Изменение"). Trick: temporarily
+        // replace the four entities with markers so they survive the
+        // bulk decode, then restore them.
+        $placeholders = [
+            '&amp;'  => "\x00TG_AMP\x00",
+            '&lt;'   => "\x00TG_LT\x00",
+            '&gt;'   => "\x00TG_GT\x00",
+            '&quot;' => "\x00TG_QUOT\x00",
+        ];
+        $text = strtr($text, $placeholders);
+        $text = html_entity_decode($text, ENT_HTML5 | ENT_QUOTES, 'UTF-8');
+        $text = strtr($text, array_flip($placeholders));
+
+        // Real non-breaking space (U+00A0) — most fonts render it but
+        // visually it's identical to a regular space and Telegram
+        // sometimes still shows it as a fallback box. Collapse it too.
+        $text = str_replace("\xC2\xA0", ' ', $text);
+
         // Collapse 3+ newlines to 2.
         $text = preg_replace("#\n{3,}#", "\n\n", $text) ?? $text;
 
