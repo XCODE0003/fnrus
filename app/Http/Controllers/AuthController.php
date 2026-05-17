@@ -439,7 +439,16 @@ class AuthController
                     $code = Str::random(32);
                     $member->remember_code = $code;
                     $member->save();
-                    Mail::send('emails.reset-code', ['code' => strtoupper($code)], function ($message) use ($member) {
+
+                    // Plain text вместо emails.reset-code blade.
+                    // HTML-шаблон с layout-картинкой от telegra.ph
+                    // классифицируется Proton/Gmail как фишинг и глушится,
+                    // тогда как Mail::raw plain-text доходит до Inbox.
+                    $body = "Код для восстановления пароля: " . strtoupper($code) . "\n\n"
+                          . "Введите этот код на странице восстановления.\n\n"
+                          . "Если заявку на восстановление подали не Вы — просто проигнорируйте письмо.\n\n"
+                          . "— Fnrus";
+                    Mail::raw($body, function ($message) use ($member) {
                         $message->to($member->email, $member->username)
                             ->subject('Код для восстановления пароля');
                     });
