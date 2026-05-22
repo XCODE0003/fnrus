@@ -28,7 +28,7 @@
 <div class="px-4">
     <div class="popup__payment-methods" id="buy-payments-methods"></div>
     <div id="bt-payments-wrapper" style="display:none">
-        <div class="mb-2" style="cursor:pointer;font-size:14px;color:#6c757d" id="bt-back">&larr; {{ __('site.invoice_back') ?: 'Назад' }}</div>
+        <div class="mb-2" style="cursor:pointer;font-size:14px;color:#6c757d" id="bt-back">&larr; {{ __('site.invoice_back') }}</div>
         <div class="popup__payment-methods" id="bt-payments-methods"></div>
     </div>
 </div>

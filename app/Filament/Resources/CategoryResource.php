@@ -48,6 +48,10 @@ class CategoryResource extends Resource
                 AttachmentImageUpload::make('image')
                     ->label('Обложка для бота'),
 
+                AttachmentImageUpload::make('image_hero')
+                    ->label('Картинка героя (страница игры)')
+                    ->helperText('Большое изображение в шапке страницы игры. Если пусто — используется дефолтное.'),
+
                 Forms\Components\TextInput::make('title')
                     ->label('Название')
                     ->required()

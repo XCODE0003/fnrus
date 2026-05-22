@@ -17,21 +17,14 @@
             <div class="reviews-grid">
                 @foreach($reviews as $review)
                 <div class="rev-card">
-                    <div>
-                        <div class="rev-card__head">
-                            <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
-                            <div class="rev-card__meta">
-                                <p class="rev-card__name">{{ $review->author }}</p>
-                                <div class="rev-card__stars">
-                                    @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
-                                </div>
-                            </div>
-                        </div>
-                        <p class="rev-card__text">{{ $review->text }}</p>
+                    <div class="rev-card__head">
+                        <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
+                        <p class="rev-card__name">{{ $review->author }}</p>
                     </div>
-                    @if(!empty($review->link))
-                    <a target="_blank" href="{{ $review->link }}" class="rev-card__btn">{{ __('site.btn_reviews') }}</a>
-                    @endif
+                    <div class="rev-card__stars">
+                        @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
+                    </div>
+                    <p class="rev-card__text">{{ $review->text }}</p>
                 </div>
                 @endforeach
             </div>

@@ -584,6 +584,7 @@ Route::get('/{alias}', function ($alias) {
         'id' => $cat->id,
         'title' => $cat->localized_title,
         'description' => $cat->description,
+        'hero_image' => $cat->image_hero,
         'alias' => $alias,
         'display_products' => $cat->display_products,
         'cat_one' => '',

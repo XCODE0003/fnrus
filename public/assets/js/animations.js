@@ -150,8 +150,8 @@
 
         /* ===================== ОТЗЫВЫ (главная) ====================== */
         if (q('.reviews')) {
-            reveal('.reviews__badge, .reviews__title, .reviews__sub, .reviews__arrows', { y: 28, trigger: '.reviews' });
-            reveal('.rev-card', { scale: 0.92, stagger: 0.09, trigger: '.reviews-slider' });
+            reveal('.reviews__badge, .reviews__title, .reviews__subtitle, .reviews__all', { y: 28, trigger: '.reviews' });
+            reveal('.reviews .rev-card', { scale: 0.94, y: 22, stagger: 0.07, trigger: '.reviews-grid' });
         }
 
         /* ============================== FAQ ========================== */

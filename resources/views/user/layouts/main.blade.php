@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.71">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.72">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -190,7 +190,7 @@
 						<span class="social-btn__icon">
 							@include('user.partials.icon', ['icon' => \App\Models\ShopSettings::getDefault()->btn_tg_bot_icon ?? 'telegram', 'color' => '#FFFFFF', 'size' => 80])
 						</span>
-                <span class="social-btn__text">{{ \App\Models\ShopSettings::getDefault()->btn_tg_bot_text ?? 'Telegram Bot' }}</span>
+                <span class="social-btn__text">{{ \App\Models\ShopSettings::getDefault()->btn_tg_bot_text ?: __('site.footer_tg_bot') }}</span>
             </a>
         </div>
         <div class="content footer__bottom-container">
@@ -609,7 +609,7 @@
 </div>
 
 <script src="/assets/js/scripts.min.js?52"></script>
-<script src="/assets/js/animations.js?v=10"></script>
+<script src="/assets/js/animations.js?v=11"></script>
 <script>
 window.lang = {
     my_profile: @json(__('site.section_user_menu_profile')),

@@ -22,6 +22,7 @@ class Category extends Model
         'description',
         'image',
         'image_site',
+        'image_hero',
         'image_spoiler',
         'alias',
         'disable_web_page_preview',

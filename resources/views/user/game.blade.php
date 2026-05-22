@@ -6,15 +6,16 @@
             <div class="game-hero__text">
                 @php $tp = preg_split('/(?=\()/u', trim($title), 2); @endphp
                 <h1 class="game-hero__title">{{ __('site.game_cheats_for') }} {{ trim($tp[0]) }}@if(!empty($tp[1]))<span class="game-hero__title-dim"> {{ $tp[1] }}</span>@endif</h1>
-                @if(!empty($description))
-                <p class="game-hero__desc">Мы продаем лучшие приватные хаки для игры СЅ 2, Наши приватные читы созданные опытными разработчиками, предлагают различные функции для получения преимущества в игровом процессе. Наши приватные читы включают в себя возможность автонаводки на людей, просвет игроков через стены, что делает игровой процесс более легким и удобным</p>
+                @php $heroDesc = trim(strip_tags($description ?? '')); @endphp
+                @if($heroDesc !== '')
+                <p class="game-hero__desc">{{ $heroDesc }}</p>
                 @endif
                 @php $cnt = 0; foreach(($categories ?: []) as $c) { $cnt += count($c['products']); } @endphp
                 <span class="game-hero__count">@plural($cnt, __('site.game_product_one'), __('site.game_product_few'), __('site.game_product_many'))</span>
                 <a href="javascript:history.back()" class="game-hero__back">{{ __('site.game_back') }}</a>
             </div>
             <div class="game-hero__image">
-                <img src="/assets/img/pubg.png" alt="">
+                <img src="{{ !empty($hero_image) ? '/i'.$hero_image : '/assets/img/pubg.png' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.png'">
             </div>
         </div>
     </section>

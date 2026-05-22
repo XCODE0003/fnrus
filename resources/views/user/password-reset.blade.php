@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Установить новый пароль</title>
+    <title>{{ __('site.pwreset_title') }}</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         body { background:#0e141d; color:#eaeaea; font-family: sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; margin:0; padding:20px; }
@@ -23,18 +23,18 @@
 </head>
 <body>
 <div class="card">
-    <h1>Установить новый пароль</h1>
-    <p class="hint">Администратор сайта сбросил ваш текущий пароль. Введите новый пароль ниже — после успешного сохранения вы сможете войти как обычно.</p>
+    <h1>{{ __('site.pwreset_title') }}</h1>
+    <p class="hint">{{ __('site.pwreset_hint') }}</p>
     <form id="resetForm" autocomplete="off">
         <div class="field">
-            <label for="pw1">Новый пароль</label>
+            <label for="pw1">{{ __('site.pwreset_new_pass') }}</label>
             <input type="password" id="pw1" minlength="8" maxlength="128" required autocomplete="new-password">
         </div>
         <div class="field">
-            <label for="pw2">Повторите пароль</label>
+            <label for="pw2">{{ __('site.pwreset_repeat_pass') }}</label>
             <input type="password" id="pw2" minlength="8" maxlength="128" required autocomplete="new-password">
         </div>
-        <button type="submit" id="submitBtn">Сохранить пароль</button>
+        <button type="submit" id="submitBtn">{{ __('site.pwreset_save') }}</button>
         <div id="msg" class="msg"></div>
     </form>
 </div>
@@ -42,6 +42,15 @@
 <script>
     (function () {
         var token = @json($token);
+        var L = {
+            save: @json(__('site.pwreset_save')),
+            saving: @json(__('site.pwreset_saving')),
+            mismatch: @json(__('site.pwreset_mismatch')),
+            minLen: @json(__('site.pwreset_min_len')),
+            done: @json(__('site.pwreset_done')),
+            error: @json(__('site.pwreset_error')),
+            networkError: @json(__('site.pwreset_network_error'))
+        };
         var $form = $('#resetForm');
         var $btn = $('#submitBtn');
         var $msg = $('#msg');
@@ -55,10 +64,10 @@
             var p1 = $('#pw1').val();
             var p2 = $('#pw2').val();
 
-            if (p1 !== p2) { showMsg('err', 'Пароли не совпадают'); return; }
-            if (p1.length < 8) { showMsg('err', 'Минимум 8 символов'); return; }
+            if (p1 !== p2) { showMsg('err', L.mismatch); return; }
+            if (p1.length < 8) { showMsg('err', L.minLen); return; }
 
-            $btn.prop('disabled', true).text('Сохраняем…');
+            $btn.prop('disabled', true).text(L.saving);
 
             $.ajax({
                 type: 'POST',
@@ -67,16 +76,16 @@
                 data: JSON.stringify({ new_password: p1 }),
                 success: function (data) {
                     if (data.ok) {
-                        showMsg('ok', data.description || 'Готово');
+                        showMsg('ok', data.description || L.done);
                         setTimeout(function () { location.href = '/'; }, 1500);
                     } else {
-                        showMsg('err', data.description || 'Ошибка');
-                        $btn.prop('disabled', false).text('Сохранить пароль');
+                        showMsg('err', data.description || L.error);
+                        $btn.prop('disabled', false).text(L.save);
                     }
                 },
                 error: function () {
-                    showMsg('err', 'Сетевая ошибка');
-                    $btn.prop('disabled', false).text('Сохранить пароль');
+                    showMsg('err', L.networkError);
+                    $btn.prop('disabled', false).text(L.save);
                 }
             });
         });

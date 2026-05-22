@@ -114,47 +114,29 @@
                         <span class="reviews__badge-text">{{ __('site.section_reviews_title') }}</span>
                     </div>
                     <h2 class="reviews__title">{{ __('site.section_reviews_caption') }}</h2>
-                    <div class="reviews__sub">
-                        <span class="reviews__sub-count">{{ __('site.section_reviews_subcaption') }}</span>
-                        <a href="{{ $shop_set->btn_reviews_url ?? 'https://t.me/Palkey' }}" target="_blank" class="reviews__tg">
-                            <span class="reviews__tg-icon"><img src="/assets/img/rv-tg.svg" alt=""></span>
-                            {{ '@' . \Str::afterLast(rtrim($shop_set->btn_reviews_url ?? 'payson_keys', '/'), '/') }}
-                        </a>
-                    </div>
+                    <p class="reviews__subtitle">{{ __('site.section_reviews_subcaption') }}</p>
                 </div>
-                <div class="slider-arrows reviews__arrows">
-                    <button class="slider-arrows__arrow slider-arrows__prev"></button>
-                    <button class="slider-arrows__arrow slider-arrows__next"></button>
-                </div>
-            </div>
-            <div class="swiper reviews-slider js-carousel" data-carousel="reviews">
-                <div class="swiper-wrapper">
-                    @foreach($reviews as $review)
-                    <div class="swiper-slide rev-card">
-                        <div>
-                            <div class="rev-card__head">
-                                <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
-                                <div class="rev-card__meta">
-                                    <p class="rev-card__name">{{ $review->author }}</p>
-                                    <div class="rev-card__stars">
-                                        @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="rev-card__text">{{ $review->text }}</p>
-                        </div>
-
-                        <a target="_blank" href="{{ $review->link }}" class="rev-card__btn">{{ __('site.btn_reviews') }}</a>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            <div class="reviews__more-wrap">
-                <a href="/reviews" class="section-more-btn">
+                <a href="/reviews" class="reviews__all">
                     {{ __('site.btn_all_reviews') }}
                     <img src="/assets/img/catalog-more-arrow.svg" alt="">
                 </a>
             </div>
+            @if(count($reviews))
+            <div class="reviews-grid">
+                @foreach($reviews->take(6) as $review)
+                <div class="rev-card">
+                    <div class="rev-card__head">
+                        <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
+                        <p class="rev-card__name">{{ $review->author }}</p>
+                    </div>
+                    <div class="rev-card__stars">
+                        @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
+                    </div>
+                    <p class="rev-card__text">{{ $review->text }}</p>
+                </div>
+                @endforeach
+            </div>
+            @endif
         </div>
     </section>
     @if($faq)

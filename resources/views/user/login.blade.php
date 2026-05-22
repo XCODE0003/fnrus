@@ -1,6 +1,6 @@
-<html>
+<html lang="{{ app()->getLocale() }}">
 <head>
-    <title>Авторизация</title>
+    <title>{{ __('site.modal_auth_title') }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>

@@ -5378,6 +5378,7 @@ section:first-child {
 .profile__settings-block__input {
     border-radius: 12px;
     padding: 16px 28px;
+    color: #ffffff;
     margin-right: 10px;
     -webkit-box-flex: 1;
     -ms-flex: 1;
@@ -9908,7 +9909,7 @@ html.ios .js-carousel {
 .reviews__top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 40px;
 }
 
@@ -9947,7 +9948,7 @@ html.ios .js-carousel {
 }
 
 .reviews__title {
-    margin-top: 28px;
+    margin-top: 26px;
     font-family: 'Mazzard H';
     font-size: 55px;
     font-weight: 500;
@@ -9956,180 +9957,155 @@ html.ios .js-carousel {
     color: #fff;
 }
 
-.reviews__sub {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.reviews__sub-count {
+.reviews__subtitle {
+    margin-top: 15px;
     font-family: 'Mazzard M';
-    font-size: 22px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, .54);
-}
-
-.reviews__tg {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 13px 18px;
-    border-radius: 12px;
-    background-color: rgba(181, 153, 255, .09);
-    font-family: 'Mazzard H';
-    font-size: 16px;
-    font-weight: 500;
-    color: #b79dff;
-    text-decoration: none;
-    transition: .3s background-color;
-}
-
-.reviews__tg:hover {
-    background-color: rgba(181, 153, 255, .16);
-}
-
-.reviews__tg-icon {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: rgba(181, 153, 255, .2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.reviews__tg-icon img {
-    width: 13px;
-    height: 11px;
-    object-fit: contain;
-}
-
-.reviews__arrows {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0;
-    margin-top: 90px;
-}
-
-.reviews__arrows .slider-arrows__arrow {
-    width: 61px;
-    height: 61px;
-    border-radius: 9px;
-    background-color: #222730;
-    background-image: url(../img/rv-chevron.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 26px;
-    transition: .3s background-color, .3s opacity;
-}
-
-.reviews__arrows .slider-arrows__arrow:hover {
-    background-color: #2d3543;
-}
-
-.reviews__arrows .slider-arrows__prev {
-    -webkit-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
-    transform: scaleX(-1);
-}
-
-.reviews__arrows .slider-arrows__arrow.swiper-button-disabled {
-    opacity: .35;
-    pointer-events: none;
-}
-
-.reviews-slider {
-    margin-top: 50px;
-}
-
-.rev-card {
-    display: flex;
-    flex-direction: column;
-    background-color: #171d28;
-    border-radius: 24px;
-    padding: 24px;
-    overflow: hidden;
-    box-sizing: border-box;
-    height: auto;
-    justify-content: space-between;
-}
-
-.reviews-slider .rev-card,
-.reviews-slider.swiper-initialized .swiper-slide.rev-card {
-    width: 438px;
-    max-width: 80vw;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-}
-
-.rev-card__head {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.rev-card__avatar {
-    flex-shrink: 0;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.rev-card__meta {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.rev-card__name {
-    font-family: 'Mazzard M';
-    font-weight: 600;
-    font-size: 24px;
-    color: #fff;
-}
-
-.rev-card__stars {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-}
-
-.rev-card__stars img {
-    width: 20px;
-    height: 20px;
-}
-
-.rev-card__text {
-    margin-top: 20px;
-    font-family: 'Mazzard M';
-    font-weight: 400;
     font-size: 18px;
     line-height: 1.5;
     color: rgba(255, 255, 255, .5);
 }
 
-.rev-card__btn {
-    margin-top: 24px;
-    display: flex;
+.reviews__all {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    margin-bottom: 8px;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    justify-content: center;
-    height: 54px;
-    border-radius: 12px;
-    background-color: #272f3c;
+    gap: 9px;
     font-family: 'Mazzard M';
     font-weight: 600;
     font-size: 16px;
-    color: #fff;
+    color: #ac8dff;
     text-decoration: none;
-    transition: .3s background-color;
+    -webkit-transition: color .2s ease;
+    -o-transition: color .2s ease;
+    transition: color .2s ease;
 }
 
-.rev-card__btn:hover {
-    background-color: #313b4a;
+.reviews__all img {
+    width: 18px;
+    height: 13px;
+    -o-object-fit: contain;
+    object-fit: contain;
+    -webkit-transition: -webkit-transform .2s ease;
+    transition: -webkit-transform .2s ease;
+    -o-transition: transform .2s ease;
+    transition: transform .2s ease;
+    transition: transform .2s ease, -webkit-transform .2s ease;
+}
+
+.reviews__all:hover {
+    color: #c4adff;
+}
+
+.reviews__all:hover img {
+    -webkit-transform: translateX(4px);
+    -ms-transform: translateX(4px);
+    transform: translateX(4px);
+}
+
+/* ===== Отзывы — карточка (сетка) ===== */
+.rev-card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    background-color: #171d28;
+    border: 1px solid #202834;
+    border-radius: 20px;
+    padding: 28px;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: auto;
+    -webkit-transition: border-color .25s ease, -webkit-transform .25s ease;
+    transition: border-color .25s ease, -webkit-transform .25s ease;
+    -o-transition: border-color .25s ease, transform .25s ease;
+    transition: border-color .25s ease, transform .25s ease;
+    transition: border-color .25s ease, transform .25s ease, -webkit-transform .25s ease;
+}
+
+.rev-card:hover {
+    border-color: #2c3647;
+    -webkit-transform: translateY(-4px);
+    -ms-transform: translateY(-4px);
+    transform: translateY(-4px);
+}
+
+.rev-card::after {
+    content: '\201D';
+    position: absolute;
+    top: 16px;
+    right: 26px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 92px;
+    line-height: 1;
+    color: rgba(132, 86, 255, .14);
+    pointer-events: none;
+}
+
+.rev-card__head {
+    position: relative;
+    z-index: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 13px;
+}
+
+.rev-card__avatar {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    background-color: #0f141d;
+}
+
+.rev-card__name {
+    font-family: 'Mazzard M';
+    font-weight: 600;
+    font-size: 18px;
+    color: #fff;
+}
+
+.rev-card__stars {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 3px;
+    margin-top: 18px;
+}
+
+.rev-card__stars img {
+    width: 17px;
+    height: 17px;
+    -o-object-fit: contain;
+    object-fit: contain;
+}
+
+.rev-card__text {
+    margin-top: 16px;
+    font-family: 'Mazzard M';
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.62;
+    color: rgba(255, 255, 255, .55);
 }
 
 /* ===== FAQ (Часто задаваемые вопросы) ===== */
@@ -10384,7 +10360,7 @@ html.ios .js-carousel {
     margin-top: 30px;
     font-family: 'Mazzard M';
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     color: #8456ff;
 }
 
