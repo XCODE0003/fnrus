@@ -33,6 +33,7 @@
     </div>
 </div>
 <div class="px-4 mt-3 text-center">
+    <button class="btn btn-success btn-sm" id="btn-check-payment" onclick="checkPayment()">{{ __('site.invoice_check_payment') }}</button>
     <button class="btn btn-outline-danger btn-sm" id="btn-cancel-order" onclick="cancelOrder()">{{ __('site.invoice_cancel_order') }}</button>
 </div>
 </div>
@@ -49,6 +50,9 @@
         cancel_error: @json(__('site.invoice_cancel_error')),
         network_error: @json(__('site.invoice_network_error')),
         cancel_order: @json(__('site.invoice_cancel_order')),
+        check_payment: @json(__('site.invoice_check_payment')),
+        checking: @json(__('site.invoice_checking')),
+        not_paid_yet: @json(__('site.invoice_not_paid_yet')),
         min_payment_amount: @json(__('site.js_min_payment_amount')),
         max_payment_amount: @json(__('site.js_max_payment_amount'))
     };
@@ -244,6 +248,31 @@
                         });
                     });
                 }
+            }
+        });
+    }
+
+    function checkPayment() {
+        var $btn = $('#btn-check-payment');
+        $btn.prop('disabled', true).text(lang.checking);
+        $.ajax({
+            type: "GET",
+            url: '/invoice/{{ $hash }}/status',
+            dataType: 'json',
+            async: true,
+            success: function(data) {
+                if (data.ok === 'wait') {
+                    var $w = $('#payment-warning');
+                    $w.text(lang.not_paid_yet).stop(true, true).fadeIn(120);
+                    clearTimeout(window._pwHide);
+                    window._pwHide = setTimeout(function(){ $w.fadeOut(200); }, 6000);
+                    $btn.prop('disabled', false).text(lang.check_payment);
+                } else {
+                    getOrder();
+                }
+            },
+            error: function() {
+                $btn.prop('disabled', false).text(lang.check_payment);
             }
         });
     }

@@ -47,8 +47,16 @@ Route::domain('fnrus.com')->middleware('cors')->group(function () {
 
 Route::group([], function () {
 
-Route::post('/cheats/search', [CheatController::class, 'search']);
-Route::post('/search', [ProductController::class, 'search']);
+// Публичный поиск — лимит запросов (search-as-you-type + анти-DDoS).
+Route::middleware('throttle:60,1')->group(function () {
+    Route::post('/cheats/search', [CheatController::class, 'search']);
+    Route::post('/search', [ProductController::class, 'search']);
+});
+
+// Публичная отправка отзыва посетителем (попадает на модерацию) — строгий лимит против спама.
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/reviews/submit', [\App\Http\Controllers\ReviewController::class, 'submit']);
+});
 
 // Публичный завершающий шаг принудительного сброса пароля (без auth, by token).
 Route::post('/password-reset/{token}', [\App\Http\Controllers\PasswordResetController::class, 'complete'])

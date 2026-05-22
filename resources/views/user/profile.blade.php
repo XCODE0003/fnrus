@@ -114,12 +114,38 @@
                                 </div>
                             </div>
                             <div class="profile__tabs__tab" data-tab="3">
+                                @php
+                                    $_pUser = null;
+                                    $_pToken = request()->cookie('session_token');
+                                    if ($_pToken) {
+                                        try {
+                                            $_pUser = \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::setToken($_pToken)->authenticate();
+                                        } catch (\Exception $e) { $_pUser = null; }
+                                    }
+                                    $_tgOn = $_pUser && (int) $_pUser->tid > 0;
+                                    $_yaOn = $_pUser && (int) $_pUser->yandex_id > 0;
+                                @endphp
                                 <div class="profile__settings-block profile__settings-block_password">
                                     <div class="profile__settings-block__text">
                                         <p class="profile__settings-block__name">{{ __('site.profile_change_password') }}</p>
                                         <p class="profile__settings-block__descr">{{ __('site.profile_change_password_hint') }}</p>
                                     </div>
                                     <button class="profile__settings-block__edit-btn" data-popup="changePass"><span class="edit">{{ __('site.profile_edit') }}</span><span class="submit">{{ __('site.profile_apply') }}</span></button>
+                                </div>
+                                <div class="profile__auth-methods">
+                                    <p class="profile__auth-methods__title">{{ __('site.profile_login_methods') }}</p>
+                                    <div class="profile__auth-method">
+                                        <span class="profile__auth-method__name">{{ __('site.profile_method_email') }}</span>
+                                        <span class="profile__auth-method__status is-on">{{ __('site.profile_method_connected') }}</span>
+                                    </div>
+                                    <div class="profile__auth-method">
+                                        <span class="profile__auth-method__name">Telegram</span>
+                                        <span class="profile__auth-method__status {{ $_tgOn ? 'is-on' : '' }}">{{ $_tgOn ? __('site.profile_method_connected') : __('site.profile_method_not_connected') }}</span>
+                                    </div>
+                                    <div class="profile__auth-method">
+                                        <span class="profile__auth-method__name">{{ __('site.profile_method_yandex') }}</span>
+                                        <span class="profile__auth-method__status {{ $_yaOn ? 'is-on' : '' }}">{{ $_yaOn ? __('site.profile_method_connected') : __('site.profile_method_not_connected') }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="profile__tabs__tab" data-tab="4">

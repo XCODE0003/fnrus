@@ -16,11 +16,12 @@ class Review extends Model
         'text',
         'avatar',
         'created_at',
-        'link'
+        'link',
+        'status'
     ];
 
     public static function getAll(){
-        return Review::get();
+        return Review::where('status', 1)->orderBy('id', 'desc')->get();
     }
 
 }

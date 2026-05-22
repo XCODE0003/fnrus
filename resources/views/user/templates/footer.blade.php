@@ -11,7 +11,7 @@
 					?>
 					<ul class="footer__menu">
 						<li class="footer__menu__item _active"><a href="index.php">Главная</a></li>
-						<li class="footer__menu__item"><a href="status.php">Статус софта</a></li>
+						<li class="footer__menu__item"><a href="status.php">Статус читов</a></li>
 						<li class="footer__menu__item"><a href="about.php">О нас</a></li>
 						<li class="footer__menu__item"><a href="index.php#faq">Помощь</a></li>
 						<li class="footer__menu__item"><a href="policy.php">Пользовательское соглашение</a></li>

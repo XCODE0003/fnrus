@@ -96,6 +96,7 @@ Route::get('/login/{hash}', [AuthController::class, 'auth_by_link'])->where('has
 
 Route::get('/oauth/yandex/redirect', [YandexAuthController::class, 'redirect']);
 Route::get('/oauth/yandex/callback', [YandexAuthController::class, 'callback']);
+Route::get('/oauth/telegram/callback', [\App\Http\Controllers\TelegramAuthController::class, 'callback']);
 
 Route::get('/reconstruction', function () {
     return view('user.reconstruction');
@@ -325,6 +326,27 @@ Route::get('/about', function () {
     $about_items = AboutItem::getAllSorted();
     return view('user/about', ['title' => __('site.page_title_about'), 'categories' => $categories->getData()->result, 'shop' => $shop, 'about_items' => $about_items]);
 });
+Route::get('/games', function () {
+    $shop = Shop::getDefault();
+    $shop_set = ShopSettings::getDefault();
+    $categories = Category::list_web_by_cid(0);
+    return view('user/games', [
+        'title' => __('site.games_page_title'),
+        'categories' => $categories->getData()->result,
+        'shop' => $shop,
+        'shop_set' => $shop_set,
+    ]);
+})->name('games');
+Route::get('/reviews', function () {
+    $shop = Shop::getDefault();
+    $shop_set = ShopSettings::getDefault();
+    return view('user/reviews', [
+        'title' => __('site.reviews_page_title'),
+        'reviews' => Review::getAll(),
+        'shop' => $shop,
+        'shop_set' => $shop_set,
+    ]);
+})->name('reviews');
 Route::get('/policy', function () {
     $shop_set = ShopSettings::getDefault();
     $locale = app()->getLocale();
@@ -539,6 +561,7 @@ Route::get('/{alias}', function ($alias) {
                         'status_title' => $product->status_title,
                         'advantages' => $product->advantages,
                         'hack_status' => $product->hack_status,
+                        'price' => \App\Models\Tariff::where('pid', $product->id)->min('price'),
                         'alias' => $c->alias . '/' . $product->alias
                     ];
                 }
@@ -560,6 +583,7 @@ Route::get('/{alias}', function ($alias) {
     return view('user/game', [
         'id' => $cat->id,
         'title' => $cat->localized_title,
+        'description' => $cat->description,
         'alias' => $alias,
         'display_products' => $cat->display_products,
         'cat_one' => '',

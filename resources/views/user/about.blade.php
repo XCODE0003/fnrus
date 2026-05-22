@@ -40,17 +40,15 @@
             </div>
             <div class="about-section__block about-section__contacts">
                 @foreach($about_items as $item)
-                <div class="about-section__contact">
-                    <div class="about-section__contact-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                    @if($item->icon === 'telegram' || $item->icon === 'discord' || $item->icon === 'vk' || $item->icon === 'youtube' || $item->icon === 'instagram' || $item->icon === 'star')
-                    @include('user.partials.icon', ['icon' => $item->icon, 'color' => '#F5C48A', 'size' => 20])
-                    @else
-                    @include('user.partials.icon', ['icon' => 'link', 'color' => '#F5C48A', 'size' => 20])
-                    @endif
-                    <span style="margin: 0; opacity: .4; font-size: 16px; font-family: 'Mazzard M';">{{ $item->localized_label }}</span>
-                    </div>
-                    <p><a target="_blank" href="{{ $item->url }}" style="display: inline-block; padding: 6px 16px; background: rgba(245, 196, 138, 0.12); border: 1px solid rgba(245, 196, 138, 0.35); border-radius: 6px; color: #F5C48A; text-decoration: none; font-size: 14px; transition: background 0.2s, border-color 0.2s;" onmouseover="this.style.background='rgba(245, 196, 138, 0.22)';this.style.borderColor='rgba(245, 196, 138, 0.6)'" onmouseout="this.style.background='rgba(245, 196, 138, 0.12)';this.style.borderColor='rgba(245, 196, 138, 0.35)'">{{ $item->url_text }}</a></p>
-                </div>
+                <a target="_blank" href="{{ $item->url }}" class="about-contact">
+                    <span class="about-contact__icon">
+                        @include('user.partials.icon', ['icon' => (in_array($item->icon, ['telegram','discord','vk','youtube','instagram','star']) ? $item->icon : 'link'), 'color' => '#ac8dff', 'size' => 22])
+                    </span>
+                    <span class="about-contact__body">
+                        <span class="about-contact__label">{{ $item->localized_label }}</span>
+                        <span class="about-contact__value">{{ $item->url_text }}</span>
+                    </span>
+                </a>
                 @endforeach
             </div>
             <div class="about-section__block about-section__history">
@@ -98,28 +96,32 @@
             </div>
             <div class="catalog__cards-container">
                 @foreach($categories as $card)
-                    <div class="card">
-                        <a href="/{{ $card->alias }}" class="card__link"></a>
-                        <div class="card__img">
-                            <img src="{{ $card->image_site }}" alt="">
-                        </div>
-                        <div class="types">@plural($card->count_products, __('site.text_x_cheats_one'), __('site.text_x_cheats_few'), __('site.text_x_cheats_many'))</div>
-                        <div class="card__name-container">
-                            <div class="card__name">{{ $card->title }}</div>
-                            <button class="card__btn"></button>
-                        </div>
+                <a href="/{{ $card->alias }}" class="catalog-card" data-platforms="{{ $card->platforms ?? 'pc mobile' }}">
+                    <div class="catalog-card__img">
+                        <img src="/{{ $card->image_site }}" alt="" loading="lazy">
                     </div>
+                    <div class="catalog-card__body">
+                        <div class="catalog-card__name">{{ $card->title }}</div>
+                        <div class="catalog-card__tags">
+                            <span class="catalog-card__tag catalog-card__tag--game">
+                                <img src="/assets/img/catalog-tag-purple.svg" alt="">
+                                {{ \Str::before($card->title, ' ') }}
+                            </span>
+                            <span class="catalog-card__tag catalog-card__tag--count">
+                                <img src="/assets/img/catalog-tag-green.svg" alt="">
+                                @plural($card->count_products, __('site.text_x_cheats_one'), __('site.text_x_cheats_few'), __('site.text_x_cheats_many'))
+                            </span>
+                        </div>
+                        @if(!empty($card->description))
+                        <p class="catalog-card__desc">{{ \Str::limit(strip_tags($card->description), 90) }}</p>
+                        @endif
+                        <span class="catalog-card__more">
+                            {{ __('site.catalog_more') }}
+                            <img src="/assets/img/catalog-more-arrow.svg" alt="">
+                        </span>
+                    </div>
+                </a>
                 @endforeach
-                {{-- <div class="card tg-card">
-                    <div class="tg-card__icon">
-                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M34.1444 47.2108L33.2445 59.8679C34.532 59.8679 35.0896 59.3148 35.7583 58.6507L41.7944 52.882L54.3019 62.0416C56.5957 63.32 58.2119 62.6468 58.8307 59.9314L67.0405 21.4615L67.0428 21.4593C67.7704 18.0683 65.8165 16.7423 63.5816 17.5742L15.3243 36.0498C12.0308 37.3282 12.0807 39.1642 14.7644 39.996L27.1019 43.8335L55.7593 25.9019C57.108 25.0089 58.3343 25.503 57.3256 26.3961L34.1444 47.2108Z" fill="#8AF59B"/>
-                        </svg>
-                    </div>
-                    <p class="tg-card__caption">Покупка через&nbsp;бота</p>
-                    <p class="tg-card__text">Вы также можете купить любой софт через нашего бота в Telegram</p>
-                    <a href="https://t.me/{{ $shop->username }}" target="_blank" class="tg-card__btn">Перейти</a>
-                </div> --}}
             </div>
         </div>
     </section>

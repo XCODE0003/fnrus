@@ -1,0 +1,142 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Shop;
+use App\Models\ShopSettings;
+use App\Models\User;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+class TelegramAuthController
+{
+    // Принимает данные от Telegram Login Widget (data-auth-url), проверяет
+    // подпись и авторизует/создаёт пользователя по Telegram ID.
+    public function callback()
+    {
+        try {
+            $botToken = config('services.telegram.bot_token');
+            if (!$botToken) {
+                Log::error('Telegram OAuth: bot token not configured');
+                return redirect('/')->with('error', 'Вход через Telegram временно недоступен.');
+            }
+
+            $authData = request()->only([
+                'id', 'first_name', 'last_name', 'username', 'photo_url', 'auth_date', 'hash',
+            ]);
+
+            if (empty($authData['id']) || empty($authData['hash'])) {
+                return redirect('/')->with('error', 'Ошибка авторизации через Telegram.');
+            }
+
+            $checkHash = (string) $authData['hash'];
+            unset($authData['hash']);
+
+            // Строка проверки: отсортированные key=value, склеенные через \n.
+            $pairs = [];
+            foreach ($authData as $key => $value) {
+                if ($value !== null && $value !== '') {
+                    $pairs[] = $key . '=' . $value;
+                }
+            }
+            sort($pairs);
+            $dataCheckString = implode("\n", $pairs);
+
+            $secretKey = hash('sha256', $botToken, true);
+            $hmac = hash_hmac('sha256', $dataCheckString, $secretKey);
+
+            if (!hash_equals($hmac, $checkHash)) {
+                Log::error('Telegram OAuth: hash mismatch');
+                return redirect('/')->with('error', 'Не удалось подтвердить вход через Telegram.');
+            }
+
+            // Данные не старше суток.
+            if (isset($authData['auth_date']) && (time() - (int) $authData['auth_date']) > 86400) {
+                return redirect('/')->with('error', 'Срок действия данных Telegram истёк. Повторите вход.');
+            }
+
+            $telegramId = (int) $authData['id'];
+            $username   = $authData['username'] ?? '';
+            $firstName  = $authData['first_name'] ?? '';
+
+            $user = $this->findOrCreateUser($telegramId, $username, $firstName);
+
+            if (!$user) {
+                return redirect('/')->with('error', 'Ошибка создания аккаунта.');
+            }
+
+            $sessionToken = Auth::login($user);
+
+            return view('user.login', ['session_token' => $sessionToken]);
+
+        } catch (QueryException $qe) {
+            Log::error('Telegram OAuth SQL error: ' . $qe->getMessage());
+            return redirect('/')->with('error', 'Ошибка при авторизации через Telegram. Попробуйте позже.');
+        } catch (Exception $e) {
+            Log::error('Telegram OAuth error: ' . $e->getMessage());
+            return redirect('/')->with('error', 'Ошибка при авторизации через Telegram.');
+        }
+    }
+
+    private function findOrCreateUser(int $telegramId, string $username, string $firstName): ?User
+    {
+        // 1. По Telegram ID.
+        $user = User::where('tid', $telegramId)->first();
+        if ($user) {
+            return $user;
+        }
+
+        // 2. Новый пользователь (Telegram не отдаёт email).
+        $shop    = Shop::getDefault();
+        $shopSet = ShopSettings::getDefault();
+
+        $baseUsername = $username ?: mb_strtolower(trim($firstName));
+        $baseUsername = preg_replace('/[^a-zA-Z0-9_]/', '', $baseUsername);
+        if (empty($baseUsername)) {
+            $baseUsername = 'tg_user';
+        }
+
+        $finalUsername = $baseUsername;
+        $counter = 1;
+        while (User::where('username', $finalUsername)->exists()) {
+            $finalUsername = $baseUsername . $counter;
+            $counter++;
+        }
+
+        $user = User::create([
+            'rid'                         => 0,
+            'tid'                         => $telegramId,
+            'sid'                         => $shop->id,
+            'mid'                         => 0,
+            'email'                       => 'tg_' . $telegramId . '@telegram.local',
+            'yandex_id'                   => 0,
+            'username'                    => $finalUsername,
+            'password'                    => Hash::make(Str::random(32)),
+            'tz'                          => 'Europe/Moscow',
+            'locale'                      => 'RU',
+            'currency'                    => 'RUB',
+            'remember_code'               => Str::random(32),
+            'remember_token'              => Str::random(32),
+            'balance_main'                => 0,
+            'balance_affiliate'           => 0,
+            'ref_percent'                 => $shopSet->ref_percent,
+            'ref_code'                    => Str::random(10),
+            'role_id'                     => 0,
+            'is_ban'                      => 0,
+            'is_active'                   => 0,
+            'is_agreement'                => 1,
+            'email_notify_tickets'        => 1,
+            'email_notify_orders'         => 1,
+            'email_notify_status_changed' => 1,
+            'tstep'                       => 0,
+            'tdata'                       => '{}',
+            'created_at'                  => strtotime('NOW'),
+        ]);
+
+        return $user;
+    }
+}

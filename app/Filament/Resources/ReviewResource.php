@@ -67,6 +67,11 @@ class ReviewResource extends Resource
                 ->maxLength(255)
                 ->placeholder('https://t.me/channel/123')
                 ->columnSpanFull(),
+
+            Forms\Components\Toggle::make('status')
+                ->label('Опубликован')
+                ->helperText('Выключено — отзыв на модерации и не виден на сайте.')
+                ->default(true),
         ]);
     }
 
@@ -82,13 +87,28 @@ class ReviewResource extends Resource
                     ->size(36),
                 Tables\Columns\TextColumn::make('author')->label('Автор')->searchable(),
                 Tables\Columns\TextColumn::make('text')->label('Текст')->limit(80),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Статус')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => $state ? 'Опубликован' : 'На модерации')
+                    ->color(fn ($state) => $state ? 'success' : 'warning'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Создан')
                     ->formatStateUsing(fn ($state) => $state ? date('Y-m-d', (int) $state) : '—')
                     ->sortable(),
             ])
-            ->filters([])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Статус')
+                    ->options([1 => 'Опубликован', 0 => 'На модерации']),
+            ])
             ->actions([
+                Tables\Actions\Action::make('publish')
+                    ->label('Опубликовать')
+                    ->icon('heroicon-o-check')
+                    ->color('success')
+                    ->visible(fn (Review $r) => ! $r->status)
+                    ->action(fn (Review $r) => $r->update(['status' => 1])),
                 Tables\Actions\EditAction::make()
                     ->mutateFormDataUsing(static function (array $data): array {
                         $file = $data['avatar_file'] ?? null;

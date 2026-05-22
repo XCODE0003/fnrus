@@ -59,9 +59,6 @@
             <div class="cheat-statuses__container" id="results_search">
                 @foreach($categories as $card)
                     <div class="game-status-block">
-                        <div class="game-status-block__image">
-                            <img style="width: 100%;max-width: 100%;" src="/{{ $card['image_site'] }}" alt="">
-                        </div>
                         <div class="game-status-block__info">
                             <p class="game-status-block__name">{{ $card['title'] }}</p>
                             <div class="game-status-block__cheats">

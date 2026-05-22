@@ -18,15 +18,23 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.39">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.71">
     <!-- Libs -->
-    <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.0">
+    <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
     @if(env("CAPTCHA_ENABLED", false))<script src="https://js.hcaptcha.com/1/api.js" async defer></script>@endif
     <!-- End Libs -->
     <style>
-        /* Reserve scrollbar gutter — prevents page shift when scrollbar appears/disappears or modals open */
-        html { scrollbar-gutter: stable; }
+        /* Hide the scrollbar site-wide — scrolling still works (wheel/touch/keys) */
+        html, body {
+            scrollbar-width: none;          /* Firefox */
+            -ms-overflow-style: none;       /* IE/old Edge */
+        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;                  /* Chrome/Safari/Edge */
+        }
         /* Zoom out to 90% on desktop only (like one Ctrl+minus) */
         @media (min-width: 1024px) {
             body { zoom: 0.9; }
@@ -101,7 +109,8 @@
             </a>
             <ul class="header__menu">
                 <li class="header__menu__item"><a href="/">{{ __('site.item_home') }}</a></li>
-                <li class="header__menu__item"><a href="/status">{{ __('site.item_statuses') }}</a></li>
+                <li class="header__menu__item"><a href="/games">{{ __('site.item_catalog') }}</a></li>
+                <li class="header__menu__item"><a href="/reviews">{{ __('site.item_reviews') }}</a></li>
                 <li class="header__menu__item"><a href="/about">{{ __('site.item_about') }}</a></li>
                 <li class="header__menu__item"><a href="/#faq" data-scroll="#faq">{{ __('site.item_help') }}</a></li>
             </ul>
@@ -110,25 +119,15 @@
                     <option value="ru" @if(app()->getLocale() == 'ru') selected @endif>RU</option>
                     <option value="en" @if(app()->getLocale() == 'en') selected @endif>EN</option>
                 </select>
-                @if(app()->getLocale() == 'ru')
+                <span class="header__lang__globe"><img src="/assets/img/icon-globe.svg" alt=""></span>
                 <div class="select__selected">
-                    <img src="/assets/img/flag_ru.svg" alt="">
-                    <span>RU</span>
+                    <span>{{ strtoupper(app()->getLocale()) }}</span>
                 </div>
-                @endif
-                @if(app()->getLocale() == 'en')
-                    <div class="select__selected">
-                        <img src="/assets/img/flag_en.svg" alt="">
-                        <span>EN</span>
-                    </div>
-                @endif
                 <div class="select__inner" id="lang">
                     <div onclick="changeLanguage('ru');" class="select__option @if(app()->getLocale() == 'ru') _active @endif" data-value="ru">
-                        <img src="/assets/img/flag_ru.svg" alt="">
                         <span>RU</span>
                     </div>
                     <div onclick="changeLanguage('en');" class="select__option @if(app()->getLocale() == 'en') _active @endif" data-value="en">
-                        <img src="/assets/img/flag_en.svg" alt="">
                         <span>EN</span>
                     </div>
                 </div>
@@ -139,7 +138,7 @@
                 <!-- Anti-autofill honeypot: absorbs browser credential autofill -->
                 <input type="text" name="prevent_autofill_username" style="display:none" tabindex="-1" aria-hidden="true">
                 <input type="password" name="prevent_autofill_password" style="display:none" tabindex="-1" aria-hidden="true">
-                <input type="search" id="search_query" name="site_search" autocomplete="new-password" class="header__search__input" placeholder="{{ __('site.input_search') }}">
+                <input id="search_query" name="site_search" autocomplete="new-password" class="header__search__input" placeholder="{{ __('site.input_search') }}">
                 <button class="header__search-reset-btn"></button>
                 <div class="header__search__inner">
                     <div class="header__search__scroll-container" id="results_search" data-simplebar></div>
@@ -201,6 +200,12 @@
     </footer>
 </div>
 
+<button class="to-top" type="button" aria-label="{{ __('site.btn_to_top') }}">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</button>
+
 <div class="popup" id="auth">
     <p class="popup__caption">{{ __('site.modal_auth_title') }}</p>
     <div class="input-block">
@@ -245,7 +250,16 @@
     <button class="btn btn-accent popup__submit-btn" style="margin-bottom: 20px;margin-top:20px" onclick="signIn();return false;">{{ __('site.btn_login') }}</button>
     <hr style="border: 1px solid #1d2533;" />
     <a href="/oauth/yandex/redirect" class="btn btn-yandex popup__submit-btn" style="margin-top: 20px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px"><path d="M13.32 21H15.9V3h-3.78c-3.78 0-5.94 2.16-5.94 5.28 0 2.52 1.26 4.02 3.54 5.58L6 21h2.82l4.2-7.86c-2.52-1.68-3.42-2.82-3.42-5.04 0-2.1 1.38-3.42 3.42-3.42h.3V21z"/></svg> {{ __('site.login_via_yandex') }}</a>
-    {{-- <a href="#" class="btn btn-auth-tg popup__submit-btn" style="margin-top: 20px"><svg xmlns="http://www.w3.org/2000/svg" style="fill: #fff;margin-right: 7px" viewBox="0 0 448 512" width="18" height="18"><path d="M446.7 98.6l-67.6 318.8c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c18.4-6.9 34.5 4.1 28.5 32.2z"/></svg> {{ __('site.login_via_telegram') }}</a> --}}
+    @if(config('services.telegram.bot_username'))
+    <div class="popup__tg-login">
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+            data-telegram-login="{{ config('services.telegram.bot_username') }}"
+            data-size="large"
+            data-radius="12"
+            data-auth-url="{{ url('/oauth/telegram/callback') }}"
+            data-request-access="write"></script>
+    </div>
+    @endif
     <p class="popup__hint">{{ __('site.text_no_account') }} <button class="popup__hint__btn" data-popup="register">{{ __('site.btn_register_two') }}</button></p>
 </div>
 
@@ -351,7 +365,16 @@
     <button class="btn btn-accent popup__submit-btn" style="margin-bottom: 20px;margin-top:20px" onclick="signUp();">{{ __('site.btn_register_two') }}</button>
     <hr style="border: 1px solid #1d2533;" />
     <a href="/oauth/yandex/redirect" class="btn btn-yandex popup__submit-btn" style="margin-top: 20px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px"><path d="M13.32 21H15.9V3h-3.78c-3.78 0-5.94 2.16-5.94 5.28 0 2.52 1.26 4.02 3.54 5.58L6 21h2.82l4.2-7.86c-2.52-1.68-3.42-2.82-3.42-5.04 0-2.1 1.38-3.42 3.42-3.42h.3V21z"/></svg> {{ __('site.login_via_yandex') }}</a>
-    {{-- <a href="#" class="btn btn-auth-tg popup__submit-btn" style="margin-top: 20px"><svg xmlns="http://www.w3.org/2000/svg" style="fill: #fff;margin-right: 7px" viewBox="0 0 448 512" width="18" height="18"><path d="M446.7 98.6l-67.6 318.8c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c18.4-6.9 34.5 4.1 28.5 32.2z"/></svg> {{ __('site.login_via_telegram') }}</a> --}}
+    @if(config('services.telegram.bot_username'))
+    <div class="popup__tg-login">
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+            data-telegram-login="{{ config('services.telegram.bot_username') }}"
+            data-size="large"
+            data-radius="12"
+            data-auth-url="{{ url('/oauth/telegram/callback') }}"
+            data-request-access="write"></script>
+    </div>
+    @endif
     <p class="popup__note">{{ __('site.text_processing_personal_data') }}</p>
     <p class="popup__hint">{{ __('site.text_isset_account') }} <button class="popup__hint__btn" data-popup="auth">{{ __('site.btn_login') }}</button></p>
 </div>
@@ -556,7 +579,37 @@
     </div>
 </div>
 
-<script src="/assets/js/scripts.min.js?48"></script>
+<div class="popup" id="review">
+    <p class="popup__caption">{{ __('site.btn_leave_review') }}</p>
+    <div class="input-block">
+        <div class="input-block__label-container">
+            <label for="review-author" class="input-block__label">{{ __('site.review_form_name') }}</label>
+        </div>
+        <div class="input-block__input-container">
+            <input type="text" class="input-block__input" id="review-author" placeholder="{{ __('site.review_form_name_ph') }}">
+        </div>
+    </div>
+    <div class="input-block">
+        <div class="input-block__label-container">
+            <label for="review-text" class="input-block__label">{{ __('site.review_form_text') }}</label>
+        </div>
+        <div class="input-block__input-container">
+            <textarea class="input-block__input input-block__textarea" id="review-text" rows="4" placeholder="{{ __('site.review_form_text_ph') }}"></textarea>
+        </div>
+    </div>
+    <div class="input-block">
+        <div class="input-block__label-container">
+            <label for="review-link" class="input-block__label">{{ __('site.review_form_link') }}</label>
+        </div>
+        <div class="input-block__input-container">
+            <input type="text" class="input-block__input" id="review-link" placeholder="https://t.me/...">
+        </div>
+    </div>
+    <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
+</div>
+
+<script src="/assets/js/scripts.min.js?52"></script>
+<script src="/assets/js/animations.js?v=10"></script>
 <script>
 window.lang = {
     my_profile: @json(__('site.section_user_menu_profile')),
@@ -580,7 +633,7 @@ window.lang = {
 };
 function changeLanguage(locale){window.location.href='/lang/'+locale;}
 </script>
-<script src="/assets/js/app.js?v=3.0"></script>
+<script src="/assets/js/app.js?v=3.2"></script>
 <!-- JivoChat Widget -->
 <script>
 (function(){

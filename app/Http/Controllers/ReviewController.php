@@ -30,6 +30,39 @@ class ReviewController extends Controller
         }
     }
 
+    // Публичная отправка отзыва посетителем сайта — попадает на модерацию (status = 0).
+    public function submit(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'author' => 'required|string|min:2|max:255',
+                'text' => 'required|string|min:10|max:2000',
+                'link' => 'nullable|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first(), 1);
+            }
+
+            Review::create([
+                'author' => trim($request->author),
+                'author_link' => '',
+                'text' => trim($request->text),
+                'avatar' => '/assets/img/default_avatar.svg',
+                'link' => $request->link ?? '',
+                'created_at' => time(),
+                'status' => 0,
+            ]);
+
+            return response()->json([
+                'ok' => true,
+                'description' => 'Отзыв отправлен на модерацию',
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['ok' => false, 'description' => $e->getMessage()], 200);
+        }
+    }
+
     public function all()
     {
         try {

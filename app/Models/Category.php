@@ -88,10 +88,24 @@ class Category extends Model
                 $cats = Category::getCategoriesByCID($c->id);
 
                 $count_products = 0;
+                $hasPc = false;
+                $hasMobile = false;
 
                 foreach ($cats as $cs){
                     $count_products += Product::getCountByCatID($cs->id);
+
+                    $platformName = mb_strtolower(trim($cs->title));
+                    if (in_array($platformName, ['пк', 'pc', 'gameloop', 'эмуляторы'])) {
+                        $hasPc = true;
+                    } elseif (in_array($platformName, ['ios', 'android'])) {
+                        $hasMobile = true;
+                    }
                 }
+
+                $platforms = [];
+                if ($hasPc) { $platforms[] = 'pc'; }
+                if ($hasMobile) { $platforms[] = 'mobile'; }
+                if (empty($platforms)) { $platforms = ['pc', 'mobile']; }
 
                 $image = '';
                 if($c->image != ''){
@@ -110,7 +124,9 @@ class Category extends Model
                     'image' => $image,
                     'image_site' => $image_site,
                     'count_products' => $count_products,
+                    'platforms' => implode(' ', $platforms),
                     'alias' => $c->alias,
+                    'description' => $c->description,
                 ];
             }
 
@@ -201,6 +217,7 @@ class Category extends Model
                     'image_site' => $image_site,
                     'count_products' => $count_products,
                     'alias' => $c->alias,
+                    'description' => $c->description,
                 ];
             }
 

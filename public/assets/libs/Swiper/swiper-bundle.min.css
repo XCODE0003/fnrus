@@ -28,7 +28,8 @@
     list-style: none;
     padding: 0;
     z-index: 1;
-    display:block
+    display:block;
+    border-radius: 12px;
 }
 
 .swiper-vertical > .swiper-wrapper {
@@ -41,6 +42,7 @@
     height: 100%;
     z-index: 1;
     display: flex;
+    align-items: stretch;
     transition-property: transform;
     transition-timing-function: var(--swiper-wrapper-transition-timing-function, initial);
     box-sizing:content-box
@@ -52,8 +54,6 @@
 
 .swiper-horizontal {
     touch-action: pan-y;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
 }
 
 .swiper-vertical {
@@ -63,10 +63,11 @@
 .swiper-slide, swiper-slide {
     flex-shrink: 0;
     width: 100%;
-    height: 100%;
     position: relative;
     transition-property: transform;
-    display:block
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .swiper-slide-invisible-blank {

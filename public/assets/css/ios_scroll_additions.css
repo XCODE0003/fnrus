@@ -82,7 +82,7 @@ html.is-ios .game-cheats-slider.js-carousel,
 html.is-ios .game-cards-slider.js-carousel,
 html.is-ios .swiper-functional.js-carousel,
 html.is-ios .section2__slider.js-carousel {
-    padding-left: max(30px, calc((100% - var(--content-width)) / 2));
+
     padding-right: max(30px, calc((100% - var(--content-width)) / 2));
     box-sizing: border-box;
 }

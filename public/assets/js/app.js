@@ -969,9 +969,6 @@ function searchStatus(query, status) {
 
                     results +=
                         '<div class="game-status-block">' +
-                        '    <div class="game-status-block__image">' +
-                        '        <img style="width:100%;max-width: 100%" src="/' + e.image + '" alt="">' +
-                        '    </div>' +
                         '    <div class="game-status-block__info">' +
                         '        <p class="game-status-block__name">' + e.title + '</p>' +
                         '        <div class="game-status-block__cheats">' + cheats.join('') +
@@ -1627,5 +1624,34 @@ function redirect(link, noref) {
 }
 function changeLanguage(lang) {
     window.location.href = '/lang/' + lang;
+}
+
+function submitReview() {
+    var author = ($('#review-author').val() || '').trim();
+    var text = ($('#review-text').val() || '').trim();
+    var link = ($('#review-link').val() || '').trim();
+
+    $.ajax({
+        type: "POST",
+        url: api_url + '/reviews/submit',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({ author: author, text: text, link: link }),
+        async: true,
+        success: function(data) {
+            if (data.ok === true) {
+                showNotification(data.description, 'success');
+                $('#review-author').val('');
+                $('#review-text').val('');
+                $('#review-link').val('');
+                if (typeof closePopup === 'function') closePopup();
+            } else {
+                showNotification(data.description, 'fail');
+            }
+        },
+        error: function() {
+            showNotification(window.lang.server_connection_error, 'fail');
+        }
+    });
 }
 
