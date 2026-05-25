@@ -156,13 +156,6 @@
                                         <span class="toggle__text">{{ __('site.profile_notify_orders') }}</span>
                                     </label>
                                 </div>
-{{--                                <div class="profile__settings-block toggle popup__toggle">--}}
-{{--                                    <input type="checkbox" class="toggle__input" id="notify-status-toggle" onclick="changeNotify('status_changed');">--}}
-{{--                                    <label for="notify-status-toggle" class="toggle__label">--}}
-{{--                                        <span class="toggle__icon"></span>--}}
-{{--                                        <span class="toggle__text">Получать уведомления о изменении статуса софта</span>--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
                             </div>
                         </div>
                     </div>

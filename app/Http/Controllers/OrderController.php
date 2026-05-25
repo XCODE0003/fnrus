@@ -241,11 +241,26 @@ class OrderController extends Controller
             $currency_code = $member->currency;
             $currency_symbol = $this->shop_currency[$currency_code];
 
+            $product = Product::getByID($shop->id, $order->pid);
+            $product_name = $product ? $product->title : '';
+
+            $period = '';
+            if ($order->tid > 0) {
+                $tariff = Tariff::where('sid', $shop->id)->where('id', $order->tid)->first();
+                if ($tariff) {
+                    $period = Tariff::num_decline((int)$tariff->title, ['день','дня','дней']);
+                }
+            }
+
             return response()->json([
                 'ok' => true,
                 'result' => [
                     'sum_main' => Currency::convert($this->main_currency, $currency_code, $order->amount).$currency_symbol,
-                    'sum_usd' => $order->amount
+                    'sum_usd' => $order->amount,
+                    'product_name' => $product_name,
+                    'order_id' => $order->hash,
+                    'period' => $period,
+                    'expires_at' => (int)$order->expired_at,
                 ]
             ]);
 

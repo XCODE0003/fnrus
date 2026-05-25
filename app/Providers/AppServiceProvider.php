@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +33,45 @@ class AppServiceProvider extends ServiceProvider
         if (filter_var(env('APP_FORCE_HTTPS', false), FILTER_VALIDATE_BOOLEAN)) {
             URL::forceScheme('https');
         }
+
+        // Share the storefront category list with the layout so the header
+        // dropdown ("Каталог читов") can show real categories without each
+        // controller having to pass them.
+        View::composer('user.layouts.main', function ($view) {
+            try {
+                $shop = \App\Models\Shop::getDefault();
+                if (!$shop) {
+                    $view->with('__headerCategories', collect());
+                    return;
+                }
+                $cats = \App\Models\Category::where('sid', $shop->id)
+                    ->where('cid', 0)
+                    ->whereIn('visibility', [1, 2])
+                    ->orderBy('sort')
+                    ->get();
+                // Decorate with image URL (image_site stored as raw hash; storefront
+                // serves images via /i{hash}) and product counts.
+                $decorated = $cats->map(function ($c) {
+                    $imgUrl = !empty($c->image_site) ? '/i' . $c->image_site : '';
+                    $count = 0;
+                    try {
+                        foreach (\App\Models\Category::getCategoriesByCID($c->id) as $sub) {
+                            $count += \App\Models\Product::getCountByCatID($sub->id);
+                        }
+                    } catch (\Throwable $e) {}
+                    return (object) [
+                        'id' => $c->id,
+                        'title' => $c->localized_title ?? $c->title,
+                        'alias' => $c->alias,
+                        'image_url' => $imgUrl,
+                        'count_products' => $count,
+                    ];
+                });
+                $view->with('__headerCategories', $decorated);
+            } catch (\Throwable $e) {
+                $view->with('__headerCategories', collect());
+            }
+        });
 
         Blade::directive('plural', function ($expression) {
             return "<?php echo \App\Providers\AppServiceProvider::pluralize($expression); ?>";

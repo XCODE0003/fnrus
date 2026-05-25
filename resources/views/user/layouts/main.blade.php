@@ -4,9 +4,31 @@
 <head>
     <meta charset="utf-8">
 
-<title>@if(empty($title)) {{ config('app.name') }}  @else @if (Route::currentRouteName() !== 'home'){{ $title }} — {{ config('app.name') }} @else {{ config('app.name') }} — {{ __('site.meta_subtitle') }} @endif @endif</title>
-<meta name="description" content="{{ __('site.meta_description') }}">
-    <meta name="keywords" content="keywords"/>
+@php
+    $_isHome = Route::currentRouteName() === 'home';
+    $_pageTitle = !empty($title)
+        ? ($_isHome ? config('app.name').' — '.__('site.meta_subtitle') : $title.' — '.config('app.name'))
+        : config('app.name').' — '.__('site.meta_subtitle');
+    $_pageDescription = !empty($description) ? $description : __('site.meta_description');
+    $_pageImage = url('/assets/img/apple-touch-icon.png');
+    $_pageUrl = url()->current();
+@endphp
+<title>{{ $_pageTitle }}</title>
+<meta name="description" content="{{ $_pageDescription }}">
+    <meta name="keywords" content="{{ __('site.meta_subtitle') }}"/>
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:title" content="{{ $_pageTitle }}">
+    <meta property="og:description" content="{{ $_pageDescription }}">
+    <meta property="og:url" content="{{ $_pageUrl }}">
+    <meta property="og:image" content="{{ $_pageImage }}">
+    <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'ru_RU' }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $_pageTitle }}">
+    <meta name="twitter:description" content="{{ $_pageDescription }}">
+    <meta name="twitter:image" content="{{ $_pageImage }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -18,7 +40,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.72">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.1.0">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -35,10 +57,9 @@
             height: 0;
             display: none;                  /* Chrome/Safari/Edge */
         }
-        /* Zoom out to 90% on desktop only (like one Ctrl+minus) */
-        @media (min-width: 1024px) {
-            body { zoom: 0.9; }
-        }
+        /* Zoom out to 90% — like one Ctrl+minus. Applied everywhere so mobile,
+           tablet and desktop look proportionally identical. */
+        body { zoom: 0.9; }
 
         /* Disable text selection globally, allow on instruction/delivery pages */
         body {
@@ -108,8 +129,61 @@
                 <img src="/assets/img/logo.png" alt="">
             </a>
             <ul class="header__menu">
-                <li class="header__menu__item"><a href="/">{{ __('site.item_home') }}</a></li>
-                <li class="header__menu__item"><a href="/games">{{ __('site.item_catalog') }}</a></li>
+                <li class="header__menu__item header__menu__item--dropdown" data-dropdown>
+                    <button type="button" class="header__menu__pill" aria-haspopup="true" aria-expanded="false">
+                        <span>{{ __('site.item_catalog') }}</span>
+                        <span class="header__menu__pill-chev" aria-hidden="true">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </button>
+                    <div class="header__mega" role="menu">
+                        <div class="header__mega__head">
+                            <div>
+                                <p class="header__mega__title">{{ __('site.mega_pick_game') }}</p>
+                                <p class="header__mega__sub">@plural(($__headerCategories ?? collect())->count(), __('site.mega_count_one'), __('site.mega_count_few'), __('site.mega_count_many'))</p>
+                            </div>
+                            <a class="header__mega__all" href="/games">
+                                {{ __('site.mega_view_all') }}
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                        </div>
+                        <div class="header__mega__grid">
+                            @foreach(($__headerCategories ?? collect())->take(8) as $__cat)
+                                <a class="header__mega__card" href="/{{ $__cat->alias }}" role="menuitem">
+                                    <span class="header__mega__card-img" data-letter="{{ mb_substr($__cat->title, 0, 1) }}">
+                                        @if(!empty($__cat->image_url))
+                                            <img src="{{ $__cat->image_url }}" alt="" loading="lazy" onerror="this.onerror=null;this.remove()" onload="if(!this.naturalWidth){this.remove()}">
+                                        @endif
+                                    </span>
+                                    <span class="header__mega__card-text">
+                                        <span class="header__mega__card-name">{{ $__cat->title }}</span>
+                                        @if(!empty($__cat->count_products))
+                                            <span class="header__mega__card-meta">@plural((int)$__cat->count_products, __('site.text_x_cheats_one'), __('site.text_x_cheats_few'), __('site.text_x_cheats_many'))</span>
+                                        @endif
+                                    </span>
+                                    <span class="header__mega__card-arrow" aria-hidden="true">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </span>
+                                </a>
+                            @endforeach
+                        </div>
+                        <div class="header__mega__foot">
+                            <a class="header__mega__quick" href="/games?platform=pc">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                                {{ __('site.catalog_tab_pc') }}
+                            </a>
+                            <a class="header__mega__quick" href="/games?platform=mobile">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                                {{ __('site.catalog_tab_mobile') }}
+                            </a>
+                            <a class="header__mega__quick" href="/status">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                                {{ __('site.item_statuses') }}
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="header__menu__item"><a href="/status">{{ __('site.item_statuses') }}</a></li>
                 <li class="header__menu__item"><a href="/reviews">{{ __('site.item_reviews') }}</a></li>
                 <li class="header__menu__item"><a href="/about">{{ __('site.item_about') }}</a></li>
                 <li class="header__menu__item"><a href="/#faq" data-scroll="#faq">{{ __('site.item_help') }}</a></li>
@@ -199,6 +273,41 @@
         </div>
     </footer>
 </div>
+
+<div class="cookie-banner" id="cookie-banner" hidden role="dialog" aria-live="polite" aria-labelledby="cookie-banner-title">
+    <div class="cookie-banner__inner">
+        <div class="cookie-banner__text">
+            <p class="cookie-banner__title" id="cookie-banner-title">{{ __('site.cookie_title') }}</p>
+            <p class="cookie-banner__desc">{{ __('site.cookie_text') }}</p>
+        </div>
+        <div class="cookie-banner__actions">
+            <button type="button" class="cookie-banner__btn cookie-banner__btn--primary" data-cookie-action="accept">{{ __('site.cookie_accept') }}</button>
+            <button type="button" class="cookie-banner__btn cookie-banner__btn--secondary" data-cookie-action="decline">{{ __('site.cookie_decline') }}</button>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    try {
+        var KEY = 'cookie_consent_v1';
+        if (localStorage.getItem(KEY)) return;
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        // Defer show a bit so it doesn't fight the page reveal animation
+        setTimeout(function(){
+            banner.hidden = false;
+            requestAnimationFrame(function(){ banner.classList.add('is-visible'); });
+        }, 600);
+        banner.addEventListener('click', function(e){
+            var btn = e.target.closest('[data-cookie-action]');
+            if (!btn) return;
+            try { localStorage.setItem(KEY, btn.dataset.cookieAction + ':' + Date.now()); } catch(_) {}
+            banner.classList.remove('is-visible');
+            setTimeout(function(){ banner.hidden = true; }, 280);
+        });
+    } catch(_) {}
+})();
+</script>
 
 <button class="to-top" type="button" aria-label="{{ __('site.btn_to_top') }}">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -609,7 +718,7 @@
 </div>
 
 <script src="/assets/js/scripts.min.js?52"></script>
-<script src="/assets/js/animations.js?v=11"></script>
+<script src="/assets/js/animations.js?v=13"></script>
 <script>
 window.lang = {
     my_profile: @json(__('site.section_user_menu_profile')),
@@ -632,27 +741,58 @@ window.lang = {
     order_paid: @json(__('site.cheat_order_paid'))
 };
 function changeLanguage(locale){window.location.href='/lang/'+locale;}
-</script>
-<script src="/assets/js/app.js?v=3.2"></script>
-<!-- JivoChat Widget -->
-<script>
+
+// Header dropdown — hover-intent on desktop, click on touch/mobile
 (function(){
-    function loadJivo(){
-        if (window.__jivoLoaded) return;
-        window.__jivoLoaded = true;
-        var s = document.createElement('script');
-        s.src = '//code.jivo.ru/widget/3tZ9JRQowl';
-        s.async = true;
-        document.head.appendChild(s);
+    var item = document.querySelector('.header__menu__item--dropdown');
+    if (!item) return;
+    var btn = item.querySelector('.header__menu__pill');
+    if (!btn) return;
+
+    var hoverDelay = 80;     // ms to wait before opening (intent guard)
+    var closeDelay = 180;    // ms after leave to close
+    var openTimer = null;
+    var closeTimer = null;
+    var isTouch = matchMedia('(hover: none)').matches;
+
+    function open(){
+        clearTimeout(closeTimer); closeTimer = null;
+        if (!item.classList.contains('is-open')) {
+            item.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+        }
     }
-    if (document.readyState === 'complete') {
-        (window.requestIdleCallback || function(cb){setTimeout(cb,3000);})(loadJivo, {timeout: 5000});
-    } else {
-        window.addEventListener('load', function(){
-            (window.requestIdleCallback || function(cb){setTimeout(cb,3000);})(loadJivo, {timeout: 5000});
+    function close(){
+        clearTimeout(openTimer); openTimer = null;
+        item.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+
+    if (!isTouch) {
+        item.addEventListener('mouseenter', function(){
+            clearTimeout(closeTimer);
+            openTimer = setTimeout(open, hoverDelay);
+        });
+        item.addEventListener('mouseleave', function(){
+            clearTimeout(openTimer);
+            closeTimer = setTimeout(close, closeDelay);
         });
     }
+
+    btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (item.classList.contains('is-open')) close();
+        else open();
+    });
+
+    document.addEventListener('click', function(e){
+        if (!item.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') close();
+    });
 })();
 </script>
+<script src="/assets/js/app.js?v=3.2"></script>
 </body>
 </html>

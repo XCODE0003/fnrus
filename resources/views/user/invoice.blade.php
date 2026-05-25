@@ -1,307 +1,458 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="MobileOptimized" content="176" />
     <meta name="HandheldFriendly" content="True" />
     <meta name="robots" content="noindex,nofollow" />
     <title>{{ __('site.invoice_title') }} #{{ $hash }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
-    <link rel="stylesheet" href="/assets/css/style.min.css?60">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.79">
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </head>
+<body class="pay-page-body">
 
-<body>
+<div class="pay-page">
 
-<div class="wrapper">
-<div id="payment-warning" style="display:none;position:fixed;left:0;right:0;bottom:0;background:#11181f;color:#f5727f;font-size:14px;line-height:1.4;padding:14px 18px;text-align:center;font-weight:500;z-index:9999;box-shadow:0 -2px 12px rgba(0,0,0,0.4)"></div>
-<div class="p-4 mt-2">
-    <div class="p-0 mb-1">{{ __('site.invoice_order') }} <span class="font-weight-600">#{{ $hash }}</span></div>
-    <h5 class="p-0"><b>{{ __('site.invoice_to_pay') }} <span id="price">...</span></b></h5>
+    {{-- ============ Toast ============ --}}
+    <div id="payment-warning" class="pay-toast" role="status" aria-live="polite"></div>
+
+    {{-- ============ Screen 1: Order info ============ --}}
+    <section class="pay-card pay-info" data-screen="info">
+        <h2 class="pay-card__title">{{ __('site.invoice_order_info') }}</h2>
+
+        <div class="pay-info__grid">
+            <div class="pay-info__field pay-info__field--wide">
+                <span class="pay-info__label">{{ __('site.invoice_product_name') }}</span>
+                <div class="pay-chip">
+                    <span class="pay-chip__value" id="info-product">—</span>
+                    <button type="button" class="pay-chip__copy" data-copy-target="info-product" aria-label="Copy">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 3H6a2 2 0 0 0-2 2v12h2V5h10V3zm3 4H10a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 14h-9V9h9v12z" fill="currentColor"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pay-info__field">
+                <span class="pay-info__label">{{ __('site.invoice_order_id') }}</span>
+                <div class="pay-chip">
+                    <span class="pay-chip__value" id="info-order-id">#{{ $hash }}</span>
+                    <button type="button" class="pay-chip__copy" data-copy-target="info-order-id" aria-label="Copy">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 3H6a2 2 0 0 0-2 2v12h2V5h10V3zm3 4H10a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 14h-9V9h9v12z" fill="currentColor"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pay-info__field">
+                <span class="pay-info__label">{{ __('site.invoice_product_period') }}</span>
+                <div class="pay-chip">
+                    <span class="pay-chip__value" id="info-period">—</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="pay-info__timer">
+            <span class="pay-info__timer-label">{{ __('site.invoice_payment_period') }}</span>
+            <span class="pay-info__timer-value" id="info-timer">—</span>
+        </p>
+
+        <div class="pay-hint" role="note">
+            <span class="pay-hint__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/></svg>
+            </span>
+            <span class="pay-hint__text">
+                {!! __('site.invoice_hint_must_check') !!}
+            </span>
+        </div>
+    </section>
+
+    {{-- ============ Screen 2: Methods picker ============ --}}
+    <section class="pay-card pay-picker" data-screen="picker">
+        <h2 class="pay-card__title">{{ __('site.invoice_choose_method') }}</h2>
+
+        <div class="pay-methods" id="pay-methods">
+            <div class="pay-methods__skeleton">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+
+        {{-- BT (sub-aggregator) screen --}}
+        <div class="pay-methods pay-methods--bt" id="pay-methods-bt" hidden>
+            <button type="button" class="pay-back" id="pay-bt-back">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {{ __('site.invoice_back') }}
+            </button>
+            <div id="pay-methods-bt-list"></div>
+        </div>
+
+        <div class="pay-actions">
+            <button type="button" class="pay-btn pay-btn--primary" id="btn-pay" disabled>
+                {{ __('site.invoice_pay') }}
+            </button>
+            <div class="pay-actions__row">
+                <button type="button" class="pay-btn pay-btn--secondary" id="btn-check-payment" onclick="checkPayment()">
+                    {{ __('site.invoice_check_payment') }}
+                </button>
+                <button type="button" class="pay-btn pay-btn--secondary pay-btn--danger" id="btn-cancel-order" onclick="openCancelModal()">
+                    {{ __('site.invoice_cancel_order') }}
+                </button>
+            </div>
+        </div>
+    </section>
 </div>
-<div class="px-4">
-    <div class="popup__payment-methods" id="buy-payments-methods"></div>
-    <div id="bt-payments-wrapper" style="display:none">
-        <div class="mb-2" style="cursor:pointer;font-size:14px;color:#6c757d" id="bt-back">&larr; {{ __('site.invoice_back') }}</div>
-        <div class="popup__payment-methods" id="bt-payments-methods"></div>
+
+{{-- ============ Screen 3: Cancel confirmation modal ============ --}}
+<div class="pay-modal" id="pay-cancel-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pay-cancel-title">
+    <div class="pay-modal__backdrop" data-close-modal></div>
+    <div class="pay-modal__panel">
+        <h3 class="pay-modal__title" id="pay-cancel-title">{{ __('site.invoice_cancel_title') }}</h3>
+        <div class="pay-modal__icon" aria-hidden="true">
+            <svg width="111" height="111" viewBox="0 0 111 111" fill="none">
+                <circle cx="55.5" cy="55.5" r="50" stroke="#E74C3C" stroke-width="6"/>
+                <line x1="22" y1="22" x2="89" y2="89" stroke="#E74C3C" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="pay-modal__actions">
+            <button type="button" class="pay-btn pay-btn--secondary" id="pay-cancel-confirm">
+                {{ __('site.invoice_cancel_order') }}
+            </button>
+            <button type="button" class="pay-btn pay-btn--primary" data-close-modal>
+                {{ __('site.invoice_continue_pay') }}
+            </button>
+        </div>
     </div>
 </div>
-<div class="px-4 mt-3 text-center">
-    <button class="btn btn-success btn-sm" id="btn-check-payment" onclick="checkPayment()">{{ __('site.invoice_check_payment') }}</button>
-    <button class="btn btn-outline-danger btn-sm" id="btn-cancel-order" onclick="cancelOrder()">{{ __('site.invoice_cancel_order') }}</button>
-</div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 
-<script type="application/javascript">
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+<script>
+(function(){
+    'use strict';
 
     var lang = {
         order_paid: @json(__('site.invoice_order_paid')),
         order_cancelled: @json(__('site.invoice_order_cancelled')),
         payment_expired: @json(__('site.invoice_payment_expired')),
-        confirm_cancel: @json(__('site.invoice_confirm_cancel')),
         cancelling: @json(__('site.invoice_cancelling')),
         cancel_error: @json(__('site.invoice_cancel_error')),
         network_error: @json(__('site.invoice_network_error')),
         cancel_order: @json(__('site.invoice_cancel_order')),
         check_payment: @json(__('site.invoice_check_payment')),
+        pay: @json(__('site.invoice_pay')),
         checking: @json(__('site.invoice_checking')),
         not_paid_yet: @json(__('site.invoice_not_paid_yet')),
         min_payment_amount: @json(__('site.js_min_payment_amount')),
-        max_payment_amount: @json(__('site.js_max_payment_amount'))
+        max_payment_amount: @json(__('site.js_max_payment_amount')),
+        copied: @json(__('site.invoice_copied'))
     };
 
-    let api_url = window.location.origin + '/api';
-    let path = window.location.pathname;
-    let path_b = path.split('/')[2];
+    var apiUrl = window.location.origin + '/api';
+    var hash = @json($hash);
+    var selectedMethodHref = null;
+    var expiresAt = 0;
+    var timerInterval = null;
+    var pollInterval = null;
 
-    // If redirected back with ?warning=..., show inline plate immediately and clean URL
-    (function(){
-        try {
-            var params = new URLSearchParams(window.location.search);
-            var warn = params.get('warning');
-            if (warn) {
-                $(function(){
-                    var $w = $('#payment-warning');
-                    if ($w.length) {
-                        $w.text(warn).show();
-                        clearTimeout(window._pwHide);
-                        window._pwHide = setTimeout(function(){ $w.fadeOut(200); }, 8000);
-                    }
-                });
-                if (window.history && window.history.replaceState) {
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
+    // ?warning=... — show toast immediately and strip from URL
+    try {
+        var params = new URLSearchParams(window.location.search);
+        var warn = params.get('warning');
+        if (warn) {
+            $(function(){ showToast(warn); });
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
-        } catch(e) {}
-    })();
+        }
+    } catch(e) {}
 
-    getOrderInfo(function (data) {
-        if (data.ok === true) {
-            $('#price').text(data.result.sum_main);
-            paymentMethodsProduct(data.result.sum_usd);
-            setInterval(function () {
-                getOrder();
-            }, 1000);
+    function showToast(msg) {
+        var $w = $('#payment-warning');
+        $w.text(msg).stop(true, true).addClass('is-visible');
+        clearTimeout(window._pwHide);
+        window._pwHide = setTimeout(function(){ $w.removeClass('is-visible'); }, 6000);
+    }
+
+    function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+    function updateTimer(){
+        if (!expiresAt) return;
+        var now = Math.floor(Date.now() / 1000);
+        var diff = expiresAt - now;
+        var $el = $('#info-timer');
+        if (diff <= 0) {
+            $el.text('00:00:00').addClass('is-expired');
+            clearInterval(timerInterval);
+            return;
+        }
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff % 3600) / 60);
+        var s = diff % 60;
+        $el.text(pad(h) + ':' + pad(m) + ':' + pad(s));
+    }
+
+    function fillOrderInfo(result){
+        if (result.product_name) $('#info-product').text(result.product_name);
+        if (result.order_id) $('#info-order-id').text('#' + result.order_id);
+        if (result.period) $('#info-period').text(result.period);
+        if (result.expires_at) {
+            expiresAt = result.expires_at;
+            updateTimer();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+    }
+
+    // === Order info ===
+    $.ajax({
+        type: 'GET',
+        url: apiUrl + '/orders/' + hash + '/info',
+        dataType: 'json',
+        success: function(data){
+            if (data.ok === true) {
+                fillOrderInfo(data.result);
+                renderMethods(data.result.sum_usd);
+                pollInterval = setInterval(pollStatus, 1500);
+            } else if (data.description) {
+                showToast(data.description);
+            }
         }
     });
 
-    function getOrderInfo(callback) {
+    // === Status polling ===
+    function pollStatus(){
         $.ajax({
-            type: "GET",
-            url: api_url + '/orders/'+path_b+'/info',
+            type: 'GET',
+            url: '/invoice/' + hash + '/status',
             dataType: 'json',
-            contentType: 'application/json',
-            async: true,
-            success: function (data) {
-                if (data.ok === false) {
-                    alert(data.description);
+            success: function(data){
+                if (data.ok === 'paid') {
+                    showTerminal('paid');
+                    try { Telegram.WebApp.close(); } catch(e) {}
+                } else if (data.ok === 'cancelled') {
+                    showTerminal('cancelled');
+                } else if (data.ok === 'expired') {
+                    showTerminal('expired');
                 }
-                callback(data);
             }
         });
     }
 
-    function getOrder() {
-
-        $.ajax({
-            type: "GET",
-            url: '/invoice/{{ $hash }}/status',
-            dataType: 'json',
-            contentType: 'application/json',
-            async: true,
-            success: function(data) {
-                if(data.ok == 'paid'){
-                    Telegram.WebApp.close();
-                } else if(data.ok == 'is_sent' || data.ok == 'paid'){
-                    var html = '<div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#4ABD5C" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M243.8 339.8C232.9 350.7 215.1 350.7 204.2 339.8L140.2 275.8C129.3 264.9 129.3 247.1 140.2 236.2C151.1 225.3 168.9 225.3 179.8 236.2L224 280.4L332.2 172.2C343.1 161.3 360.9 161.3 371.8 172.2C382.7 183.1 382.7 200.9 371.8 211.8L243.8 339.8zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/></svg></div> <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">'+lang.order_paid+'</div>';
-                    $('.wrapper').html('<div class="my-5 text-center" style="width: 200px;margin:0 auto">'+html+'</div>');
-                } else if(data.ok == 'cancelled'){
-                    var html = '<div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#E74C3C" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg></div> <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">'+lang.order_cancelled+'</div>';
-                    $('.wrapper').html('<div class="my-5 text-center" style="width: 200px;margin:0 auto">'+html+'</div>');
-                } else if(data.ok == 'expired'){
-                    var html = '<div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#F39C12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 120v136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg></div> <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">'+lang.payment_expired+'</div>';
-                    $('.wrapper').html('<div class="my-5 text-center" style="width: 200px;margin:0 auto">'+html+'</div>');
-                }
-            }
-
-        });
-
+    function showTerminal(state){
+        clearInterval(pollInterval);
+        clearInterval(timerInterval);
+        var icons = {
+            paid:      '<svg viewBox="0 0 24 24" fill="none" width="64" height="64"><circle cx="12" cy="12" r="10" stroke="#4ABD5C" stroke-width="2"/><path d="M7 12l3.5 3.5L17 9" stroke="#4ABD5C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            cancelled: '<svg viewBox="0 0 24 24" fill="none" width="64" height="64"><circle cx="12" cy="12" r="10" stroke="#E74C3C" stroke-width="2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#E74C3C" stroke-width="2.4" stroke-linecap="round"/></svg>',
+            expired:   '<svg viewBox="0 0 24 24" fill="none" width="64" height="64"><circle cx="12" cy="12" r="10" stroke="#F39C12" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F39C12" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        };
+        var texts = { paid: lang.order_paid, cancelled: lang.order_cancelled, expired: lang.payment_expired };
+        $('.pay-page').html(
+            '<div class="pay-terminal">' + icons[state] +
+            '<p class="pay-terminal__text">' + texts[state] + '</p></div>'
+        );
     }
 
-    function paymentMethodsProduct(price) {
-
+    // === Methods ===
+    function renderMethods(price){
         $.ajax({
-            type: "POST",
-            url: api_url + '/methods_payments/ps/all',
+            type: 'POST',
+            url: apiUrl + '/methods_payments/ps/all',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify({
-                price: price
-            }),
-            async: true,
-            success: function(data) {
-                if (data.ok === true) {
+            data: JSON.stringify({ price: price }),
+            success: function(data){
+                if (data.ok !== true) return;
 
-                    var items_html = '';
-                    var bt_html = '';
-                    var bt_entry = null;
+                var itemsHtml = '';
+                var btHtml = '';
+                var btEntry = null;
 
-                    $(data.result).each(function (index, e) {
-
-                        if (e.type === 'bt' && e.assets && e.assets.length > 0) {
-                            bt_entry = e;
-                            $(e.assets).each(function (index, a) {
-                                bt_html += '<a href="/invoice/{{ $hash }}/'+e.type+'/'+a.id+'" class="popup__payment-method" data-min-main="'+(a.min_main || 0)+'" data-max-main="'+(a.max_main || 0)+'" data-min-display="'+(a.min || 0)+'" data-max-display="'+(a.max || 0)+'" data-currency="'+(a.currency || '')+'"><div class="popup__payment-method__custom-info">' + a.currency + '</div><img src="' + a.icon + '" alt=""> </a>';
-                            });
-                            return; // skip default flatten for bt
-                        }
-
-                        $(e.assets).each(function (index, a) {
-
-                            items_html += '<a href="/invoice/{{ $hash }}/'+e.type+'/'+a.id+'" class="popup__payment-method" data-min-main="'+(a.min_main || 0)+'" data-max-main="'+(a.max_main || 0)+'" data-min-display="'+(a.min || 0)+'" data-max-display="'+(a.max || 0)+'" data-currency="'+(a.currency || '')+'"><div class="popup__payment-method__custom-info">' + a.currency + '</div><img src="' + a.icon + '" alt=""> </a>';
+                data.result.forEach(function(e){
+                    if (e.type === 'bt' && e.assets && e.assets.length > 0) {
+                        btEntry = e;
+                        e.assets.forEach(function(a){
+                            btHtml += renderMethodRow(e, a, true);
                         });
-
-                    });
-
-                    if (bt_entry) {
-                        items_html += '<a href="#" class="popup__payment-method" id="bt-aggregator"><div class="popup__payment-method__custom-info">' + (bt_entry.title || 'BTKassa') + '</div><img src="' + bt_entry.icon + '" alt=""> </a>';
+                        return;
                     }
-
-                    $('#buy-payments-methods').html(items_html);
-                    $('#bt-payments-methods').html(bt_html);
-
-                    $('#bt-aggregator').on('click', function(e) {
-                        e.preventDefault();
-                        $('#buy-payments-methods').hide();
-                        $('#bt-payments-wrapper').show();
+                    (e.assets || []).forEach(function(a){
+                        itemsHtml += renderMethodRow(e, a, false);
                     });
+                });
 
-                    $('#bt-back').on('click', function() {
-                        $('#bt-payments-wrapper').hide();
-                        $('#buy-payments-methods').show();
-                    });
-
-                    function showPaymentWarning(msg) {
-                        var $w = $('#payment-warning');
-                        $w.text(msg).stop(true, true).fadeIn(120);
-                        clearTimeout(window._pwHide);
-                        window._pwHide = setTimeout(function(){ $w.fadeOut(200); }, 6000);
-                    }
-
-                    $('#buy-payments-methods, #bt-payments-methods').on('click', 'a.popup__payment-method', function(e) {
-                        if (this.id === 'bt-aggregator') return;
-                        var $a = $(this);
-                        var href = $a.attr('href');
-                        if (!href || href === '#') return;
-
-                        // Local fast min/max check (instant feedback when conversion rate available)
-                        var minMain = parseFloat($a.data('min-main')) || 0;
-                        var maxMain = parseFloat($a.data('max-main')) || 0;
-                        var cur = $a.data('currency') || '';
-                        var minDisplay = $a.data('min-display');
-                        var maxDisplay = $a.data('max-display');
-                        if (minMain > 0 && price < minMain) {
-                            e.preventDefault();
-                            showPaymentWarning(lang.min_payment_amount.replace(':min', minDisplay).replace(':amount', minDisplay).replace(':currency', cur));
-                            return;
-                        }
-                        if (maxMain > 0 && price > maxMain) {
-                            e.preventDefault();
-                            showPaymentWarning(lang.max_payment_amount.replace(':max', maxDisplay).replace(':amount', maxDisplay).replace(':currency', cur));
-                            return;
-                        }
-
-                        // AJAX request to the same endpoint — server returns JSON when X-Requested-With is set.
-                        // If ok:true → navigate to payment URL. If ok:false → show inline warning. No page redirect to ?warning=.
-                        e.preventDefault();
-                        if ($a.data('busy')) return;
-                        $a.data('busy', true);
-                        $.ajax({
-                            type: 'GET',
-                            url: href,
-                            dataType: 'json',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
-                            timeout: 30000,
-                            success: function(data) {
-                                $a.data('busy', false);
-                                if (data && data.ok === true && data.redirect) {
-                                    window.location.href = data.redirect;
-                                } else if (data && data.ok === false && data.message) {
-                                    showPaymentWarning(data.message);
-                                } else {
-                                    // Unexpected response — fall back to direct navigation
-                                    window.location.href = href;
-                                }
-                            },
-                            error: function(xhr) {
-                                $a.data('busy', false);
-                                // Network or non-JSON response — fall back to direct navigation
-                                window.location.href = href;
-                            }
-                        });
-                    });
+                if (btEntry) {
+                    itemsHtml += '<button type="button" class="pay-method" id="pay-bt-aggregator">' +
+                        '<span class="pay-method__icon"><img src="' + btEntry.icon + '" alt=""></span>' +
+                        '<span class="pay-method__name">' + (btEntry.title || 'BTKassa') + '</span>' +
+                        '<span class="pay-method__hint">' + (btEntry.region || '') + '</span>' +
+                        '<span class="pay-method__chevron">' +
+                            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                        '</span>' +
+                    '</button>';
                 }
+
+                $('#pay-methods').html(itemsHtml || '<p class="pay-methods__empty">—</p>');
+                $('#pay-methods-bt-list').html(btHtml);
+                wireMethodHandlers(price);
             }
         });
     }
 
-    function checkPayment() {
+    function renderMethodRow(entry, asset, isBt){
+        var href = '/invoice/' + hash + '/' + entry.type + '/' + asset.id;
+        var hint = asset.currency
+            ? (asset.currency.indexOf(',') !== -1 ? '{{ __('site.invoice_currencies') }}: ' + asset.currency : asset.currency)
+            : (entry.region || '');
+        return '<button type="button" class="pay-method" ' +
+            'data-href="' + href + '" ' +
+            'data-min-main="' + (asset.min_main || 0) + '" ' +
+            'data-max-main="' + (asset.max_main || 0) + '" ' +
+            'data-min-display="' + (asset.min || 0) + '" ' +
+            'data-max-display="' + (asset.max || 0) + '" ' +
+            'data-currency="' + (asset.currency || '') + '">' +
+                '<span class="pay-method__icon"><img src="' + asset.icon + '" alt="" loading="lazy"></span>' +
+                '<span class="pay-method__name">' + (asset.title || entry.title || '') + '</span>' +
+                '<span class="pay-method__hint">' + hint + '</span>' +
+            '</button>';
+    }
+
+    function wireMethodHandlers(price){
+        $('#pay-bt-aggregator').on('click', function(e){
+            e.preventDefault();
+            $('#pay-methods').attr('hidden', true);
+            $('#pay-methods-bt').removeAttr('hidden');
+        });
+        $('#pay-bt-back').on('click', function(){
+            $('#pay-methods-bt').attr('hidden', true);
+            $('#pay-methods').removeAttr('hidden');
+        });
+        $('#pay-methods, #pay-methods-bt').on('click', '.pay-method', function(){
+            var $btn = $(this);
+            if ($btn.attr('id') === 'pay-bt-aggregator') return;
+            $btn.closest('.pay-methods').find('.pay-method').removeClass('is-selected');
+            $btn.addClass('is-selected');
+            selectedMethodHref = $btn.data('href');
+            // Validate amount window
+            var minMain = parseFloat($btn.data('min-main')) || 0;
+            var maxMain = parseFloat($btn.data('max-main')) || 0;
+            var cur = $btn.data('currency') || '';
+            var minD = $btn.data('min-display'), maxD = $btn.data('max-display');
+            $('#btn-pay').prop('disabled', false).data('warning', null);
+            if (minMain > 0 && price < minMain) {
+                $('#btn-pay').data('warning', lang.min_payment_amount.replace(':min', minD).replace(':amount', minD).replace(':currency', cur));
+            } else if (maxMain > 0 && price > maxMain) {
+                $('#btn-pay').data('warning', lang.max_payment_amount.replace(':max', maxD).replace(':amount', maxD).replace(':currency', cur));
+            }
+        });
+    }
+
+    // === Pay button ===
+    $('#btn-pay').on('click', function(){
+        var $btn = $(this);
+        if ($btn.prop('disabled') || !selectedMethodHref) return;
+        var warning = $btn.data('warning');
+        if (warning) { showToast(warning); return; }
+        $btn.prop('disabled', true);
+        $.ajax({
+            type: 'GET',
+            url: selectedMethodHref,
+            dataType: 'json',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+            timeout: 30000,
+            success: function(data){
+                if (data && data.ok === true && data.redirect) {
+                    window.location.href = data.redirect;
+                } else if (data && data.ok === false && data.message) {
+                    showToast(data.message);
+                    $btn.prop('disabled', false);
+                } else {
+                    window.location.href = selectedMethodHref;
+                }
+            },
+            error: function(){
+                window.location.href = selectedMethodHref;
+            }
+        });
+    });
+
+    // === Check payment ===
+    window.checkPayment = function(){
         var $btn = $('#btn-check-payment');
+        var original = $btn.text();
         $btn.prop('disabled', true).text(lang.checking);
         $.ajax({
-            type: "GET",
-            url: '/invoice/{{ $hash }}/status',
+            type: 'GET',
+            url: '/invoice/' + hash + '/status',
             dataType: 'json',
-            async: true,
-            success: function(data) {
+            success: function(data){
                 if (data.ok === 'wait') {
-                    var $w = $('#payment-warning');
-                    $w.text(lang.not_paid_yet).stop(true, true).fadeIn(120);
-                    clearTimeout(window._pwHide);
-                    window._pwHide = setTimeout(function(){ $w.fadeOut(200); }, 6000);
-                    $btn.prop('disabled', false).text(lang.check_payment);
+                    showToast(lang.not_paid_yet);
+                    $btn.prop('disabled', false).text(original);
                 } else {
-                    getOrder();
+                    pollStatus();
                 }
             },
-            error: function() {
-                $btn.prop('disabled', false).text(lang.check_payment);
-            }
+            error: function(){ $btn.prop('disabled', false).text(original); }
         });
-    }
+    };
 
-    function cancelOrder() {
-        if(!confirm(lang.confirm_cancel)) return;
-        $('#btn-cancel-order').prop('disabled', true).text(lang.cancelling);
+    // === Cancel modal ===
+    window.openCancelModal = function(){
+        $('#pay-cancel-modal').removeAttr('hidden').addClass('is-open');
+        document.body.classList.add('pay-modal-open');
+    };
+    function closeCancelModal(){
+        $('#pay-cancel-modal').removeClass('is-open').attr('hidden', true);
+        document.body.classList.remove('pay-modal-open');
+    }
+    $(document).on('click', '[data-close-modal]', closeCancelModal);
+    $(document).on('keydown', function(e){ if (e.key === 'Escape') closeCancelModal(); });
+
+    $('#pay-cancel-confirm').on('click', function(){
+        var $btn = $(this);
+        $btn.prop('disabled', true).text(lang.cancelling);
         $.ajax({
-            type: "POST",
-            url: api_url + '/orders/'+path_b+'/cancel',
+            type: 'POST',
+            url: apiUrl + '/orders/' + hash + '/cancel',
             dataType: 'json',
             contentType: 'application/json',
-            async: true,
-            success: function(data) {
-                if(data.ok === true) {
-                    var html = '<div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#E74C3C" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg></div> <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">'+lang.order_cancelled+'</div>';
-                    $('.wrapper').html('<div class="my-5 text-center" style="width: 200px;margin:0 auto">'+html+'</div>');
+            success: function(data){
+                if (data.ok === true) {
+                    closeCancelModal();
+                    showTerminal('cancelled');
                 } else {
-                    alert(data.description || lang.cancel_error);
-                    $('#btn-cancel-order').prop('disabled', false).text(lang.cancel_order);
+                    showToast(data.description || lang.cancel_error);
+                    $btn.prop('disabled', false).text(lang.cancel_order);
                 }
             },
-            error: function() {
-                alert(lang.network_error);
-                $('#btn-cancel-order').prop('disabled', false).text(lang.cancel_order);
+            error: function(){
+                showToast(lang.network_error);
+                $btn.prop('disabled', false).text(lang.cancel_order);
             }
         });
-    }
-</script>
+    });
 
+    // === Copy chip values ===
+    $(document).on('click', '.pay-chip__copy', function(){
+        var id = $(this).data('copy-target');
+        var text = ($('#' + id).text() || '').replace(/^#/, '');
+        if (!text || text === '—') return;
+        var copy = function(t){
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(t);
+            }
+            var ta = document.createElement('textarea');
+            ta.value = t; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch(e) {}
+            document.body.removeChild(ta);
+            return Promise.resolve();
+        };
+        copy(text).then(function(){ showToast(lang.copied); });
+    });
+
+})();
+</script>
 </body>
 </html>

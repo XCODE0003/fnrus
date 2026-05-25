@@ -1,5 +1,10 @@
 @extends('user.layouts.main')
 @section('content')
+@php
+    $reviewCount = $reviews ? count($reviews) : 0;
+    // No rating column in DB yet — show static 5.0 average until backend supports it
+    $avgRating = '5.0';
+@endphp
 <main class="reviews-page">
     <section class="reviews-page__section">
         <div class="content">
@@ -10,16 +15,88 @@
                 </div>
                 <h1 class="reviews-page__title">{{ __('site.reviews_title') }}</h1>
                 <p class="reviews-page__subtitle">{{ __('site.reviews_subtitle') }}</p>
-                <button class="btn btn-accent reviews-page__leave-btn" data-popup="review">{{ __('site.btn_leave_review') }}</button>
             </div>
 
+            {{-- ==== Rating stats card ==== --}}
+            <div class="reviews-stats">
+                <div class="reviews-stats__rating">
+                    <p class="reviews-stats__value">{{ $avgRating }}</p>
+                    <div class="reviews-stats__stars" aria-label="{{ $avgRating }} {{ __('site.reviews_of_5') }}">
+                        @for($i = 0; $i < 5; $i++)
+                            <img src="/assets/img/rv-star.svg" alt="" width="20" height="20">
+                        @endfor
+                    </div>
+                </div>
+                <div class="reviews-stats__count">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M3 17l6-6 4 4 8-8" stroke="#F1FF9D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="14 7 21 7 21 14" stroke="#F1FF9D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>@plural($reviewCount, __('site.reviews_count_one'), __('site.reviews_count_few'), __('site.reviews_count_many'))</span>
+                </div>
+            </div>
+
+            {{-- ==== Inline review form ==== --}}
+            <div class="reviews-form" id="reviews-form">
+                <p class="reviews-form__title">{{ __('site.btn_leave_review') }}</p>
+                <div class="reviews-form__grid">
+                    <div class="reviews-form__field">
+                        <label class="reviews-form__label" for="rv-author">{{ __('site.review_form_name') }} <span>*</span></label>
+                        <input type="text" id="rv-author" class="reviews-form__input" placeholder="{{ __('site.review_form_name_ph') }}" maxlength="64" autocomplete="off">
+                    </div>
+                    <div class="reviews-form__field">
+                        <label class="reviews-form__label" for="rv-product">{{ __('site.review_form_product') }}</label>
+                        <div class="reviews-form__select-wrap">
+                            <select id="rv-product" class="reviews-form__select">
+                                <option value="">{{ __('site.review_form_product_ph') }}</option>
+                                @foreach($categories ?? [] as $cat)
+                                    <option value="{{ $cat->alias ?? $cat->title }}">{{ $cat->title }}</option>
+                                @endforeach
+                            </select>
+                            <svg class="reviews-form__select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <div class="reviews-form__field reviews-form__field--rating">
+                        <label class="reviews-form__label">{{ __('site.review_form_rating') }} <span>*</span></label>
+                        <div class="reviews-form__stars" id="rv-stars" role="radiogroup" aria-label="{{ __('site.review_form_rating') }}">
+                            @for($i = 1; $i <= 5; $i++)
+                                <button type="button" class="reviews-form__star {{ $i <= 5 ? 'is-active' : '' }}" data-value="{{ $i }}" aria-label="{{ $i }}/5">
+                                    <img src="/assets/img/rv-star.svg" alt="" width="28" height="28">
+                                </button>
+                            @endfor
+                        </div>
+                        <input type="hidden" id="rv-rating" value="5">
+                    </div>
+                    <div class="reviews-form__field reviews-form__field--wide">
+                        <label class="reviews-form__label" for="rv-text">{{ __('site.review_form_text') }} <span>*</span></label>
+                        <div class="reviews-form__textarea-wrap">
+                            <textarea id="rv-text" class="reviews-form__textarea" rows="5" maxlength="1000" placeholder="{{ __('site.review_form_text_ph_long') }}"></textarea>
+                            <span class="reviews-form__counter" id="rv-counter">0/1000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reviews-form__actions">
+                    <button type="button" class="reviews-form__submit" id="rv-submit">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        {{ __('site.btn_leave_review') }}
+                    </button>
+                </div>
+            </div>
+
+            {{-- ==== Existing reviews grid ==== --}}
             @if(count($reviews))
             <div class="reviews-grid">
                 @foreach($reviews as $review)
                 <div class="rev-card">
                     <div class="rev-card__head">
                         <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
-                        <p class="rev-card__name">{{ $review->author }}</p>
+                        <div class="rev-card__meta">
+                            <p class="rev-card__name">{{ $review->author }}</p>
+                            @if(!empty($review->link))<p class="rev-card__sub">{{ $review->link }}</p>@endif
+                        </div>
+                        @if(!empty($review->created_at))
+                        <span class="rev-card__date">{{ \Carbon\Carbon::parse($review->created_at)->translatedFormat('j M Y') }}</span>
+                        @endif
                     </div>
                     <div class="rev-card__stars">
                         @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
@@ -34,4 +111,74 @@
         </div>
     </section>
 </main>
+
+<script>
+(function(){
+    var ta = document.getElementById('rv-text');
+    var counter = document.getElementById('rv-counter');
+    if (ta && counter) {
+        var upd = function() { counter.textContent = ta.value.length + '/1000'; };
+        ta.addEventListener('input', upd); upd();
+    }
+
+    var ratingHidden = document.getElementById('rv-rating');
+    var stars = document.querySelectorAll('#rv-stars .reviews-form__star');
+    function paint(n) {
+        stars.forEach(function(s, i){ s.classList.toggle('is-active', i < n); });
+    }
+    stars.forEach(function(star){
+        star.addEventListener('click', function(){
+            var v = +star.getAttribute('data-value');
+            ratingHidden.value = v;
+            paint(v);
+        });
+        star.addEventListener('mouseenter', function(){
+            paint(+star.getAttribute('data-value'));
+        });
+    });
+    var starsWrap = document.getElementById('rv-stars');
+    if (starsWrap) starsWrap.addEventListener('mouseleave', function(){ paint(+ratingHidden.value); });
+
+    var submit = document.getElementById('rv-submit');
+    if (submit) {
+        submit.addEventListener('click', function(){
+            var author = (document.getElementById('rv-author').value || '').trim();
+            var text = (document.getElementById('rv-text').value || '').trim();
+            var product = (document.getElementById('rv-product').value || '').trim();
+            var rating = ratingHidden.value;
+            if (!author || !text) {
+                if (window.showNotification) window.showNotification(@json(__('site.review_form_validation')), 'fail');
+                return;
+            }
+            // Encode rating + product into link field so it's stored alongside review
+            var meta = product ? (rating + '★ · ' + product) : (rating + '★');
+            submit.disabled = true;
+            $.ajax({
+                type: 'POST',
+                url: (window.api_url || (location.origin + '/api')) + '/reviews/submit',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({ author: author, text: text, link: meta }),
+                success: function(data){
+                    submit.disabled = false;
+                    if (data.ok === true) {
+                        if (window.showNotification) window.showNotification(data.description, 'success');
+                        document.getElementById('rv-author').value = '';
+                        document.getElementById('rv-text').value = '';
+                        document.getElementById('rv-product').value = '';
+                        ratingHidden.value = 5; paint(5);
+                        if (counter) counter.textContent = '0/1000';
+                    } else if (window.showNotification) {
+                        window.showNotification(data.description || @json(__('site.cancel_error')), 'fail');
+                    }
+                },
+                error: function(){
+                    submit.disabled = false;
+                    if (window.showNotification) window.showNotification(@json(__('site.invoice_network_error')), 'fail');
+                }
+            });
+        });
+    }
+})();
+</script>
 @endsection

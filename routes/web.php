@@ -340,11 +340,13 @@ Route::get('/games', function () {
 Route::get('/reviews', function () {
     $shop = Shop::getDefault();
     $shop_set = ShopSettings::getDefault();
+    $categories = Category::where('sid', $shop->id)->where('cid', 0)->whereIn('visibility', [1, 2])->orderBy('sort')->get();
     return view('user/reviews', [
         'title' => __('site.reviews_page_title'),
         'reviews' => Review::getAll(),
         'shop' => $shop,
         'shop_set' => $shop_set,
+        'categories' => $categories,
     ]);
 })->name('reviews');
 Route::get('/policy', function () {
