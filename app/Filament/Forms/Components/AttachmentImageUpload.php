@@ -107,7 +107,11 @@ class AttachmentImageUpload
                 return $hash;
             })
             ->afterStateHydrated(function (FileUpload $component, $state): void {
-                if ($state === null || $state === '') {
+                if ($state === null || $state === '' || $state === '[]') {
+                    // FileUpload's internal state must be an array, never a
+                    // bare string — otherwise foreach() in BaseFileUpload
+                    // explodes ("argument must be of type array|object, string given").
+                    $component->state([]);
                     return;
                 }
 
@@ -129,12 +133,11 @@ class AttachmentImageUpload
                 }
 
                 $path = self::resolvePath((string) $state);
-                if ($path !== null) {
-                    // FileUpload normalises state to an array internally even
-                    // for single-file mode — passing a bare string blows up
-                    // BaseFileUpload::getStateToDehydrate's foreach.
-                    $component->state([$path]);
-                }
+                // FileUpload normalises state to an array internally even for
+                // single-file mode — passing a bare string blows up
+                // BaseFileUpload::getStateToDehydrate's foreach. Always set an
+                // array; empty if the hash doesn't resolve (orphan attachment).
+                $component->state($path !== null ? [$path] : []);
             })
             ->dehydrateStateUsing(function ($state, FileUpload $component) {
                 // Legacy columns `image`, `image_site`, `gallery` are NOT
