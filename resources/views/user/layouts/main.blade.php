@@ -40,7 +40,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.1.0">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.1.6">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -57,9 +57,12 @@
             height: 0;
             display: none;                  /* Chrome/Safari/Edge */
         }
-        /* Zoom out to 90% — like one Ctrl+minus. Applied everywhere so mobile,
-           tablet and desktop look proportionally identical. */
-        body { zoom: 0.9; }
+        /* Zoom out to 90% (like one Ctrl+minus) — desktop only.
+           On mobile/tablet content is already small; zooming it breaks
+           viewport math and shifts content. */
+        @media (min-width: 1024px) {
+            body { zoom: 0.9; }
+        }
 
         /* Disable text selection globally, allow on instruction/delivery pages */
         body {
@@ -717,7 +720,7 @@
     <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
 </div>
 
-<script src="/assets/js/scripts.min.js?52"></script>
+<script src="/assets/js/scripts.min.js?53"></script>
 <script src="/assets/js/animations.js?v=13"></script>
 <script>
 window.lang = {

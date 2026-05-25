@@ -15375,3 +15375,441 @@ html, body { overflow-x: clip; }
     text-transform:uppercase;
 }
 .header__mega__card-img img{position:relative;z-index:1}
+
+/* ================================================================== */
+/*  Hamburger — modern pill button matching the new header aesthetic   */
+/* ================================================================== */
+.header__hamburger{
+    width:42px !important;height:42px !important;
+    margin-left:8px !important;
+    border-radius:999px !important;
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    box-shadow:none !important;
+    transition:background .2s ease, border-color .2s ease !important;
+    position:relative;
+    flex-shrink:0;
+}
+@media (min-width:1024px){.header__hamburger{display:none !important}}
+.header__hamburger:hover{
+    background:rgba(132,86,255,.12) !important;
+    border-color:rgba(132,86,255,.4) !important;
+}
+.header__hamburger._active{
+    background:rgba(132,86,255,.18) !important;
+    border-color:rgba(132,86,255,.55) !important;
+    box-shadow:0 0 18px -6px rgba(132,86,255,.5) !important;
+}
+
+/* Lines — clean 16px width, 1.5px height */
+.header__hamburger span,
+.header__hamburger span::before,
+.header__hamburger span::after{
+    width:16px !important;height:1.5px !important;
+    background-color:#fff !important;
+    border-radius:2px !important;
+}
+.header__hamburger span::before{top:-5px !important}
+.header__hamburger span::after{top:5px !important}
+
+/* Clean X animation when active */
+.header__hamburger._active span{
+    background:transparent !important;
+    transform:none !important;
+}
+.header__hamburger._active span::before{
+    top:0 !important;
+    transform:rotate(45deg) !important;
+    background:#cbb6ff !important;
+}
+.header__hamburger._active span::after{
+    top:0 !important;
+    transform:rotate(-45deg) !important;
+    background:#cbb6ff !important;
+    opacity:1 !important;
+}
+
+/* Mobile menu polish — match new aesthetic when opened full-screen */
+@media (max-width:1023px){
+    .header__menu{
+        background:rgba(11, 15, 22, .96) !important;
+        backdrop-filter:blur(20px) saturate(180%);
+        -webkit-backdrop-filter:blur(20px) saturate(180%);
+        padding-top:90px !important;
+        gap:8px !important;
+    }
+    .header__menu__item{padding:0 18px;width:100%;max-width:520px}
+    .header__menu__item > a,
+    .header__menu__pill{
+        display:flex !important;width:100% !important;
+        padding:16px 22px !important;
+        border-radius:14px !important;
+        background:rgba(255,255,255,.03) !important;
+        border:1px solid rgba(255,255,255,.05) !important;
+        font-size:15px !important;font-weight:600 !important;
+        color:#fff !important;
+        justify-content:flex-start !important;
+        transition:background .2s, border-color .2s !important;
+    }
+    .header__menu__item > a:hover,
+    .header__menu__pill:hover{
+        background:rgba(132,86,255,.12) !important;
+        border-color:rgba(132,86,255,.3) !important;
+    }
+    .header__menu__item--dropdown .header__menu__pill{
+        background:rgba(132,86,255,.12) !important;
+        border-color:rgba(132,86,255,.35) !important;
+        color:#fff !important;
+    }
+    /* Inline expanded mega menu on mobile */
+    .header__mega{
+        position:static !important;
+        width:100% !important;
+        opacity:1 !important;visibility:visible !important;transform:none !important;
+        margin-top:8px;
+        background:transparent !important;
+        border:0 !important;box-shadow:none !important;padding:0 !important;
+    }
+    .header__mega::before,.header__mega::after{display:none !important}
+    .header__menu__item--dropdown:not(.is-open) .header__mega{display:none !important}
+    .header__mega__head{padding:0 !important;margin-bottom:10px !important;border-bottom:0 !important}
+    .header__mega__grid{grid-template-columns:1fr !important;gap:4px !important}
+    .header__mega__foot{border-top:0 !important;padding-top:8px !important}
+}
+
+/* Header mobile — tighten right side, profile pill shouldn't have huge gap */
+@media (max-width:1023px){
+    /* The .header__menu is rendered as fixed overlay on mobile, but the empty
+       <ul> in the flow still takes space because of order-natural; force it out. */
+    .header__menu:not(._active){flex:0 0 0 !important;width:0 !important;min-width:0 !important;padding:0 !important;margin:0 !important;overflow:hidden}
+    .header__lang{margin-left:auto !important;margin-right:8px !important}
+    .header__search-btn{margin-right:8px !important}
+    .header__hamburger{margin-left:8px !important;margin-right:8px !important}
+    .header__login{
+        width:42px !important;height:42px !important;
+        padding:0 !important;
+        border-radius:999px !important;
+        font-size:0 !important;
+        flex-shrink:0;
+    }
+    .header__login .btn__icon{margin:0 !important;padding:0 !important;border:0 !important}
+    .header__login .btn__icon img{width:18px !important;height:18px !important}
+}
+
+/* ================================================================== */
+/*  Profile/login pill — polish on mobile                              */
+/* ================================================================== */
+@media (max-width:1023px){
+    .header__login{
+        width:42px !important;height:42px !important;
+        padding:0 !important;
+        border-radius:999px !important;
+        background:linear-gradient(180deg, #9466ff 0%, #7340ff 100%) !important;
+        border:1px solid rgba(255,255,255,.08) !important;
+        box-shadow:
+            0 1px 0 rgba(255,255,255,.2) inset,
+            0 6px 18px -6px rgba(132,86,255,.55) !important;
+        font-size:0 !important;
+        flex-shrink:0;
+        transition:transform .15s ease, box-shadow .25s ease !important;
+    }
+    .header__login:hover,.header__login:active{
+        transform:translateY(-1px);
+        box-shadow:
+            0 1px 0 rgba(255,255,255,.25) inset,
+            0 10px 24px -6px rgba(132,86,255,.7) !important;
+    }
+    .header__login .btn__icon{
+        margin:0 !important;padding:0 !important;border:0 !important;
+        display:inline-flex !important;align-items:center !important;justify-content:center !important;
+    }
+    .header__login .btn__icon img{
+        width:18px !important;height:18px !important;
+        filter:brightness(0) invert(1);
+    }
+}
+
+/* ================================================================== */
+/*  Catalog cards on index — horizontal on mobile (match /games style) */
+/* ================================================================== */
+@media (max-width:599px){
+    .catalog__cards-container{
+        grid-template-columns:1fr !important;gap:12px !important;
+    }
+    .catalog-card{
+        flex-direction:row !important;
+        align-items:stretch;
+        border-radius:14px;
+        overflow:hidden;
+        background:linear-gradient(180deg,#1d2533 0%,#171d28 100%);
+        border:1px solid rgba(255,255,255,.05);
+        transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .catalog-card:hover{
+        transform:translateY(-2px);
+        border-color:rgba(132,86,255,.35);
+        box-shadow:0 14px 30px -16px rgba(132,86,255,.5);
+    }
+    .catalog-card__img{
+        width:118px !important;height:auto !important;
+        aspect-ratio:auto !important;
+        flex-shrink:0;
+        border-radius:0 !important;
+        background:#0f141c;
+        overflow:hidden;
+        position:relative;
+    }
+    .catalog-card__img img{
+        width:100% !important;height:100% !important;
+        object-fit:cover !important;
+        display:block;
+    }
+    .catalog-card__img::after{display:none !important}
+    .catalog-card__body{
+        padding:14px 16px !important;
+        flex:1;min-width:0;
+        display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .catalog-card__name{
+        font-size:15px !important;line-height:1.2;font-weight:700;
+        margin-bottom:6px;
+        overflow:hidden;text-overflow:ellipsis;
+        display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    }
+    .catalog-card__tags{flex-wrap:wrap;gap:5px;margin:4px 0 8px}
+    .catalog-card__tag{font-size:11px !important;padding:3px 8px !important;border-radius:6px}
+    .catalog-card__tag img{width:10px !important;height:10px !important;margin-right:4px}
+    .catalog-card__desc{display:none !important}
+    .catalog-card__more{
+        font-size:12px !important;margin-top:auto;
+        color:#b59aff;
+        display:inline-flex;align-items:center;gap:4px;
+        text-transform:uppercase;letter-spacing:.04em;font-weight:700;
+    }
+    .catalog-card__more img{width:12px !important;height:12px !important}
+}
+
+/* ================================================================== */
+/*  Mobile burger menu — premium redesign                              */
+/* ================================================================== */
+@media (max-width:1023px){
+    .header__menu{
+        background:
+            radial-gradient(ellipse 70% 50% at 20% 0%, rgba(132,86,255,.10), transparent 70%),
+            linear-gradient(180deg, #0e131c 0%, #0a0e15 100%) !important;
+        padding:96px 16px 24px !important;
+        gap:0 !important;
+        align-items:stretch !important;
+    }
+
+    /* Subtle pill brand-mark above the items list */
+    .header__menu::before{
+        content:"";
+        position:absolute;left:50%;top:74px;transform:translateX(-50%);
+        width:46px;height:4px;border-radius:99px;
+        background:linear-gradient(90deg,transparent,rgba(132,86,255,.5),transparent);
+    }
+
+    .header__menu__item{
+        max-width:none !important;width:100%;padding:0 !important;
+        margin:0 0 6px !important;
+        opacity:0;transform:translateY(12px);
+        transition:opacity .35s ease, transform .35s cubic-bezier(.2,.7,.2,1) !important;
+    }
+    .header__menu._active .header__menu__item{opacity:1;transform:translateY(0)}
+
+    /* Plain menu link as a clean row card with icon + label + chevron */
+    .header__menu__item > a{
+        display:grid !important;
+        grid-template-columns:42px 1fr 18px;
+        gap:14px;align-items:center;
+        padding:14px 16px !important;
+        background:rgba(255,255,255,.025) !important;
+        border:1px solid rgba(255,255,255,.04) !important;
+        border-radius:14px !important;
+        font-size:15px !important;font-weight:600 !important;
+        color:#fff !important;
+        position:relative;overflow:hidden;
+        transition:background .2s ease, border-color .2s ease, transform .15s ease !important;
+    }
+    .header__menu__item > a:hover,
+    .header__menu__item > a:active{
+        background:rgba(132,86,255,.10) !important;
+        border-color:rgba(132,86,255,.3) !important;
+        transform:translateX(2px);
+    }
+    .header__menu__item.is-active > a{
+        background:linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.06)) !important;
+        border-color:rgba(132,86,255,.5) !important;
+        box-shadow:0 8px 22px -12px rgba(132,86,255,.55);
+    }
+
+    /* Icon container — purple square 32×32 */
+    .header__menu__item > a::before{
+        content:"";
+        width:36px;height:36px;border-radius:10px;
+        background:linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.08));
+        border:1px solid rgba(132,86,255,.18);
+        background-repeat:no-repeat;background-position:center;background-size:18px;
+        flex-shrink:0;
+    }
+    /* Per-item icons */
+    .header__menu__item > a[href="/status"]::before{
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbb6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><polyline points='12 7 12 12 15 14'/></svg>"), linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.08));
+    }
+    .header__menu__item > a[href="/reviews"]::before{
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbb6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 15 9 22 9 17 14 19 22 12 17 5 22 7 14 2 9 9 9 12 2'/></svg>"), linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.08));
+    }
+    .header__menu__item > a[href="/about"]::before{
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbb6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><line x1='12' y1='8' x2='12' y2='12'/><circle cx='12' cy='16' r='.5' fill='%23cbb6ff'/></svg>"), linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.08));
+    }
+    .header__menu__item > a[href*="#faq"]::before{
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbb6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M9.5 9a2.5 2.5 0 1 1 4 2c-1 .6-1.5 1.2-1.5 2'/><circle cx='12' cy='16.5' r='.7' fill='%23cbb6ff'/></svg>"), linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.08));
+    }
+    /* Chevron */
+    .header__menu__item > a::after{
+        content:"";
+        width:14px;height:14px;
+        background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='.45' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>") center/contain no-repeat;
+        transition:transform .2s ease;
+    }
+    .header__menu__item > a:hover::after{transform:translateX(3px)}
+
+    /* ============ Catalog pill — same row treatment but accent ============ */
+    .header__menu__item--dropdown{margin-bottom:6px !important}
+    .header__menu__pill{
+        display:grid !important;
+        grid-template-columns:42px 1fr 18px;
+        gap:14px;align-items:center;
+        width:100%;
+        padding:14px 16px !important;
+        background:linear-gradient(180deg, rgba(132,86,255,.16), rgba(132,86,255,.06)) !important;
+        border:1px solid rgba(132,86,255,.4) !important;
+        border-radius:14px !important;
+        font-size:15px !important;font-weight:700 !important;
+        color:#fff !important;
+        justify-content:flex-start !important;
+        box-shadow:0 8px 22px -12px rgba(132,86,255,.55);
+        position:relative;overflow:hidden;
+    }
+    .header__menu__pill > span:first-of-type{
+        /* The text span */
+        order:1;
+    }
+    .header__menu__pill-chev{
+        order:2;
+        width:14px !important;height:14px !important;
+        margin-left:auto;
+    }
+    /* Icon for catalog */
+    .header__menu__pill::before{
+        content:"";
+        order:0;
+        width:36px;height:36px;border-radius:10px;
+        background:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f1ff9d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='8' height='8' rx='1.5'/><rect x='13' y='3' width='8' height='8' rx='1.5'/><rect x='3' y='13' width='8' height='8' rx='1.5'/><rect x='13' y='13' width='8' height='8' rx='1.5'/></svg>") center/18px no-repeat,
+            linear-gradient(180deg, rgba(241,255,157,.18), rgba(132,86,255,.1));
+        border:1px solid rgba(241,255,157,.25);
+        box-shadow:0 0 14px -4px rgba(241,255,157,.4);
+        flex-shrink:0;
+    }
+
+    /* Mega menu inside burger — inline reveal, compact grid */
+    .header__mega{
+        position:static !important;
+        opacity:1 !important;visibility:visible !important;transform:none !important;
+        margin:6px 0 6px !important;
+        padding:8px !important;
+        background:rgba(132,86,255,.04) !important;
+        border:1px solid rgba(132,86,255,.12) !important;
+        border-radius:14px !important;
+        box-shadow:none !important;width:100% !important;
+    }
+    .header__mega::before,.header__mega::after{display:none !important}
+    .header__menu__item--dropdown:not(.is-open) .header__mega{display:none !important}
+    .header__mega__head{
+        padding:4px 6px 10px !important;margin-bottom:8px !important;
+        border-bottom:1px solid rgba(255,255,255,.05) !important;
+    }
+    .header__mega__title{font-size:12px !important;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5) !important;font-weight:700 !important}
+    .header__mega__sub{display:none !important}
+    .header__mega__all{
+        padding:6px 12px !important;font-size:11px !important;
+    }
+    .header__mega__grid{grid-template-columns:1fr !important;gap:2px !important;margin-bottom:8px !important}
+    .header__mega__card{padding:8px !important;border-radius:10px !important}
+    .header__mega__card-img{width:36px !important;height:36px !important;border-radius:8px !important}
+    .header__mega__card-img::before{font-size:15px !important}
+    .header__mega__card-name{font-size:13px !important}
+    .header__mega__card-meta{font-size:10px !important}
+    .header__mega__card-arrow{width:20px !important;height:20px !important}
+    .header__mega__foot{padding-top:8px !important;border-top:1px solid rgba(255,255,255,.05) !important;gap:4px !important}
+    .header__mega__quick{padding:8px 10px !important;font-size:11px !important;border-radius:8px !important}
+    .header__mega__quick svg{width:11px !important;height:11px !important}
+
+    /* Footer info inside burger menu */
+    .header__menu::after{
+        content:"© FnRus";
+        display:block;
+        text-align:center;
+        margin-top:auto;padding-top:18px;
+        font-size:12px;color:rgba(255,255,255,.3);font-family:'Mazzard M',sans-serif;
+    }
+}
+
+/* ================================================================== */
+/*  Profile/login pill — desktop polish (gradient + glow + pill)       */
+/* ================================================================== */
+@media (min-width:1024px){
+    .header__login{
+        display:inline-flex !important;align-items:center !important;
+        gap:10px;
+        height:auto !important;min-height:48px !important;
+        padding:0 22px 0 18px !important;
+        border-radius:999px !important;
+        background:linear-gradient(180deg, #9466ff 0%, #7340ff 100%) !important;
+        border:1px solid rgba(255,255,255,.08) !important;
+        font-family:'Mazzard M',sans-serif !important;
+        font-weight:600 !important;font-size:14px !important;
+        letter-spacing:.01em !important;
+        color:#fff !important;
+        box-shadow:
+            0 1px 0 rgba(255,255,255,.2) inset,
+            0 -1px 0 rgba(0,0,0,.15) inset,
+            0 10px 26px -8px rgba(132,86,255,.55) !important;
+        transition:transform .15s ease, box-shadow .25s ease, background .25s ease !important;
+        position:relative;overflow:hidden;
+    }
+    .header__login:hover{
+        transform:translateY(-1px);
+        background:linear-gradient(180deg, #a07aff 0%, #7d4fff 100%) !important;
+        box-shadow:
+            0 1px 0 rgba(255,255,255,.25) inset,
+            0 -1px 0 rgba(0,0,0,.2) inset,
+            0 16px 34px -8px rgba(132,86,255,.75) !important;
+    }
+    .header__login:active{transform:translateY(0)}
+    /* Shimmer overlay on hover */
+    .header__login::before{
+        content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+        background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+        transform:translateX(-110%);
+        transition:transform .8s ease;
+    }
+    .header__login:hover::before{transform:translateX(110%)}
+
+    /* Avatar/icon — round chip with subtle bg, no border divider */
+    .header__login .btn__icon{
+        display:inline-flex !important;align-items:center !important;justify-content:center !important;
+        width:28px !important;height:28px !important;
+        margin:0 !important;padding:0 !important;
+        border:0 !important;
+        border-radius:50% !important;
+        background:rgba(255,255,255,.18) !important;
+        flex-shrink:0;
+    }
+    .header__login .btn__icon img{
+        width:14px !important;height:14px !important;
+        filter:brightness(0) invert(1);
+    }
+}
