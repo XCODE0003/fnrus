@@ -240,9 +240,35 @@
                         <button type="button" class="pay-btn pay-btn--primary popup__submit-btn" id="btn-pay">
                             {{ __('site.modal_buy_btn_payment') }}
                         </button>
-                        <button type="button" class="pay-btn pay-btn--secondary popup__back-btn" data-popup-switch-step="1" onclick="clearInterval(timerInterval);">
-                            {{ __('site.modal_buy_btn_back') }}
-                        </button>
+                        <div class="pay-actions__row">
+                            <button type="button" class="pay-btn pay-btn--secondary popup__back-btn" data-popup-switch-step="1" onclick="clearInterval(timerInterval);">
+                                {{ __('site.modal_buy_btn_back') }}
+                            </button>
+                            <button type="button" class="pay-btn pay-btn--secondary pay-btn--danger" id="buy-cancel-trigger">
+                                {{ __('site.invoice_cancel_order') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Cancel confirmation — overlay inside #buy popup --}}
+                    <div class="buy-cancel-confirm" id="buy-cancel-confirm" hidden>
+                        <div class="buy-cancel-confirm__panel">
+                            <h3 class="buy-cancel-confirm__title">{{ __('site.invoice_cancel_title') }}</h3>
+                            <div class="buy-cancel-confirm__icon" aria-hidden="true">
+                                <svg width="88" height="88" viewBox="0 0 111 111" fill="none">
+                                    <circle cx="55.5" cy="55.5" r="50" stroke="#E74C3C" stroke-width="5"/>
+                                    <line x1="22" y1="22" x2="89" y2="89" stroke="#E74C3C" stroke-width="5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="pay-actions__row">
+                                <button type="button" class="pay-btn pay-btn--secondary" id="buy-cancel-confirm-yes">
+                                    {{ __('site.invoice_cancel_order') }}
+                                </button>
+                                <button type="button" class="pay-btn pay-btn--primary" id="buy-cancel-confirm-no">
+                                    {{ __('site.invoice_continue_pay') }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -281,6 +307,57 @@
             </div>
         </div>
     </div>
+
+    <script>
+    (function(){
+        var trigger = document.getElementById('buy-cancel-trigger');
+        var overlay = document.getElementById('buy-cancel-confirm');
+        var yes = document.getElementById('buy-cancel-confirm-yes');
+        var no  = document.getElementById('buy-cancel-confirm-no');
+        if (!trigger || !overlay) return;
+
+        function open(){ overlay.hidden = false; requestAnimationFrame(function(){ overlay.classList.add('is-open'); }); }
+        function close(){ overlay.classList.remove('is-open'); setTimeout(function(){ overlay.hidden = true; }, 220); }
+
+        trigger.addEventListener('click', open);
+        no.addEventListener('click', close);
+
+        yes.addEventListener('click', function(){
+            var orderId = window._createdOrderId;
+            if (!orderId) { close(); return; }
+            yes.disabled = true;
+            $.ajax({
+                type: 'POST',
+                url: (window.api_url || (location.origin + '/api')) + '/orders/' + orderId + '/cancel',
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + getCookie('session_token')); },
+                success: function(data){
+                    yes.disabled = false;
+                    close();
+                    if (data && data.ok === true) {
+                        try { clearInterval(window.timerInterval); } catch(e) {}
+                        var popup = document.querySelector('#buy');
+                        popup.querySelectorAll('[data-popup-step]._active').forEach(function(s){ s.classList.remove('_active'); });
+                        popup.querySelector('[data-popup-step="1"]').classList.add('_active');
+                        if (typeof window.showNotification === 'function') {
+                            window.showNotification(@json(__('site.invoice_order_cancelled')), 'success');
+                        }
+                    } else if (window.showNotification) {
+                        window.showNotification((data && data.description) || @json(__('site.invoice_cancel_error')), 'fail');
+                    }
+                },
+                error: function(){
+                    yes.disabled = false;
+                    if (window.showNotification) window.showNotification(@json(__('site.invoice_network_error')), 'fail');
+                }
+            });
+        });
+
+        overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+    })();
+    </script>
 
     @if($product->link_video != '#' and $product->link_video != '' and (Str::startsWith($product->link_video, 'http') or Str::startsWith($product->link_video, '/uploads/')))
     <div class="popup" id="cheat-video">

@@ -39,11 +39,14 @@ class CheatController extends Controller
 
                 $cheats_json = [];
 
-                if($query != '') {
-                    $cheats = StatusCheat::where('title', 'like', '%' . $query . '%')->where('cid', $c->id)->where('status', $status)->get();
-                } else {
-                    $cheats = StatusCheat::where('cid', $c->id)->where('status', $status)->get();
+                $cheatsQuery = StatusCheat::where('cid', $c->id);
+                if ($query != '') {
+                    $cheatsQuery->where('title', 'like', '%' . $query . '%');
                 }
+                if ($status > 0) {
+                    $cheatsQuery->where('status', $status);
+                }
+                $cheats = $cheatsQuery->get();
 
                 foreach ($cheats as $p) {
 

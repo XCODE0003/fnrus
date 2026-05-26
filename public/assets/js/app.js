@@ -301,6 +301,18 @@ function paymentMethodsProduct(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
+                // Row renderer — icon + name + currency pill (Figma "оплата 4"/"6")
+                var rowHtml = function(e, a) {
+                    var name = (e && e.title) || (a && a.title) || a.currency || '';
+                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">' +
+                        '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
+                            '<span class="popup__payment-method__icon"><img src="' + iconSrc + '" alt=""></span>' +
+                            '<span class="popup__payment-method__name">' + name + '</span>' +
+                            '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
+                        '</label>';
+                };
+
                 $(data.result).each(function (index, e) {
 
                     if(e.is_active === 1) {
@@ -308,22 +320,13 @@ function paymentMethodsProduct(price) {
                         if (e.type === 'bt' && e.assets && e.assets.length > 0) {
                             bt_entry = e;
                             $(e.assets).each(function (index, a) {
-                                bt_html += '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">\n' +
-                                    '            <label for="payment_method_' + a.id + '" class="popup__payment-method">' +
-                                    '               <div class="popup__payment-method__custom-info">' + a.currency + '</div>\n' +
-                                    '                <img src="' + a.icon + '" alt="">\n' +
-                                    '            </label>';
+                                bt_html += rowHtml(e, a);
                             });
                             return;
                         }
 
                         $(e.assets).each(function (index, a) {
-
-                            items_html += '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">\n' +
-                                '            <label for="payment_method_' + a.id + '" class="popup__payment-method">' +
-                                '               <div class="popup__payment-method__custom-info">' + a.currency + '</div>\n' +
-                                '                <img src="' + a.icon + '" alt="">\n' +
-                                '            </label>';
+                            items_html += rowHtml(e, a);
                         });
 
                     }
@@ -331,27 +334,29 @@ function paymentMethodsProduct(price) {
                 });
 
                 if (bt_entry) {
-                    items_html += '<a href="#" class="popup__payment-method" id="product-bt-aggregator">' +
-                        '<div class="popup__payment-method__custom-info">' + (bt_entry.title || 'BTKassa') + '</div>' +
-                        '<img src="' + bt_entry.icon + '" alt=""></a>';
+                    items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="product-bt-aggregator">' +
+                        '<span class="popup__payment-method__icon"><img src="' + bt_entry.icon + '" alt=""></span>' +
+                        '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
+                        '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
+                        '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                    '</a>';
                 }
 
-                var gridStyle = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;grid-column:1/-1';
-                var wrapper = '<div id="product-bt-main" style="' + gridStyle + '">' + items_html + '</div>' +
+                var wrapper = '<div id="product-bt-main">' + items_html + '</div>' +
                     '<div id="product-bt-sub" style="display:none">' + bt_html +
-                    '<div style="text-align:center;margin-top:10px;grid-column:1/-1"><a href="#" id="product-bt-back" style="cursor:pointer;color:#6c757d">← Назад</a></div></div>';
+                    '<div style="text-align:center;margin-top:10px"><a href="#" id="product-bt-back" class="popup__payment-method__back">← Назад</a></div></div>';
 
                 $('#buy-payments-methods').html(wrapper);
 
                 $('#buy-payments-methods').off('click', '#product-bt-aggregator').on('click', '#product-bt-aggregator', function(e){
                     e.preventDefault();
                     $('#product-bt-main').hide();
-                    $('#product-bt-sub').css({'display':'grid','grid-template-columns':'repeat(4,1fr)','gap':'10px','grid-column':'1/-1'});
+                    $('#product-bt-sub').show();
                 });
                 $('#buy-payments-methods').off('click', '#product-bt-back').on('click', '#product-bt-back', function(e){
                     e.preventDefault();
                     $('#product-bt-sub').hide();
-                    $('#product-bt-main').css({'display':'grid','grid-template-columns':'repeat(4,1fr)','gap':'10px','grid-column':'1/-1'});
+                    $('#product-bt-main').show();
                 });
             }
         }
@@ -1015,7 +1020,10 @@ if(path_a === 'status') {
     const query_input = document.querySelector('.status-heading-section__filter #search_query');
     query_input.addEventListener('keyup', function (event) {
         const query = event.target.value;
-        var status = $('.status-heading-section__filter .select__option._active').attr('data-value');
+        var status = $('#status-select').attr('data-value')
+            || $('.status-heading-section__filter .st-select__opt.is-active').attr('data-value')
+            || $('.status-heading-section__filter .select__option._active').attr('data-value')
+            || 0;
         searchStatus(query, status)
     });
 }

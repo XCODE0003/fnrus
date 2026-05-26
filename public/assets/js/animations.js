@@ -101,20 +101,18 @@
             });
         }
 
-        /* ============================ HERO ============================ */
+        /* ============================ HERO — refined cinematic intro === */
         if (q('.hero')) {
-            gsap.timeline({ defaults: { ease: GLIDE, duration: 1, clearProps: 'transform,filter' } })
-                .from('.hero__badge', { autoAlpha: 0, y: 26, scale: 0.92, duration: 0.8 })
-                .fromTo('.hero__title',
-                    { autoAlpha: 0, y: 60, filter: 'blur(16px)' },
-                    { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.2 }, '-=0.45')
-                .from('.hero__title-bolt', { scale: 0, rotation: -160, duration: 0.85, ease: POP }, '-=0.7')
-                .from('.hero__subtitle', { autoAlpha: 0, y: 28, duration: 0.8 }, '-=0.75')
-                .from('.hero__actions > *', { autoAlpha: 0, y: 26, scale: 0.96, stagger: 0.12, duration: 0.75 }, '-=0.6')
-                .from('.hero__image', { autoAlpha: 0, scale: 0.9, y: 26, duration: 1.25, ease: SOFT }, '-=1.1');
+            gsap.timeline({ defaults: { ease: GLIDE, duration: 0.85, clearProps: 'transform,opacity,filter' } })
+                .from('.hero__badge',    { autoAlpha: 0, y: 22, duration: 0.7, ease: SOFT })
+                .from('.hero__title',    { autoAlpha: 0, y: 28, filter: 'blur(6px)', duration: 0.95 }, '-=0.55')
+                .from('.hero__title-bolt', { scale: 0.4, autoAlpha: 0, rotate: -15, duration: 0.75, ease: POP }, '-=0.7')
+                .from('.hero__subtitle', { autoAlpha: 0, y: 18, duration: 0.7 }, '-=0.6')
+                .from('.hero__actions > *', { autoAlpha: 0, y: 16, scale: 0.96, stagger: 0.08, duration: 0.6, ease: SOFT }, '-=0.5')
+                .from('.hero__image',    { autoAlpha: 0, y: 32, scale: 0.94, duration: 1.05 }, '-=0.85');
             if (q('.hero__image img')) {
                 gsap.to('.hero__image img', {
-                    y: 16, rotation: 0.5, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.4
+                    y: 12, duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.2
                 });
             }
         }
@@ -137,27 +135,27 @@
 
         /* ===================== Секция «Новый уровень» ================ */
         if (q('.section2')) {
-            reveal('.section2__badge', { y: 26, trigger: '.section2' });
-            reveal('.section2__title', { y: 40, blur: 12, duration: 1.05, trigger: '.section2' });
-            reveal('.s2-card', { scale: 0.9, y: 30, stagger: 0.1, trigger: '.section2__grid' });
+            reveal('.section2__badge', { y: 20, duration: 0.7, trigger: '.section2' });
+            reveal('.section2__title', { y: 26, duration: 0.85, trigger: '.section2' });
+            reveal('.s2-card', { y: 28, scale: 0.96, stagger: 0.09, duration: 0.7, trigger: '.section2__grid' });
         }
 
         /* ============================ КАТАЛОГ ======================== */
         if (q('.catalog')) {
-            reveal('.catalog__badge, .catalog__title, .catalog__subtitle', { y: 28, stagger: 0.1, trigger: '.catalog' });
-            reveal('.catalog-card', { scale: 0.94, stagger: 0.07, trigger: '.catalog__cards-container' });
+            reveal('.catalog__badge, .catalog__title, .catalog__subtitle', { y: 22, stagger: 0.08, duration: 0.75, trigger: '.catalog' });
+            reveal('.catalog-card', { y: 26, scale: 0.96, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
         }
 
         /* ===================== ОТЗЫВЫ (главная) ====================== */
         if (q('.reviews')) {
-            reveal('.reviews__badge, .reviews__title, .reviews__subtitle, .reviews__all', { y: 28, trigger: '.reviews' });
-            reveal('.reviews .rev-card', { scale: 0.94, y: 22, stagger: 0.07, trigger: '.reviews-grid' });
+            reveal('.reviews__badge, .reviews__title, .reviews__subtitle, .reviews__all', { y: 22, stagger: 0.07, duration: 0.7, trigger: '.reviews' });
+            reveal('.reviews .rev-card', { y: 22, scale: 0.96, stagger: 0.06, duration: 0.65, trigger: '.reviews-grid' });
         }
 
         /* ============================== FAQ ========================== */
         if (q('.faq')) {
-            reveal('.faq__badge, .faq__title', { y: 26, trigger: '.faq' });
-            reveal('.faq__container .accordion', { y: 30, stagger: 0.08, trigger: '.faq__container' });
+            reveal('.faq__badge, .faq__title', { y: 20, stagger: 0.07, duration: 0.7, trigger: '.faq' });
+            reveal('.faq__container .accordion', { y: 18, stagger: 0.06, duration: 0.6, trigger: '.faq__container' });
         }
 
         /* ================= Секции платформ (страница игры) =========== */

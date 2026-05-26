@@ -24,21 +24,33 @@
                 <input type="text" name="prevent_autofill_u" style="display:none" tabindex="-1" aria-hidden="true">
                 <input type="password" name="prevent_autofill_p" style="display:none" tabindex="-1" aria-hidden="true">
                 <input type="search" placeholder="{{ __('site.section_statuses_placeholder_search') }}" id="search_query" name="site_search" autocomplete="new-password">
-                <div class="select">
-                    <select name="status">
-                        <option value="1">{{ __('site.section_statuses_status_1') }}</option>
-                        <option value="4">{{ __('site.section_statuses_status_4') }}</option>
-                        <option value="3">{{ __('site.section_statuses_status_3') }}</option>
-                        <option value="2">{{ __('site.section_statuses_status_2') }}</option>
-                    </select>
-                    <div class="select__selected">
-                        <span class="status _recommend">{{ __('site.section_statuses_status_1') }}</span>
-                    </div>
-                    <div class="select__inner">
-                        <div class="select__option" onclick="changeStatusQuery(1)" data-value="1"><span class="status _recommend">{{ __('site.section_statuses_status_1') }}</span></div>
-                        <div class="select__option" onclick="changeStatusQuery(4)" data-value="4"><span class="status _risk">{{ __('site.section_statuses_status_4') }}</span></div>
-                        <div class="select__option" onclick="changeStatusQuery(3)" data-value="3"><span class="status _on-update">{{ __('site.section_statuses_status_3') }}</span></div>
-                        <div class="select__option" onclick="changeStatusQuery(2)" data-value="2"><span class="status _not-recommend">{{ __('site.section_statuses_status_2') }}</span></div>
+                <div class="st-select" id="status-select" data-value="0">
+                    <button type="button" class="st-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="st-select__bar st-select__bar--all"></span>
+                        <span class="st-select__value">{{ __('site.section_statuses_status_0') }}</span>
+                        <svg class="st-select__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="st-select__menu" role="listbox" hidden>
+                        <button type="button" class="st-select__opt is-active" role="option" data-value="0" data-mod="all" data-label="{{ __('site.section_statuses_status_0') }}" onclick="changeStatusQuery(0)">
+                            <span class="st-select__bar st-select__bar--all"></span>
+                            <span class="st-select__opt-label">{{ __('site.section_statuses_status_0') }}</span>
+                        </button>
+                        <button type="button" class="st-select__opt" role="option" data-value="1" data-mod="recommend" data-label="{{ __('site.section_statuses_status_1') }}" onclick="changeStatusQuery(1)">
+                            <span class="st-select__bar st-select__bar--recommend"></span>
+                            <span class="st-select__opt-label">{{ __('site.section_statuses_status_1') }}</span>
+                        </button>
+                        <button type="button" class="st-select__opt" role="option" data-value="4" data-mod="risk" data-label="{{ __('site.section_statuses_status_4') }}" onclick="changeStatusQuery(4)">
+                            <span class="st-select__bar st-select__bar--risk"></span>
+                            <span class="st-select__opt-label">{{ __('site.section_statuses_status_4') }}</span>
+                        </button>
+                        <button type="button" class="st-select__opt" role="option" data-value="3" data-mod="on-update" data-label="{{ __('site.section_statuses_status_3') }}" onclick="changeStatusQuery(3)">
+                            <span class="st-select__bar st-select__bar--on-update"></span>
+                            <span class="st-select__opt-label">{{ __('site.section_statuses_status_3') }}</span>
+                        </button>
+                        <button type="button" class="st-select__opt" role="option" data-value="2" data-mod="not-recommend" data-label="{{ __('site.section_statuses_status_2') }}" onclick="changeStatusQuery(2)">
+                            <span class="st-select__bar st-select__bar--not-recommend"></span>
+                            <span class="st-select__opt-label">{{ __('site.section_statuses_status_2') }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -74,4 +86,36 @@
         </div>
     </section>
 </main>
+<script>
+(function(){
+    var sel = document.getElementById('status-select');
+    if (!sel) return;
+    var trigger = sel.querySelector('.st-select__trigger');
+    var menu = sel.querySelector('.st-select__menu');
+    var valueLbl = sel.querySelector('.st-select__value');
+    var triggerBar = trigger.querySelector('.st-select__bar');
+
+    function close(){ sel.classList.remove('is-open'); menu.hidden = true; trigger.setAttribute('aria-expanded','false'); }
+    function open(){ sel.classList.add('is-open'); menu.hidden = false; trigger.setAttribute('aria-expanded','true'); }
+
+    trigger.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (sel.classList.contains('is-open')) close(); else open();
+    });
+    menu.addEventListener('click', function(e){
+        var opt = e.target.closest('.st-select__opt');
+        if (!opt) return;
+        var label = opt.getAttribute('data-label');
+        var mod = opt.getAttribute('data-mod');
+        valueLbl.textContent = label;
+        triggerBar.className = 'st-select__bar st-select__bar--' + mod;
+        menu.querySelectorAll('.st-select__opt').forEach(function(o){ o.classList.toggle('is-active', o === opt); });
+        sel.setAttribute('data-value', opt.getAttribute('data-value'));
+        close();
+        // changeStatusQuery already invoked via inline onclick
+    });
+    document.addEventListener('click', function(e){ if (!sel.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+})();
+</script>
 @endsection

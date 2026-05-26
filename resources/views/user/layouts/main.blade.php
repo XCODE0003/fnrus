@@ -40,7 +40,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.1.6">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.4.1">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -720,8 +720,8 @@
     <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
 </div>
 
-<script src="/assets/js/scripts.min.js?53"></script>
-<script src="/assets/js/animations.js?v=13"></script>
+<script src="/assets/js/scripts.min.js?54"></script>
+<script src="/assets/js/animations.js?v=15"></script>
 <script>
 window.lang = {
     my_profile: @json(__('site.section_user_menu_profile')),
@@ -796,6 +796,6 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
     });
 })();
 </script>
-<script src="/assets/js/app.js?v=3.2"></script>
+<script src="/assets/js/app.js?v=3.4"></script>
 </body>
 </html>

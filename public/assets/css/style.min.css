@@ -5038,10 +5038,6 @@ section:first-child {
     display: block;
 }
 
-.about-section__stat:not(:last-child) {
-    margin-right: 160px;
-}
-
 .about-section__stat:not(:last-child)::after {
     content: "";
     position: absolute;
@@ -7748,9 +7744,6 @@ main.main .section-subcaption {
         padding: 18px 32px;
     }
 
-    .about-section__stat:not(:last-child) {
-        margin-right: 80px;
-    }
 
     .about-section__stat:not(:last-child)::after {
         right: -40px;
@@ -10747,6 +10740,7 @@ html.ios .js-carousel {
     gap: 24px;
     padding: 30px 35px;
     cursor: pointer;
+
 }
 
 .faq__container .accordion__header__content {
@@ -15812,4 +15806,1964 @@ html, body { overflow-x: clip; }
         width:14px !important;height:14px !important;
         filter:brightness(0) invert(1);
     }
+}
+
+/* ================================================================== */
+/*  Buy modal step 2 — new layout: icon + name + currency-pill + radio */
+/* ================================================================== */
+.popup--pay #buy-payments-methods .popup__payment-method{
+    display:flex !important;align-items:center !important;
+    gap:12px !important;
+    padding:10px 14px !important;
+    min-height:60px !important;
+}
+
+/* Icon wrapper — round 36×36 chip */
+.popup--pay #buy-payments-methods .popup__payment-method__icon{
+    width:36px !important;height:36px !important;
+    border-radius:50% !important;
+    background:#0f141c !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    display:inline-flex !important;align-items:center !important;justify-content:center !important;
+    flex-shrink:0 !important;
+    overflow:hidden;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__icon img{
+    width:22px !important;height:22px !important;
+    object-fit:contain !important;
+    background:transparent !important;
+    padding:0 !important;border-radius:0 !important;
+    display:block;
+}
+
+/* Name — main label, left-aligned, no truncation if it fits */
+.popup--pay #buy-payments-methods .popup__payment-method__name{
+    flex:1 !important;
+    font-family:'Mazzard M',sans-serif !important;
+    font-weight:600 !important;font-size:15px !important;
+    color:#fff !important;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;
+    text-align:left !important;
+}
+@media (min-width:768px){
+    .popup--pay #buy-payments-methods .popup__payment-method__name{font-size:16px !important}
+}
+
+/* Currency / region — small pill on the right */
+.popup--pay #buy-payments-methods .popup__payment-method__hint,
+.popup--pay #buy-payments-methods .popup__payment-method__custom-info{
+    position:static !important;
+    flex-shrink:0;
+    padding:4px 10px !important;
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:999px !important;
+    font-family:'Mazzard M',sans-serif !important;
+    font-weight:600 !important;font-size:11px !important;
+    color:rgba(255,255,255,.55) !important;
+    letter-spacing:.04em;text-transform:uppercase;
+    line-height:1.2 !important;
+    top:auto !important;right:auto !important;left:auto !important;
+}
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__hint,
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__custom-info{
+    background:rgba(132,86,255,.15) !important;
+    border-color:rgba(132,86,255,.4) !important;
+    color:#cbb6ff !important;
+}
+
+/* Aggregator row (BT) — chevron instead of currency badge */
+.popup--pay #buy-payments-methods .popup__payment-method--aggregator{
+    text-decoration:none !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__chev{
+    flex-shrink:0;color:rgba(255,255,255,.4);margin-left:4px;
+    transition:transform .2s, color .2s;
+}
+.popup--pay #buy-payments-methods .popup__payment-method--aggregator:hover .popup__payment-method__chev{
+    color:#fff;transform:translateX(2px);
+}
+
+/* Old ::after radio-circle no longer needed — remove */
+.popup--pay #buy-payments-methods .popup__payment-method::after{display:none !important}
+
+/* Back button in BT sub-menu */
+.popup--pay #buy-payments-methods .popup__payment-method__back{
+    display:inline-flex;align-items:center;gap:6px;
+    color:rgba(255,255,255,.65) !important;text-decoration:none;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+    padding:10px 14px;border-radius:10px;
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+    transition:background .2s, color .2s;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__back:hover{
+    background:rgba(132,86,255,.12);color:#fff !important;border-color:rgba(132,86,255,.3);
+}
+
+/* ================================================================== */
+/*  Buy modal — cancel confirmation overlay (Figma "оплата 8/9")       */
+/* ================================================================== */
+.popup--pay #body{position:relative}
+.buy-cancel-confirm{
+    position:absolute;inset:0;
+    background:rgba(8,10,14,.82);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border-radius:inherit;
+    z-index:10;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+    opacity:0;transition:opacity .22s ease;
+}
+.buy-cancel-confirm[hidden]{display:none}
+.buy-cancel-confirm.is-open{opacity:1}
+.buy-cancel-confirm__panel{
+    width:100%;max-width:420px;
+    display:flex;flex-direction:column;align-items:center;gap:18px;
+    text-align:center;
+    transform:translateY(8px) scale(.97);
+    transition:transform .25s cubic-bezier(.2,.7,.2,1);
+}
+.buy-cancel-confirm.is-open .buy-cancel-confirm__panel{transform:translateY(0) scale(1)}
+.buy-cancel-confirm__title{
+    margin:0;
+    font-family:'Mazzard H',sans-serif;font-weight:600;
+    font-size:26px;line-height:1.16;letter-spacing:-.26px;color:#fff;
+}
+@media (min-width:768px){.buy-cancel-confirm__title{font-size:32px}}
+.buy-cancel-confirm__icon{display:inline-flex;color:#E74C3C}
+.buy-cancel-confirm .pay-actions__row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+
+/* ================================================================== */
+/*  /status — v2 clean rebuild (ui-ux-pro-max Dark Mode OLED)          */
+/* ================================================================== */
+
+/* Reset legacy layout: kill 560px min-height + absolute filter */
+.status-page .status-heading-section{
+    min-height:0 !important;padding:48px 0 28px !important;
+    position:relative;
+}
+.status-page .status-heading-section__container{
+    padding-bottom:0 !important;align-items:stretch !important;text-align:left !important;
+    gap:18px;
+}
+.status-page .status-heading-section__filter{
+    position:static !important;transform:none !important;
+    width:100% !important;max-width:none !important;
+    bottom:auto !important;left:auto !important;
+}
+
+/* Force GSAP-stuck elements visible (animation never completes on this page) */
+.status-page .status-heading-section__section-subcaption,
+.status-page .status-heading-section__attention,
+.status-page .status-heading-section__filter{
+    opacity:1 !important;visibility:visible !important;transform:none !important;
+}
+
+/* Title — clean, white, no uppercase mess */
+.status-page .status-heading-section__section-caption{
+    color:#fff !important;opacity:1 !important;
+    font-family:'Mazzard H',sans-serif !important;
+    font-size:clamp(28px,4.5vw,44px) !important;line-height:1.1 !important;
+    text-transform:none !important;font-weight:700 !important;
+    letter-spacing:-.02em !important;
+    text-align:center;margin:0 0 8px !important;
+}
+.status-page .status-heading-section__section-caption .section-caption__icon{
+    margin:0 4px;vertical-align:middle;
+}
+.status-page .status-heading-section__section-subcaption{
+    color:rgba(255,255,255,.55) !important;
+    font-size:15px;line-height:1.5;
+    max-width:580px;margin:0 auto 4px !important;text-align:center;
+}
+
+/* Attention banner — amber/warning, compact */
+.status-page .status-heading-section__attention{
+    margin:8px auto 0;max-width:720px;width:auto !important;
+    background:linear-gradient(180deg, rgba(245,196,138,.10), rgba(245,196,138,.03)) !important;
+    border:1px solid rgba(245,196,138,.25) !important;
+    border-radius:14px !important;
+    padding:14px 18px !important;
+    display:inline-flex !important;align-items:center;gap:12px;
+    color:rgba(255,255,255,.82) !important;font-size:14px;line-height:1.4;
+    align-self:center;
+}
+
+/* Filter bar — search input + status dropdown in a glass-pill */
+.status-page .status-heading-section__filter{
+    max-width:720px;margin:8px auto 0 !important;
+    display:flex !important;gap:6px;align-items:stretch;
+    background:rgba(23,29,40,.6) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:14px !important;padding:6px !important;
+    box-shadow:0 16px 40px -20px rgba(0,0,0,.5);
+    overflow:visible;
+}
+.status-page .status-heading-section__filter input[type="search"]{
+    flex:1 !important;min-width:0;height:46px !important;
+    background:transparent !important;background-image:url(/assets/img/icon_search.svg) !important;
+    background-repeat:no-repeat !important;background-size:18px !important;background-position:14px center !important;
+    border:0 !important;outline:none !important;
+    padding:0 16px 0 42px !important;margin:0 !important;
+    color:#fff !important;font-family:'Mazzard M',sans-serif;font-size:15px;
+}
+.status-page .status-heading-section__filter input[type="search"]::placeholder{color:rgba(255,255,255,.4)}
+.status-page .status-heading-section__filter .select{
+    flex-shrink:0;height:46px !important;
+}
+.status-page .status-heading-section__filter .select__selected{
+    height:46px !important;
+    background:rgba(132,86,255,.12) !important;
+    border:1px solid rgba(132,86,255,.28) !important;
+    border-radius:10px !important;
+    padding:0 36px 0 16px !important;
+    display:flex !important;align-items:center;
+    cursor:pointer;font-size:13px;
+}
+
+/* Statuses legend card */
+.cheat-statuses{padding-bottom:60px}
+.cheat-statuses__header{
+    background:linear-gradient(180deg, rgba(29,37,51,.5), rgba(23,29,40,.3)) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:16px !important;padding:18px 22px !important;margin-bottom:14px;
+    display:flex !important;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+}
+.cheat-statuses__header > p{
+    margin:0;font-family:'Mazzard H',sans-serif;font-weight:600;
+    font-size:14px;color:rgba(255,255,255,.7);letter-spacing:.04em;text-transform:uppercase;
+}
+.cheat-statuses__header__all-statuses{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------- Status pills (used everywhere) ---------- */
+.status{
+    display:inline-flex !important;align-items:center;gap:7px;
+    padding:5px 11px !important;border-radius:999px !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;
+    font-size:12px !important;letter-spacing:.005em !important;line-height:1.2 !important;
+    color:rgba(255,255,255,.92) !important;
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    white-space:nowrap;
+}
+.status::before{
+    content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;
+}
+.status._recommend{background:rgba(138,245,155,.10) !important;border-color:rgba(138,245,155,.28) !important}
+.status._recommend::before{background:#8af59b;box-shadow:0 0 8px rgba(138,245,155,.85)}
+.status._on-update{background:rgba(241,255,157,.10) !important;border-color:rgba(241,255,157,.28) !important}
+.status._on-update::before{background:#f1ff9d;box-shadow:0 0 8px rgba(241,255,157,.85)}
+.status._risk{background:rgba(245,196,138,.10) !important;border-color:rgba(245,196,138,.28) !important}
+.status._risk::before{background:#f5c48a;box-shadow:0 0 8px rgba(245,196,138,.85)}
+.status._not-recommend{background:rgba(255,138,138,.10) !important;border-color:rgba(255,138,138,.28) !important}
+.status._not-recommend::before{background:#ff8a8a;box-shadow:0 0 8px rgba(255,138,138,.85)}
+
+/* Game blocks — grid of cards */
+.cheat-statuses__container{
+    display:grid !important;
+    grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+    gap:12px;
+}
+.game-status-block{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:16px !important;
+    padding:18px 20px !important;
+    transition:border-color .25s ease, transform .15s ease, box-shadow .25s ease;
+}
+.game-status-block:hover{
+    border-color:rgba(132,86,255,.35) !important;
+    transform:translateY(-2px);
+    box-shadow:0 18px 40px -22px rgba(132,86,255,.55);
+}
+.game-status-block__info{padding:0 !important}
+.game-status-block__name{
+    margin:0 0 12px !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:600 !important;
+    font-size:17px !important;color:#fff !important;letter-spacing:-.005em !important;
+}
+.game-status-block__cheats{display:flex !important;flex-wrap:wrap;gap:6px}
+
+/* Mobile */
+@media (max-width:599px){
+    .status-page .status-heading-section{padding:28px 0 18px !important}
+    .cheat-statuses__container{grid-template-columns:1fr !important}
+    .cheat-statuses__header{padding:14px 16px !important;flex-direction:column;align-items:flex-start;gap:10px}
+    .cheat-statuses__header > p{font-size:12px}
+    .game-status-block{padding:14px 16px !important}
+    .game-status-block__name{font-size:15px !important;margin-bottom:10px !important}
+    .status-page .status-heading-section__filter{flex-direction:column;padding:5px !important}
+    .status-page .status-heading-section__filter .select__selected{width:100%}
+}
+
+/* ================================================================== */
+/*  /about — section cards + contacts + history timeline polish        */
+/* ================================================================== */
+.about-page .about-heading-section{padding:60px 0 30px}
+.about-heading-section__section-caption{
+    color:#fff !important;opacity:1 !important;
+    font-size:clamp(28px,5vw,52px) !important;line-height:1.1 !important;
+    font-weight:700 !important;letter-spacing:-.02em !important;
+    margin-bottom:14px !important;
+}
+.about-heading-section__section-subcaption{
+    color:rgba(255,255,255,.55) !important;
+    font-size:15px;max-width:680px;margin-bottom:24px !important;
+}
+.about-heading-section__btn{
+    background:linear-gradient(180deg, #9466ff 0%, #7340ff 100%) !important;
+    border:0 !important;color:#fff !important;
+    padding:16px 26px !important;min-height:54px;
+    border-radius:999px !important;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:15px;
+    box-shadow:0 1px 0 rgba(255,255,255,.2) inset, 0 12px 28px -10px rgba(132,86,255,.55) !important;
+    transition:transform .15s ease, box-shadow .25s ease !important;
+}
+.about-heading-section__btn:hover{transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.25) inset, 0 16px 32px -10px rgba(132,86,255,.7) !important}
+
+/* Stats block — premium cards */
+.about-section__block.about-section__stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    background:transparent !important;border:0 !important;padding:0 !important;margin-bottom:22px;
+}
+.about-section__stat{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;padding:22px 20px;text-align:left;
+    transition:border-color .25s ease, transform .15s ease;
+}
+.about-section__stat:hover{border-color:rgba(132,86,255,.3);transform:translateY(-2px)}
+.about-section__stat p{
+    margin:0 0 4px;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:34px !important;line-height:1;letter-spacing:-.02em;
+    background:linear-gradient(135deg,#fff,#cbb6ff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+}
+.about-section__stat span{
+    color:rgba(255,255,255,.55);font-size:13px;font-weight:500;
+}
+@media (max-width:899px){.about-section__block.about-section__stats{grid-template-columns:repeat(2,1fr)}}
+
+/* Contacts block — social links premium */
+.about-section__block.about-section__contacts{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;
+    background:transparent !important;border:0 !important;padding:0 !important;margin-bottom:22px;
+}
+.about-contact{
+    display:flex !important;align-items:center;gap:12px;
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:14px;padding:14px 16px;text-decoration:none !important;
+    transition:border-color .2s, transform .15s, box-shadow .25s;
+}
+.about-contact:hover{
+    border-color:rgba(132,86,255,.4);transform:translateY(-2px);
+    box-shadow:0 14px 30px -16px rgba(132,86,255,.5);
+}
+.about-contact__icon{
+    width:42px;height:42px;border-radius:12px;flex-shrink:0;
+    background:linear-gradient(180deg, rgba(132,86,255,.2), rgba(132,86,255,.08)) !important;
+    border:1px solid rgba(132,86,255,.15);
+    display:inline-flex !important;align-items:center;justify-content:center;
+    color:#cbb6ff;
+}
+.about-contact__body{display:flex !important;flex-direction:column;gap:2px;min-width:0;flex:1}
+.about-contact__label{
+    color:#fff !important;font-family:'Mazzard M',sans-serif;font-weight:600;font-size:14px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.about-contact__value{
+    color:rgba(255,255,255,.5) !important;font-size:12px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* History timeline */
+.about-section__history{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:20px !important;padding:24px !important;margin-bottom:22px;
+}
+.about-section__history__caption{
+    margin:0 0 18px !important;font-family:'Mazzard H',sans-serif;font-weight:600;
+    font-size:20px;color:#fff;letter-spacing:-.01em;
+}
+.about-section__history__slide{padding:18px 14px}
+.about-section__history__slide .years{
+    color:#cbb6ff !important;font-weight:700 !important;font-size:16px;margin-bottom:6px;
+}
+.about-section__history__slide .record{
+    color:#fff;font-weight:600;font-size:18px;margin-bottom:6px;letter-spacing:-.005em;
+}
+.about-section__history__slide .small-text{color:rgba(255,255,255,.55);font-size:13px;line-height:1.4}
+.about-section__history__slide .point{
+    background:#8456ff !important;box-shadow:0 0 12px rgba(132,86,255,.6) !important;
+}
+
+/* About long text */
+.about-section__text{
+    color:rgba(255,255,255,.7) !important;font-size:14px;line-height:1.6;
+    background:rgba(255,255,255,.02);border-radius:14px;padding:18px 22px;
+    border:1px solid rgba(255,255,255,.04);
+}
+
+/* ================================================================== */
+/*  /profile — sidebar + content panels                                */
+/* ================================================================== */
+.profile{padding:40px 0 60px}
+.profile__container{display:grid;grid-template-columns:300px 1fr;gap:20px}
+@media (max-width:899px){.profile__container{grid-template-columns:1fr}}
+
+.profile__sidebar{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:20px;padding:20px;
+    align-self:start;position:sticky;top:24px;
+}
+.profile__menu__item{
+    display:flex !important;align-items:center;gap:12px;
+    padding:12px 14px !important;border-radius:12px !important;
+    color:rgba(255,255,255,.7) !important;text-decoration:none;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:14px;
+    transition:background .2s, color .2s !important;
+}
+.profile__menu__item:hover{background:rgba(132,86,255,.1) !important;color:#fff !important}
+.profile__menu__item._active{
+    background:linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.06)) !important;
+    color:#fff !important;
+    box-shadow:0 0 0 1px rgba(132,86,255,.3) inset;
+}
+
+.profile__content{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:20px;padding:28px;
+}
+.profile__caption{
+    font-family:'Mazzard H',sans-serif;font-weight:600;
+    font-size:22px;color:#fff;letter-spacing:-.01em;margin:0 0 22px;
+}
+.profile__tabs{
+    display:flex;gap:6px;margin-bottom:24px;
+    background:rgba(255,255,255,.03);border-radius:12px;padding:4px;
+    border:1px solid rgba(255,255,255,.05);
+}
+.profile__tab,.profile__tab__label{
+    flex:1;padding:10px 14px !important;border-radius:9px !important;
+    text-align:center;color:rgba(255,255,255,.6) !important;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;cursor:pointer;
+    transition:background .2s, color .2s !important;
+}
+.profile__tab:hover,.profile__tab__label:hover{color:#fff !important}
+.profile__tab._active,.profile__tab__label._active,
+input.profile__tab:checked + .profile__tab__label{
+    background:linear-gradient(180deg, #8456ff, #6b34ff) !important;
+    color:#fff !important;
+    box-shadow:0 6px 18px -8px rgba(132,86,255,.55);
+}
+
+@media (max-width:599px){
+    .profile{padding:24px 0 40px}
+    .profile__content{padding:18px}
+    .profile__caption{font-size:18px;margin-bottom:16px}
+    .profile__tabs{font-size:12px}
+}
+
+/* (status pill rules moved into /status v2 block above) */
+
+/* ================================================================== */
+/*  /game (category landing) — hero polish + section nav arrows        */
+/* ================================================================== */
+.game-hero{
+    padding:60px 0 40px;
+    position:relative;
+}
+.game-hero__inner{
+    display:flex !important;align-items:center;justify-content:space-between;gap:40px;
+}
+.game-hero__text{flex:1;min-width:0}
+.game-hero__title{
+    margin:0 0 16px !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:clamp(28px,4vw,48px) !important;line-height:1.1 !important;
+    letter-spacing:-.02em !important;color:#fff !important;
+}
+.game-hero__title-dim{color:rgba(255,255,255,.4) !important}
+.game-hero__desc{
+    margin:0 0 18px !important;
+    color:rgba(255,255,255,.6) !important;font-size:15px;line-height:1.5;
+    max-width:640px;
+}
+.game-hero__count{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:999px;
+    background:rgba(132,86,255,.12);border:1px solid rgba(132,86,255,.3);
+    color:#cbb6ff;font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+}
+.game-hero__back{
+    display:inline-flex !important;align-items:center;gap:6px;
+    margin-left:12px;
+    padding:6px 12px;border-radius:999px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+    color:rgba(255,255,255,.7) !important;text-decoration:none;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+    transition:background .2s, color .2s, border-color .2s;
+}
+.game-hero__back:hover{background:rgba(132,86,255,.12);border-color:rgba(132,86,255,.3);color:#fff !important}
+.game-hero__back::before{content:"←";font-size:14px;margin-right:2px}
+
+.game-hero__image{flex-shrink:0;width:42%;max-width:480px}
+.game-hero__image img{width:100%;height:auto;display:block}
+
+@media (max-width:899px){
+    .game-hero{padding:40px 0 30px}
+    .game-hero__inner{flex-direction:column;gap:24px}
+    .game-hero__image{width:60%}
+}
+@media (max-width:599px){
+    .game-hero__image{width:80%}
+}
+
+/* Section heading per platform — better arrows + spacing */
+.game-list{margin-bottom:40px}
+.game-list__head{
+    margin-bottom:18px !important;align-items:center;
+}
+.game-list__platform{
+    font-family:'Mazzard H',sans-serif !important;font-weight:600 !important;
+    font-size:18px !important;color:#fff !important;
+    display:inline-flex;align-items:center;gap:10px;
+}
+.game-list__platform-icon{width:20px;height:22px}
+.game-list__platform span{color:#fff;letter-spacing:-.005em}
+
+/* Game card — premium product tile */
+.game-card{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:18px !important;
+    padding:18px !important;
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition:transform .2s ease, border-color .2s ease, box-shadow .25s ease;
+    position:relative;overflow:hidden;
+    text-decoration:none !important;color:#fff !important;
+}
+.game-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(132,86,255,.35);
+    box-shadow:0 18px 40px -20px rgba(132,86,255,.5);
+}
+.game-card__top{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:14px;
+}
+.game-card__logo{
+    width:48px;height:48px;border-radius:12px;
+    background:#0f141c;overflow:hidden;flex-shrink:0;
+    border:1px solid rgba(255,255,255,.06);
+}
+.game-card__logo img{width:100%;height:100%;object-fit:cover;display:block}
+.game-card__status{flex-shrink:0}
+.game-card__name{
+    font-family:'Mazzard H',sans-serif;font-weight:600;font-size:18px;
+    color:#fff;letter-spacing:-.01em;margin:0 0 10px;
+}
+.game-card__list{
+    list-style:none;margin:0 0 14px;padding:0;
+    display:flex;flex-direction:column;gap:5px;
+}
+.game-card__list li{
+    font-family:'Mazzard M',sans-serif;font-size:13px;
+    color:rgba(255,255,255,.68);
+    padding-left:14px;position:relative;line-height:1.4;
+}
+.game-card__list li::before{
+    content:"";position:absolute;left:2px;top:.55em;
+    width:5px;height:5px;border-radius:50%;background:#8456ff;opacity:.7;
+}
+.game-card__bottom{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    margin-top:auto;padding-top:10px;
+    border-top:1px solid rgba(255,255,255,.05);
+}
+.game-card__tag{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;
+    letter-spacing:.04em;text-transform:uppercase;
+}
+.game-card__tag--green{background:rgba(138,245,155,.1);color:#8af59b}
+.game-card__tag--purple{background:rgba(132,86,255,.12);color:#cbb6ff}
+.game-card__price{
+    color:#fff;font-family:'Mazzard M',sans-serif;font-weight:700;font-size:15px;
+}
+
+.game-card__hover{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg, rgba(132,86,255,.2), rgba(132,86,255,.05));
+    opacity:0;transition:opacity .25s ease;pointer-events:none;
+}
+.game-card:hover .game-card__hover{opacity:1}
+.game-card__hover-btn{
+    padding:12px 24px;border-radius:999px;
+    background:linear-gradient(180deg,#9466ff,#7340ff);
+    color:#fff;font-weight:600;font-size:14px;
+    box-shadow:0 12px 28px -10px rgba(132,86,255,.6);
+}
+
+@media (max-width:599px){
+    .game-card{padding:14px}
+    .game-card__name{font-size:15px;margin-bottom:8px}
+    .game-card__list li{font-size:12px}
+    .game-card__price{font-size:14px}
+}
+
+/* ================================================================== */
+/*  Footer — premium polish (matches header glass style)              */
+/* ================================================================== */
+.footer{
+    margin-top:60px;padding:40px 0 20px;
+    background:linear-gradient(180deg, transparent 0%, rgba(11,15,22,.6) 100%);
+    border-top:1px solid rgba(255,255,255,.04);
+    position:relative;
+}
+.footer__container{
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.04);margin-bottom:18px;
+}
+.footer__logo img{width:44px;height:44px;object-fit:contain}
+.footer__menu{
+    display:flex !important;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap;
+}
+.footer__menu__item{
+    color:rgba(255,255,255,.6) !important;
+    font-family:'Mazzard M',sans-serif;font-weight:500;font-size:14px;
+    text-decoration:none;
+    transition:color .2s;
+}
+.footer__menu__item:hover{color:#fff !important}
+.footer__bottom-container{
+    display:flex !important;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.footer__copy{
+    color:rgba(255,255,255,.4);font-size:12px;margin:0;
+}
+
+@media (max-width:599px){
+    .footer{margin-top:40px;padding:30px 0 16px}
+    .footer__container{flex-direction:column;align-items:flex-start;gap:18px;padding-bottom:20px}
+    .footer__menu{flex-direction:column;gap:10px;width:100%}
+    .footer__bottom-container{flex-direction:column-reverse;align-items:flex-start;gap:10px}
+}
+
+/* ================================================================== */
+/*  Section caption — global typography refresh                        */
+/* ================================================================== */
+.section-caption{
+    color:#fff !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:clamp(28px,4.5vw,48px) !important;line-height:1.1 !important;
+    letter-spacing:-.02em !important;
+}
+.section-subcaption{
+    color:rgba(255,255,255,.55) !important;
+    font-size:15px;line-height:1.5;
+}
+
+/* ================================================================== */
+/*  Accordion (FAQ) — premium                                          */
+/* ================================================================== */
+.accordion__item{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.05) !important;
+    border-radius:14px !important;
+    margin-bottom:8px !important;
+    overflow:hidden;
+    transition:border-color .25s ease;
+}
+.accordion__item:hover{border-color:rgba(132,86,255,.25)}
+.accordion__item._active{border-color:rgba(132,86,255,.45)}
+.accordion__title{
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;
+    font-size:15px !important;color:#fff !important;
+    padding:18px 22px !important;
+    display:flex !important;align-items:center;justify-content:space-between;gap:14px;
+    cursor:pointer;
+}
+.accordion__title::after{
+    content:"";width:18px;height:18px;flex-shrink:0;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbb6ff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") center/contain no-repeat;
+    transition:transform .25s ease;
+}
+.accordion__item._active .accordion__title::after{transform:rotate(180deg)}
+.accordion__body{
+    color:rgba(255,255,255,.65) !important;
+    font-size:14px;line-height:1.55;
+}
+
+/* ================================================================== */
+/*  Notification toast — premium                                       */
+/* ================================================================== */
+.notification{
+    background:linear-gradient(180deg, #1d2533, #171d28) !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    border-radius:14px !important;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.7) !important;
+    padding:14px 20px !important;
+    color:#fff !important;font-family:'Mazzard M',sans-serif;font-weight:600;
+}
+.notification.success{border-color:rgba(138,245,155,.4) !important}
+.notification.success::before{background:#8af59b !important;box-shadow:0 0 12px rgba(138,245,155,.6)}
+.notification.fail{border-color:rgba(255,138,138,.4) !important}
+.notification.fail::before{background:#ff8a8a !important;box-shadow:0 0 12px rgba(255,138,138,.6)}
+
+/* ================================================================== */
+/*  NUKE legacy min-height + absolute positioning on hero sections     */
+/*  Many media queries inherit 100vh / 560px / 475px — kill them all   */
+/* ================================================================== */
+.about-page .about-heading-section,
+.status-page .status-heading-section,
+.reviews-page .reviews-page__section{
+    min-height:0 !important;height:auto !important;
+    padding-top:48px !important;padding-bottom:32px !important;
+}
+.about-page .about-heading-section__container,
+.status-page .status-heading-section__container{
+    position:relative !important;
+    padding:0 !important;height:auto !important;min-height:0 !important;
+    display:flex !important;flex-direction:column !important;align-items:center !important;
+    gap:14px !important;
+    text-align:center !important;
+}
+
+/* Remove ALL decorative absolutes that anchor to non-existent dimensions */
+.about-page .decor,
+.about-page .about-heading-section__decor1,
+.about-page .about-heading-section__decor2,
+.about-page .about-heading-section__decor3{display:none !important}
+
+/* Status hero filter — back to normal flow */
+.status-page .status-heading-section__filter{
+    position:static !important;transform:none !important;
+    bottom:auto !important;left:auto !important;right:auto !important;
+    width:100% !important;max-width:720px !important;margin:8px auto 0 !important;
+}
+
+/* About hero "Купить читы" btn alignment + spacing reset */
+.about-heading-section__btn{margin:6px auto 0 !important}
+
+/* Force any GSAP-stuck initial states visible on these sections */
+.status-page .status-heading-section *,
+.about-page .about-heading-section *{
+    opacity:1 !important;visibility:visible !important;
+}
+/* Only reset transform on the wrappers, not children that have animation */
+.status-page .status-heading-section > *,
+.status-page .status-heading-section__container > *,
+.about-page .about-heading-section > *,
+.about-page .about-heading-section__container > *{
+    transform:none !important;
+}
+
+/* about-section — no min-height tricks either */
+.about-page .about-section{
+    padding:24px 0 60px !important;
+}
+.about-page .about-section .content{
+    display:flex;flex-direction:column;gap:18px;
+}
+
+/* about-section block defaults (was probably big card with padding) */
+.about-section__block{
+    background:transparent !important;border:0 !important;padding:0 !important;
+    margin:0 !important;
+}
+
+/* Section captions: kill `text-align: center` if hero forces it on inner content */
+.about-heading-section__section-caption,
+.status-heading-section__section-caption{
+    text-align:center !important;width:100%;
+    /* override any line-clamp/min-height set elsewhere */
+    height:auto !important;
+}
+
+/* Header is position:absolute (overlays hero on main page).
+   On pages WITHOUT a full hero image the content collides with it.
+   Push first section down to clear the header height. */
+.status-page > section:first-of-type,
+.about-page > section:first-of-type,
+.reviews-page > section:first-of-type,
+.profile > section:first-of-type,
+main.status-page,main.about-page,main.reviews-page,main.profile{
+    padding-top:140px !important;
+}
+@media (max-width:599px){
+    .status-page > section:first-of-type,
+    .about-page > section:first-of-type,
+    .reviews-page > section:first-of-type,
+    .profile > section:first-of-type,
+    main.status-page,main.about-page,main.reviews-page,main.profile{
+        padding-top:110px !important;
+    }
+}
+
+/* Force all game-status-blocks visible (GSAP stagger never finishes after #1) */
+.status-page .game-status-block{
+    opacity:1 !important;visibility:visible !important;transform:none !important;
+}
+
+/* Status filter dropdown — closed by default; only open on hover/.is-open */
+.status-page .status-heading-section__filter .select__inner{
+    display:none !important;
+}
+.status-page .status-heading-section__filter .select:hover .select__inner,
+.status-page .status-heading-section__filter .select._open .select__inner{
+    display:block !important;
+}
+
+/* /about — force visible (GSAP stagger frozen) */
+.about-page .about-section__stat,
+.about-page .about-contact,
+.about-page .about-section__history__slide,
+.about-page .about-section__text{
+    opacity:1 !important;visibility:visible !important;transform:none !important;
+}
+
+/* Hide the floating "Получите результат" decorative badge that overlaps */
+.about-heading-section__get-result{display:none !important}
+
+/* Kill legacy negative margin that overlaps about-section onto heading */
+.about-page .about-section{margin-top:0 !important}
+
+/* ================================================================== */
+/*  No-hero pages — tighter hero, header in flow                       */
+/* ================================================================== */
+/* Reduce padding-top: make content start closer to header */
+main.status-page,main.about-page,main.reviews-page,main.profile{
+    padding-top:100px !important;
+}
+@media (max-width:599px){
+    main.status-page,main.about-page,main.reviews-page,main.profile{
+        padding-top:80px !important;
+    }
+}
+.status-page .status-heading-section,
+.about-page .about-heading-section{
+    padding-top:24px !important;padding-bottom:24px !important;
+}
+.status-page .status-heading-section__container,
+.about-page .about-heading-section__container{
+    gap:12px !important;
+}
+
+/* ================================================================== */
+/*  About — beefier stats cards                                        */
+/* ================================================================== */
+.about-page .about-section__stats{
+    grid-template-columns:repeat(4,1fr) !important;gap:14px !important;
+}
+.about-section__stat{
+    padding:22px 22px 20px !important;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(132,86,255,.10), transparent 70%),
+        linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:18px !important;
+    box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 14px 30px -20px rgba(0,0,0,.5);
+    min-height:120px;
+    display:flex !important;flex-direction:column;justify-content:center;
+    position:relative;overflow:hidden;
+}
+.about-section__stat::before{
+    content:"";position:absolute;left:18%;right:18%;top:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(132,86,255,.45),transparent);
+}
+.about-section__stat p{
+    margin:0 0 6px !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:36px !important;line-height:1;letter-spacing:-.02em;
+    background:linear-gradient(135deg,#fff 0%,#cbb6ff 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+}
+.about-section__stat span{
+    color:rgba(255,255,255,.6) !important;font-size:13px;font-weight:500;
+}
+@media (max-width:1023px){.about-page .about-section__stats{grid-template-columns:repeat(2,1fr) !important}}
+
+/* About contacts grid — keep card look but tighter */
+.about-section__contacts{
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)) !important;gap:10px !important;
+}
+
+/* About history timeline — proper connector line + visible dots */
+.about-section__history{
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:18px !important;
+    padding:24px !important;margin-top:6px;
+}
+.about-section__history__caption{
+    margin:0 0 18px !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:22px !important;color:#fff !important;letter-spacing:-.01em;
+}
+.about-section__history__slider{position:relative}
+.about-section__history__slider::before{
+    content:"";position:absolute;left:8px;right:8px;top:8px;height:2px;
+    background:linear-gradient(90deg, rgba(132,86,255,.5), rgba(132,86,255,.1));
+    z-index:1;
+}
+.about-section__history__slide{
+    position:relative;padding:24px 8px 8px !important;
+    z-index:2;
+}
+.about-section__history__slide .point{
+    position:relative;width:18px !important;height:18px !important;
+    border-radius:50%;
+    background:#8456ff !important;
+    border:3px solid #0f141c !important;
+    box-shadow:0 0 16px rgba(132,86,255,.6) !important;
+    margin:0 0 12px;
+}
+.about-section__history__slide .years{
+    color:#fff !important;font-weight:700 !important;font-size:18px;letter-spacing:-.005em;
+    margin-bottom:6px;
+}
+.about-section__history__slide .record{
+    color:#cbb6ff !important;font-weight:600 !important;font-size:14px;margin-bottom:8px;
+}
+.about-section__history__slide .small-text{
+    color:rgba(255,255,255,.55) !important;font-size:12.5px;line-height:1.45;
+}
+.about-section__history__slider-btn{
+    width:36px !important;height:36px !important;border-radius:10px !important;
+    background:rgba(132,86,255,.12) !important;border:1px solid rgba(132,86,255,.3) !important;
+}
+.about-section__history__slider-btn:hover{background:rgba(132,86,255,.22) !important}
+
+/* About long text */
+.about-section__text{
+    color:rgba(255,255,255,.65) !important;font-size:14px;line-height:1.6;
+    background:rgba(255,255,255,.02);border-radius:14px;padding:18px 22px;
+    border:1px solid rgba(255,255,255,.04);margin-top:6px;
+}
+
+/* ================================================================== */
+/*  Status — tighter spacing                                            */
+/* ================================================================== */
+.cheat-statuses{padding-top:8px !important;padding-bottom:60px}
+
+/* ================================================================== */
+/*  /reviews — custom select (rv-select)                               */
+/* ================================================================== */
+.rv-select{position:relative;width:100%}
+.rv-select__trigger{
+    width:100%;display:flex !important;align-items:center;justify-content:space-between;gap:10px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:14px 16px;min-height:48px;
+    color:#fff;
+    font-family:'Mazzard M',sans-serif;font-weight:500;font-size:15px;
+    cursor:pointer;
+    transition:background .2s, border-color .2s;
+    text-align:left;
+}
+.rv-select__trigger:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.rv-select.is-open .rv-select__trigger,
+.rv-select:focus-within .rv-select__trigger{
+    background:rgba(132,86,255,.08);border-color:rgba(132,86,255,.5);
+}
+.rv-select__value{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.4)}
+.rv-select.has-value .rv-select__value{color:#fff}
+.rv-select__chev{color:rgba(255,255,255,.45);flex-shrink:0;transition:transform .2s}
+.rv-select.is-open .rv-select__chev{transform:rotate(180deg);color:#cbb6ff}
+
+.rv-select__menu{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;
+    background:#171e2a;border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;padding:6px;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.7);
+    max-height:280px;overflow-y:auto;
+    animation:rvSelectDrop .18s ease-out;
+}
+@keyframes rvSelectDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.rv-select__option{
+    width:100%;display:flex !important;align-items:center;gap:10px;
+    background:transparent;border:0;cursor:pointer;
+    padding:10px 12px;border-radius:8px;
+    color:rgba(255,255,255,.85);
+    font-family:'Mazzard M',sans-serif;font-weight:500;font-size:14px;
+    text-align:left;
+    transition:background .15s, color .15s;
+}
+.rv-select__option:hover{background:rgba(132,86,255,.14);color:#fff}
+.rv-select__option.is-selected{background:rgba(132,86,255,.2);color:#fff}
+.rv-select__dot{
+    width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;
+    transition:background .15s, box-shadow .15s;
+}
+.rv-select__option:hover .rv-select__dot,
+.rv-select__option.is-selected .rv-select__dot{
+    background:#8456ff;box-shadow:0 0 8px rgba(132,86,255,.6);
+}
+
+/* Scrollbar inside menu */
+.rv-select__menu::-webkit-scrollbar{width:6px}
+.rv-select__menu::-webkit-scrollbar-track{background:transparent}
+.rv-select__menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+
+/* ================================================================== */
+/*  CLEANUP: remove decorative dots (A + B + C)                        */
+/* ================================================================== */
+
+/* A. Status pill — remove the colored dot. Bg + border encode the status. */
+.status::before{display:none !important}
+
+/* B. History timeline — continuous line + small clean dots */
+.about-section__history__slider::before{
+    background:rgba(132,86,255,.22) !important;
+    top:11px !important;height:1px !important;
+    left:18px !important;right:18px !important;
+}
+.about-section__history__slide{padding:6px 8px 8px !important}
+.about-section__history__slide .point{
+    width:8px !important;height:8px !important;
+    background:#8456ff !important;
+    border:0 !important;box-shadow:none !important;
+    margin:0 0 14px !important;
+    position:relative;z-index:2;
+}
+
+/* C. Status legend — replace dot with left-accent border (per status color) */
+.cheat-statuses__header__all-statuses .status{
+    border-left:3px solid currentColor;
+    padding-left:12px !important;
+    border-radius:6px !important;
+}
+.cheat-statuses__header__all-statuses .status._recommend{border-left-color:#8af59b !important;color:#8af59b !important}
+.cheat-statuses__header__all-statuses .status._on-update{border-left-color:#f1ff9d !important;color:#f1ff9d !important}
+.cheat-statuses__header__all-statuses .status._risk{border-left-color:#f5c48a !important;color:#f5c48a !important}
+.cheat-statuses__header__all-statuses .status._not-recommend{border-left-color:#ff8a8a !important;color:#ff8a8a !important}
+
+/* ================================================================== */
+/*  Fix: legend pill text + about history arrows                       */
+/* ================================================================== */
+
+/* Legend pills: white text, only border-left coloured */
+.cheat-statuses__header__all-statuses .status._recommend,
+.cheat-statuses__header__all-statuses .status._on-update,
+.cheat-statuses__header__all-statuses .status._risk,
+.cheat-statuses__header__all-statuses .status._not-recommend{
+    color:rgba(255,255,255,.92) !important;
+}
+
+/* About history prev/next buttons — restore arrow SVG icon */
+.about-section__history__slider-btn{
+    background-color:rgba(132,86,255,.12) !important;
+    background-image:url(../img/icon_arrow-next.svg) !important;
+    background-repeat:no-repeat !important;
+    background-position:center !important;
+    background-size:16px !important;
+    border:1px solid rgba(132,86,255,.3) !important;
+    border-radius:10px !important;
+    width:36px !important;height:36px !important;
+    top:calc(50% - 18px) !important;
+}
+.about-section__history__slider-btn:hover{
+    background-color:rgba(132,86,255,.22) !important;
+}
+.about-section__history__prev-btn{
+    transform:scaleX(-1) !important;
+}
+
+/* ================================================================== */
+/*  /about timeline — clean single line through all dots               */
+/* ================================================================== */
+.about-section__history{
+    padding:24px 28px 28px !important;
+    position:relative;overflow:hidden;
+}
+.about-section__history__slider{
+    overflow:visible !important;
+    padding:8px 0 0 !important;
+    position:relative;
+}
+/* Override previous ::before — make line full-width inside swiper-wrapper */
+.about-section__history__slider::before{
+    content:"";position:absolute;
+    left:0;right:0;top:12px;height:1px !important;
+    background:rgba(132,86,255,.18) !important;
+    z-index:0;pointer-events:none;
+}
+.about-section__history__slider .swiper-wrapper{align-items:flex-start}
+.about-section__history__slide{
+    padding:0 14px 4px !important;
+    position:relative;
+}
+.about-section__history__slide .point{
+    width:9px !important;height:9px !important;
+    border-radius:50% !important;
+    background:#8456ff !important;
+    border:0 !important;box-shadow:0 0 0 4px #171d28 !important;
+    margin:0 0 18px !important;
+    position:relative;z-index:2;
+}
+.about-section__history__slide .years{
+    color:#fff !important;font-weight:700 !important;font-size:18px !important;
+    letter-spacing:-.005em !important;margin:0 0 6px !important;
+}
+.about-section__history__slide .record{
+    color:#cbb6ff !important;font-weight:600 !important;font-size:14px !important;
+    margin:0 0 8px !important;line-height:1.3;
+}
+.about-section__history__slide .small-text{
+    color:rgba(255,255,255,.55) !important;font-size:12.5px !important;line-height:1.45 !important;
+    margin:0 !important;
+}
+
+/* ================================================================== */
+/*  /games (catalog with filter tabs + search)                         */
+/* ================================================================== */
+.games-page{padding-bottom:80px}
+.games-page .games-hero{
+    text-align:center;padding:24px 0 28px;
+}
+.games-page .games-hero__badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:999px;
+    background:rgba(132,86,255,.12);border:1px solid rgba(132,86,255,.3);
+    color:#cbb6ff;font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+    margin-bottom:14px;
+}
+.games-page .games-hero__title{
+    color:#fff !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:clamp(28px,4.5vw,44px) !important;line-height:1.1 !important;
+    letter-spacing:-.02em !important;margin:0 0 10px !important;
+}
+.games-page .games-hero__subtitle{
+    color:rgba(255,255,255,.55) !important;font-size:15px;
+    max-width:560px;margin:0 auto !important;
+}
+
+/* Filter row: tabs + search + sort */
+.games-page .games-filters{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;align-items:stretch;
+}
+.games-page .games-tabs{
+    display:flex;gap:4px;
+    background:rgba(23,29,40,.6);border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;padding:5px;flex-shrink:0;
+}
+.games-page .games-tab{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 18px;border-radius:10px;
+    background:transparent;border:0;cursor:pointer;
+    color:rgba(255,255,255,.6);font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+    transition:background .2s, color .2s;
+}
+.games-page .games-tab:hover{color:#fff;background:rgba(255,255,255,.04)}
+.games-page .games-tab.is-active{
+    background:linear-gradient(180deg,#8456ff,#6b34ff);
+    color:#fff;box-shadow:0 6px 18px -8px rgba(132,86,255,.55);
+}
+.games-page #games-search{
+    flex:1;min-width:220px;
+    background:rgba(23,29,40,.6) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:14px !important;
+    padding:0 18px 0 42px !important;
+    height:auto !important;min-height:48px;
+    background-image:url(/assets/img/icon_search.svg) !important;
+    background-repeat:no-repeat !important;
+    background-position:16px center !important;
+    background-size:16px !important;
+    color:#fff !important;font-family:'Mazzard M',sans-serif !important;font-size:14px !important;
+    outline:none;
+}
+.games-page #games-search:focus{border-color:rgba(132,86,255,.45) !important;background-color:rgba(132,86,255,.06) !important}
+.games-page #games-search::placeholder{color:rgba(255,255,255,.4)}
+.games-page #games-sort{
+    background:rgba(23,29,40,.6) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:14px !important;padding:0 36px 0 16px !important;
+    min-height:48px;color:#fff !important;
+    font-family:'Mazzard M',sans-serif !important;font-size:13px !important;
+    cursor:pointer;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+    background-repeat:no-repeat !important;
+    background-position:right 14px center !important;
+    background-size:14px !important;
+}
+
+@media (max-width:599px){
+    .games-page .games-filters{flex-direction:column;gap:8px}
+    .games-page .games-tabs{justify-content:stretch}
+    .games-page .games-tab{flex:1;justify-content:center;padding:9px 10px;font-size:12px}
+}
+
+/* ================================================================== */
+/*  /games — fix targeting actual class names                          */
+/* ================================================================== */
+.games-page .games-catalog{padding-bottom:80px}
+.games-page .games-catalog__head{text-align:center;margin-bottom:22px}
+.games-page .catalog__badge{display:inline-flex;margin-bottom:14px}
+.games-page .games-catalog__title{
+    color:#fff !important;
+    font-family:'Mazzard H',sans-serif !important;font-weight:700 !important;
+    font-size:clamp(28px,4.5vw,44px) !important;line-height:1.1 !important;
+    letter-spacing:-.02em !important;margin:0 0 10px !important;
+}
+.games-page .games-catalog__subtitle{
+    color:rgba(255,255,255,.55) !important;font-size:15px;
+    max-width:560px;margin:0 auto !important;
+}
+
+/* Controls row */
+.games-page .games-catalog__controls{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;align-items:stretch;
+}
+.games-page .games-catalog__tabs{
+    display:flex;gap:4px;
+    background:rgba(23,29,40,.6) !important;border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;padding:5px;margin:0 !important;
+    flex-shrink:0;
+}
+.games-page .games-catalog__tabs .catalog__tab{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 16px !important;border-radius:10px !important;
+    background:transparent !important;border:0 !important;cursor:pointer;
+    color:rgba(255,255,255,.6) !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;font-size:13px !important;
+    transition:background .2s, color .2s;
+    width:auto !important;height:auto !important;
+}
+.games-page .games-catalog__tabs .catalog__tab:hover{color:#fff !important;background:rgba(255,255,255,.04) !important}
+.games-page .games-catalog__tabs .catalog__tab.is-active{
+    background:linear-gradient(180deg,#8456ff,#6b34ff) !important;
+    color:#fff !important;box-shadow:0 6px 18px -8px rgba(132,86,255,.55);
+}
+.games-page .games-catalog__tabs .catalog__tab-ico{
+    width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
+}
+.games-page .games-catalog__tabs .catalog__tab-ico img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1);opacity:.85}
+.games-page .games-catalog__tabs .catalog__tab.is-active .catalog__tab-ico img{opacity:1}
+
+.games-page .games-catalog__tools{display:flex;gap:10px;flex:1;min-width:280px}
+.games-page .games-search{
+    flex:1;position:relative;display:flex;align-items:center;
+    background:rgba(23,29,40,.6);border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;padding:0 16px 0 42px;
+    transition:border-color .2s, background .2s;
+}
+.games-page .games-search:focus-within{
+    border-color:rgba(132,86,255,.45);background:rgba(132,86,255,.06);
+}
+.games-page .games-search__icon{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;opacity:.5;filter:brightness(0) invert(1);
+}
+.games-page .games-search__input{
+    flex:1;background:transparent !important;border:0 !important;outline:none !important;
+    padding:14px 0 !important;color:#fff !important;
+    font-family:'Mazzard M',sans-serif !important;font-size:14px !important;
+}
+.games-page .games-search__input::placeholder{color:rgba(255,255,255,.4)}
+
+.games-page .games-select{flex-shrink:0;position:relative}
+.games-page .games-sort{
+    background:rgba(23,29,40,.6) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:14px !important;
+    padding:0 36px 0 16px !important;
+    min-height:48px;color:#fff !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;font-size:13px !important;
+    cursor:pointer;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.5)' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+    background-repeat:no-repeat !important;
+    background-position:right 14px center !important;
+    background-size:14px !important;
+}
+.games-page .games-sort:focus{border-color:rgba(132,86,255,.45) !important;outline:none !important}
+
+@media (max-width:599px){
+    .games-page .games-catalog__controls{flex-direction:column;gap:8px}
+    .games-page .games-catalog__tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start}
+    .games-page .games-catalog__tabs .catalog__tab{flex-shrink:0;padding:9px 14px !important;font-size:12px !important}
+    .games-page .games-catalog__tools{flex-direction:column;min-width:0}
+}
+
+/* Force games-catalog controls visible (GSAP frozen state) */
+.games-page .games-catalog__controls,
+.games-page .games-catalog__head,
+.games-page .games-catalog__title,
+.games-page .games-catalog__subtitle{
+    opacity:1 !important;visibility:visible !important;transform:none !important;
+}
+
+/* ================================================================== */
+/*  /status — custom selector + premium legend                         */
+/* ================================================================== */
+
+/* ============ Filter bar wrapper ============ */
+.status-page .status-heading-section__filter{
+    max-width:760px;margin:14px auto 0 !important;
+    background:linear-gradient(180deg, rgba(29,37,51,.7), rgba(23,29,40,.5)) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:16px !important;
+    padding:6px !important;
+    display:flex !important;gap:6px;align-items:stretch;
+    box-shadow:0 18px 40px -22px rgba(0,0,0,.6);
+}
+.status-page .status-heading-section__filter input[type="search"]{
+    flex:1;min-width:0;
+    background:transparent !important;
+    background-image:url(/assets/img/icon_search.svg) !important;
+    background-repeat:no-repeat !important;
+    background-position:18px center !important;
+    background-size:16px !important;
+    border:0 !important;outline:none !important;
+    padding:0 16px 0 46px !important;
+    height:48px !important;color:#fff !important;
+    font-family:'Mazzard M',sans-serif;font-size:14px;
+}
+.status-page .status-heading-section__filter input[type="search"]::placeholder{color:rgba(255,255,255,.4)}
+
+/* ============ Custom select trigger ============ */
+.status-page .status-heading-section__filter .select{
+    flex-shrink:0;position:relative;min-width:260px;
+}
+.status-page .status-heading-section__filter > .select select{
+    /* keep native select hidden but accessible */
+    position:absolute;inset:0;opacity:0;pointer-events:none;width:100%;height:100%;
+}
+.status-page .status-heading-section__filter .select__selected{
+    display:flex !important;align-items:center;justify-content:space-between;gap:10px;
+    height:48px !important;padding:0 16px !important;
+    background:rgba(132,86,255,.10) !important;
+    border:1px solid rgba(132,86,255,.32) !important;
+    border-radius:12px !important;
+    cursor:pointer !important;
+    color:#fff !important;
+    font-family:'Mazzard M',sans-serif;font-weight:600;font-size:13px;
+    transition:background .2s, border-color .2s;
+}
+.status-page .status-heading-section__filter .select__selected:hover{
+    background:rgba(132,86,255,.16) !important;
+    border-color:rgba(132,86,255,.5) !important;
+}
+.status-page .status-heading-section__filter .select__selected::after{
+    content:"";flex-shrink:0;width:12px;height:12px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.6)' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") center/contain no-repeat;
+    transition:transform .2s;
+}
+.status-page .status-heading-section__filter .select._open .select__selected::after,
+.status-page .status-heading-section__filter .select:focus-within .select__selected::after{
+    transform:rotate(180deg);
+}
+/* Status pill inside trigger — strip extra border-left, keep clean text */
+.status-page .status-heading-section__filter .select__selected .status{
+    border:0 !important;background:transparent !important;
+    padding:0 !important;
+    color:#fff !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;font-size:13px !important;
+    flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    display:inline-flex !important;align-items:center;gap:8px;
+}
+.status-page .status-heading-section__filter .select__selected .status::before{
+    content:"" !important;display:inline-block !important;
+    width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.status-page .status-heading-section__filter .select__selected .status._recommend::before{background:#8af59b;box-shadow:0 0 8px rgba(138,245,155,.6)}
+.status-page .status-heading-section__filter .select__selected .status._on-update::before{background:#f1ff9d;box-shadow:0 0 8px rgba(241,255,157,.6)}
+.status-page .status-heading-section__filter .select__selected .status._risk::before{background:#f5c48a;box-shadow:0 0 8px rgba(245,196,138,.6)}
+.status-page .status-heading-section__filter .select__selected .status._not-recommend::before{background:#ff8a8a;box-shadow:0 0 8px rgba(255,138,138,.6)}
+
+/* ============ Options panel ============ */
+.status-page .status-heading-section__filter .select__inner{
+    position:absolute !important;top:calc(100% + 8px) !important;left:0 !important;right:0 !important;
+    background:#171e2a !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    border-radius:14px !important;
+    padding:6px !important;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.7) !important;
+    z-index:60;
+    display:none !important;
+}
+.status-page .status-heading-section__filter .select._open .select__inner,
+.status-page .status-heading-section__filter .select:focus-within .select__inner,
+.status-page .status-heading-section__filter .select:hover .select__inner{
+    display:block !important;
+    animation:rvSelectDrop .18s ease-out;
+}
+.status-page .status-heading-section__filter .select__option{
+    display:flex !important;align-items:center;gap:10px;
+    padding:10px 12px !important;border-radius:9px !important;
+    cursor:pointer;
+    color:rgba(255,255,255,.85);
+    font-family:'Mazzard M',sans-serif;font-weight:500;font-size:13px;
+    transition:background .15s;
+}
+.status-page .status-heading-section__filter .select__option:hover{background:rgba(132,86,255,.14)}
+.status-page .status-heading-section__filter .select__option .status{
+    border:0 !important;background:transparent !important;padding:0 !important;
+    color:#fff !important;font-weight:600 !important;font-size:13px !important;
+    display:inline-flex !important;align-items:center;gap:8px;
+}
+.status-page .status-heading-section__filter .select__option .status::before{
+    content:"" !important;display:inline-block !important;
+    width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.status-page .status-heading-section__filter .select__option .status._recommend::before{background:#8af59b}
+.status-page .status-heading-section__filter .select__option .status._on-update::before{background:#f1ff9d}
+.status-page .status-heading-section__filter .select__option .status._risk::before{background:#f5c48a}
+.status-page .status-heading-section__filter .select__option .status._not-recommend::before{background:#ff8a8a}
+
+/* ============ Legend card v2 — premium grid ============ */
+.cheat-statuses__header{
+    background:linear-gradient(180deg, rgba(29,37,51,.55), rgba(23,29,40,.35)) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:18px !important;
+    padding:22px 26px !important;
+    margin-bottom:16px;
+    display:grid !important;
+    grid-template-columns:auto 1fr;gap:24px;align-items:center;
+}
+.cheat-statuses__header > p{
+    margin:0 !important;font-family:'Mazzard H',sans-serif !important;
+    font-weight:700 !important;font-size:13px !important;
+    letter-spacing:.14em !important;text-transform:uppercase !important;
+    color:rgba(255,255,255,.55) !important;
+    line-height:1.4;
+    border-right:1px solid rgba(255,255,255,.06);padding-right:24px;
+}
+.cheat-statuses__header__all-statuses{
+    display:grid !important;
+    grid-template-columns:repeat(4, 1fr);gap:10px;
+    flex:1;
+}
+.cheat-statuses__header__all-statuses .status{
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-left:3px solid currentColor !important;
+    border-radius:10px !important;
+    padding:10px 14px !important;
+    color:rgba(255,255,255,.92) !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;font-size:12px !important;
+    line-height:1.3 !important;
+    display:flex !important;align-items:center;gap:0;
+    min-height:46px;
+    transition:background .2s, border-color .2s;
+}
+.cheat-statuses__header__all-statuses .status:hover{
+    background:rgba(255,255,255,.05) !important;
+}
+.cheat-statuses__header__all-statuses .status._recommend{border-left-color:#8af59b !important;color:rgba(255,255,255,.92) !important}
+.cheat-statuses__header__all-statuses .status._on-update{border-left-color:#f1ff9d !important;color:rgba(255,255,255,.92) !important}
+.cheat-statuses__header__all-statuses .status._risk{border-left-color:#f5c48a !important;color:rgba(255,255,255,.92) !important}
+.cheat-statuses__header__all-statuses .status._not-recommend{border-left-color:#ff8a8a !important;color:rgba(255,255,255,.92) !important}
+
+@media (max-width:899px){
+    .cheat-statuses__header{grid-template-columns:1fr !important;gap:14px}
+    .cheat-statuses__header > p{border-right:0 !important;border-bottom:1px solid rgba(255,255,255,.06);padding:0 0 12px !important}
+    .cheat-statuses__header__all-statuses{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:599px){
+    .cheat-statuses__header__all-statuses{grid-template-columns:1fr}
+    .status-page .status-heading-section__filter{flex-direction:column;padding:5px !important}
+    .status-page .status-heading-section__filter .select{min-width:0;width:100%}
+}
+
+/* ================================================================== */
+/*  Selector v3 — clean options with left-accent, no overlapping dots  */
+/* ================================================================== */
+
+/* Trigger: simple status text + chevron, no awkward dot */
+.status-page .status-heading-section__filter .select__selected .status::before{
+    display:none !important;
+}
+.status-page .status-heading-section__filter .select__selected .status{
+    border-left:3px solid currentColor !important;
+    padding-left:12px !important;
+}
+.status-page .status-heading-section__filter .select__selected .status._recommend{border-left-color:#8af59b !important}
+.status-page .status-heading-section__filter .select__selected .status._on-update{border-left-color:#f1ff9d !important}
+.status-page .status-heading-section__filter .select__selected .status._risk{border-left-color:#f5c48a !important}
+.status-page .status-heading-section__filter .select__selected .status._not-recommend{border-left-color:#ff8a8a !important}
+
+/* Options: each row gets a left-accent + clean label */
+.status-page .status-heading-section__filter .select__option{
+    padding:0 !important;border-radius:9px !important;
+    overflow:hidden;
+    margin:2px 0;
+}
+.status-page .status-heading-section__filter .select__option .status{
+    width:100%;
+    border:0 !important;
+    border-left:3px solid currentColor !important;
+    background:transparent !important;
+    border-radius:0 !important;
+    padding:12px 14px 12px 14px !important;
+    color:rgba(255,255,255,.85) !important;
+    font-family:'Mazzard M',sans-serif !important;font-weight:600 !important;font-size:13px !important;
+    line-height:1.2 !important;
+    display:flex !important;align-items:center !important;gap:0 !important;
+    transition:background .15s, color .15s;
+}
+/* Kill any inherited ::before dots */
+.status-page .status-heading-section__filter .select__option .status::before{
+    display:none !important;
+    content:none !important;
+}
+.status-page .status-heading-section__filter .select__option:hover{
+    background:rgba(132,86,255,.10) !important;
+}
+.status-page .status-heading-section__filter .select__option:hover .status{
+    color:#fff !important;
+}
+.status-page .status-heading-section__filter .select__option._active{
+    background:rgba(132,86,255,.16) !important;
+}
+.status-page .status-heading-section__filter .select__option._active .status{
+    color:#fff !important;
+}
+/* Per-status left-accent colours */
+.status-page .status-heading-section__filter .select__option .status._recommend{border-left-color:#8af59b !important}
+.status-page .status-heading-section__filter .select__option .status._on-update{border-left-color:#f1ff9d !important}
+.status-page .status-heading-section__filter .select__option .status._risk{border-left-color:#f5c48a !important}
+.status-page .status-heading-section__filter .select__option .status._not-recommend{border-left-color:#ff8a8a !important}
+
+/* Home page GSAP — handled fully in animations.js now. No CSS overrides. */
+
+/* ================================================================== */
+/*  /status — clean custom select (rewrite)                            */
+/* ================================================================== */
+.status-heading-section__filter .select,
+.status-heading-section__filter select{display:none !important}
+.st-select{position:relative;display:inline-flex;min-width:280px;font-family:inherit;user-select:none}
+.st-select__trigger{
+    display:flex;align-items:center;gap:10px;width:100%;
+    padding:12px 16px;
+    background:#161b24;border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;color:#fff;font:500 14px/1.2 inherit;
+    cursor:pointer;transition:border-color .18s ease,background .18s ease;
+}
+.st-select__trigger:hover{border-color:rgba(255,255,255,.18);background:#1a212c}
+.st-select.is-open .st-select__trigger{border-color:#8456ff;background:#1a212c}
+.st-select__bar{
+    flex:0 0 auto;display:inline-block;width:3px;height:16px;border-radius:2px;
+    background:#8af59b;
+}
+.st-select__bar--recommend{background:#8af59b}
+.st-select__bar--risk{background:#f5c48a}
+.st-select__bar--on-update{background:#f1ff9d}
+.st-select__bar--not-recommend{background:#ff8a8a}
+.st-select__value{flex:1 1 auto;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-select__chev{
+    flex:0 0 auto;display:block;width:14px;height:14px;color:rgba(255,255,255,.55);
+    transition:transform .2s ease,color .18s ease;
+}
+.st-select.is-open .st-select__chev{transform:rotate(180deg);color:#fff}
+.st-select__menu{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;
+    background:#161b24;border:1px solid rgba(255,255,255,.08);border-radius:14px;
+    padding:6px;z-index:50;
+    box-shadow:0 18px 40px rgba(0,0,0,.45);
+    display:flex;flex-direction:column;gap:2px;
+}
+.st-select__menu[hidden]{display:none}
+.st-select__opt{
+    display:flex;align-items:center;gap:10px;width:100%;
+    padding:10px 12px;border:0;background:transparent;color:#fff;
+    border-radius:10px;cursor:pointer;text-align:left;
+    font:500 14px/1.2 inherit;transition:background .15s ease;
+}
+.st-select__opt:hover{background:rgba(255,255,255,.05)}
+.st-select__opt.is-active{background:rgba(132,86,255,.14)}
+.st-select__opt-label{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width: 600px){
+    .st-select{min-width:0;width:100%}
+}
+
+/* ================================================================== */
+/*  /about timeline — kill legacy dotted segments + perfect line       */
+/* ================================================================== */
+/* Legacy CSS draws a dotted ::before on each slide :not(:last-child)
+   with top:9px right:-81px — creating broken segments between slides.
+   Remove them entirely; the slider::before below provides one clean line. */
+.about-section__history__slide:not(:last-child)::before{
+    content:none !important;
+    display:none !important;
+    border:0 !important;
+    background:transparent !important;
+}
+.about-section__history__slide:not(:last-child){margin-right:0 !important}
+.about-section__history__slide.swiper-slide{width:auto !important}
+
+/* Single continuous line — span swiper-wrapper full width, sit exactly
+   on dot vertical center. Slide padding-top:8px, dot height 10px → center 13px */
+.about-section__history__slider{position:relative !important;overflow:visible !important;padding:8px 0 0 !important}
+.about-section__history__slider::before{
+    content:"" !important;position:absolute !important;
+    left:14px !important;right:14px !important;
+    top:13px !important;height:2px !important;
+    background:linear-gradient(90deg,
+        rgba(132,86,255,0) 0%,
+        rgba(132,86,255,.32) 8%,
+        rgba(132,86,255,.32) 92%,
+        rgba(132,86,255,0) 100%) !important;
+    border:0 !important;border-radius:1px !important;
+    z-index:0;pointer-events:none;
+}
+.about-section__history__slide{
+    padding:0 14px 4px !important;
+    position:relative !important;
+    background:transparent !important;
+}
+.about-section__history__slide .point{
+    width:10px !important;height:10px !important;
+    border-radius:50% !important;
+    background:#a98aff !important;
+    border:0 !important;
+    box-shadow:0 0 0 3px #171d28, 0 0 10px rgba(169,138,255,.45) !important;
+    margin:8px 0 18px !important;
+    position:relative !important;z-index:2 !important;
+}
+.about-section__history__slide .point::before,
+.about-section__history__slide .point::after{content:none !important;display:none !important}
+
+/* /status select — "Все статусы" neutral bar */
+.st-select__bar--all{background:linear-gradient(180deg,#8af59b 0%,#f1ff9d 33%,#f5c48a 66%,#ff8a8a 100%)}
+
+/* ================================================================== */
+/*  /about — history timeline: kill swiper layout on desktop, use grid */
+/* ================================================================== */
+@media (min-width: 768px){
+    .about-section__history__slider{
+        overflow:visible !important;
+        padding:14px 8px 4px !important;
+        position:relative !important;
+    }
+    /* Force grid layout — 4 equal columns regardless of swiper inline styles */
+    .about-section__history__slider .swiper-wrapper{
+        display:grid !important;
+        grid-template-columns:repeat(4, 1fr) !important;
+        gap:24px !important;
+        transform:none !important;
+        width:100% !important;
+        align-items:flex-start !important;
+    }
+    .about-section__history__slider .swiper-slide{
+        width:auto !important;
+        margin:0 !important;
+        flex:0 0 auto !important;
+    }
+    .about-section__history__slide{
+        padding:0 !important;
+        background:transparent !important;
+        position:relative !important;
+    }
+    /* Single clean line — spans from first dot center to last dot center.
+       4 cols, gap 24px, slides equal width. Dot is 10px, centered at start
+       of each slide. Line goes from col1-center to col4-center.
+       col-width = (100% - 3*24px) / 4, dot center = 5px from slide left.
+       So left = 5px, right = 5px is wrong — last col spans full last column.
+       Use simpler: line under all dots, left:5px to right:5px. */
+    .about-section__history__slider::before{
+        content:"" !important;position:absolute !important;
+        left:13px !important;right:13px !important;
+        top:19px !important;height:2px !important;
+        background:linear-gradient(90deg,
+            rgba(132,86,255,.45) 0%,
+            rgba(132,86,255,.45) 100%) !important;
+        border-radius:1px !important;
+        z-index:0;pointer-events:none;
+    }
+    .about-section__history__slide .point{
+        width:10px !important;height:10px !important;
+        border-radius:50% !important;
+        background:#a98aff !important;
+        border:0 !important;
+        box-shadow:0 0 0 4px #171d28, 0 0 12px rgba(169,138,255,.5) !important;
+        margin:0 0 16px !important;
+        position:relative !important;z-index:2 !important;
+    }
+    /* Hide swiper nav arrows on desktop — grid has no need for them */
+    .about-section__history__prev-btn,
+    .about-section__history__next-btn{display:none !important}
+}
+/* Mobile: keep swiper but make line span container with single soft line */
+@media (max-width: 767px){
+    .about-section__history__slider::before{
+        left:8px !important;right:8px !important;
+        background:rgba(132,86,255,.35) !important;
+    }
+}
+
+/* ================================================================== */
+/*  Auth / Register / Reset password — modern modal redesign           */
+/* ================================================================== */
+.popup#auth .popup__inner,
+.popup#register .popup__inner,
+.popup#resetPass .popup__inner{
+    padding:36px 36px 28px !important;
+    width:460px !important;
+    max-width:calc(100% - 32px) !important;
+    background:
+        radial-gradient(120% 80% at 50% -10%, rgba(132,86,255,.18) 0%, rgba(132,86,255,0) 60%),
+        linear-gradient(180deg, #181f2c 0%, #131923 100%) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:22px !important;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(132,86,255,.08) inset !important;
+    overflow:hidden;
+}
+/* Subtle decorative glow inside top */
+.popup#auth .popup__inner::before,
+.popup#register .popup__inner::before,
+.popup#resetPass .popup__inner::before{
+    content:"";position:absolute;
+    top:-40%;left:50%;transform:translateX(-50%);
+    width:380px;height:380px;
+    background:radial-gradient(circle, rgba(132,86,255,.18) 0%, rgba(132,86,255,0) 60%);
+    pointer-events:none;z-index:0;
+}
+.popup#auth .popup__inner > *:not(.popup__close),
+.popup#register .popup__inner > *:not(.popup__close),
+.popup#resetPass .popup__inner > *:not(.popup__close){position:relative;z-index:1}
+/* Close button must stay absolute + above the decorative glow */
+.popup#auth .popup__close,
+.popup#register .popup__close,
+.popup#resetPass .popup__close{position:absolute !important;z-index:10 !important}
+
+/* Caption with badge above */
+.popup#auth .popup__caption,
+.popup#register .popup__caption,
+.popup#resetPass .popup__caption{
+    margin:6px 0 24px !important;
+    text-transform:none !important;
+    font-family:'Mazzard M',sans-serif !important;
+    font-weight:700 !important;
+    font-size:24px !important;
+    letter-spacing:-0.01em !important;
+    text-align:center !important;
+    color:#fff !important;
+}
+/* User icon-badge removed per request */
+.popup#auth .popup__caption::before,
+.popup#register .popup__caption::before,
+.popup#resetPass .popup__caption::before{content:none !important;display:none !important}
+
+/* Close button — refined */
+.popup#auth .popup__close,
+.popup#register .popup__close,
+.popup#resetPass .popup__close{
+    right:18px !important;top:18px !important;
+    width:34px !important;height:34px !important;
+    border-radius:10px !important;
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    opacity:1 !important;
+    display:flex !important;align-items:center;justify-content:center;
+    transition:background .18s ease, border-color .18s ease !important;
+}
+.popup#auth .popup__close:hover,
+.popup#register .popup__close:hover,
+.popup#resetPass .popup__close:hover{
+    background:rgba(132,86,255,.14) !important;
+    border-color:rgba(132,86,255,.35) !important;
+}
+.popup#auth .popup__close svg,
+.popup#register .popup__close svg,
+.popup#resetPass .popup__close svg{
+    width:14px !important;height:14px !important;
+    color:rgba(255,255,255,.75);
+}
+
+/* Input fields — modern with focus glow */
+.popup#auth .input-block,
+.popup#register .input-block,
+.popup#resetPass .input-block{margin-bottom:14px !important}
+.popup#auth .input-block__label,
+.popup#register .input-block__label,
+.popup#resetPass .input-block__label{
+    font-size:13px !important;font-weight:500 !important;
+    color:rgba(255,255,255,.6) !important;
+    margin-bottom:8px !important;
+    text-transform:none !important;letter-spacing:0 !important;
+}
+.popup#auth .input-block__label-link,
+.popup#register .input-block__label-link,
+.popup#resetPass .input-block__label-link{
+    font-size:12px !important;color:#cbb6ff !important;
+    text-decoration:none !important;
+    transition:color .18s ease;
+}
+.popup#auth .input-block__label-link:hover,
+.popup#register .input-block__label-link:hover,
+.popup#resetPass .input-block__label-link:hover{color:#fff !important}
+.popup#auth .input-block__input,
+.popup#register .input-block__input,
+.popup#resetPass .input-block__input{
+    height:50px !important;
+    background:#0f141d !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-radius:12px !important;
+    padding:0 16px !important;
+    color:#fff !important;
+    font-size:15px !important;
+    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease !important;
+}
+.popup#auth .input-block__input::placeholder,
+.popup#register .input-block__input::placeholder,
+.popup#resetPass .input-block__input::placeholder{color:rgba(255,255,255,.32) !important}
+.popup#auth .input-block__input:focus,
+.popup#register .input-block__input:focus,
+.popup#resetPass .input-block__input:focus{
+    background:#131927 !important;
+    border-color:rgba(132,86,255,.55) !important;
+    box-shadow:0 0 0 3px rgba(132,86,255,.14) !important;
+    outline:none !important;
+}
+.popup#auth .input-block__showHide-btn,
+.popup#register .input-block__showHide-btn,
+.popup#resetPass .input-block__showHide-btn{
+    right:14px !important;opacity:.55 !important;
+    transition:opacity .18s ease !important;
+}
+.popup#auth .input-block__showHide-btn:hover,
+.popup#register .input-block__showHide-btn:hover,
+.popup#resetPass .input-block__showHide-btn:hover{opacity:1 !important}
+
+/* Primary CTA — gradient + arrow + glow */
+.popup#auth .popup__submit-btn.btn-accent,
+.popup#register .popup__submit-btn.btn-accent,
+.popup#resetPass .popup__submit-btn.btn-accent{
+    height:52px !important;
+    margin:18px 0 0 !important;
+    border-radius:14px !important;
+    font-size:15px !important;font-weight:600 !important;
+    background:linear-gradient(180deg, #9468ff 0%, #7a4eff 100%) !important;
+    color:#fff !important;
+    border:0 !important;
+    box-shadow:0 12px 28px rgba(132,86,255,.32), inset 0 1px 0 rgba(255,255,255,.18) !important;
+    transition:transform .15s ease, box-shadow .18s ease, filter .15s ease !important;
+}
+.popup#auth .popup__submit-btn.btn-accent:hover,
+.popup#register .popup__submit-btn.btn-accent:hover,
+.popup#resetPass .popup__submit-btn.btn-accent:hover{
+    transform:translateY(-1px);
+    box-shadow:0 16px 36px rgba(132,86,255,.42), inset 0 1px 0 rgba(255,255,255,.22) !important;
+    filter:brightness(1.05);
+}
+.popup#auth .popup__submit-btn.btn-accent:active,
+.popup#register .popup__submit-btn.btn-accent:active,
+.popup#resetPass .popup__submit-btn.btn-accent:active{transform:translateY(0)}
+
+/* Divider "или" — replace ugly hr */
+.popup#auth hr,
+.popup#register hr,
+.popup#resetPass hr{
+    border:0 !important;
+    margin:22px 0 14px !important;
+    height:1px !important;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.08) 30%, rgba(255,255,255,.08) 70%, transparent) !important;
+    position:relative;
+    overflow:visible;
+}
+.popup#auth hr::after,
+.popup#register hr::after,
+.popup#resetPass hr::after{
+    content:"или";
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    padding:0 12px;
+    background:#161c28;
+    color:rgba(255,255,255,.4);
+    font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+}
+
+/* Yandex / OAuth secondary buttons */
+.popup#auth .btn-yandex.popup__submit-btn,
+.popup#register .btn-yandex.popup__submit-btn,
+.popup#resetPass .btn-yandex.popup__submit-btn{
+    height:48px !important;
+    margin:8px 0 0 !important;
+    border-radius:12px !important;
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    color:#fff !important;
+    font-size:14px !important;font-weight:500 !important;
+    transition:background .18s ease, border-color .18s ease !important;
+}
+.popup#auth .btn-yandex.popup__submit-btn:hover,
+.popup#register .btn-yandex.popup__submit-btn:hover,
+.popup#resetPass .btn-yandex.popup__submit-btn:hover{
+    background:rgba(255,255,255,.07) !important;
+    border-color:rgba(255,255,255,.14) !important;
+}
+.popup#auth .popup__tg-login,
+.popup#register .popup__tg-login,
+.popup#resetPass .popup__tg-login{
+    margin-top:10px;display:flex;justify-content:center;
+}
+
+/* Hints + notes */
+.popup#auth .popup__hint,
+.popup#register .popup__hint,
+.popup#resetPass .popup__hint{
+    margin-top:20px !important;
+    text-align:center;
+    font-size:13px !important;font-weight:400 !important;
+    color:rgba(255,255,255,.55);
+}
+.popup#auth .popup__hint__btn,
+.popup#register .popup__hint__btn,
+.popup#resetPass .popup__hint__btn{
+    color:#cbb6ff !important;font-weight:600 !important;
+    transition:color .18s ease;
+}
+.popup#auth .popup__hint__btn:hover,
+.popup#register .popup__hint__btn:hover,
+.popup#resetPass .popup__hint__btn:hover{color:#fff !important}
+.popup#auth .popup__note,
+.popup#register .popup__note,
+.popup#resetPass .popup__note{
+    text-align:center !important;
+    font-size:11px !important;
+    color:rgba(255,255,255,.35) !important;
+    margin-top:12px !important;
+}
+
+/* Captcha center */
+.popup#auth .h-captcha,
+.popup#register .h-captcha{margin:14px auto 0 !important}
+
+/* Mobile tweaks */
+@media (max-width: 480px){
+    .popup#auth .popup__inner,
+    .popup#register .popup__inner,
+    .popup#resetPass .popup__inner{
+        padding:28px 22px 22px !important;
+        border-radius:18px !important;
+    }
+    .popup#auth .popup__caption,
+    .popup#register .popup__caption,
+    .popup#resetPass .popup__caption{font-size:21px !important;margin-bottom:18px !important}
+}
+
+/* Override inline styles from blade <button style="margin-top:20px..."> */
+.popup#auth .btn.popup__submit-btn[style],
+.popup#register .btn.popup__submit-btn[style],
+.popup#resetPass .btn.popup__submit-btn[style]{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+}
+.popup#auth .btn-accent.popup__submit-btn[style],
+.popup#register .btn-accent.popup__submit-btn[style],
+.popup#resetPass .btn-accent.popup__submit-btn[style]{
+    margin-top:18px !important;
+    margin-bottom:0 !important;
 }

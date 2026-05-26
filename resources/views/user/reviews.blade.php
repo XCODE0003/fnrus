@@ -45,15 +45,21 @@
                         <input type="text" id="rv-author" class="reviews-form__input" placeholder="{{ __('site.review_form_name_ph') }}" maxlength="64" autocomplete="off">
                     </div>
                     <div class="reviews-form__field">
-                        <label class="reviews-form__label" for="rv-product">{{ __('site.review_form_product') }}</label>
-                        <div class="reviews-form__select-wrap">
-                            <select id="rv-product" class="reviews-form__select">
-                                <option value="">{{ __('site.review_form_product_ph') }}</option>
+                        <label class="reviews-form__label">{{ __('site.review_form_product') }}</label>
+                        <div class="rv-select" id="rv-select" data-empty="{{ __('site.review_form_product_ph') }}">
+                            <input type="hidden" id="rv-product" value="">
+                            <button type="button" class="rv-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="rv-select__value">{{ __('site.review_form_product_ph') }}</span>
+                                <svg class="rv-select__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <div class="rv-select__menu" role="listbox" hidden>
                                 @foreach($categories ?? [] as $cat)
-                                    <option value="{{ $cat->alias ?? $cat->title }}">{{ $cat->title }}</option>
+                                    <button type="button" class="rv-select__option" role="option" data-value="{{ $cat->alias ?? $cat->title }}" data-label="{{ $cat->title }}">
+                                        <span class="rv-select__dot"></span>
+                                        {{ $cat->title }}
+                                    </button>
                                 @endforeach
-                            </select>
-                            <svg class="reviews-form__select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
                         </div>
                     </div>
                     <div class="reviews-form__field reviews-form__field--rating">
@@ -139,6 +145,46 @@
     var starsWrap = document.getElementById('rv-stars');
     if (starsWrap) starsWrap.addEventListener('mouseleave', function(){ paint(+ratingHidden.value); });
 
+    // ===== Custom product select =====
+    var sel = document.getElementById('rv-select');
+    if (sel) {
+        var trigger = sel.querySelector('.rv-select__trigger');
+        var menu = sel.querySelector('.rv-select__menu');
+        var valueLbl = sel.querySelector('.rv-select__value');
+        var hidden = document.getElementById('rv-product');
+        var placeholder = sel.getAttribute('data-empty');
+
+        function close(){ sel.classList.remove('is-open'); menu.hidden = true; trigger.setAttribute('aria-expanded','false'); }
+        function open(){ sel.classList.add('is-open'); menu.hidden = false; trigger.setAttribute('aria-expanded','true'); }
+
+        trigger.addEventListener('click', function(e){
+            e.stopPropagation();
+            if (sel.classList.contains('is-open')) close(); else open();
+        });
+        menu.addEventListener('click', function(e){
+            var opt = e.target.closest('.rv-select__option');
+            if (!opt) return;
+            var v = opt.getAttribute('data-value');
+            var l = opt.getAttribute('data-label');
+            hidden.value = v;
+            valueLbl.textContent = l;
+            valueLbl.classList.remove('rv-select__value--placeholder');
+            sel.classList.add('has-value');
+            menu.querySelectorAll('.rv-select__option').forEach(function(o){ o.classList.toggle('is-selected', o === opt); });
+            close();
+        });
+        document.addEventListener('click', function(e){ if (!sel.contains(e.target)) close(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+
+        // reset
+        window._resetProductSelect = function(){
+            hidden.value = '';
+            valueLbl.textContent = placeholder;
+            sel.classList.remove('has-value');
+            menu.querySelectorAll('.rv-select__option').forEach(function(o){ o.classList.remove('is-selected'); });
+        };
+    }
+
     var submit = document.getElementById('rv-submit');
     if (submit) {
         submit.addEventListener('click', function(){
@@ -165,7 +211,7 @@
                         if (window.showNotification) window.showNotification(data.description, 'success');
                         document.getElementById('rv-author').value = '';
                         document.getElementById('rv-text').value = '';
-                        document.getElementById('rv-product').value = '';
+                        if (typeof window._resetProductSelect === 'function') window._resetProductSelect();
                         ratingHidden.value = 5; paint(5);
                         if (counter) counter.textContent = '0/1000';
                     } else if (window.showNotification) {
