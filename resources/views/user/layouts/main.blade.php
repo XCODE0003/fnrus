@@ -40,7 +40,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.4.1">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.7.4">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -638,7 +638,7 @@
 {{--</div>--}}
 
 
-<div class="popup" id="replenishment">
+<div class="popup popup--pay" id="replenishment">
     <div id="result">
         <div id="body">
             <p class="popup__caption">{{ __('site.modal_topup_balance_title') }}</p>
@@ -722,6 +722,8 @@
 
 <script src="/assets/js/scripts.min.js?54"></script>
 <script src="/assets/js/animations.js?v=15"></script>
+<script src="/assets/js/bg-fx.js?v=5" defer></script>
+<script src="/assets/js/sticky-header.js?v=2" defer></script>
 <script>
 window.lang = {
     my_profile: @json(__('site.section_user_menu_profile')),
@@ -796,6 +798,6 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
     });
 })();
 </script>
-<script src="/assets/js/app.js?v=3.4"></script>
+<script src="/assets/js/app.js?v=3.5"></script>
 </body>
 </html>

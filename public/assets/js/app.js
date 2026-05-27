@@ -225,53 +225,58 @@ function paymentMethodsTopup(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
+                // Row renderer matching buy modal (icon chip + name + currency pill)
+                var rowHtml = function(e, a) {
+                    var name = (e && e.title) || (a && a.title) || a.currency || '';
+                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">' +
+                        '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
+                            '<span class="popup__payment-method__icon"><img src="' + iconSrc + '" alt=""></span>' +
+                            '<span class="popup__payment-method__name">' + name + '</span>' +
+                            '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
+                        '</label>';
+                };
+
                 $(data.result).each(function (index, e) {
 
                     if (e.type === 'bt' && e.assets && e.assets.length > 0) {
                         bt_entry = e;
                         $(e.assets).each(function (index, a) {
-                            bt_html += '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">\n' +
-                                '            <label for="topup_method_' + a.id + '" class="popup__payment-method">' +
-                                '               <div class="popup__payment-method__custom-info">' + a.currency + '</div>\n' +
-                                '                <img src="' + a.icon + '" alt="">\n' +
-                                '            </label>';
+                            bt_html += rowHtml(e, a);
                         });
                         return;
                     }
 
                     $(e.assets).each(function (index, a) {
-
-                        items_html += '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">\n' +
-                            '            <label for="topup_method_' + a.id + '" class="popup__payment-method">' +
-                            '               <div class="popup__payment-method__custom-info">' + a.currency + '</div>\n' +
-                            '                <img src="' + a.icon + '" alt="">\n' +
-                            '            </label>';
+                        items_html += rowHtml(e, a);
                     });
 
                 });
 
                 if (bt_entry) {
-                    items_html += '<a href="#" class="popup__payment-method" id="topup-bt-aggregator">' +
-                        '<div class="popup__payment-method__custom-info">' + (bt_entry.title || 'BTKassa') + '</div>' +
-                        '<img src="' + bt_entry.icon + '" alt=""></a>';
+                    items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="topup-bt-aggregator">' +
+                        '<span class="popup__payment-method__icon"><img src="' + bt_entry.icon + '" alt=""></span>' +
+                        '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
+                        '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
+                        '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                    '</a>';
                 }
 
-                var gridStyle = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;grid-column:1/-1';
-                var wrapper = '<div id="topup-bt-main" style="' + gridStyle + '">' + items_html + '</div>' +
+                var wrapper = '<div id="topup-bt-main">' + items_html + '</div>' +
                     '<div id="topup-bt-sub" style="display:none">' + bt_html +
-                    '<div style="text-align:center;margin-top:10px;grid-column:1/-1"><a href="#" id="topup-bt-back" style="cursor:pointer;color:#6c757d">← Назад</a></div></div>';
+                    '<div style="text-align:center;margin-top:10px"><a href="#" id="topup-bt-back" class="popup__payment-method__back">← Назад</a></div></div>';
 
                 $('#topup-payments-methods').html(wrapper);
 
                 $('#topup-payments-methods').off('click', '#topup-bt-aggregator').on('click', '#topup-bt-aggregator', function(e){
                     e.preventDefault();
                     $('#topup-bt-main').hide();
-                    $('#topup-bt-sub').css({'display':'grid','grid-template-columns':'repeat(4,1fr)','gap':'10px','grid-column':'1/-1'});
+                    $('#topup-bt-sub').show();
                 });
                 $('#topup-payments-methods').off('click', '#topup-bt-back').on('click', '#topup-bt-back', function(e){
                     e.preventDefault();
                     $('#topup-bt-sub').hide();
-                    $('#topup-bt-main').css({'display':'grid','grid-template-columns':'repeat(4,1fr)','gap':'10px','grid-column':'1/-1'});
+                    $('#topup-bt-main').show();
                 });
             }
         }

@@ -59,6 +59,7 @@ return [
 
     "section_faq_title" => "FAQ",
     "section_faq_caption" => "Frequently asked questions",
+    "section_faq_subcaption" => "Answers to the most common questions about our products and service.",
 
     "section_user_menu_profile" => "Profile",
     "section_user_menu_my_buys" => "My purchases",
