@@ -21055,3 +21055,10 @@ main.profile {
     mask-repeat:no-repeat;
     filter:none !important;
 }
+
+/* Hero image — nudge slightly lower */
+@media (min-width: 1024px){
+    .hero__image{
+        bottom:-40px !important;       /* drop a bit below original alignment */
+    }
+}

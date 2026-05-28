@@ -110,11 +110,7 @@
                 .from('.hero__subtitle', { autoAlpha: 0, y: 18, duration: 0.7 }, '-=0.6')
                 .from('.hero__actions > *', { autoAlpha: 0, y: 16, scale: 0.96, stagger: 0.08, duration: 0.6, ease: SOFT }, '-=0.5')
                 .from('.hero__image',    { autoAlpha: 0, y: 32, scale: 0.94, duration: 1.05 }, '-=0.85');
-            if (q('.hero__image img')) {
-                gsap.to('.hero__image img', {
-                    y: 12, duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.2
-                });
-            }
+            /* Idle float on hero image disabled — image stays static. */
         }
 
         /* ========================= GAME HERO ========================= */
