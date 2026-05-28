@@ -722,7 +722,7 @@
 
 <script src="/assets/js/scripts.min.js?54"></script>
 <script src="/assets/js/animations.js?v=15"></script>
-<script src="/assets/js/bg-fx.js?v=5" defer></script>
+<script src="/assets/js/bg-fx.js?v=7" defer></script>
 <script src="/assets/js/sticky-header.js?v=2" defer></script>
 <script>
 window.lang = {
