@@ -1987,7 +1987,7 @@ section:first-child {
     font-family: "Mazzard H";
     font-size: 71px;
     font-weight: 500;
-    line-height: 1.16;
+    line-height: 1;
     letter-spacing: -0.01em;
     color: #fff;
 }
@@ -20246,13 +20246,14 @@ main.profile {
 /* ================================================================== */
 /*  Interactive background — soft particle/glow canvas                 */
 /* ================================================================== */
-/* Particles overlay — visible but tasteful. Click-through. */
+/* Aurora orbs — true background, behind all content. Click-through. */
 #bg-fx {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 0;
     pointer-events: none;
-    opacity: 0.85;
+    opacity: 0.9;
+    mix-blend-mode: screen;   /* lifts brand-purple onto dark bg without dimming text */
 }
 @media (prefers-reduced-motion: reduce) {
     #bg-fx {
@@ -20964,4 +20965,93 @@ main.profile {
         top:52px !important;
         height:calc(100vh - 52px) !important;
     }
+}
+
+/* ==================================================================== */
+/*  Header — bigger nav text + bigger profile button                    */
+/* ==================================================================== */
+@media (min-width: 1024px){
+    /* Nav menu items: larger, bolder */
+    .header__menu__item > a{
+        font-size:16px !important;
+        font-weight:700 !important;
+        letter-spacing:.005em;
+    }
+    .header__menu__pill{
+        font-size:16px !important;
+        font-weight:700 !important;
+        padding:11px 18px !important;
+    }
+    .header__menu__pill-spark,
+    .header__menu__pill-chev{
+        width:16px !important;height:16px !important;
+    }
+
+    /* Profile (login) pill — taller, larger label */
+    .header__login{
+        height:56px !important;
+        padding:0 26px 0 22px !important;
+        font-size:16px !important;
+        font-weight:700 !important;
+        gap:10px !important;
+    }
+    .header__login .btn__icon{
+        width:36px !important;height:36px !important;
+    }
+    .header__login .btn__icon img{
+        width:18px !important;height:18px !important;
+    }
+
+    /* Hide the globe icon next to language (also removed from markup) */
+    .header__lang__globe{display:none !important}
+    /* Adjust lang select padding without the globe */
+    .header__lang .select__selected{padding-left:14px !important}
+}
+
+/* ==================================================================== */
+/*  Hero — tighter vertical spacing (per reference screenshot)           */
+/* ==================================================================== */
+/* Original hero has 65-70px margins between every element → bloated.
+   Bring spacing closer together for a tighter, modern look. */
+.hero__col{
+    padding-top:14px !important;
+    padding-bottom:14px !important;
+}
+.hero__title{margin-top:28px !important}
+.hero__subtitle{margin-top:22px !important}
+.hero__actions{margin-top:32px !important}
+
+@media (max-width: 1023px){
+    .hero__col{padding-top:10px !important;padding-bottom:10px !important}
+    .hero__title{margin-top:20px !important}
+    .hero__subtitle{margin-top:16px !important}
+    .hero__actions{margin-top:24px !important}
+}
+
+@media (max-width: 599px){
+    .hero__title{margin-top:18px !important}
+    .hero__subtitle{margin-top:14px !important}
+    .hero__actions{margin-top:22px !important}
+}
+
+/* ==================================================================== */
+/*  Hero spider image — blend into page bg (kill the dark rectangle)    */
+/* ==================================================================== */
+/* The PNG has its own dark background that's slightly off from the page
+   color, creating a visible rectangle. We solve it with two layers:
+   (1) mix-blend-mode: screen — dark bg pixels add nothing to page bg,
+       only the colored/bright spider pixels show through
+   (2) a soft radial mask fades the edges to transparent so even any
+       leftover seam disappears smoothly. */
+.hero__image{
+    mix-blend-mode:normal !important;          /* revert: screen made it worse */
+}
+.hero__image img{
+    /* Aggressive radial mask — center spider sharp, edges fade out fast.
+       28% solid → 65% half-fade → 95% transparent. */
+    -webkit-mask-image:radial-gradient(ellipse 58% 65% at 50% 52%, #000 28%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 95%);
+    mask-image:radial-gradient(ellipse 58% 65% at 50% 52%, #000 28%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 95%);
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    filter:none !important;
 }

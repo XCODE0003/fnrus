@@ -1,8 +1,8 @@
 /* =====================================================================
-   bg-fx — subtle decorative particles (desktop only)
-   - DISABLED on mobile (<768px) to avoid scroll lag + reveal anim jank
-   - Desktop: low density, slow drift, dim alpha
-   - Always visible (no pause on scroll) — just stays calm in background
+   bg-fx — soft drifting gradient orbs, ONLY at edges/corners
+   - DISABLED on mobile (<768px) to keep scroll smooth
+   - 4 large soft radial blobs anchored at the corners, drifting locally
+   - Center of viewport stays clean — no orbs cover content
    - pointer-events: none — clicks pass through
    ===================================================================== */
 (function(){
@@ -14,10 +14,10 @@
     document.documentElement.appendChild(canvas);
     var ctx = canvas.getContext('2d');
 
-    var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    var particles = [];
-    var mouse = { x: -9999, y: -9999, active: false };
+    var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.25);
+    var orbs = [];
     var running = true;
+    var t0 = performance.now();
 
     function resize(){
         W = window.innerWidth;
@@ -31,115 +31,83 @@
 
     function rand(a, b){ return a + Math.random() * (b - a); }
 
-    function makeParticles(){
-        particles = [];
-        var density = 60000;
-        var count = Math.round((W * H) / density);
-        count = Math.max(14, Math.min(count, 38));
-        for (var i = 0; i < count; i++){
-            particles.push({
-                x: Math.random() * W,
-                y: Math.random() * H,
-                vx: rand(-0.025, 0.025),     // very slow drift
-                vy: rand(-0.025, 0.025),
-                r: rand(0.9, 1.8),
-                base: rand(0.18, 0.36),      // dim baseline
-                pulse: rand(0, Math.PI * 2),
-                pulseSpeed: rand(0.0003, 0.0006)
+    function makeOrbs(){
+        // Brand palette — purples
+        var palette = [
+            [148, 104, 255],   // #9468ff — brand purple
+            [124, 82, 240],    // deeper purple
+            [180, 145, 255],   // lighter lavender
+            [90, 60, 200]      // dark accent
+        ];
+        // Anchor each orb to a CORNER. Small amplitude → drifts only locally,
+        // never crosses into the central content area.
+        var anchors = [
+            { cx: 0.08, cy: 0.10 },  // top-left
+            { cx: 0.92, cy: 0.08 },  // top-right
+            { cx: 0.06, cy: 0.92 },  // bottom-left
+            { cx: 0.94, cy: 0.90 }   // bottom-right
+        ];
+        orbs = [];
+        for (var i = 0; i < 4; i++){
+            var a = anchors[i];
+            var c = palette[i % palette.length];
+            orbs.push({
+                cx: a.cx,
+                cy: a.cy,
+                ax: rand(0.04, 0.08),       // tiny local drift
+                ay: rand(0.04, 0.08),
+                fx: rand(0.000015, 0.000035),
+                fy: rand(0.000015, 0.000035),
+                phx: rand(0, Math.PI * 2),
+                phy: rand(0, Math.PI * 2),
+                radius: rand(320, 480),
+                color: c,
+                baseAlpha: rand(0.20, 0.32),
+                pulseSpeed: rand(0.0003, 0.0006),
+                pulsePhase: rand(0, Math.PI * 2)
             });
         }
     }
 
-    function step(t){
+    function step(now){
         if (!running) return;
+        var t = now - t0;
+
         ctx.clearRect(0, 0, W, H);
 
-        // Soft cursor halo — gentle hint, no flashing
-        if (mouse.active){
-            var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 170);
-            g.addColorStop(0, 'rgba(140,100,255,0.045)');
-            g.addColorStop(0.5, 'rgba(140,100,255,0.015)');
-            g.addColorStop(1, 'rgba(140,100,255,0)');
+        for (var i = 0; i < orbs.length; i++){
+            var o = orbs[i];
+            var x = (o.cx + Math.sin(t * o.fx + o.phx) * o.ax) * W;
+            var y = (o.cy + Math.cos(t * o.fy + o.phy) * o.ay) * H;
+            var pulse = 0.85 + 0.15 * Math.sin(t * o.pulseSpeed + o.pulsePhase);
+            var alpha = o.baseAlpha * pulse;
+
+            var g = ctx.createRadialGradient(x, y, 0, x, y, o.radius);
+            g.addColorStop(0,    'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',' + alpha + ')');
+            g.addColorStop(0.45, 'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',' + (alpha * 0.3) + ')');
+            g.addColorStop(1,    'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',0)');
             ctx.fillStyle = g;
             ctx.beginPath();
-            ctx.arc(mouse.x, mouse.y, 170, 0, Math.PI * 2);
+            ctx.arc(x, y, o.radius, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        var now = t || 0;
+        // Cut out the central viewport area — guarantees content stays clean
+        // even if a large orb's gradient bleeds toward middle.
+        ctx.globalCompositeOperation = 'destination-out';
+        var cx = W / 2, cy = H / 2;
+        var rOuter = Math.min(W, H) * 0.55;
+        var rInner = Math.min(W, H) * 0.18;
+        var cut = ctx.createRadialGradient(cx, cy, rInner, cx, cy, rOuter);
+        cut.addColorStop(0,   'rgba(0,0,0,1)');
+        cut.addColorStop(0.7, 'rgba(0,0,0,0.55)');
+        cut.addColorStop(1,   'rgba(0,0,0,0)');
+        ctx.fillStyle = cut;
+        ctx.fillRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over';
 
-        // Particles
-        for (var i = 0; i < particles.length; i++){
-            var p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
-            if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
-
-            // gentle mouse attraction
-            if (mouse.active){
-                var dx = mouse.x - p.x, dy = mouse.y - p.y;
-                var d2 = dx*dx + dy*dy;
-                if (d2 < 22500){
-                    var d = Math.sqrt(d2);
-                    var f = (1 - d / 150) * 0.014;
-                    p.x += dx / d * f;
-                    p.y += dy / d * f;
-                }
-            }
-
-            // very slow individual pulse
-            var pulse = 0.8 + 0.2 * Math.sin(now * p.pulseSpeed + p.pulse);
-            var alpha = p.base * pulse;
-
-            // soft halo for signature glow
-            var halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4.5);
-            halo.addColorStop(0, 'rgba(170,140,255,' + (alpha * 0.32) + ')');
-            halo.addColorStop(1, 'rgba(170,140,255,0)');
-            ctx.fillStyle = halo;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r * 4.5, 0, Math.PI * 2);
-            ctx.fill();
-
-            // crisp core
-            ctx.fillStyle = 'rgba(180,150,255,' + alpha + ')';
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // Thin connecting lines — dim, nearby pairs only
-        var maxDist = 11000;
-        for (var i = 0; i < particles.length; i++){
-            for (var j = i + 1; j < particles.length; j++){
-                var a = particles[i], b = particles[j];
-                var dx = a.x - b.x, dy = a.y - b.y;
-                var d2 = dx*dx + dy*dy;
-                if (d2 < maxDist){
-                    var op = (1 - d2 / maxDist) * 0.08;
-                    ctx.strokeStyle = 'rgba(165,135,240,' + op + ')';
-                    ctx.lineWidth = 0.5;
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    ctx.lineTo(b.x, b.y);
-                    ctx.stroke();
-                }
-            }
-        }
         requestAnimationFrame(step);
     }
-
-    function getOffset(){
-        var r = canvas.getBoundingClientRect();
-        return { x: r.left, y: r.top, sx: r.width / W || 1, sy: r.height / H || 1 };
-    }
-    function onMove(e){
-        var o = getOffset();
-        mouse.x = (e.clientX - o.x) / o.sx;
-        mouse.y = (e.clientY - o.y) / o.sy;
-        mouse.active = true;
-    }
-    function onLeave(){ mouse.active = false; }
 
     window.addEventListener('resize', function(){
         if (window.innerWidth < 768){
@@ -150,17 +118,15 @@
         canvas.style.display = '';
         running = true;
         resize();
-        makeParticles();
+        makeOrbs();
         requestAnimationFrame(step);
     });
-    window.addEventListener('mousemove', onMove, { passive: true });
-    window.addEventListener('mouseleave', onLeave);
     document.addEventListener('visibilitychange', function(){
         running = !document.hidden;
         if (running) requestAnimationFrame(step);
     });
 
     resize();
-    makeParticles();
+    makeOrbs();
     requestAnimationFrame(step);
 })();

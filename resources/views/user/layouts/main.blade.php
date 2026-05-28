@@ -40,7 +40,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.7.4">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.7.8">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -196,7 +196,6 @@
                     <option value="ru" @if(app()->getLocale() == 'ru') selected @endif>RU</option>
                     <option value="en" @if(app()->getLocale() == 'en') selected @endif>EN</option>
                 </select>
-                <span class="header__lang__globe"><img src="/assets/img/icon-globe.svg" alt=""></span>
                 <div class="select__selected">
                     <span>{{ strtoupper(app()->getLocale()) }}</span>
                 </div>
@@ -722,7 +721,7 @@
 
 <script src="/assets/js/scripts.min.js?54"></script>
 <script src="/assets/js/animations.js?v=15"></script>
-<script src="/assets/js/bg-fx.js?v=7" defer></script>
+<script src="/assets/js/bg-fx.js?v=9" defer></script>
 <script src="/assets/js/sticky-header.js?v=2" defer></script>
 <script>
 window.lang = {
