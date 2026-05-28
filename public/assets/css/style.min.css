@@ -20246,14 +20246,13 @@ main.profile {
 /* ================================================================== */
 /*  Interactive background — soft particle/glow canvas                 */
 /* ================================================================== */
-/* Aurora orbs — true background, behind all content. Click-through. */
+/* Starfield — sits in front of bg but behind interactive content. Click-through. */
 #bg-fx {
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 1;               /* in front of body bg, behind cards/text */
     pointer-events: none;
     opacity: 0.9;
-    mix-blend-mode: screen;   /* lifts brand-purple onto dark bg without dimming text */
 }
 @media (prefers-reduced-motion: reduce) {
     #bg-fx {
@@ -20971,15 +20970,18 @@ main.profile {
 /*  Header — bigger nav text + bigger profile button                    */
 /* ==================================================================== */
 @media (min-width: 1024px){
-    /* Nav menu items: larger, bolder */
+    /* Nav menu items: lighter weight, uppercase */
     .header__menu__item > a{
-        font-size:16px !important;
-        font-weight:700 !important;
-        letter-spacing:.005em;
+        font-size:13px !important;
+        font-weight:500 !important;
+        letter-spacing:.08em !important;
+        text-transform:uppercase !important;
     }
     .header__menu__pill{
-        font-size:16px !important;
-        font-weight:700 !important;
+        font-size:13px !important;
+        font-weight:500 !important;
+        letter-spacing:.08em !important;
+        text-transform:uppercase !important;
         padding:11px 18px !important;
     }
     .header__menu__pill-spark,
@@ -20987,12 +20989,14 @@ main.profile {
         width:16px !important;height:16px !important;
     }
 
-    /* Profile (login) pill — taller, larger label */
+    /* Profile (login) pill — uppercase, lighter weight */
     .header__login{
         height:56px !important;
         padding:0 26px 0 22px !important;
-        font-size:16px !important;
-        font-weight:700 !important;
+        font-size:13px !important;
+        font-weight:500 !important;
+        letter-spacing:.08em !important;
+        text-transform:uppercase !important;
         gap:10px !important;
     }
     .header__login .btn__icon{

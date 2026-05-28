@@ -1,9 +1,11 @@
 /* =====================================================================
-   bg-fx — soft drifting gradient orbs, ONLY at edges/corners
-   - DISABLED on mobile (<768px) to keep scroll smooth
-   - 4 large soft radial blobs anchored at the corners, drifting locally
-   - Center of viewport stays clean — no orbs cover content
-   - pointer-events: none — clicks pass through
+   bg-fx — premium starfield (subtle, calm)
+   - DISABLED on mobile (<768px) for performance + scroll smoothness
+   - ~90 tiny stars with independent slow twinkle
+   - A handful of "feature" stars get a soft glow halo
+   - Very slight downward parallax drift for depth
+   - Mouse passes through; nearby stars subtly brighten on hover
+   - pointer-events: none — clicks pass through everything
    ===================================================================== */
 (function(){
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -14,8 +16,9 @@
     document.documentElement.appendChild(canvas);
     var ctx = canvas.getContext('2d');
 
-    var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.25);
-    var orbs = [];
+    var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    var stars = [];
+    var mouse = { x: -9999, y: -9999, active: false };
     var running = true;
     var t0 = performance.now();
 
@@ -31,40 +34,27 @@
 
     function rand(a, b){ return a + Math.random() * (b - a); }
 
-    function makeOrbs(){
-        // Brand palette — purples
-        var palette = [
-            [148, 104, 255],   // #9468ff — brand purple
-            [124, 82, 240],    // deeper purple
-            [180, 145, 255],   // lighter lavender
-            [90, 60, 200]      // dark accent
-        ];
-        // Anchor each orb to a CORNER. Small amplitude → drifts only locally,
-        // never crosses into the central content area.
-        var anchors = [
-            { cx: 0.08, cy: 0.10 },  // top-left
-            { cx: 0.92, cy: 0.08 },  // top-right
-            { cx: 0.06, cy: 0.92 },  // bottom-left
-            { cx: 0.94, cy: 0.90 }   // bottom-right
-        ];
-        orbs = [];
-        for (var i = 0; i < 4; i++){
-            var a = anchors[i];
-            var c = palette[i % palette.length];
-            orbs.push({
-                cx: a.cx,
-                cy: a.cy,
-                ax: rand(0.04, 0.08),       // tiny local drift
-                ay: rand(0.04, 0.08),
-                fx: rand(0.000015, 0.000035),
-                fy: rand(0.000015, 0.000035),
-                phx: rand(0, Math.PI * 2),
-                phy: rand(0, Math.PI * 2),
-                radius: rand(320, 480),
-                color: c,
-                baseAlpha: rand(0.20, 0.32),
-                pulseSpeed: rand(0.0003, 0.0006),
-                pulsePhase: rand(0, Math.PI * 2)
+    function makeStars(){
+        stars = [];
+        var area = W * H;
+        var count = Math.min(140, Math.max(50, Math.round(area / 18000)));
+        for (var i = 0; i < count; i++){
+            var feature = Math.random() < 0.08;     // ~8% are bright "feature" stars
+            stars.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                r: feature ? rand(1.4, 2.1) : rand(0.5, 1.2),
+                base: feature ? rand(0.45, 0.75) : rand(0.18, 0.42),
+                feature: feature,
+                // Independent slow twinkle
+                twinkleSpeed: rand(0.0004, 0.0011),
+                twinklePhase: rand(0, Math.PI * 2),
+                twinkleDepth: rand(0.35, 0.65),
+                // Slight tint variation — mostly white, some lavender
+                hue: Math.random() < 0.25 ? 'lavender' : 'white',
+                // Parallax drift (very gentle, mostly downward)
+                vy: rand(0.015, 0.05),
+                vx: rand(-0.012, 0.012)
             });
         }
     }
@@ -75,39 +65,68 @@
 
         ctx.clearRect(0, 0, W, H);
 
-        for (var i = 0; i < orbs.length; i++){
-            var o = orbs[i];
-            var x = (o.cx + Math.sin(t * o.fx + o.phx) * o.ax) * W;
-            var y = (o.cy + Math.cos(t * o.fy + o.phy) * o.ay) * H;
-            var pulse = 0.85 + 0.15 * Math.sin(t * o.pulseSpeed + o.pulsePhase);
-            var alpha = o.baseAlpha * pulse;
+        for (var i = 0; i < stars.length; i++){
+            var s = stars[i];
 
-            var g = ctx.createRadialGradient(x, y, 0, x, y, o.radius);
-            g.addColorStop(0,    'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',' + alpha + ')');
-            g.addColorStop(0.45, 'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',' + (alpha * 0.3) + ')');
-            g.addColorStop(1,    'rgba(' + o.color[0] + ',' + o.color[1] + ',' + o.color[2] + ',0)');
-            ctx.fillStyle = g;
+            // drift
+            s.x += s.vx;
+            s.y += s.vy;
+            if (s.y > H + 5)  { s.y = -5; s.x = Math.random() * W; }
+            if (s.y < -5)     { s.y = H + 5; }
+            if (s.x > W + 5)  s.x = -5;
+            if (s.x < -5)     s.x = W + 5;
+
+            // twinkle
+            var pulse = 1 - s.twinkleDepth * (0.5 - 0.5 * Math.cos(t * s.twinkleSpeed + s.twinklePhase));
+            var alpha = s.base * pulse;
+
+            // mouse proximity glow boost
+            if (mouse.active){
+                var dx = mouse.x - s.x, dy = mouse.y - s.y;
+                var d2 = dx*dx + dy*dy;
+                if (d2 < 16000){
+                    var prox = 1 - d2 / 16000;
+                    alpha += prox * 0.25;
+                }
+            }
+
+            var rgb = s.hue === 'lavender'
+                ? '190,170,255'
+                : '230,230,250';
+
+            // feature stars: soft halo
+            if (s.feature){
+                var halo = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 6);
+                halo.addColorStop(0, 'rgba(' + rgb + ',' + (alpha * 0.45) + ')');
+                halo.addColorStop(0.4, 'rgba(' + rgb + ',' + (alpha * 0.12) + ')');
+                halo.addColorStop(1, 'rgba(' + rgb + ',0)');
+                ctx.fillStyle = halo;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r * 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // crisp core
+            ctx.fillStyle = 'rgba(' + rgb + ',' + Math.min(alpha, 1) + ')';
             ctx.beginPath();
-            ctx.arc(x, y, o.radius, 0, Math.PI * 2);
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        // Cut out the central viewport area — guarantees content stays clean
-        // even if a large orb's gradient bleeds toward middle.
-        ctx.globalCompositeOperation = 'destination-out';
-        var cx = W / 2, cy = H / 2;
-        var rOuter = Math.min(W, H) * 0.55;
-        var rInner = Math.min(W, H) * 0.18;
-        var cut = ctx.createRadialGradient(cx, cy, rInner, cx, cy, rOuter);
-        cut.addColorStop(0,   'rgba(0,0,0,1)');
-        cut.addColorStop(0.7, 'rgba(0,0,0,0.55)');
-        cut.addColorStop(1,   'rgba(0,0,0,0)');
-        ctx.fillStyle = cut;
-        ctx.fillRect(0, 0, W, H);
-        ctx.globalCompositeOperation = 'source-over';
-
         requestAnimationFrame(step);
     }
+
+    function getOffset(){
+        var r = canvas.getBoundingClientRect();
+        return { x: r.left, y: r.top, sx: r.width / W || 1, sy: r.height / H || 1 };
+    }
+    function onMove(e){
+        var o = getOffset();
+        mouse.x = (e.clientX - o.x) / o.sx;
+        mouse.y = (e.clientY - o.y) / o.sy;
+        mouse.active = true;
+    }
+    function onLeave(){ mouse.active = false; }
 
     window.addEventListener('resize', function(){
         if (window.innerWidth < 768){
@@ -118,15 +137,17 @@
         canvas.style.display = '';
         running = true;
         resize();
-        makeOrbs();
+        makeStars();
         requestAnimationFrame(step);
     });
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mouseleave', onLeave);
     document.addEventListener('visibilitychange', function(){
         running = !document.hidden;
         if (running) requestAnimationFrame(step);
     });
 
     resize();
-    makeOrbs();
+    makeStars();
     requestAnimationFrame(step);
 })();
