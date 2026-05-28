@@ -19930,11 +19930,16 @@ main.profile {
     background-color: rgba(132, 86, 255, 0.16) !important;
     border-color: rgba(132, 86, 255, 0.4) !important;
 }
+/* FAQ answer body — defaults only. NO !important + no wildcard inherit
+   so admin rich-text (inline styles like font-size, color) can override. */
 .faq .accordion__body__content {
-    color: rgba(255, 255, 255, 0.6) !important;
-    font-size: 14px !important;
-    line-height: 1.55 !important;
+    color: rgba(255, 255, 255, .7);
+    font-family: "Mazzard H", "Mazzard M", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
 }
+.faq .accordion__body__content p{margin:0 0 8px}
+.faq .accordion__body__content p:last-child{margin-bottom:0}
 .faq__title {
     font-family: "Mazzard M", sans-serif;
     font-weight: 700;
@@ -20246,13 +20251,17 @@ main.profile {
 /* ================================================================== */
 /*  Interactive background — soft particle/glow canvas                 */
 /* ================================================================== */
-/* Starfield — sits in front of bg but behind interactive content. Click-through. */
+/* Starfield — true background, behind ALL content. Click-through. */
+/* Trick: page bg moves to <html>, <body> becomes transparent.
+   Canvas at z:-1 paints between html-bg and body content. */
+html{ background-color:#0a0e15 !important }
+body{ background-color:transparent !important }
 #bg-fx {
     position: fixed;
     inset: 0;
-    z-index: 1;               /* in front of body bg, behind cards/text */
+    z-index: -1 !important;
     pointer-events: none;
-    opacity: 0.9;
+    opacity: 0.85;
 }
 @media (prefers-reduced-motion: reduce) {
     #bg-fx {
@@ -20341,36 +20350,38 @@ main.profile {
     padding-bottom: 24px; /* breathing room so shadow isn't cut */
 }
 
-/* Restyle the section-more-btn (used on home catalog + reviews) */
+/* Section-more-btn — bigger, Mazzard H font (NOT uppercase), neon only on hover */
 .section-more-btn {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 12px !important;
-    padding: 16px 34px !important;
+    gap: 14px !important;
+    padding: 20px 44px !important;
     background: linear-gradient(180deg, #9468ff 0%, #7a4eff 100%) !important;
     border: 0 !important;
     border-radius: 999px !important;
-    font-family: "Mazzard M", sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 15px !important;
+    font-family: "Mazzard H", "Mazzard M", sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
     color: #fff !important;
     text-decoration: none !important;
     box-shadow:
-        0 14px 36px rgba(132, 86, 255, 0.38),
-        0 4px 12px rgba(132, 86, 255, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+        0 2px 6px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
     transition:
-        transform 0.18s ease,
-        box-shadow 0.25s ease,
-        filter 0.15s ease !important;
+        transform 0.2s ease,
+        box-shadow 0.3s ease,
+        filter 0.2s ease,
+        background 0.3s ease !important;
     position: relative;
 }
 .section-more-btn:hover {
     transform: translateY(-2px) !important;
     box-shadow:
-        0 20px 44px rgba(132, 86, 255, 0.5),
-        0 6px 16px rgba(132, 86, 255, 0.28),
+        0 18px 44px rgba(132, 86, 255, 0.55),
+        0 6px 18px rgba(132, 86, 255, 0.32),
         inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
     filter: brightness(1.06);
     background: linear-gradient(180deg, #a07cff 0%, #8557ff 100%) !important;
@@ -20379,22 +20390,27 @@ main.profile {
     transform: translateY(0) !important;
 }
 
-/* Arrow icon — clean, slides on hover (replace legacy SVG positioning) */
+/* Arrow icon — clean, slides on hover */
 .section-more-btn img {
-    width: 18px !important;
-    height: 18px !important;
+    width: 20px !important;
+    height: 20px !important;
     object-fit: contain !important;
-    filter: brightness(0) invert(1) !important; /* force white arrow */
+    filter: brightness(0) invert(1) !important;
     transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
 }
 .section-more-btn:hover img {
-    transform: translateX(5px) !important;
+    transform: translateX(6px) !important;
 }
 
 @media (max-width: 600px) {
     .section-more-btn {
-        padding: 14px 24px !important;
-        font-size: 14px !important;
+        padding: 16px 30px !important;
+        font-size: 16px !important;
+        gap: 12px !important;
+    }
+    .section-more-btn img {
+        width: 18px !important;
+        height: 18px !important;
     }
 }
 
@@ -21065,4 +21081,144 @@ main.profile {
     .hero__image{
         bottom:-40px !important;       /* drop a bit below original alignment */
     }
+}
+
+/* ==================================================================== */
+/*  Disable Yandex.Browser image-action overlay (camera/save button)    */
+/* ==================================================================== */
+/* The Yandex camera icon over images is triggered when the image is
+   draggable / selectable. Blocking pointer events + drag + selection on
+   product card images removes the overlay without breaking parent links. */
+.catalog-card__img img,
+.game-card__img img,
+.game-status-block__img img,
+.cheat-block__slider img,
+.rev-card__avatar,
+.hero__image img,
+.game-hero__image img,
+.cheat-card__img img,
+.catalog-card img,
+.header__mega__card-img img,
+.s2-card img{
+    pointer-events:none !important;
+    -webkit-user-drag:none !important;
+    -khtml-user-drag:none !important;
+    -moz-user-drag:none !important;
+    -o-user-drag:none !important;
+    user-drag:none !important;
+    -webkit-user-select:none !important;
+    -moz-user-select:none !important;
+    -ms-user-select:none !important;
+    user-select:none !important;
+    -webkit-touch-callout:none !important;
+}
+
+/* ==================================================================== */
+/*  Catalog-card images — rendered as background-image (no Yandex btn)  */
+/* ==================================================================== */
+/* The Yandex.Browser camera overlay attaches only to <img> tags. We
+   render game thumbnails via CSS background-image instead → overlay
+   never appears. The inline `style="background-image: url(...)"` sets
+   the URL; this block handles sizing. */
+.catalog-card__img{
+    background-size:cover !important;
+    background-position:center !important;
+    background-repeat:no-repeat !important;
+}
+
+/* ==================================================================== */
+/*  1. Header "Каталог читов" pill — center text label                  */
+/* ==================================================================== */
+@media (min-width: 1024px){
+    .header__menu__pill{
+        justify-content:center !important;
+        min-width:180px;
+    }
+    /* Make the LABEL span take the remaining space so it sits in the center
+       between the spark icon (left) and chevron (right) */
+    .header__menu__pill > span:not(.header__menu__pill-spark):not(.header__menu__pill-chev){
+        flex:1 1 auto !important;
+        text-align:center !important;
+    }
+}
+
+/* ==================================================================== */
+/*  2. FAQ title — bigger                                               */
+/* ==================================================================== */
+.faq__title{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:700 !important;
+    font-size:44px !important;
+    letter-spacing:-0.015em !important;
+    line-height:1.12 !important;
+}
+.faq__subtitle{
+    font-size:17px !important;
+    line-height:1.5 !important;
+}
+@media (max-width: 768px){
+    .faq__title{font-size:30px !important}
+    .faq__subtitle{font-size:15px !important}
+}
+
+/* ==================================================================== */
+/*  3. FAQ accordion items — bigger, different font                     */
+/* ==================================================================== */
+.faq .accordion__header__content{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-weight:500 !important;
+    font-size:17px !important;
+    letter-spacing:-0.005em !important;
+    line-height:1.4 !important;
+}
+@media (max-width: 768px){
+    .faq .accordion__header__content{font-size:15px !important}
+}
+
+/* ==================================================================== */
+/*  4. Footer text — uppercase + letter-spacing (match header style)    */
+/* ==================================================================== */
+.footer__menu__item > a,
+.footer__menu .footer__menu__item,
+.footer__bottom-container .footer__menu__item{
+    text-transform:uppercase !important;
+    letter-spacing:.08em !important;
+    font-weight:500 !important;
+    font-family:"Mazzard M", sans-serif !important;
+}
+.footer__copy{
+    text-transform:uppercase !important;
+    letter-spacing:.08em !important;
+}
+.footer__social-btn,
+.footer__social-btn .social-btn__text{
+    text-transform:uppercase !important;
+    letter-spacing:.08em !important;
+    font-weight:500 !important;
+}
+
+/* ==================================================================== */
+/*  Reviews page — bigger hero title                                    */
+/* ==================================================================== */
+.reviews-page__title{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:64px !important;
+    font-weight:700 !important;
+    line-height:1.08 !important;
+    letter-spacing:-0.015em !important;
+}
+.reviews-page__subtitle{
+    font-size:20px !important;
+    line-height:1.5 !important;
+}
+.reviews-page__head{
+    padding-bottom:18px;
+}
+@media (max-width: 1023px){
+    .reviews-page__title{font-size:48px !important}
+    .reviews-page__subtitle{font-size:17px !important}
+}
+@media (max-width: 599px){
+    .reviews-page__title{font-size:34px !important}
+    .reviews-page__subtitle{font-size:15px !important}
 }

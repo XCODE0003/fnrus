@@ -49,9 +49,7 @@
                    data-name="{{ \Str::lower($card->title) }}"
                    data-count="{{ (int) $card->count_products }}"
                    data-id="{{ (int) $card->id }}">
-                    <div class="catalog-card__img">
-                        <img src="/{{ $card->image_site }}" alt="" loading="lazy">
-                    </div>
+                    <div class="catalog-card__img" role="img" aria-label="{{ $card->title }}" style="background-image:url('/{{ $card->image_site }}')"></div>
                     <div class="catalog-card__body">
                         <div class="catalog-card__name">{{ $card->title }}</div>
                         <div class="catalog-card__tags">

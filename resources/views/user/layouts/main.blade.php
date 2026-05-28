@@ -32,6 +32,10 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- Suppress Yandex Browser image overlay (camera/search) + image indexing --}}
+    <meta name="yandex" content="noimageindex">
+    <meta name="robots" content="noimageindex">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -40,7 +44,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.8.1">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.8.5">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">

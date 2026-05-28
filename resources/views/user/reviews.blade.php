@@ -40,9 +40,12 @@
             <div class="reviews-form" id="reviews-form">
                 <p class="reviews-form__title">{{ __('site.btn_leave_review') }}</p>
                 <div class="reviews-form__grid">
+                    {{-- Honeypots to absorb browser autofill (Chrome/Yandex ignore autocomplete=off) --}}
+                    <input type="text" name="fake_user_email" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+                    <input type="password" name="fake_user_pass" autocomplete="current-password" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                     <div class="reviews-form__field">
                         <label class="reviews-form__label" for="rv-author">{{ __('site.review_form_name') }} <span>*</span></label>
-                        <input type="text" id="rv-author" class="reviews-form__input" placeholder="{{ __('site.review_form_name_ph') }}" maxlength="64" autocomplete="off">
+                        <input type="text" id="rv-author" name="rv_review_display_name" class="reviews-form__input" placeholder="{{ __('site.review_form_name_ph') }}" maxlength="64" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
                     <div class="reviews-form__field">
                         <label class="reviews-form__label">{{ __('site.review_form_product') }}</label>
@@ -53,10 +56,10 @@
                                 <svg class="rv-select__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
                             <div class="rv-select__menu" role="listbox" hidden>
-                                @foreach($categories ?? [] as $cat)
-                                    <button type="button" class="rv-select__option" role="option" data-value="{{ $cat->alias ?? $cat->title }}" data-label="{{ $cat->title }}">
+                                @foreach($products ?? [] as $product)
+                                    <button type="button" class="rv-select__option" role="option" data-value="{{ $product->title }}" data-label="{{ $product->title }}">
                                         <span class="rv-select__dot"></span>
-                                        {{ $cat->title }}
+                                        {{ $product->title }}
                                     </button>
                                 @endforeach
                             </div>
