@@ -8,7 +8,7 @@ return [
     "hero_title_1" => "Exclusive",
     "hero_title_2" => "cheats<br>for mobile<br>and PC games",
     "hero_subtitle" => "We take pride in offering high-quality and reliable cheats for your devices.",
-    "hero_btn_catalog" => "Cheats catalog",
+    "hero_btn_catalog" => "Games catalog",
     "hero_btn_register" => "Register",
     "text_all_rights_reserved" => "All rights reserved",
     "footer_tg_bot" => "Telegram bot",

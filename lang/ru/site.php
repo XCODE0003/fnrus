@@ -8,7 +8,7 @@ return [
     "hero_title_1" => "Эксклюзивные",
     "hero_title_2" => "читы<br>для мобильных<br>и компьютерных игр",
     "hero_subtitle" => "Мы гордимся тем, что предлагаем высококачественные и надежные читы для ваших устройств.",
-    "hero_btn_catalog" => "Каталог читов",
+    "hero_btn_catalog" => "Каталог игр",
     "hero_btn_register" => "Регистрация",
     "text_all_rights_reserved" => "Все права защищены",
     "footer_tg_bot" => "Telegram-бот",

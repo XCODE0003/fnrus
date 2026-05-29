@@ -11,10 +11,10 @@
                 <h1 class="hero__title">{{ __('site.hero_title_1') }}<span class="hero__title-bolt"><img src="/assets/img/icon_lightning.svg" alt=""></span>{!! __('site.hero_title_2') !!}</h1>
                 <p class="hero__subtitle">{{ __('site.hero_subtitle') }}</p>
                 <div class="hero__actions">
-                    <button type="button" class="hero__btn-catalog" data-scroll=".catalog">
+                    <a href="/games" class="hero__btn-catalog">
                         <span class="hero__btn-catalog__tab"><img src="/assets/img/hero-catalog.svg" alt=""></span>
                         <span class="hero__btn-catalog__label">{{ __('site.hero_btn_catalog') }}</span>
-                    </button>
+                    </a>
                     <button type="button" class="hero__btn-register" data-popup="register" id="register">
                         <span class="hero__btn-register__icon"><img src="/assets/img/icon_2.svg" alt=""></span>
                         <span class="name">{{ __('site.hero_btn_register') }}</span>
