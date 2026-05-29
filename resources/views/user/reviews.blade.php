@@ -95,6 +95,7 @@
             {{-- ==== Existing reviews grid ==== --}}
             @if(count($reviews))
             <div class="reviews-grid">
+                @foreach($reviews as $review)
                 @php
                     // 1-2 letter initials from author name
                     $initials = collect(preg_split('/\s+/u', trim($review->author ?? '')))

@@ -44,7 +44,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=2.8.7">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=3.0.1">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -140,7 +140,7 @@
                     <button type="button" class="header__menu__pill" aria-haspopup="true" aria-expanded="false">
                         <span>{{ __('site.item_catalog') }}</span>
                         <span class="header__menu__pill-chev" aria-hidden="true">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                     </button>
                     <div class="header__mega" role="menu">
@@ -723,7 +723,7 @@
     <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
 </div>
 
-<script src="/assets/js/scripts.min.js?54"></script>
+<script src="/assets/js/scripts.min.js?55"></script>
 <script src="/assets/js/animations.js?v=16"></script>
 <script src="/assets/js/bg-fx.js?v=10" defer></script>
 <script src="/assets/js/sticky-header.js?v=2" defer></script>
@@ -801,6 +801,6 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
     });
 })();
 </script>
-<script src="/assets/js/app.js?v=3.5"></script>
+<script src="/assets/js/app.js?v=3.6"></script>
 </body>
 </html>

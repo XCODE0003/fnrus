@@ -10946,7 +10946,6 @@ html.ios .js-carousel {
 
 .game-hero__back::before {
     content: "\2190";
-    margin-right: 8px;
 }
 
 .game-hero__back:hover {
@@ -13722,19 +13721,19 @@ body:has(.popup._active.popup--pay) .support-bubble {
     padding-right: 48px;
 }
 
-/* Restore the subtle purple glow + soft inner highlight that was there before */
+/* Subtle purple glow + soft inner highlight (toned down per request) */
 .popup--pay #body {
     background:
         radial-gradient(
             ellipse 90% 60% at 50% 0%,
-            rgba(132, 86, 255, 0.1),
+            rgba(132, 86, 255, 0.05),
             transparent 70%
         ),
         linear-gradient(180deg, #1a2230 0%, #161c27 100%) !important;
     box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.05) inset,
-        0 0 0 1px rgba(132, 86, 255, 0.1),
-        0 0 60px -10px rgba(132, 86, 255, 0.35),
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 0 0 1px rgba(132, 86, 255, 0.07),
+        0 0 28px -14px rgba(132, 86, 255, 0.18),
         0 30px 80px -20px rgba(0, 0, 0, 0.75) !important;
     border-radius: 20px !important;
     overflow: hidden;
@@ -15959,34 +15958,39 @@ body {
 /*  Catalog cards on index — horizontal on mobile (match /games style) */
 /* ================================================================== */
 @media (max-width: 599px) {
+    /* Wide vertical cards (like desktop): image on top, body below, one per row */
     .catalog__cards-container {
         grid-template-columns: 1fr !important;
-        gap: 12px !important;
+        gap: 16px !important;
     }
     .catalog-card {
-        flex-direction: row !important;
-        align-items: stretch;
-        border-radius: 14px;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        border-radius: 18px;
         overflow: hidden;
-        background: linear-gradient(180deg, #1d2533 0%, #171d28 100%);
+        background-color: #171d28;
         border: 1px solid rgba(255, 255, 255, 0.05);
+        /* Smooth lift + shadow transition — matches desktop feel */
         transition:
-            transform 0.2s ease,
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+            transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+            border-color 0.3s ease,
+            box-shadow 0.3s ease !important;
+        will-change: transform;
     }
-    .catalog-card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(132, 86, 255, 0.35);
-        box-shadow: 0 14px 30px -16px rgba(132, 86, 255, 0.5);
+    .catalog-card:hover,
+    .catalog-card:active {
+        transform: translateY(-6px) !important;
+        border-color: rgba(132, 86, 255, 0.32);
+        box-shadow: 0 22px 44px -20px rgba(132, 86, 255, 0.55),
+                    0 10px 24px -16px rgba(0, 0, 0, 0.6);
     }
     .catalog-card__img {
-        width: 118px !important;
+        width: 100% !important;
         height: auto !important;
-        aspect-ratio: auto !important;
+        aspect-ratio: 16 / 9 !important;
         flex-shrink: 0;
         border-radius: 0 !important;
-        background: #0f141c;
+        background: #10151e;
         overflow: hidden;
         position: relative;
     }
@@ -15994,62 +15998,80 @@ body {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
+        object-position: center !important;
         display: block;
+        transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
+    .catalog-card:hover .catalog-card__img img,
+    .catalog-card:active .catalog-card__img img {
+        transform: scale(1.05);
+    }
+    /* Bottom fade-into-card gradient — same as desktop */
     .catalog-card__img::after {
-        display: none !important;
+        content: "" !important;
+        display: block !important;
+        position: absolute;
+        left: 0; right: 0; bottom: -2px;
+        height: 55%;
+        background: linear-gradient(180deg, rgba(23, 29, 40, 0) 0%, #171d28 92%) !important;
+        pointer-events: none;
     }
+    /* Arrow slides on tap/hover — like desktop */
+    .catalog-card:hover .catalog-card__more img,
+    .catalog-card:active .catalog-card__more img {
+        transform: translateX(5px);
+    }
+    .catalog-card__more img { transition: transform 0.25s cubic-bezier(0.2,0.7,0.2,1); }
     .catalog-card__body {
-        padding: 14px 16px !important;
+        padding: 18px 18px 20px !important;
         flex: 1;
         min-width: 0;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 4px;
     }
     .catalog-card__name {
-        font-size: 15px !important;
+        font-size: 18px !important;
         line-height: 1.2;
         font-weight: 700;
-        margin-bottom: 6px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        margin-bottom: 8px;
     }
     .catalog-card__tags {
         flex-wrap: wrap;
-        gap: 5px;
-        margin: 4px 0 8px;
+        gap: 8px;
+        margin: 0 0 12px;
     }
     .catalog-card__tag {
-        font-size: 11px !important;
-        padding: 3px 8px !important;
-        border-radius: 6px;
+        font-size: 12px !important;
+        padding: 5px 10px !important;
+        border-radius: 8px;
     }
     .catalog-card__tag img {
-        width: 10px !important;
-        height: 10px !important;
-        margin-right: 4px;
+        width: 12px !important;
+        height: 12px !important;
+        margin-right: 5px;
     }
     .catalog-card__desc {
-        display: none !important;
+        display: block !important;
+        font-size: 13px !important;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0 0 12px;
     }
     .catalog-card__more {
-        font-size: 12px !important;
+        font-size: 13px !important;
         margin-top: auto;
         color: #b59aff;
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
         text-transform: uppercase;
         letter-spacing: 0.04em;
         font-weight: 700;
     }
     .catalog-card__more img {
-        width: 12px !important;
-        height: 12px !important;
+        width: 14px !important;
+        height: 14px !important;
     }
 }
 
@@ -17360,7 +17382,6 @@ input.profile__tab:checked + .profile__tab__label {
 .game-hero__back::before {
     content: "←";
     font-size: 14px;
-    margin-right: 2px;
 }
 
 .game-hero__image {
@@ -17605,8 +17626,7 @@ input.profile__tab:checked + .profile__tab__label {
     margin-bottom: 18px;
 }
 .footer__logo img {
-    width: 44px;
-    height: 44px;
+    height: 115px;
     object-fit: contain;
 }
 .footer__menu {
@@ -21393,4 +21413,1031 @@ img.rev-card__avatar{display:none !important}
     .game-list__platform span{font-size:20px !important}
     .game-list__platform-icon{width:20px !important;height:22px !important}
     .game-list__arrows .slider-arrows__arrow{width:40px !important;height:40px !important;border-radius:10px !important}
+}
+
+/* ==================================================================== */
+/*  About page — bigger typography + better font hierarchy              */
+/* ==================================================================== */
+
+/* 1. Hero title "МЫ ПРЕДЛАГАЕМ ЧИТЫ ДЛЯ MOBILE И ПК ИГР" */
+.about-heading-section__section-caption{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:56px !important;
+    font-weight:700 !important;
+    line-height:1.08 !important;
+    letter-spacing:-0.015em !important;
+}
+.about-heading-section__section-subcaption{
+    font-size:17px !important;
+    line-height:1.55 !important;
+    color:rgba(255,255,255,.55) !important;
+    margin-top:18px !important;
+}
+@media (max-width: 1023px){
+    .about-heading-section__section-caption{font-size:40px !important}
+    .about-heading-section__section-subcaption{font-size:15px !important}
+}
+@media (max-width: 599px){
+    .about-heading-section__section-caption{font-size:28px !important}
+    .about-heading-section__section-subcaption{font-size:14px !important}
+}
+
+/* 2. Long paragraph "За долгие годы работы..." */
+.about-section__text{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-size:17px !important;
+    line-height:1.7 !important;
+    color:rgba(255,255,255,.68) !important;
+    margin-top:22px !important;
+}
+.about-section__text p{margin:0 0 14px}
+.about-section__text p:last-child{margin-bottom:0}
+@media (max-width: 599px){
+    .about-section__text{font-size:15px !important;line-height:1.6 !important}
+}
+
+/* 3. Catalog block "Мы предлагаем продукты для таких игр как:" */
+.about-page .section-caption-container .section-caption,
+.about-page .catalog .section-caption{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:38px !important;
+    font-weight:700 !important;
+    line-height:1.15 !important;
+    letter-spacing:-0.012em !important;
+}
+@media (max-width: 1023px){
+    .about-page .catalog .section-caption{font-size:28px !important}
+}
+@media (max-width: 599px){
+    .about-page .catalog .section-caption{font-size:22px !important}
+}
+
+/* 4. Social-cards row (Telegram канал / Наши отзывы / ...) — fix font */
+.about-contact__label{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:600 !important;
+    font-size:15px !important;
+    letter-spacing:-0.005em !important;
+    color:#fff !important;
+}
+.about-contact__value{
+    font-family:"Mazzard M", sans-serif !important;
+    font-weight:500 !important;
+    font-size:12px !important;
+    letter-spacing:.08em !important;
+    text-transform:uppercase !important;
+    color:rgba(255,255,255,.5) !important;
+    margin-top:4px;
+}
+@media (max-width: 599px){
+    .about-contact__label{font-size:14px !important}
+    .about-contact__value{font-size:11px !important}
+}
+
+/* ==================================================================== */
+/*  Category page hero (/Pubg-Mobile etc.) — bigger title + HACKEXE-vibe */
+/* ==================================================================== */
+.game-hero{
+    padding:72px 0 56px !important;
+}
+.game-hero__inner{gap:60px !important;align-items:flex-start !important}
+.game-hero__text{flex:1 1 0;min-width:0}
+
+/* Big display title */
+.game-hero__title{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:clamp(36px, 5.5vw, 64px) !important;
+    font-weight:700 !important;
+    line-height:1.05 !important;
+    letter-spacing:-0.02em !important;
+    margin:0 0 22px !important;
+    color:#fff !important;
+}
+.game-hero__title-dim{
+    color:rgba(255,255,255,.32) !important;
+    font-weight:700 !important;
+    display:inline;
+}
+
+/* Body text */
+.game-hero__desc{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-size:17px !important;
+    line-height:1.6 !important;
+    color:rgba(255,255,255,.65) !important;
+    max-width:560px;
+    margin:0 0 26px !important;
+}
+
+/* Stats row — count chip + back link sit on the same line, like screen 2 */
+.game-hero__count,
+.game-hero__back{
+    display:inline-flex !important;align-items:center !important;
+    height:38px;line-height:1;
+    padding:0 16px !important;
+    border-radius:999px !important;
+    font-family:"Mazzard M", sans-serif !important;
+    font-weight:600 !important;
+    font-size:13px !important;
+    letter-spacing:.06em !important;
+    text-transform:uppercase !important;
+    text-decoration:none !important;
+    transition:background .2s, border-color .2s, color .2s, transform .15s !important;
+    vertical-align:middle;
+}
+.game-hero__count{
+    background:rgba(132,86,255,.14) !important;
+    border:1px solid rgba(132,86,255,.32) !important;
+    color:#cbb6ff !important;
+    margin-right:10px !important;
+}
+.game-hero__back{
+    margin-left:0 !important;
+    background:transparent !important;
+    border:1px solid rgba(255,255,255,.10) !important;
+    color:rgba(255,255,255,.72) !important;
+    gap:8px !important;
+}
+.game-hero__back::before{
+    content:"←";font-size:14px;line-height:1;
+    transform:translateX(0);
+    transition:transform .2s ease;
+}
+.game-hero__back:hover{
+    background:rgba(132,86,255,.10) !important;
+    border-color:rgba(132,86,255,.32) !important;
+    color:#fff !important;
+}
+.game-hero__back:hover::before{transform:translateX(-3px)}
+
+/* Image — keep proportion stable, soft mask edges, no harsh PNG bg */
+.game-hero__image{
+    flex:0 0 38% !important;
+    max-width:420px !important;
+    margin:0 !important;
+}
+.game-hero__image img{
+    width:100% !important;height:auto !important;
+    -webkit-mask-image:radial-gradient(ellipse 70% 75% at 50% 50%, #000 50%, rgba(0,0,0,.4) 80%, rgba(0,0,0,0) 100%);
+    mask-image:radial-gradient(ellipse 70% 75% at 50% 50%, #000 50%, rgba(0,0,0,.4) 80%, rgba(0,0,0,0) 100%);
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+}
+
+@media (max-width: 1023px){
+    .game-hero{padding:54px 0 40px !important}
+    .game-hero__inner{gap:32px !important;flex-direction:column-reverse}
+    .game-hero__image{flex:0 0 auto !important;max-width:320px !important;margin:0 auto !important}
+    .game-hero__title{font-size:36px !important}
+    .game-hero__desc{font-size:15px !important}
+}
+@media (max-width: 599px){
+    .game-hero{padding:36px 0 28px !important}
+    .game-hero__title{font-size:28px !important;margin-bottom:14px !important}
+    .game-hero__desc{font-size:14px !important;margin-bottom:18px !important}
+    .game-hero__count,
+    .game-hero__back{height:34px;font-size:12px !important;padding:0 14px !important}
+    .game-hero__image{max-width:240px !important}
+}
+
+/* ==================================================================== */
+/*  Bring back plain black background (user request)                    */
+/* ==================================================================== */
+html{ background-color:#0e0c16 !important }
+body{ background-color:transparent !important }
+/* #bg-fx canvas already z:-1 so stars still visible against the black */
+
+/* ==================================================================== */
+/*  /games — "Каталог игр" hero title bigger                            */
+/* ==================================================================== */
+.games-catalog__title{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:56px !important;
+    font-weight:700 !important;
+    line-height:1.08 !important;
+    letter-spacing:-0.015em !important;
+}
+.games-catalog__subtitle{
+    font-size:17px !important;
+    line-height:1.55 !important;
+}
+@media (max-width: 1023px){
+    .games-catalog__title{font-size:40px !important}
+    .games-catalog__subtitle{font-size:15px !important}
+}
+@media (max-width: 599px){
+    .games-catalog__title{font-size:28px !important}
+    .games-catalog__subtitle{font-size:14px !important}
+}
+
+/* ==================================================================== */
+/*  Cheat page — Функционал cards bigger + Mazzard H                    */
+/* ==================================================================== */
+.cheat-functions__caption,
+.cheat-functions .cheat-functions__caption{
+    font-family:"Mazzard H", sans-serif !important;
+    font-size:34px !important;
+    font-weight:700 !important;
+    letter-spacing:-0.012em !important;
+}
+.cheat-functions__block__name-panel{
+    font-size:15px !important;
+}
+.cheat-functions__block__name-panel span{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:600 !important;
+    font-size:15px !important;
+    letter-spacing:.04em !important;
+    text-transform:uppercase !important;
+}
+.cheat-functions__block__list{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-size:15px !important;
+    line-height:1.6 !important;
+}
+.cheat-functions__block__list li{
+    font-size:15px !important;
+    line-height:1.6 !important;
+    color:rgba(255,255,255,.78) !important;
+    padding:2px 0;
+}
+@media (max-width: 599px){
+    .cheat-functions__caption{font-size:24px !important}
+    .cheat-functions__block__list li{font-size:14px !important}
+}
+
+/* ==================================================================== */
+/*  Category page (/{game}) — premium hero v2 (HACKEXE-style)           */
+/* ==================================================================== */
+.game-hero{
+    position:relative;
+    padding:120px 0 60px !important;
+}
+.game-hero__inner{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:60px !important;
+}
+.game-hero__text{
+    flex:1 1 auto;
+    max-width:680px;
+    position:relative;z-index:2;
+}
+
+/* Breadcrumb */
+.game-hero__crumbs{
+    display:flex;align-items:center;gap:8px;
+    font-family:"Mazzard M",sans-serif;
+    font-size:13px;font-weight:500;
+    color:rgba(255,255,255,.4);
+    margin-bottom:22px;
+}
+.game-hero__crumbs a{
+    color:rgba(255,255,255,.5);
+    text-decoration:none;
+    transition:color .15s ease;
+}
+.game-hero__crumbs a:hover{color:#fff}
+.game-hero__crumbs-sep{
+    color:rgba(255,255,255,.25);
+    margin:0 2px;
+}
+.game-hero__crumbs-current{
+    color:rgba(255,255,255,.8);
+}
+
+/* Title — big, with dim parenthetical */
+.game-hero__title{
+    font-family:"Mazzard H",sans-serif !important;
+    font-size:54px !important;
+    font-weight:700 !important;
+    line-height:1.08 !important;
+    letter-spacing:-0.018em !important;
+    color:#fff !important;
+    margin:0 0 20px !important;
+}
+.game-hero__title-dim{
+    color:rgba(255,255,255,.32) !important;
+    font-weight:700 !important;
+    margin-left:8px;
+}
+
+/* Description */
+.game-hero__desc{
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:16px !important;
+    font-weight:500 !important;
+    line-height:1.6 !important;
+    color:rgba(255,255,255,.62) !important;
+    margin:0 0 22px !important;
+    max-width:560px;
+}
+
+/* Stats row — count · undetected · delivery · support */
+.game-hero__stats{
+    display:flex !important;align-items:center !important;
+    flex-wrap:wrap !important;gap:0 !important;
+    list-style:none !important;
+    margin:0 0 22px !important;padding:0 !important;
+}
+.game-hero__stat{
+    display:inline-flex !important;align-items:center !important;
+    gap:8px;
+    padding:6px 16px;
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:13px !important;font-weight:500 !important;
+    color:rgba(255,255,255,.62) !important;
+    position:relative;
+    white-space:nowrap;
+}
+.game-hero__stat svg{flex-shrink:0;opacity:.7}
+.game-hero__stat:not(:last-child)::after{
+    content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);
+    width:3px;height:3px;border-radius:50%;
+    background:rgba(255,255,255,.22);
+}
+.game-hero__stat:first-child{padding-left:0}
+.game-hero__stat--badge{
+    color:#8af59b !important;
+}
+.game-hero__stat--badge svg{opacity:1}
+
+/* Back button */
+.game-hero__back{
+    display:inline-flex !important;align-items:center !important;gap:8px;
+    margin-top:0 !important;
+    padding:0 !important;
+    background:transparent !important;
+    border:0 !important;
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:12px !important;font-weight:600 !important;
+    color:rgba(255,255,255,.5) !important;
+    text-transform:uppercase !important;
+    letter-spacing:.10em !important;
+    text-decoration:none !important;
+    transition:color .18s ease;
+}
+.game-hero__back:hover{color:#fff !important}
+.game-hero__back svg{transition:transform .2s ease}
+.game-hero__back:hover svg{transform:translateX(-2px)}
+
+/* Image — character on the right */
+.game-hero__image{
+    flex:0 0 40% !important;
+    max-width:480px !important;
+    position:relative;
+}
+.game-hero__image img{
+    display:block;width:100%;height:auto;
+    object-fit:contain;
+}
+
+@media (max-width: 1023px){
+    .game-hero{padding:90px 0 40px !important}
+    .game-hero__inner{gap:32px !important}
+    .game-hero__title{font-size:42px !important}
+    .game-hero__desc{font-size:15px !important}
+    .game-hero__image{flex:0 0 36% !important;max-width:360px !important}
+}
+@media (max-width: 768px){
+    .game-hero{padding:84px 0 32px !important}
+    .game-hero__inner{flex-direction:column !important;text-align:left;gap:24px !important}
+    .game-hero__text{max-width:none}
+    .game-hero__title{font-size:32px !important}
+    .game-hero__stats{justify-content:flex-start}
+    .game-hero__image{display:none !important}     /* hide image on mobile */
+}
+@media (max-width: 480px){
+    .game-hero__title{font-size:26px !important}
+    .game-hero__desc{font-size:14px !important}
+    .game-hero__stat{font-size:12px !important;padding:6px 12px}
+}
+
+/* ==================================================================== */
+/*  Footer logo — large per request                                     */
+/* ==================================================================== */
+.footer__logo img{ height:115px !important; width:auto !important }
+@media (max-width: 599px){
+    .footer__logo img{ height:84px !important }
+}
+
+/* ==================================================================== */
+/*  Cheat page — Функционал cards bigger + readable                     */
+/* ==================================================================== */
+.cheat-functions__slider,
+.cheat-functions .swiper{
+    overflow:visible;
+}
+.cheat-functions__block{
+    min-height:340px !important;
+    padding:0 !important;
+}
+.cheat-functions__block__name-panel{
+    padding:18px 22px !important;
+    min-height:58px !important;
+    display:flex !important;align-items:center !important;
+}
+.cheat-functions__block__name-panel span{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:700 !important;
+    font-size:16px !important;
+    letter-spacing:.04em !important;
+    text-transform:uppercase !important;
+}
+.cheat-functions__block__scroll-container{
+    padding:14px 22px 20px !important;
+}
+.cheat-functions__block__list li{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-size:16px !important;
+    line-height:1.75 !important;
+    color:rgba(255,255,255,.82) !important;
+    padding:3px 0 !important;
+}
+@media (max-width: 599px){
+    .cheat-functions__block{min-height:280px !important}
+    .cheat-functions__block__list li{font-size:15px !important}
+}
+
+/* ==================================================================== */
+/*  Buy modal — heading/label/button font (Mazzard H, cleaner)          */
+/* ==================================================================== */
+.popup--pay .pay-card__title,
+.popup--pay .popup__caption{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:700 !important;
+    letter-spacing:-0.01em !important;
+}
+.popup--pay .pay-section__label{
+    font-family:"Mazzard M", sans-serif !important;
+    font-weight:600 !important;
+    font-size:12px !important;
+    letter-spacing:.14em !important;
+    text-transform:uppercase !important;
+    color:rgba(255,255,255,.45) !important;
+}
+.popup--pay .pay-btn,
+.popup--pay .pay-btn--primary,
+.popup--pay .pay-btn--secondary{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:600 !important;
+    letter-spacing:.01em !important;
+}
+.popup--pay .pay-option__label{
+    font-family:"Mazzard H", "Mazzard M", sans-serif !important;
+    font-weight:600 !important;
+}
+
+/* ==================================================================== */
+/*  Payment method icon chip — light bg so dark logos stay visible      */
+/* ==================================================================== */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #topup-payments-methods .popup__payment-method__icon{
+    width:40px !important;height:40px !important;
+    border-radius:11px !important;
+    background:#fff !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    padding:6px !important;
+    overflow:hidden;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__icon img,
+.popup--pay #topup-payments-methods .popup__payment-method__icon img{
+    width:100% !important;height:100% !important;
+    object-fit:contain !important;
+}
+/* When icon fails to load — show a neutral card glyph instead of empty box */
+.popup--pay .popup__payment-method__icon.is-empty{
+    background:rgba(132,86,255,.16) !important;
+    border-color:rgba(132,86,255,.3) !important;
+    position:relative;
+}
+.popup--pay .popup__payment-method__icon.is-empty::after{
+    content:"";position:absolute;inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='%23cbb6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='5' width='20' height='14' rx='3'/><path d='M2 10h20'/></svg>");
+    background-repeat:no-repeat;background-position:center;background-size:20px;
+}
+/* Bigger name text in payment rows */
+.popup--pay .popup__payment-method__name{
+    font-family:"Mazzard H","Mazzard M",sans-serif !important;
+    font-weight:600 !important;
+    font-size:15px !important;
+}
+
+/* ==================================================================== */
+/*  ABOUT stats — clean even 2×2 bento grid on mobile (kill 60px gaps)  */
+/* ==================================================================== */
+@media (max-width: 767px){
+    .about-section__stats{
+        display:grid !important;
+        grid-template-columns:repeat(2, 1fr) !important;
+        gap:12px !important;
+        max-width:none !important;
+    }
+    .about-section__stat{
+        margin:0 !important;
+        padding:20px 18px !important;
+        background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)) !important;
+        border:1px solid rgba(255,255,255,.06) !important;
+        border-radius:16px !important;
+        border-right:0 !important;
+        text-align:left;
+    }
+    /* Kill all the legacy spacers/dividers/offsets */
+    .about-section__stat:nth-child(1),
+    .about-section__stat:nth-child(2),
+    .about-section__stat:nth-child(3),
+    .about-section__stat:nth-child(4){
+        margin-bottom:0 !important;
+        padding-left:18px !important;
+        border-right:0 !important;
+    }
+    .about-section__stat::after,
+    .about-section__stat:nth-child(1)::after{display:none !important}
+    .about-section__stat p{
+        font-family:"Mazzard H", sans-serif !important;
+        font-size:30px !important;font-weight:700 !important;
+        margin:0 0 4px !important;line-height:1 !important;
+    }
+    .about-section__stat span{
+        font-size:13px !important;
+        color:rgba(255,255,255,.5) !important;
+    }
+}
+
+/* ==================================================================== */
+/*  SECTION2 "Почему стоит выбрать нас" — horizontal scroll on mobile   */
+/* ==================================================================== */
+@media (max-width: 767px){
+    .section2__grid{
+        display:flex !important;
+        grid-template-columns:none !important;
+        max-width:none !important;
+        flex-wrap:nowrap !important;
+        gap:14px !important;
+        overflow-x:auto !important;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        padding:4px 16px 16px !important;
+        margin:0 -16px !important;          /* bleed to screen edges */
+        scrollbar-width:none;
+    }
+    .section2__grid::-webkit-scrollbar{display:none}
+    .section2__grid .s2-card{
+        flex:0 0 78% !important;
+        max-width:78% !important;
+        scroll-snap-align:center;
+        padding:34px 22px 38px !important;
+    }
+}
+
+/* ==================================================================== */
+/*  FOOTER — refined mobile layout (screen 4)                           */
+/* ==================================================================== */
+@media (max-width: 599px){
+    .footer{
+        margin-top:48px !important;
+        padding:36px 20px 26px !important;
+    }
+    .footer__container{
+        gap:26px !important;
+        padding-bottom:26px !important;
+    }
+    .footer__logo img{ height:96px !important }
+    /* Links — two even columns, compact, tappable */
+    .footer__menu{
+        display:grid !important;
+        grid-template-columns:repeat(2, 1fr) !important;
+        gap:6px 14px !important;
+        width:100%;
+        justify-content:stretch !important;
+    }
+    .footer__menu__item{ width:100% !important }
+    .footer__menu__item > a{
+        display:flex !important;align-items:center !important;justify-content:center !important;
+        padding:12px 10px !important;
+        font-size:12px !important;
+        letter-spacing:.06em !important;
+        color:rgba(255,255,255,.6) !important;
+        background:rgba(255,255,255,.03) !important;
+        border:1px solid rgba(255,255,255,.05) !important;
+        border-radius:12px !important;
+        min-height:44px;
+        text-align:center;
+    }
+    .footer__menu__item > a:active{
+        background:rgba(132,86,255,.10) !important;
+        border-color:rgba(132,86,255,.3) !important;
+        color:#fff !important;
+    }
+    /* TG channel — full width prominent */
+    .footer__social-btn{
+        width:100% !important;
+        justify-content:center !important;
+        padding:15px 18px !important;
+        font-size:13px !important;
+        background:linear-gradient(180deg, rgba(132,86,255,.16), rgba(132,86,255,.06)) !important;
+        border:1px solid rgba(132,86,255,.28) !important;
+        border-radius:14px !important;
+    }
+    .footer__bottom-container{
+        gap:8px !important;text-align:center;
+        padding-top:6px !important;
+    }
+    .footer__bottom-container .footer__menu__item{
+        background:transparent !important;border:0 !important;padding:0 !important;
+        font-size:11px !important;min-height:auto;
+    }
+}
+
+/* ==================================================================== */
+/*  FINAL pass — category hero image, about hero, history, footer       */
+/* ==================================================================== */
+
+/* 1. Category page hero image — bigger */
+.game-hero__image{
+    flex:0 0 46% !important;
+    max-width:580px !important;
+}
+@media (max-width: 1023px){
+    .game-hero__image{flex:0 0 42% !important;max-width:440px !important}
+}
+
+/* 2. About hero — bigger title + subcaption never overflows the screen */
+.about-heading-section__section-caption{
+    font-size:60px !important;
+}
+.about-heading-section__section-subcaption{
+    max-width:680px;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+}
+@media (max-width: 1023px){
+    .about-heading-section__section-caption{font-size:42px !important}
+}
+@media (max-width: 599px){
+    .about-heading-section{padding-left:0;padding-right:0}
+    .about-heading-section__container{padding-left:18px !important;padding-right:18px !important}
+    .about-heading-section__section-caption{font-size:30px !important;line-height:1.12 !important}
+    .about-heading-section__section-subcaption{
+        font-size:14px !important;
+        max-width:100% !important;
+        width:100% !important;
+    }
+}
+
+/* 3. About contacts + history caption — Mazzard H font (screen 4) */
+.about-contact__label{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:600 !important;
+    font-size:15px !important;
+    letter-spacing:-0.005em !important;
+}
+.about-contact__value{
+    font-family:"Mazzard M", sans-serif !important;
+    font-size:12px !important;letter-spacing:.06em !important;
+    text-transform:uppercase !important;color:rgba(255,255,255,.5) !important;
+}
+.about-section__history__caption{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:700 !important;
+    font-size:28px !important;
+    letter-spacing:-0.012em !important;
+}
+.about-section__history__slide .years{
+    font-family:"Mazzard H", sans-serif !important;
+    font-weight:700 !important;
+}
+.about-section__history__slide .record{
+    font-family:"Mazzard H","Mazzard M",sans-serif !important;
+}
+
+/* 3b. History timeline — clean vertical stack on mobile (swiper disabled).
+   Each year sits on its own row with a dot + vertical connector line. */
+@media (max-width: 767px){
+    .about-section__history__slider{
+        overflow:visible !important;
+        padding:8px 0 0 4px !important;
+        position:relative !important;
+    }
+    /* kill the horizontal connector line */
+    .about-section__history__slider::before{display:none !important}
+    .about-section__history__slider .swiper-wrapper{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:0 !important;
+        transform:none !important;
+        width:100% !important;
+    }
+    .about-section__history__slide{
+        width:100% !important;
+        max-width:none !important;
+        padding:0 0 22px 26px !important;
+        margin:0 !important;
+        position:relative !important;
+    }
+    /* vertical line down the left edge */
+    .about-section__history__slide::before{
+        content:"" !important;display:block !important;
+        position:absolute !important;
+        left:4px !important;top:6px !important;bottom:-6px !important;
+        width:2px !important;
+        background:rgba(132,86,255,.30) !important;
+        border:0 !important;
+    }
+    .about-section__history__slide:last-child::before{display:none !important}
+    /* dot on the line */
+    .about-section__history__slide .point{
+        position:absolute !important;
+        left:0 !important;top:4px !important;
+        width:10px !important;height:10px !important;
+        margin:0 !important;
+        border-radius:50% !important;
+        background:#a98aff !important;border:0 !important;
+        box-shadow:0 0 0 3px rgba(132,86,255,.18) !important;
+        z-index:2 !important;
+    }
+    .about-section__history__slide .point::before,
+    .about-section__history__slide .point::after{display:none !important}
+    .about-section__history__slide .years{font-size:18px !important;margin:0 0 4px !important}
+    .about-section__history__slide .record{font-size:14px !important;margin:0 0 4px !important}
+    .about-section__history__slide .small-text{font-size:13px !important;line-height:1.5 !important}
+    /* hide swiper nav arrows on mobile stack */
+    .about-section__history__slider-btn{display:none !important}
+}
+
+/* 4. FOOTER — premium mobile rebuild (screen 2) */
+@media (max-width: 599px){
+    .footer{
+        margin-top:40px !important;
+        padding:34px 18px 24px !important;
+        background:linear-gradient(180deg, transparent 0%, rgba(132,86,255,.04) 24%, rgba(8,11,17,.9) 100%) !important;
+        border-top:1px solid rgba(255,255,255,.05) !important;
+    }
+    .footer__container{
+        display:flex !important;flex-direction:column !important;
+        align-items:center !important;
+        gap:22px !important;
+        padding-bottom:22px !important;
+        border-bottom:1px solid rgba(255,255,255,.05) !important;
+    }
+    .footer__logo{order:1;align-self:center}
+    .footer__logo img{height:92px !important;width:auto !important}
+
+    /* Nav — single clean column of text links, generous tap area, NO boxes */
+    .footer__menu{
+        order:2;
+        display:flex !important;flex-direction:column !important;
+        align-items:center !important;
+        gap:2px !important;width:100%;
+        grid-template-columns:none !important;
+    }
+    .footer__menu__item{width:auto !important}
+    .footer__menu__item > a{
+        display:inline-flex !important;align-items:center;justify-content:center;
+        padding:11px 8px !important;
+        background:transparent !important;border:0 !important;border-radius:0 !important;
+        min-height:auto !important;
+        font-family:"Mazzard M",sans-serif !important;
+        font-size:13px !important;font-weight:500 !important;
+        letter-spacing:.08em !important;text-transform:uppercase !important;
+        color:rgba(255,255,255,.6) !important;
+        transition:color .18s ease;
+    }
+    .footer__menu__item > a:active{color:#fff !important;background:transparent !important;border:0 !important}
+
+    /* TG channel — full-width pill */
+    .footer__social-btn{
+        order:3;width:100% !important;
+        justify-content:center !important;align-items:center !important;gap:10px !important;
+        padding:15px 18px !important;
+        font-size:13px !important;
+        background:linear-gradient(180deg, rgba(132,86,255,.18), rgba(132,86,255,.07)) !important;
+        border:1px solid rgba(132,86,255,.3) !important;
+        border-radius:14px !important;
+        box-shadow:0 10px 26px -12px rgba(132,86,255,.5) !important;
+    }
+    /* Bottom legal — centered, tiny */
+    .footer__bottom-container{
+        flex-direction:column !important;align-items:center !important;
+        gap:6px !important;padding-top:8px !important;text-align:center;
+    }
+    .footer__bottom-container .footer__menu__item{
+        font-size:11px !important;color:rgba(255,255,255,.4) !important;
+    }
+    .footer__bottom-container .footer__menu__item > a{padding:2px 6px !important;font-size:11px !important}
+    .footer__copy{font-size:11px !important;color:rgba(255,255,255,.35) !important}
+}
+
+/* ==================================================================== */
+/*  History timeline — robust mobile stack (kills iOS 100vw breakout)   */
+/* ==================================================================== */
+@media (max-width: 767px){
+    /* Neutralise the legacy iOS full-bleed breakout — swiper is disabled now */
+    html.ios .about-section__history__slider.js-carousel,
+    .about-section__history__slider,
+    .about-section__history__slider.js-carousel{
+        width:100% !important;
+        max-width:100% !important;
+        margin:0 !important;
+        padding:6px 0 0 !important;
+        overflow:visible !important;
+        box-sizing:border-box !important;
+    }
+    .about-section__history__slider .swiper-wrapper{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:0 !important;
+        width:100% !important;
+        transform:none !important;
+        margin:0 !important;
+    }
+    /* Each entry = dot column + content, fully inside the card */
+    .about-section__history__slide,
+    .about-section__history__slide.swiper-slide{
+        display:grid !important;
+        grid-template-columns:18px 1fr !important;
+        column-gap:14px !important;
+        width:100% !important;max-width:100% !important;
+        margin:0 !important;
+        padding:0 0 22px !important;
+        position:relative !important;
+        scroll-margin:0 !important;
+        box-sizing:border-box !important;
+    }
+    /* dot — first grid column, top aligned */
+    .about-section__history__slide .point{
+        position:relative !important;
+        left:auto !important;top:5px !important;
+        grid-column:1 !important;grid-row:1 / 60 !important;
+        width:11px !important;height:11px !important;margin:0 !important;
+        border-radius:50% !important;background:#a98aff !important;border:0 !important;
+        box-shadow:0 0 0 3px rgba(132,86,255,.18) !important;
+        align-self:start;
+        z-index:2 !important;
+    }
+    .about-section__history__slide .point::before,
+    .about-section__history__slide .point::after{display:none !important}
+    /* vertical connector line in the dot column */
+    .about-section__history__slide:not(:last-child)::before{
+        content:"" !important;display:block !important;
+        position:absolute !important;
+        left:5px !important;top:14px !important;bottom:0 !important;
+        width:2px !important;
+        background:rgba(132,86,255,.28) !important;
+        border:0 !important;transform:none !important;
+    }
+    /* content sits in column 2 and wraps — no horizontal overflow */
+    .about-section__history__slide .years{
+        grid-column:2 !important;
+        font-family:"Mazzard H",sans-serif !important;font-weight:700 !important;
+        font-size:18px !important;margin:0 0 4px !important;
+    }
+    .about-section__history__slide .record{
+        grid-column:2 !important;
+        font-size:14px !important;margin:0 0 4px !important;
+    }
+    .about-section__history__slide .small-text{
+        grid-column:2 !important;
+        font-size:13px !important;line-height:1.5 !important;
+        margin:0 !important;
+        max-width:100% !important;
+        overflow-wrap:anywhere !important;
+        word-break:break-word !important;
+        white-space:normal !important;
+    }
+    .about-section__history__slider-btn{display:none !important}
+}
+
+/* ==================================================================== */
+/*  FIX: popups must sit ABOVE the fixed header (z:1000)                */
+/* ==================================================================== */
+.popup{ z-index:2000 !important }
+/* register/auth/reset content clears nothing now since popup covers header */
+
+/* ==================================================================== */
+/*  MOBILE — tighten home sections: smaller badges/titles, less gap     */
+/* ==================================================================== */
+@media (max-width: 767px){
+    /* ---- Section vertical rhythm — kill oversized gaps ---- */
+    .hero{ padding-bottom:24px !important }
+    .hero__col{ padding-top:8px !important; padding-bottom:0 !important }
+    .hero__actions{ margin-top:24px !important; margin-bottom:0 !important }
+    main.main .catalog{ margin:40px 0 !important }
+    main.main .section2{ margin:40px 0 !important }
+    main.main .reviews{ margin:40px 0 !important }
+    main.main .faq{ padding:40px 0 !important }
+
+    /* ---- Section badges (Лучший чит / Почему / Отзывы) — smaller ---- */
+    .catalog__badge,
+    .section2__badge,
+    .reviews__badge{
+        padding:7px 14px 7px 8px !important;
+        gap:8px !important;
+        border-radius:999px !important;
+    }
+    .catalog__badge-icon,
+    .section2__badge-icon,
+    .reviews__badge-icon{
+        width:30px !important;height:30px !important;
+    }
+    .catalog__badge-icon img,
+    .section2__badge-icon img,
+    .reviews__badge-icon img{ width:15px !important;height:15px !important }
+    .catalog__badge-text,
+    .section2__badge-text,
+    .reviews__badge-text,
+    .reviews__badge span:last-child{
+        font-size:13px !important;
+    }
+
+    /* ---- Section titles — smaller on mobile ---- */
+    .catalog__title,
+    .section2__title,
+    .reviews__title{
+        font-size:30px !important;
+        line-height:1.12 !important;
+        margin-top:12px !important;
+        letter-spacing:-0.01em !important;
+    }
+    .catalog__subtitle,
+    .section2__subtitle,
+    .reviews__subtitle{
+        font-size:14px !important;
+        line-height:1.5 !important;
+        margin-top:8px !important;
+    }
+    /* spark/bolt icon inside section2 title — scale down */
+    .section2__title-spark{ width:24px !important;height:24px !important;vertical-align:-3px !important }
+}
+@media (max-width: 480px){
+    .catalog__title,
+    .section2__title,
+    .reviews__title{ font-size:26px !important }
+}
+
+/* ==================================================================== */
+/*  FAQ — smaller badge + title on mobile (screen 1)                    */
+/* ==================================================================== */
+@media (max-width: 767px){
+    .faq__badge{
+        padding:7px 14px 7px 8px !important;
+        gap:8px !important;
+    }
+    .faq__badge img,
+    .faq__badge-icon img{width:15px !important;height:15px !important}
+    .faq__badge-icon,
+    .faq__badge > span:first-child{width:30px !important;height:30px !important}
+    .faq__title{font-size:26px !important;line-height:1.14 !important}
+    .faq__subtitle{font-size:14px !important}
+}
+
+/* ==================================================================== */
+/*  CATEGORY page — title bigger, desc font, kill 430px empty gap       */
+/* ==================================================================== */
+/* Kill legacy min-height that leaves huge empty space when the hero
+   image is hidden on mobile. */
+.game-hero__inner{ min-height:0 !important }
+
+/* Description — Mazzard font (screen 2) */
+.game-hero__desc{
+    font-family:"Mazzard H","Mazzard M",sans-serif !important;
+}
+
+@media (max-width: 768px){
+    .game-hero{padding:84px 0 24px !important}
+    .game-hero__inner{padding:0 !important;min-height:0 !important}
+    /* Title bigger on mobile (screen 3) */
+    .game-hero__title{font-size:38px !important;line-height:1.1 !important}
+    .game-hero__desc{font-size:15px !important;line-height:1.6 !important}
+    /* Tighten gap before first platform list (screen 4) */
+    .game-list{margin-top:8px !important}
+    .game-list__head{margin-bottom:16px !important}
+}
+@media (max-width: 480px){
+    .game-hero__title{font-size:32px !important}
+}
+
+/* ==================================================================== */
+/*  History timeline — force text wrapping (grid min-width:0 fix)       */
+/* ==================================================================== */
+@media (max-width: 767px){
+    /* keep the slider/card from being overflowed by wide content */
+    .about-section__history{overflow:hidden !important}
+    .about-section__history__slider{overflow:hidden !important}
+    /* minmax(0,1fr) lets the content column actually shrink & wrap */
+    .about-section__history__slide,
+    .about-section__history__slide.swiper-slide{
+        grid-template-columns:18px minmax(0, 1fr) !important;
+    }
+    /* min-width:0 on grid children defeats the default min-content floor */
+    .about-section__history__slide .years,
+    .about-section__history__slide .record,
+    .about-section__history__slide .small-text{
+        min-width:0 !important;
+        max-width:100% !important;
+        overflow-wrap:anywhere !important;
+        word-break:break-word !important;
+        white-space:normal !important;
+    }
 }

@@ -29,8 +29,11 @@
                 </div>
                 <div class="games-catalog__tools">
                     <label class="games-search">
+                        {{-- Honeypots to absorb Chrome/Yandex autofill --}}
+                        <input type="text" name="fake_email_field" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+                        <input type="password" name="fake_pwd_field" autocomplete="current-password" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                         <img class="games-search__icon" src="/assets/img/header-search.svg" alt="">
-                        <input type="text" id="games-search" class="games-search__input" placeholder="{{ __('site.games_search_placeholder') }}" autocomplete="off">
+                        <input type="text" id="games-search" name="games_catalog_query" class="games-search__input" placeholder="{{ __('site.games_search_placeholder') }}" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </label>
                     <div class="select _unfold games-select">
                         <select id="games-sort" class="games-sort">

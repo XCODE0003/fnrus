@@ -225,13 +225,17 @@ function paymentMethodsTopup(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
-                // Row renderer matching buy modal (icon chip + name + currency pill)
+                // Row renderer matching buy modal (icon chip + name + currency pill).
+                // Prefer the asset's own title over the payment-system title.
                 var rowHtml = function(e, a) {
-                    var name = (e && e.title) || (a && a.title) || a.currency || '';
+                    var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
                     var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    var iconImg = iconSrc
+                        ? '<img src="' + iconSrc + '" alt="" onerror="this.style.display=\'none\';this.parentElement.classList.add(\'is-empty\')">'
+                        : '';
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">' +
                         '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
-                            '<span class="popup__payment-method__icon"><img src="' + iconSrc + '" alt=""></span>' +
+                            '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__name">' + name + '</span>' +
                             '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
                         '</label>';
@@ -263,20 +267,15 @@ function paymentMethodsTopup(price) {
                 }
 
                 var wrapper = '<div id="topup-bt-main">' + items_html + '</div>' +
-                    '<div id="topup-bt-sub" style="display:none">' + bt_html +
-                    '<div style="text-align:center;margin-top:10px"><a href="#" id="topup-bt-back" class="popup__payment-method__back">← Назад</a></div></div>';
+                    '<div id="topup-bt-sub" style="display:none">' + bt_html + '</div>';
 
                 $('#topup-payments-methods').html(wrapper);
 
                 $('#topup-payments-methods').off('click', '#topup-bt-aggregator').on('click', '#topup-bt-aggregator', function(e){
                     e.preventDefault();
-                    $('#topup-bt-main').hide();
-                    $('#topup-bt-sub').show();
-                });
-                $('#topup-payments-methods').off('click', '#topup-bt-back').on('click', '#topup-bt-back', function(e){
-                    e.preventDefault();
-                    $('#topup-bt-sub').hide();
-                    $('#topup-bt-main').show();
+                    var $sub = $('#topup-bt-sub');
+                    $sub.toggle();
+                    $(this).toggleClass('is-open', $sub.is(':visible'));
                 });
             }
         }
@@ -306,13 +305,18 @@ function paymentMethodsProduct(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
-                // Row renderer — icon + name + currency pill (Figma "оплата 4"/"6")
+                // Row renderer — icon + name + currency pill (Figma "оплата 4"/"6").
+                // Prefer the ASSET's own title (e.g. "Банковская карта", "USDT") over
+                // the payment-system title so rows aren't all "Freekassa".
                 var rowHtml = function(e, a) {
-                    var name = (e && e.title) || (a && a.title) || a.currency || '';
+                    var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
                     var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    var iconImg = iconSrc
+                        ? '<img src="' + iconSrc + '" alt="" onerror="this.style.display=\'none\';this.parentElement.classList.add(\'is-empty\')">'
+                        : '';
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">' +
                         '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
-                            '<span class="popup__payment-method__icon"><img src="' + iconSrc + '" alt=""></span>' +
+                            '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__name">' + name + '</span>' +
                             '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
                         '</label>';
@@ -348,20 +352,17 @@ function paymentMethodsProduct(price) {
                 }
 
                 var wrapper = '<div id="product-bt-main">' + items_html + '</div>' +
-                    '<div id="product-bt-sub" style="display:none">' + bt_html +
-                    '<div style="text-align:center;margin-top:10px"><a href="#" id="product-bt-back" class="popup__payment-method__back">← Назад</a></div></div>';
+                    '<div id="product-bt-sub" style="display:none">' + bt_html + '</div>';
 
                 $('#buy-payments-methods').html(wrapper);
 
+                // Aggregator row toggles its sub-methods inline (no separate
+                // back-link needed — main list stays visible above).
                 $('#buy-payments-methods').off('click', '#product-bt-aggregator').on('click', '#product-bt-aggregator', function(e){
                     e.preventDefault();
-                    $('#product-bt-main').hide();
-                    $('#product-bt-sub').show();
-                });
-                $('#buy-payments-methods').off('click', '#product-bt-back').on('click', '#product-bt-back', function(e){
-                    e.preventDefault();
-                    $('#product-bt-sub').hide();
-                    $('#product-bt-main').show();
+                    var $sub = $('#product-bt-sub');
+                    $sub.toggle();
+                    $(this).toggleClass('is-open', $sub.is(':visible'));
                 });
             }
         }

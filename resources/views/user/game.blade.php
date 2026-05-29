@@ -4,15 +4,62 @@
     <section class="game-hero">
         <div class="content game-hero__inner">
             <div class="game-hero__text">
+                {{-- Breadcrumb --}}
                 @php $tp = preg_split('/(?=\()/u', trim($title), 2); @endphp
-                <h1 class="game-hero__title">{{ __('site.game_cheats_for') }} {{ trim($tp[0]) }}@if(!empty($tp[1]))<span class="game-hero__title-dim"> {{ $tp[1] }}</span>@endif</h1>
+                <nav class="game-hero__crumbs" aria-label="breadcrumb">
+                    <a href="/">{{ __('site.item_home') }}</a>
+                    <span class="game-hero__crumbs-sep">/</span>
+                    <a href="/games">{{ __('site.menu_catalog') ?? 'Магазин' }}</a>
+                    <span class="game-hero__crumbs-sep">/</span>
+                    <span class="game-hero__crumbs-current">{{ trim($tp[0]) }}</span>
+                </nav>
+
+                {{-- Title with dim parenthetical subtitle --}}
+                <h1 class="game-hero__title">
+                    {{ __('site.game_cheats_for') }} {{ trim($tp[0]) }}
+                    @if(!empty($tp[1]))
+                        <span class="game-hero__title-dim">{{ $tp[1] }}</span>
+                    @endif
+                </h1>
+
+                {{-- Description --}}
                 @php $heroDesc = trim(strip_tags($description ?? '')); @endphp
                 @if($heroDesc !== '')
-                <p class="game-hero__desc">{{ $heroDesc }}</p>
+                    <p class="game-hero__desc">{{ $heroDesc }}</p>
                 @endif
+
+                {{-- Stats row: count · undetected · delivery · support --}}
                 @php $cnt = 0; foreach(($categories ?: []) as $c) { $cnt += count($c['products']); } @endphp
-                <span class="game-hero__count">@plural($cnt, __('site.game_product_one'), __('site.game_product_few'), __('site.game_product_many'))</span>
-                <a href="javascript:history.back()" class="game-hero__back">{{ __('site.game_back') }}</a>
+                <ul class="game-hero__stats">
+                    <li class="game-hero__stat">
+                        <span>@plural($cnt, __('site.game_product_one'), __('site.game_product_few'), __('site.game_product_many'))</span>
+                    </li>
+                    <li class="game-hero__stat game-hero__stat--badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="#8af59b" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M9 12l2 2 4-4" stroke="#8af59b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Undetected</span>
+                    </li>
+                    <li class="game-hero__stat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                        <span>{{ __('site.delivery_instant') ?? 'Мгновенная доставка' }}</span>
+                    </li>
+                    <li class="game-hero__stat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1118 0v3a3 3 0 01-3 3h-1v-7h4M3 12v3a3 3 0 003 3h1v-7H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>{{ __('site.support_24_7') ?? 'Поддержка 24/7' }}</span>
+                    </li>
+                </ul>
+
+                {{-- Back link --}}
+                <a href="/games" class="game-hero__back" style="padding: 0 10px !important;">
+            
+                    {{ __('site.game_back') }}
+                </a>
             </div>
             <div class="game-hero__image">
                 <img src="{{ !empty($hero_image) ? '/i'.$hero_image : '/assets/img/pubg.png' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.png'">

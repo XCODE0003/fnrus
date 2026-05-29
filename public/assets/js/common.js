@@ -409,7 +409,7 @@ $(document).ready(function(){
         $(".popup__wrapper").css("max-height", window.innerHeight)
     })
 
-    if (exists('.about-section__history__slider') && window.innerWidth < 768){
+    if (false && exists('.about-section__history__slider')){
         new Swiper('.about-section__history__slider', withIosCssMode({
             slidesPerView: "auto",
             touchEventsTarget: 'container',
