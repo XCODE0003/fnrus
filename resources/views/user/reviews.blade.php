@@ -95,13 +95,29 @@
             {{-- ==== Existing reviews grid ==== --}}
             @if(count($reviews))
             <div class="reviews-grid">
-                @foreach($reviews as $review)
+                @php
+                    // 1-2 letter initials from author name
+                    $initials = collect(preg_split('/\s+/u', trim($review->author ?? '')))
+                        ->filter()
+                        ->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))
+                        ->take(2)
+                        ->implode('');
+                    // Display: prefer pure product name; legacy records stored "5★ · ProductName"
+                    $productLine = $review->link ?? '';
+                    if ($productLine && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $productLine, $m)) {
+                        $productLine = trim($m[1]);
+                    }
+                    // Hide raw URLs (legacy data may contain t.me links)
+                    if ($productLine && preg_match('~^https?://~i', $productLine)) {
+                        $productLine = '';
+                    }
+                @endphp
                 <div class="rev-card">
                     <div class="rev-card__head">
-                        <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
+                        <span class="rev-card__avatar" aria-hidden="true">{{ $initials ?: '?' }}</span>
                         <div class="rev-card__meta">
                             <p class="rev-card__name">{{ $review->author }}</p>
-                            @if(!empty($review->link))<p class="rev-card__sub">{{ $review->link }}</p>@endif
+                            @if(!empty($productLine))<p class="rev-card__sub">{{ $productLine }}</p>@endif
                         </div>
                         @if(!empty($review->created_at))
                         <span class="rev-card__date">{{ \Carbon\Carbon::parse($review->created_at)->translatedFormat('j M Y') }}</span>
@@ -200,7 +216,9 @@
                 return;
             }
             // Encode rating + product into link field so it's stored alongside review
-            var meta = product ? (rating + '★ · ' + product) : (rating + '★');
+            // Store ONLY the selected product name in the link field — rating is already
+            // saved separately as stars on display side. Avoids "5★ · " prefix clutter.
+            var meta = product || '';
             submit.disabled = true;
             $.ajax({
                 type: 'POST',

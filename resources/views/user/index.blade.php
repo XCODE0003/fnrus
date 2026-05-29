@@ -122,9 +122,16 @@
             @if(count($reviews))
             <div class="reviews-grid">
                 @foreach($reviews->take(6) as $review)
+                @php
+                    $initials = collect(preg_split('/\s+/u', trim($review->author ?? '')))
+                        ->filter()
+                        ->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))
+                        ->take(2)
+                        ->implode('');
+                @endphp
                 <div class="rev-card">
                     <div class="rev-card__head">
-                        <img class="rev-card__avatar" src="{{ $review->avatar }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='/assets/img/default_avatar.svg'">
+                        <span class="rev-card__avatar" aria-hidden="true">{{ $initials ?: '?' }}</span>
                         <p class="rev-card__name">{{ $review->author }}</p>
                     </div>
                     <div class="rev-card__stars">
