@@ -32,7 +32,10 @@
                         {{-- Honeypots to absorb Chrome/Yandex autofill --}}
                         <input type="text" name="fake_email_field" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                         <input type="password" name="fake_pwd_field" autocomplete="current-password" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-                        <img class="games-search__icon" src="/assets/img/header-search.svg" alt="">
+                        <svg class="games-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                            <path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                         <input type="text" id="games-search" name="games_catalog_query" class="games-search__input" placeholder="{{ __('site.games_search_placeholder') }}" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </label>
                     <div class="select _unfold games-select">

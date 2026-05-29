@@ -22441,3 +22441,27 @@ body{ background-color:transparent !important }
         white-space:normal !important;
     }
 }
+
+/* ==================================================================== */
+/*  Games catalog search — single clean magnifier (kill duplicate icon) */
+/* ==================================================================== */
+/* The input had its own background-image magnifier AND an <img> icon —
+   two icons. Remove the input bg-image, keep one inline-SVG magnifier. */
+.games-page #games-search,
+.games-page .games-search__input{
+    background-image:none !important;
+}
+.games-page .games-search__icon{
+    position:absolute !important;
+    left:16px !important;top:50% !important;
+    transform:translateY(-50%) !important;
+    width:18px !important;height:18px !important;
+    color:rgba(255,255,255,.45) !important;
+    opacity:1 !important;
+    filter:none !important;
+    pointer-events:none;
+    transition:color .2s ease;
+}
+.games-page .games-search:focus-within .games-search__icon{
+    color:#cbb6ff !important;
+}
