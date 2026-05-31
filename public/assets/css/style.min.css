@@ -18672,7 +18672,7 @@ main.profile {
     background: rgba(23, 29, 40, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px;
-    padding: 0 16px 0 42px;
+    padding: 0 0 0 42px;
     transition:
         border-color 0.2s,
         background 0.2s;
@@ -21610,7 +21610,7 @@ img.rev-card__avatar{display:none !important}
 /* ==================================================================== */
 /*  Bring back plain black background (user request)                    */
 /* ==================================================================== */
-html{ background-color:#0e0c16 !important }
+html{ background-color:rgb(17 23 32) !important }
 body{ background-color:transparent !important }
 /* #bg-fx canvas already z:-1 so stars still visible against the black */
 
@@ -22756,4 +22756,240 @@ body{ background-color:transparent !important }
     .hero__badge-text,.catalog__badge-text,.section2__badge-text,
     .reviews__badge-text,.faq__badge-text,
     .reviews__badge > span:last-child,.faq__badge > span:last-child{ font-size:12.5px !important }
+}
+
+/* ==================================================================== */
+/*  Hero title — UPPERCASE + slightly smaller (per request)             */
+/* ==================================================================== */
+.hero__title{
+    text-transform:uppercase !important;
+    font-size:52px !important;
+    line-height:1.1 !important;
+    letter-spacing:-0.01em !important;
+}
+@media (max-width:1023px){ .hero__title{ font-size:40px !important } }
+@media (max-width:599px){ .hero__title{ font-size:30px !important } }
+
+/* ==================================================================== */
+/*  Big section headings — lighter weight (closer to reference)         */
+/*  Less heavy than 700, crisp rendering for readability                */
+/* ==================================================================== */
+.reviews__title,
+.reviews-page__title,
+.catalog__title,
+.section2__title,
+.faq__title,
+.games-catalog__title,
+.about-heading-section__section-caption,
+.status-heading-section__section-caption,
+.game-hero__title{
+    font-weight:600 !important;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    letter-spacing:-0.015em !important;
+}
+
+/* ==================================================================== */
+/*  TYPOGRAPHY — lighter, more readable headings (hackexe-like)         */
+/*  Mazzard H is a heavy display face → headings looked too chunky.     */
+/*  Switch major headings to the cleaner Mazzard M at weight 600 and    */
+/*  enable proper antialiasing so even small text stays crisp.          */
+/* ==================================================================== */
+body, body *{
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+}
+.hero__title,
+.catalog__title,
+.section2__title,
+.reviews__title,
+.reviews-page__title,
+.faq__title,
+.games-catalog__title,
+.about-heading-section__section-caption,
+.status-heading-section__section-caption,
+.game-hero__title,
+.section-caption,
+.about-section__history__caption,
+.cheat-functions__caption,
+.cheat-block__name{
+    font-family:"Mazzard M","Mazzard H",sans-serif !important;
+    font-weight:600 !important;
+    letter-spacing:-0.02em !important;
+}
+
+/* (2) Hero H1 — uppercase + slightly smaller (screen 2) */
+.hero__title{
+    text-transform:uppercase !important;
+    font-size:46px !important;
+    line-height:1.1 !important;
+}
+@media (min-width:1440px){ .hero__title{ font-size:52px !important } }
+@media (max-width:1023px){ .hero__title{ font-size:36px !important } }
+@media (max-width:599px){ .hero__title{ font-size:30px !important } }
+
+/* Keep the home "Эксклюзивные читы"→"Выберите свою игру" + others crisp,
+   not uppercase (only the hero H1 is caps per request). */
+.catalog__title,
+.section2__title,
+.reviews__title,
+.reviews-page__title,
+.faq__title,
+.games-catalog__title{
+    text-transform:none !important;
+}
+
+/* ==================================================================== */
+/*  ФУНКЦИОНАЛ — clean rebuild (header bar + top-aligned list)          */
+/*  Fixes: content was bottom-aligned with a big empty middle (simplebar */
+/*  + equal-height swiper stretch). Now cards hug content, list sits      */
+/*  right under a clean accent header.                                    */
+/* ==================================================================== */
+/* Cards size to content, top-aligned (no forced equal-height stretch) */
+.swiper-functional .swiper-wrapper{ align-items:flex-start !important }
+.cheat-functions__block.swiper-slide,
+.cheat-functions__block{
+    width:360px !important;
+    height:auto !important;
+    align-self:flex-start !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    background:#1a212e !important;
+    border:1px solid rgba(255,255,255,.06) !important;
+    border-radius:18px !important;
+    padding:0 !important;
+    overflow:hidden !important;
+}
+
+/* Header bar — full-width accent strip with dot + uppercase title */
+.cheat-functions__block__name-panel{
+    height:auto !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:16px 20px !important;
+    border-radius:0 !important;
+    border-bottom:1px solid rgba(255,255,255,.05) !important;
+    display:flex !important;align-items:center !important;
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:13px !important;font-weight:700 !important;
+    letter-spacing:.16em !important;text-transform:uppercase !important;
+}
+
+/* Neutralise simplebar so the short lists flow naturally (no scroll/height) */
+.cheat-functions__block__scroll-container{
+    margin:0 !important;
+    max-height:none !important;
+    height:auto !important;
+    padding:18px 20px 22px !important;
+    overflow:visible !important;
+}
+.cheat-functions__block .simplebar-offset,
+.cheat-functions__block .simplebar-content-wrapper,
+.cheat-functions__block .simplebar-mask{
+    position:static !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+}
+.cheat-functions__block .simplebar-content{
+    display:block !important;
+    padding:0 !important;
+}
+.cheat-functions__block .simplebar-track{ display:none !important }
+
+/* List — clean, top-aligned, even spacing */
+.cheat-functions__block__list{
+    display:flex !important;flex-direction:column !important;
+    gap:12px !important;margin:0 !important;padding:0 !important;
+    list-style:none !important;
+}
+.cheat-functions__block__list li{
+    opacity:1 !important;
+    margin:0 !important;
+    padding-left:20px !important;
+    position:relative;
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:14.5px !important;line-height:1.35 !important;
+    color:rgba(255,255,255,.74) !important;
+}
+.cheat-functions__block__list li::before{
+    content:"" !important;
+    position:absolute;left:2px;top:.5em;
+    width:6px;height:6px;border-radius:50%;
+    background:currentColor;opacity:1;
+}
+
+/* Accent header tints + matching bullet colors */
+.cheat-functions__block__name-panel#visuals{
+    background:linear-gradient(90deg, rgba(138,245,155,.16), rgba(138,245,155,0)) !important;
+    color:#8af59b !important;
+}
+.cheat-functions__block__name-panel#aimbot{
+    background:linear-gradient(90deg, rgba(255,187,86,.16), rgba(255,187,86,0)) !important;
+    color:#ffbb56 !important;
+}
+.cheat-functions__block__name-panel#misc{
+    background:linear-gradient(90deg, rgba(255,140,181,.16), rgba(255,140,181,0)) !important;
+    color:#ff8cb5 !important;
+}
+.cheat-functions__block__name-panel:not(#visuals):not(#aimbot):not(#misc){
+    background:linear-gradient(90deg, rgba(132,86,255,.16), rgba(132,86,255,0)) !important;
+    color:#b59aff !important;
+}
+.cheat-functions__block:has(#visuals) .cheat-functions__block__list li{ color:rgba(255,255,255,.74) !important }
+.cheat-functions__block:has(#visuals) .cheat-functions__block__list li::before{ background:#8af59b !important }
+.cheat-functions__block:has(#aimbot) .cheat-functions__block__list li::before{ background:#ffbb56 !important }
+.cheat-functions__block:has(#misc)   .cheat-functions__block__list li::before{ background:#ff8cb5 !important }
+
+@media (max-width: 599px){
+    .cheat-functions__block.swiper-slide,
+    .cheat-functions__block{ width:84vw !important; max-width:340px !important }
+    .cheat-functions__block__list li{ font-size:14px !important }
+}
+
+/* ==================================================================== */
+/*  ФУНКЦИОНАЛ v2 — responsive GRID (swiper disabled), content-height    */
+/* ==================================================================== */
+/* Hide the now-unused slider arrows */
+.cheat-functions .slider-arrows{ display:none !important }
+
+/* Turn the swiper structure into a responsive grid */
+.cheat-functions .swiper-functional,
+.cheat-functions .swiper{
+    overflow:visible !important;
+    width:100% !important;
+}
+.cheat-functions .swiper-functional .swiper-wrapper,
+.cheat-functions .swiper .swiper-wrapper{
+    display:grid !important;
+    grid-template-columns:repeat(3, 1fr) !important;
+    gap:20px !important;
+    transform:none !important;
+    width:100% !important;
+    align-items:start !important;       /* each card hugs its content */
+}
+.cheat-functions__block.swiper-slide,
+.cheat-functions__block{
+    width:auto !important;
+    height:auto !important;
+    margin:0 !important;
+    align-self:start !important;
+}
+
+@media (max-width: 980px){
+    .cheat-functions .swiper-functional .swiper-wrapper,
+    .cheat-functions .swiper .swiper-wrapper{
+        grid-template-columns:repeat(2, 1fr) !important;
+    }
+}
+@media (max-width: 640px){
+    .cheat-functions .swiper-functional .swiper-wrapper,
+    .cheat-functions .swiper .swiper-wrapper{
+        grid-template-columns:1fr !important;
+        gap:14px !important;
+    }
+    .cheat-functions__block.swiper-slide,
+    .cheat-functions__block{ width:auto !important;max-width:none !important }
 }
