@@ -81,31 +81,69 @@
                         </div>
                     </div>
                 </div>
-                <div class="cheat-functions">
+                @php
+                    $functional = json_decode($product->functional, true) ?: [];
+                    $accentMap = ['visuals' => 'func--visuals', 'aimbot' => 'func--aimbot', 'misc' => 'func--misc'];
+                @endphp
+                @if(count($functional))
+                <div class="cheat-functions" id="cheat-functions">
                     <div class="cheat-functions__caption-container">
                         <p class="cheat-functions__caption">{{ __('site.section_functional_title') }}</p>
-                        <div class="slider-arrows">
-                            <button class="slider-arrows__arrow slider-arrows__prev"></button>
-                            <button class="slider-arrows__arrow slider-arrows__next"></button>
-                        </div>
                     </div>
-                    <div class="swiper swiper-functional">
-                        <div class="swiper-wrapper">
-                            @foreach(json_decode($product->functional, true) as $func)
-                                <div class="swiper-slide cheat-functions__block">
-                                    <div class="cheat-functions__block__name-panel" id="{{ !empty($func['id']) ? $func['id'] : 'visuals' }}"><span>{{ $func['title'] }}</span></div>
-                                    <div class="cheat-functions__block__scroll-container" data-simplebar>
-                                        <ul class="cheat-functions__block__list">
-                                            @foreach($func['lines'] as $line)
-                                                <li>{{ $line }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+
+                    {{-- Category tabs --}}
+                    <div class="func-tabs" role="tablist" aria-label="{{ __('site.section_functional_title') }}">
+                        @foreach($functional as $i => $func)
+                            @php $acc = $accentMap[$func['id'] ?? ''] ?? 'func--default'; @endphp
+                            <button type="button"
+                                    class="func-tab {{ $acc }} {{ $i === 0 ? 'is-active' : '' }}"
+                                    role="tab"
+                                    aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
+                                    data-target="func-panel-{{ $i }}">
+                                <span class="func-tab__dot" aria-hidden="true"></span>
+                                <span class="func-tab__label">{{ $func['title'] }}</span>
+                            </button>
+                        @endforeach
+                    </div>
+
+                    {{-- Panels --}}
+                    <div class="func-panels">
+                        @foreach($functional as $i => $func)
+                            @php $acc = $accentMap[$func['id'] ?? ''] ?? 'func--default'; @endphp
+                            <div class="func-panel {{ $acc }} {{ $i === 0 ? 'is-active' : '' }}"
+                                 id="func-panel-{{ $i }}" role="tabpanel">
+                                <div class="func-chips">
+                                    @foreach($func['lines'] as $line)
+                                        <span class="func-chip">
+                                            <svg class="func-chip__check" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            <span>{{ trim($line) }}</span>
+                                        </span>
+                                    @endforeach
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+                <script>
+                (function(){
+                    var root = document.getElementById('cheat-functions');
+                    if (!root) return;
+                    var tabs = root.querySelectorAll('.func-tab');
+                    var panels = root.querySelectorAll('.func-panel');
+                    function activate(tab){
+                        var target = tab.getAttribute('data-target');
+                        tabs.forEach(function(t){ t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+                        panels.forEach(function(p){ p.classList.toggle('is-active', p.id === target); });
+                    }
+                    tabs.forEach(function(tab){
+                        tab.addEventListener('click', function(){ activate(tab); });
+                        tab.addEventListener('keydown', function(e){
+                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(tab); }
+                        });
+                    });
+                })();
+                </script>
+                @endif
             </div>
         </section>
         <section class="game-cheats">

@@ -22993,3 +22993,155 @@ body, body *{
     .cheat-functions__block.swiper-slide,
     .cheat-functions__block{ width:auto !important;max-width:none !important }
 }
+
+/* ==================================================================== */
+/*  GLOBAL FONT — Onest (self-hosted) mapped onto existing family names */
+/*  Все ~250 деклараций font-family:"Mazzard H"/"Mazzard M" автоматически */
+/*  рисуются Onest. Объявления в конце файла перекрывают оригинальные.   */
+/* ==================================================================== */
+@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-400.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-500.ttf) format("truetype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-600.ttf) format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-700.ttf) format("truetype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-800.ttf) format("truetype");font-weight:800;font-style:normal;font-display:swap}
+
+/* Remap legacy family slots → Onest (5 weights each) */
+@font-face{font-family:"Mazzard M";src:url(../fonts/Onest/Onest-400.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard M";src:url(../fonts/Onest/Onest-500.ttf) format("truetype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard M";src:url(../fonts/Onest/Onest-600.ttf) format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard M";src:url(../fonts/Onest/Onest-700.ttf) format("truetype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard M";src:url(../fonts/Onest/Onest-800.ttf) format("truetype");font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard H";src:url(../fonts/Onest/Onest-400.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard H";src:url(../fonts/Onest/Onest-500.ttf) format("truetype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard H";src:url(../fonts/Onest/Onest-600.ttf) format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard H";src:url(../fonts/Onest/Onest-700.ttf) format("truetype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Mazzard H";src:url(../fonts/Onest/Onest-800.ttf) format("truetype");font-weight:800;font-style:normal;font-display:swap}
+
+:root{ --font-sans:"Onest","Mazzard M",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif }
+html, body{ font-family:var(--font-sans) !important }
+
+/* Crisp rendering everywhere */
+html, body, body *{
+    -webkit-font-smoothing:antialiased !important;
+    -moz-osx-font-smoothing:grayscale !important;
+    text-rendering:optimizeLegibility;
+}
+
+/* ==================================================================== */
+/*  FONT-WEIGHT normalization — clean, consistent scale (Onest)         */
+/* ==================================================================== */
+/* Big headings → 700 */
+.hero__title,.section-caption,.catalog__title,.section2__title,.reviews__title,
+.reviews-page__title,.faq__title,.games-catalog__title,.game-hero__title,
+.about-heading-section__section-caption,.status-heading-section__section-caption,
+.about-section__history__caption,.cheat-functions__caption,.cheat-block__name,
+.popup__caption,.profile__main__header,.about-section__stat p{
+    font-weight:700 !important;
+    letter-spacing:-0.02em !important;
+}
+/* Sub-headings / pills / tabs / badges / buttons → 600 */
+.hero__subtitle,.catalog__subtitle,.section2__subtitle,.reviews__subtitle,
+.reviews-page__subtitle,.faq__subtitle,.games-catalog__subtitle,.game-hero__desc,
+.header__menu__item > a,.header__menu__pill,.header__login,.btn,.section-more-btn,
+.func-tab,.func-chip,.hero__badge-text,.catalog__badge-text,.section2__badge-text,
+.reviews__badge-text,.faq__badge-text,.catalog-card__name,.game-card__name,
+.rev-card__name,.about-contact__label,.cheat-functions__block__name-panel,
+.pay-btn,.pay-option__label,.footer__social-btn,.footer__menu__item > a{
+    font-weight:600 !important;
+}
+/* Body / lists / inputs / meta → 500 (comfortable on dark) */
+body,p,li,span,a,input,textarea,select,label,
+.cheat-functions__block__list li,.func-chip,.catalog-card__desc,.game-card__list li,
+.rev-card__text,.about-section__text,.accordion__body__content,
+.pay-order-info__label,.pay-order-info__value{
+    font-weight:500;
+}
+
+/* ==================================================================== */
+/*  ФУНКЦИОНАЛ v3 — segmented tabs + chips grid                         */
+/* ==================================================================== */
+.cheat-functions{ overflow:visible }
+.cheat-functions .slider-arrows{ display:none !important }
+.cheat-functions__caption-container{ margin-bottom:22px !important }
+
+/* Tabs (segmented) */
+.func-tabs{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-bottom:18px;
+}
+.func-tab{
+    display:inline-flex; align-items:center; gap:9px;
+    padding:11px 20px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:999px;
+    color:rgba(255,255,255,.62);
+    font-family:"Onest",sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer;
+    transition:background .2s ease, border-color .2s ease, color .2s ease;
+}
+.func-tab:hover{ color:#fff; background:rgba(255,255,255,.06) }
+.func-tab__dot{
+    width:8px; height:8px; border-radius:50%;
+    background:currentColor; flex-shrink:0;
+    box-shadow:0 0 10px currentColor;
+}
+/* Active tab — accent tint + glow */
+.func-tab.is-active{ color:#fff }
+.func-tab.func--visuals.is-active{ background:rgba(138,245,155,.12); border-color:rgba(138,245,155,.4) }
+.func-tab.func--aimbot.is-active{  background:rgba(255,187,86,.12);  border-color:rgba(255,187,86,.4) }
+.func-tab.func--misc.is-active{    background:rgba(255,140,181,.12);  border-color:rgba(255,140,181,.4) }
+.func-tab.func--default.is-active{ background:rgba(132,86,255,.14);   border-color:rgba(132,86,255,.42) }
+/* Dot color per category (always tinted) */
+.func-tab.func--visuals .func-tab__dot{ color:#8af59b }
+.func-tab.func--aimbot  .func-tab__dot{ color:#ffbb56 }
+.func-tab.func--misc    .func-tab__dot{ color:#ff8cb5 }
+.func-tab.func--default .func-tab__dot{ color:#b59aff }
+
+/* Panel container — fixed-ish height so switching doesn't jump */
+.func-panels{
+    position:relative;
+    background:#1a212e;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;
+    padding:24px;
+    min-height:200px;
+}
+.func-panel{ display:none }
+.func-panel.is-active{ display:block; animation:funcFade .25s ease both }
+@keyframes funcFade{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+@media (prefers-reduced-motion: reduce){ .func-panel.is-active{ animation:none } }
+
+/* Chips grid */
+.func-chips{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:10px;
+}
+.func-chip{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:11px 16px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    color:rgba(255,255,255,.82);
+    font-family:"Onest",sans-serif; font-weight:500; font-size:14px;
+    line-height:1.3;
+    transition:background .18s ease, border-color .18s ease;
+}
+.func-chip:hover{ background:rgba(255,255,255,.05) }
+.func-chip__check{ flex-shrink:0 }
+/* Check color per category */
+.func--visuals .func-chip__check{ color:#8af59b }
+.func--aimbot  .func-chip__check{ color:#ffbb56 }
+.func--misc    .func-chip__check{ color:#ff8cb5 }
+.func--default .func-chip__check{ color:#b59aff }
+
+@media (max-width: 640px){
+    .func-tabs{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin:0 -16px 16px; padding:0 16px }
+    .func-tabs::-webkit-scrollbar{ display:none }
+    .func-tab{ flex-shrink:0 }
+    .func-chips{ grid-template-columns:1fr }
+    .func-panels{ padding:18px; min-height:0 }
+}
