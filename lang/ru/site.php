@@ -227,6 +227,7 @@ return [
     // === cheat page ===
     "cheat_tariffs" => "Тарифы",
     "cheat_order_paid" => "Заказ оплачен",
+    "cheat_video_review" => "Видео обзор",
     "cheat_get_product" => "Получить товар",
     "cheat_buy_more" => "Купить еще",
     "cheat_payment_expired" => "Срок оплаты истек",

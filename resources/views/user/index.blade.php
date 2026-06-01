@@ -31,7 +31,9 @@
             <div class="catalog__top">
                 <div class="catalog__head">
                     <div class="catalog__badge">
-                        <span class="catalog__badge-icon"><img src="/assets/img/hero-crown.svg" alt=""></span>
+                        <span class="catalog__badge-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 4h10v3a5 5 0 01-10 0V4zM7 5H4v1a3 3 0 003 3M17 5h3v1a3 3 0 01-3 3M9 14h6M12 12v2M8 20h8M10 20v-2.5h4V20" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
                         <span class="catalog__badge-text">{{ __('site.text_best_soft') }}</span>
                     </div>
                     <h2 class="catalog__title">{{ __('site.text_exclusive_cheats') }}</h2>

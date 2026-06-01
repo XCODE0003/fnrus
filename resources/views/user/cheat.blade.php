@@ -48,9 +48,12 @@
                                 <span id="btn_price">...</span>
                             </button>
                             @if($product->link_video != '#' and $product->link_video != '' and (Str::startsWith($product->link_video, 'http') or Str::startsWith($product->link_video, '/uploads/')))
-                                <button class="btn-play" data-popup="cheat-video"></button>
-                            @else
-                                <button class="btn-play" disabled></button>
+                                <button class="btn-play" data-popup="cheat-video" aria-label="{{ __('site.cheat_video_review') }}" title="{{ __('site.cheat_video_review') }}">
+                                    <span class="btn-play__icon" aria-hidden="true">
+                                        <svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M1.5 1.3v13.4a.8.8 0 0 0 1.22.68l11-6.7a.8.8 0 0 0 0-1.36l-11-6.7A.8.8 0 0 0 1.5 1.3Z" fill="currentColor"/></svg>
+                                    </span>
+                                    <span class="btn-play__label">{{ __('site.cheat_video_review') }}</span>
+                                </button>
                             @endif
                         </div>
                     </div>
@@ -165,7 +168,7 @@
                                 $desc = implode(' · ', array_slice($advantages, 0, 3));
                             @endphp
                             <a href="{{ $card->alias }}" class="swiper-slide catalog-card">
-                                <div class="catalog-card__img" role="img" aria-label="{{ $card->title }}" style="background-image:url('/i{{ $card->image_site }}')"></div>
+                                <div class="catalog-card__img" role="img" aria-label="{{ $card->title }}" style="background-image:url('/{{ ltrim($card->image_site, '/') }}')"></div>
                                 <div class="catalog-card__body">
                                     <div class="catalog-card__name">{{ $card->title }}</div>
                                     <div class="catalog-card__tags">

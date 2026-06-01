@@ -227,6 +227,7 @@ return [
     // === cheat page ===
     "cheat_tariffs" => "Tariffs",
     "cheat_order_paid" => "Order paid",
+    "cheat_video_review" => "Video review",
     "cheat_get_product" => "Get product",
     "cheat_buy_more" => "Buy more",
     "cheat_payment_expired" => "Payment time expired",
