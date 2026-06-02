@@ -222,7 +222,7 @@ return [
     "about_history_beginning" => "The beginning",
     "about_history_beginning_text" => "The birth year of the first Telegram bot, where the first sales were made",
     "about_long_text" => "Over many years of working in this field, we have earned the trust of many loyal customers, so if you are looking for private cheats for any game, you should definitely check out our offerings. <br><br> A serious approach to work and the high level of discipline of our staff guarantee that you will only purchase products of the highest quality in our store.",
-    "about_games_caption" => "We offer products for games such as:",
+    "about_games_caption" => "Recommended",
 
     // === cheat page ===
     "cheat_tariffs" => "Tariffs",
