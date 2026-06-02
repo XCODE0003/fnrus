@@ -215,9 +215,29 @@ function pmGlyph(name){
     // default — bank card (карта/visa/master/мир/банковская/прочее без бренда)
     return s('#b59aff','<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 9.5h19M6 15h4"/>');
 }
+// Icon is decided IN CODE by the method name (no DB dependency) so it works
+// everywhere after a plain `git pull`. Logos are repo files in /assets/img.
 function pmIconHtml(name, src){
-    if (src) return '<img class="pm-img" src="' + src + '" alt="" onerror="this.style.display=\'none\'">';
-    return '<span class="pm-glyph">' + pmGlyph(name) + '</span>';
+    var n = (name || '').toString().toLowerCase();
+    var L = '/assets/img/';
+    function img(p){ return '<img class="pm-img" src="' + p + '" alt="" onerror="this.style.display=\'none\'">'; }
+    function gl(){ return '<span class="pm-glyph">' + pmGlyph(name) + '</span>'; }
+    // brand-free glyphs (same colour) for generic card + "other"
+    if (/остальн|other|проч|разное|\bmore\b/.test(n)) return gl();
+    if (/банковск/.test(n) || n === 'карта' || n === 'card') return gl();
+    // official logos shipped in the repo
+    if (/сбп|sbp/.test(n))                              return img(L + 'payment_sbp.svg');
+    if (/usdt|tether/.test(n))                          return img(L + 'payment_cryptobot.png');
+    if (/crypto|крипт|crystal|\bbtc\b|\bton\b/.test(n)) return img(L + 'payment_crystalpay.svg');
+    if (/xtr|stars?|звезд|telegram|телеграм/.test(n))   return img(L + 'payment_tgstars.png');
+    if (/stream/.test(n))                               return img(L + 'payment_visamir.svg');
+    if (/qiwi|киви/.test(n))                            return img(L + 'payment_qiwi.svg');
+    if (/umoney|юmoney|юмани|ю\.?деньги/.test(n))       return img(L + 'payment_umoney.svg');
+    if (/binance|бинанс/.test(n))                       return img(L + 'payment_binance.svg');
+    if (/карт|visa|master|\bмир\b|mir/.test(n))         return img(L + 'payment_visamastercard.svg');
+    // unknown method → DB icon if any, else a card glyph
+    if (src) return img(src);
+    return gl();
 }
 
 function paymentMethodsTopup(price) {
