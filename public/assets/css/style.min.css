@@ -4493,7 +4493,7 @@ section:first-child {
 }
 
 .reviews {
-    margin: 175px 0;
+    margin: 50px 0;
     overflow: hidden;
     position: relative;
     --slide-height: 420px;
