@@ -210,12 +210,15 @@ function pmGlyph(name){
     if (/usdt|usd|crypto|крипт|btc|bitcoin|\bton\b|coin|crystal|cb\b/.test(n)) return s('#27d39e','<circle cx="12" cy="12" r="9"/><path d="M9.3 9.3h4.5a1.9 1.9 0 0 1 0 3.8H9.3m0 0h5a1.9 1.9 0 0 1 0 3.8H9.3m1.3-11v13"/>');
     if (/star|stars|xtr|звезд/.test(n)) return s('#56b2ff','<path d="M12 3.2l2.5 5.1 5.6.8-4 4 .9 5.6L12 16.6 6.9 18.7l.9-5.6-4-4 5.6-.8z"/>');
     if (/сбп|sbp/.test(n)) return s('#2ec97a','<path d="M13 2.5L4.5 13.5H10l-1 8 9.5-11H13l1-7.5z"/>');
-    if (/остальн|other|проч|more|разное/.test(n)) return s('#9aa8ff','<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>');
+    if (/остальн|other|проч|more|разное/.test(n)) return s('#b59aff','<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>');
     if (/stream/.test(n)) return s('#b59aff','<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.2l5 2.8-5 2.8z"/>');
     // default — bank card (карта/visa/master/мир/банковская/прочее без бренда)
     return s('#b59aff','<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 9.5h19M6 15h4"/>');
 }
-function pmIconHtml(name, src){ return '<span class="pm-glyph">' + pmGlyph(name) + '</span>'; }
+function pmIconHtml(name, src){
+    if (src) return '<img class="pm-img" src="' + src + '" alt="" onerror="this.style.display=\'none\'">';
+    return '<span class="pm-glyph">' + pmGlyph(name) + '</span>';
+}
 
 function paymentMethodsTopup(price) {
 
