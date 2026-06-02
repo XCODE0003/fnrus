@@ -23956,3 +23956,24 @@ body::before{
     outline:none !important;
 }
 .profile__settings-block__input:hover:not([readonly]){ border-color:rgba(132,86,255,.6) !important }
+
+/* Payment method icons → cohesive accent glyph chips (replaces logo tiles) */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #topup-payments-methods .popup__payment-method__icon{
+    background:linear-gradient(160deg, rgba(132,86,255,.20), rgba(132,86,255,.10)) !important;
+    border:1px solid rgba(132,86,255,.30) !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    width:42px !important; height:42px !important; border-radius:12px !important;
+    color:#cdbcff !important;
+}
+.pm-glyph{ display:inline-flex; align-items:center; justify-content:center; color:#cdbcff }
+.pm-glyph svg{ width:21px; height:21px; display:block }
+/* selected row → brighter glyph chip */
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__icon,
+.popup--pay #topup-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__icon{
+    background:linear-gradient(160deg, rgba(132,86,255,.4), rgba(132,86,255,.2)) !important;
+    border-color:rgba(132,86,255,.55) !important;
+    color:#fff !important;
+}
+.popup--pay .popup__payment-method__icon .pm-glyph svg{ color:inherit }
