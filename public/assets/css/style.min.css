@@ -24082,9 +24082,9 @@ body::before{
    circles & banding (OLED was already fine). */
 body::before{
     background:
-        radial-gradient(720px 720px at 14% 18%, rgba(132,86,255,.022), transparent 58%),
-        radial-gradient(820px 820px at 88% 30%, rgba(124,99,255,.018), transparent 60%),
-        radial-gradient(720px 720px at 78% 88%, rgba(140,86,255,.015), transparent 60%) !important;
+        radial-gradient(640px 640px at 15% 20%, rgba(132,86,255,.05), transparent 66%),
+        radial-gradient(720px 720px at 88% 30%, rgba(124,99,255,.042), transparent 68%),
+        radial-gradient(640px 640px at 76% 86%, rgba(140,86,255,.038), transparent 68%) !important;
 }
 
 /* Hero — more compact (less top padding, tighter element gaps) */
@@ -24095,3 +24095,32 @@ body::before{
 .hero__title{ margin-top:12px !important }
 .hero__subtitle{ margin-top:8px !important }
 .hero__actions{ margin-top:14px !important }
+
+/* ==================================================================== */
+/*  v3.5.0 — payment rows match Figma "payson" (circle icons + region)   */
+/* ==================================================================== */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #topup-payments-methods .popup__payment-method__icon{
+    background:transparent !important; border:0 !important; box-shadow:none !important;
+    padding:0 !important; width:34px !important; height:34px !important; border-radius:0 !important; overflow:visible !important;
+}
+.pm-fig{
+    width:34px !important; height:34px !important; border-radius:50% !important; overflow:hidden;
+    display:inline-flex !important; align-items:center; justify-content:center; flex-shrink:0;
+    background:transparent;
+}
+.pm-fig img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
+.pm-fig--white{ background:#fff !important; }
+.pm-fig--white img{ width:62% !important; height:62% !important; object-fit:contain; border-radius:0; }
+.pm-fig--purple{ background:#8456ff !important; }
+.pm-fig--purple img{ width:54% !important; height:54% !important; object-fit:contain; border-radius:0; filter:brightness(0) invert(1); }
+
+/* Right-side region label — gray, no pill (Figma) */
+.popup--pay #buy-payments-methods .popup__payment-method__region,
+.popup--pay #topup-payments-methods .popup__payment-method__region{
+    margin-left:auto !important; flex-shrink:0;
+    font-family:"Onest",sans-serif !important; font-weight:500 !important;
+    font-size:13px !important; color:rgba(255,255,255,.5) !important;
+    white-space:nowrap; padding:0 !important; background:none !important; border:0 !important;
+    letter-spacing:0 !important; text-transform:none !important;
+}

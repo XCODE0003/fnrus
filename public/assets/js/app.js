@@ -203,41 +203,36 @@ function getProductByAlias(alias) {
 
 
 
-// Plain, brand-free line-icon per payment method (no background tile).
-function pmGlyph(name){
-    var n = (name || '').toString().toLowerCase();
-    function s(col, body){ return '<svg viewBox="0 0 24 24" fill="none" stroke="' + col + '" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">' + body + '</svg>'; }
-    if (/usdt|usd|crypto|крипт|btc|bitcoin|\bton\b|coin|crystal|cb\b/.test(n)) return s('#27d39e','<circle cx="12" cy="12" r="9"/><path d="M9.3 9.3h4.5a1.9 1.9 0 0 1 0 3.8H9.3m0 0h5a1.9 1.9 0 0 1 0 3.8H9.3m1.3-11v13"/>');
-    if (/star|stars|xtr|звезд/.test(n)) return s('#56b2ff','<path d="M12 3.2l2.5 5.1 5.6.8-4 4 .9 5.6L12 16.6 6.9 18.7l.9-5.6-4-4 5.6-.8z"/>');
-    if (/сбп|sbp/.test(n)) return s('#2ec97a','<path d="M13 2.5L4.5 13.5H10l-1 8 9.5-11H13l1-7.5z"/>');
-    if (/остальн|other|проч|more|разное/.test(n)) return s('#b59aff','<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>');
-    if (/stream/.test(n)) return s('#b59aff','<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.2l5 2.8-5 2.8z"/>');
-    // default — bank card (карта/visa/master/мир/банковская/прочее без бренда)
-    return s('#b59aff','<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 9.5h19M6 15h4"/>');
-}
-// Icon is decided IN CODE by the method name (no DB dependency) so it works
-// everywhere after a plain `git pull`. Logos are repo files in /assets/img.
+// Payment icons per Figma "payson-keys / оплата 4" — decided IN CODE by the
+// method name (no DB dependency) so it works everywhere after a plain git pull.
+// Assets are repo files in /assets/img (payson-*).
 function pmIconHtml(name, src){
     var n = (name || '').toString().toLowerCase();
     var L = '/assets/img/';
-    function img(p){ return '<img class="pm-img" src="' + p + '" alt="" onerror="this.style.display=\'none\'">'; }
-    function gl(){ return '<span class="pm-glyph">' + pmGlyph(name) + '</span>'; }
-    // brand-free glyphs (same colour) for generic card + "other"
-    if (/остальн|other|проч|разное|\bmore\b/.test(n)) return gl();
-    if (/банковск/.test(n) || n === 'карта' || n === 'card') return gl();
-    // official logos shipped in the repo
-    if (/сбп|sbp/.test(n))                              return img(L + 'payment_sbp.svg');
-    if (/usdt|tether/.test(n))                          return img(L + 'payment_cryptobot.png');
-    if (/crypto|крипт|crystal|\bbtc\b|\bton\b/.test(n)) return img(L + 'payment_crystalpay.svg');
-    if (/xtr|stars?|звезд|telegram|телеграм/.test(n))   return img(L + 'payment_tgstars.png');
-    if (/stream/.test(n))                               return img(L + 'payment_visamir.svg');
-    if (/qiwi|киви/.test(n))                            return img(L + 'payment_qiwi.svg');
-    if (/umoney|юmoney|юмани|ю\.?деньги/.test(n))       return img(L + 'payment_umoney.svg');
-    if (/binance|бинанс/.test(n))                       return img(L + 'payment_binance.svg');
-    if (/карт|visa|master|\bмир\b|mir/.test(n))         return img(L + 'payment_visamastercard.svg');
-    // anything else (BTKassa, RUB/Pally, …) → clean brand-free card glyph,
-    // never a broken/ugly remote logo.
-    return gl();
+    // full circular brand logo (object-cover)
+    function full(p){ return '<span class="pm-fig"><img src="' + p + '" alt="" onerror="this.style.display=\'none\'"></span>'; }
+    // logo glyph centred on a white circle (e.g. СБП)
+    function white(p){ return '<span class="pm-fig pm-fig--white"><img src="' + p + '" alt="" onerror="this.style.display=\'none\'"></span>'; }
+    // purple circle + white card glyph (bank cards / transfers)
+    function card(){ return '<span class="pm-fig pm-fig--purple"><img src="' + L + 'payson-card.svg" alt=""></span>'; }
+
+    if (/сбп|sbp/.test(n))                                   return white(L + 'payson-sbp.png');
+    if (/сбер|sber/.test(n))                                 return full(L + 'payson-sber.png');
+    if (/lzt|лзт|crypto ?bot|cryptobot|крипто.?бот/.test(n)) return full(L + 'payson-cryptobot.png');
+    if (/usdt|tether|crystal|\bcrypto\b|крипт|\bton\b/.test(n)) return full(L + 'payson-cryptobot.png');
+    if (/xtr|stars?|звезд|telegram|телеграм/.test(n))        return full(L + 'payson-tgstars.png');
+    if (/банковск|перевод|карт|visa|master|\bмир\b|\bmir\b|остальн|streampay|stream/.test(n)) return card();
+    // anything else → bank card style (never a broken/ugly remote logo).
+    return card();
+}
+
+// Right-side region / currency label per Figma (gray, by method name).
+function pmRegion(name, currency){
+    var n = (name || '').toString().toLowerCase();
+    if (/сбп|sbp|сбер|sber|банковск/.test(n)) return 'Для России';
+    if (/lzt|crypto ?bot|cryptobot|telegram|stars?|xtr|звезд|usdt|tether|crypto|крипт|crystal|\bton\b/.test(n)) return 'Все страны';
+    if (/перевод/.test(n)) return 'Все страны';
+    return currency || '';
 }
 
 function paymentMethodsTopup(price) {
@@ -273,7 +268,7 @@ function paymentMethodsTopup(price) {
                         '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__name">' + name + '</span>' +
-                            '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
+                            '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
                         '</label>';
                 };
 
@@ -353,7 +348,7 @@ function paymentMethodsProduct(price) {
                         '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__name">' + name + '</span>' +
-                            '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (a.currency || '') + '</span>' +
+                            '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
                         '</label>';
                 };
 
