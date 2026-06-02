@@ -91,7 +91,7 @@
         <div class="content">
             <div class="section-caption-container">
                 <div class="section-caption-container__inner">
-                    <p class="section-caption">{{ __('site.about_games_caption') }}</p>
+                    <p class="section-caption">{{ __('site.about_games_caption') }}:</p>
                 </div>
             </div>
             <div class="catalog__cards-container">
