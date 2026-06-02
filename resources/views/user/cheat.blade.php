@@ -97,9 +97,9 @@
                     {{-- All categories shown side-by-side (Figma cards), no tabs --}}
                     @php
                         $funcIcons = [
-                            'visuals' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
-                            'aimbot'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="2.5"/></svg>',
-                            'misc'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4a2 2 0 1 1 4 0v1.5H20a2 2 0 0 1 2 2v3.5h-1.5a2 2 0 1 0 0 4H22V20a2 2 0 0 1-2 2h-3.5v-1.5a2 2 0 1 0-4 0V22H4a2 2 0 0 1-2-2v-3.5h1.5a2 2 0 1 0 0-4H2V7.5a2 2 0 0 1 2-2h3.5V4a2 2 0 1 1 4 0v1.5h3z"/></svg>',
+                            'visuals' => '<img src="/assets/img/func-visuals.svg" alt="" width="42" height="42">',
+                            'aimbot'  => '<img src="/assets/img/func-aimbot.svg" alt="" width="42" height="42">',
+                            'misc'    => '<img src="/assets/img/func-misc.svg" alt="" width="42" height="42">',
                         ];
                     @endphp
                     <div class="func-grid">

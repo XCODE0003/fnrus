@@ -24243,58 +24243,57 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .cheat-functions .slider-arrows{ display:none !important }
 .func-grid{
     display:grid !important;
-    grid-template-columns:repeat(auto-fit, minmax(285px, 1fr)) !important;
-    gap:16px !important;
+    grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+    gap:24px !important;
 }
 .func-cat{
     background:#171d28 !important;
-    border-radius:22px !important;
+    border-radius:27px !important;
     overflow:hidden;
     display:flex; flex-direction:column;
-    padding:10px;
+    padding:14px;
 }
 .func-cat__head{
     position:relative; overflow:hidden;
-    min-height:104px;
-    border-radius:15px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px;
+    height:107px;
+    border-radius:16px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
     background:rgba(132,86,255,.06);
+    border:1px solid rgba(255,255,255,.10);
     color:#b59aff;
 }
+/* horizontal concentric ring overlay (Figma "Ellipses", mix-blend overlay) */
 .func-cat__head::before{
-    content:""; position:absolute; left:50%; top:128%;
-    transform:translate(-50%,-50%);
-    width:330px; height:330px; border-radius:50%;
-    background:repeating-radial-gradient(circle at center, currentColor 0 1.2px, transparent 1.2px 24px);
-    opacity:.16; pointer-events:none;
-    -webkit-mask-image:radial-gradient(circle at center, #000 30%, transparent 72%);
-            mask-image:radial-gradient(circle at center, #000 30%, transparent 72%);
+    content:""; position:absolute; inset:0;
+    background:url('/assets/img/func-rings.svg') center / auto 300% no-repeat;
+    opacity:.55; mix-blend-mode:overlay; pointer-events:none;
 }
-.func-cat__icon{ position:relative; width:30px; height:30px; display:inline-flex; }
-.func-cat__icon svg{ width:100%; height:100%; }
-.func-cat__name{ position:relative; font-weight:800; font-size:18px; text-transform:uppercase; letter-spacing:.07em; line-height:1; }
-.func-cat__body{ padding:16px 18px 8px; max-height:360px; overflow-y:auto; }
-.func-cat__list{ list-style:none; margin:0; padding:0; }
+.func-cat__icon{ position:relative; z-index:1; width:42px; height:42px; display:inline-flex; }
+.func-cat__icon svg, .func-cat__icon img{ width:100%; height:100%; object-fit:contain; display:block; }
+.func-cat__name{ position:relative; z-index:1; font-weight:700; font-size:22px; text-transform:uppercase; letter-spacing:1.1px; line-height:1.16; }
+.func-cat__body{ padding:20px 16px 6px; max-height:430px; overflow-y:auto; }
+.func-cat__list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .func-cat__list li{
-    position:relative; padding-left:17px; margin-bottom:13px;
-    font-size:14px; line-height:1.45; color:rgba(255,255,255,.55);
+    position:relative; padding-left:16px; margin:0;
+    font-size:17px; line-height:1.445; color:rgba(255,255,255,.55);
 }
 .func-cat__list li::before{
-    content:""; position:absolute; left:2px; top:8px;
-    width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.4);
+    content:""; position:absolute; left:1px; top:10px;
+    width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,.55);
 }
-/* accent per category */
+/* accent per category — exact Figma colors */
 .func--visuals .func-cat__head{ background:rgba(138,245,155,.06) }
 .func--visuals .func-cat__icon, .func--visuals .func-cat__name, .func--visuals .func-cat__head{ color:#8af59b }
-.func--aimbot  .func-cat__head{ background:rgba(255,160,51,.06) }
-.func--aimbot  .func-cat__icon, .func--aimbot  .func-cat__name, .func--aimbot  .func-cat__head{ color:#ffa033 }
-.func--misc    .func-cat__head{ background:rgba(255,92,138,.07) }
-.func--misc    .func-cat__icon, .func--misc    .func-cat__name, .func--misc    .func-cat__head{ color:#ff5c8a }
+.func--aimbot  .func-cat__head{ background:rgba(255,187,86,.06) }
+.func--aimbot  .func-cat__icon, .func--aimbot  .func-cat__name, .func--aimbot  .func-cat__head{ color:#ffbb56 }
+.func--misc    .func-cat__head{ background:rgba(255,86,96,.06) }
+.func--misc    .func-cat__icon, .func--misc    .func-cat__name, .func--misc    .func-cat__head{ color:#ff5660 }
 .func--default .func-cat__head{ background:rgba(132,86,255,.08) }
 .func--default .func-cat__icon, .func--default .func-cat__name, .func--default .func-cat__head{ color:#b59aff }
-.func-cat__body::-webkit-scrollbar{ width:5px }
+.func-cat__body::-webkit-scrollbar{ width:7px }
 .func-cat__body::-webkit-scrollbar-thumb{ background:#29313d; border-radius:30px }
-@media (max-width:640px){ .func-grid{ grid-template-columns:1fr !important } }
+.func-cat__body::-webkit-scrollbar-track{ background:transparent }
+@media (max-width:900px){ .func-grid{ grid-template-columns:1fr !important } }
 
 /* ==================================================================== */
 /*  v3.6.6 — payment icons: crisp circles matching Figma exactly         */
@@ -24324,12 +24323,15 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
         top:0 !important; bottom:0 !important; right:0 !important;
         height:100% !important;
         display:flex !important; align-items:center !important; justify-content:flex-end !important;
-        padding-top:130px !important;   /* clear the fixed header */
+        padding-top:90px !important;    /* push down a touch below header, keep image big */
     }
     .hero__image img{
-        max-height:420px !important; width:auto !important; height:auto !important;
+        max-height:600px !important; width:auto !important; height:auto !important;
         max-width:100% !important; display:block;
     }
+}
+@media (min-width:1600px){
+    .hero__image img{ max-height:680px !important; }
 }
 
 /* ---------------------------------------------------------------------- */
