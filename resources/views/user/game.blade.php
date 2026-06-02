@@ -15,8 +15,11 @@
                 </nav>
 
                 {{-- Title with dim parenthetical subtitle --}}
+                {{-- Title = category name only (no hard-coded "Читы"); the
+                     parenthetical part "(CS2)" comes from the category name
+                     itself in admin and is dimmed for SEO. --}}
                 <h1 class="game-hero__title">
-                    {{ __('site.game_cheats_for') }} {{ trim($tp[0]) }}
+                    {{ trim($tp[0]) }}
                     @if(!empty($tp[1]))
                         <span class="game-hero__title-dim">{{ $tp[1] }}</span>
                     @endif

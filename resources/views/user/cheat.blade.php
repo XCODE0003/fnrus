@@ -91,7 +91,7 @@
                 @if(count($functional))
                 <div class="cheat-functions" id="cheat-functions">
                     <div class="cheat-functions__caption-container">
-                        <p class="cheat-functions__caption">{{ __('site.section_functional_title') }}</p>
+                        <p class="section-caption">{{ __('site.section_functional_title') }}</p>
                     </div>
 
                     {{-- Category tabs --}}

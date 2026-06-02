@@ -24124,3 +24124,79 @@ body::before{
     white-space:nowrap; padding:0 !important; background:none !important; border:0 !important;
     letter-spacing:0 !important; text-transform:none !important;
 }
+
+/* ==================================================================== */
+/*  v3.6.0 — client: system font stack + Tailwind heading scale          */
+/* ==================================================================== */
+:root{
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+html, body, body *{ font-family: var(--font-sans) !important; }
+
+/* All headings → text-2xl / sm:text-3xl / lg:text-4xl, font-semibold, white */
+.hero__title, .game-hero__title, .games-catalog__title, .reviews-page__title,
+.catalog__title, .section2__title, .reviews__title, .faq__title,
+.section-caption, .about-heading-section__section-caption,
+.status-heading-section__section-caption, .key__section-caption,
+.instruction__section-caption, .cheat-functions__caption,
+.games-page .games-catalog__title, .status-page .status-heading-section__section-caption{
+    font-size:24px !important;
+    font-weight:600 !important;
+    color:#fff !important;
+    line-height:1.18 !important;
+    letter-spacing:-0.01em !important;
+}
+@media (min-width:640px){
+    .hero__title, .game-hero__title, .games-catalog__title, .reviews-page__title,
+    .catalog__title, .section2__title, .reviews__title, .faq__title,
+    .section-caption, .about-heading-section__section-caption,
+    .status-heading-section__section-caption, .key__section-caption,
+    .instruction__section-caption, .cheat-functions__caption,
+    .games-page .games-catalog__title, .status-page .status-heading-section__section-caption{ font-size:30px !important; }
+}
+@media (min-width:1024px){
+    .hero__title, .game-hero__title, .games-catalog__title, .reviews-page__title,
+    .catalog__title, .section2__title, .reviews__title, .faq__title,
+    .section-caption, .about-heading-section__section-caption,
+    .status-heading-section__section-caption, .key__section-caption,
+    .instruction__section-caption, .cheat-functions__caption,
+    .games-page .games-catalog__title, .status-page .status-heading-section__section-caption{ font-size:36px !important; }
+}
+
+/* All sub-headings → text-sm / sm:text-base, white/40 */
+.hero__subtitle, .game-hero__desc, .catalog__subtitle, .section2__subtitle,
+.reviews__subtitle, .faq__subtitle, .games-catalog__subtitle,
+.about-heading-section__section-subcaption, .section-subcaption{
+    font-size:14px !important;
+    font-weight:400 !important;
+    color:rgba(255,255,255,.4) !important;
+}
+@media (min-width:640px){
+    .hero__subtitle, .game-hero__desc, .catalog__subtitle, .section2__subtitle,
+    .reviews__subtitle, .faq__subtitle, .games-catalog__subtitle,
+    .about-heading-section__section-subcaption, .section-subcaption{ font-size:16px !important; }
+}
+
+/* Category hero — wider text column so the title isn't cramped */
+@media (min-width:1024px){
+    .game-hero__text{ flex:1 1 auto !important; max-width:none !important; padding-right:40px; }
+    .game-hero__image{ flex:0 0 46% !important; max-width:680px !important; }
+}
+
+/* Payment icon — remove white background tile */
+.pm-fig--white{ background:transparent !important; }
+.pm-fig--white img{ width:100% !important; height:100% !important; object-fit:contain; }
+
+/* Force system font over class-level Mazzard/Onest declarations everywhere */
+html body [class], html body [class] *{ font-family: var(--font-sans) !important; }
+.hero__title, .game-hero__title, .games-catalog__title, .reviews-page__title,
+.catalog__title, .section2__title, .reviews__title, .faq__title,
+.section-caption, .about-heading-section__section-caption,
+.status-heading-section__section-caption, .key__section-caption,
+.instruction__section-caption, .cheat-functions__caption,
+.games-page .games-catalog__title, .status-page .status-heading-section__section-caption,
+.section-caption.status-heading-section__section-caption,
+.catalog-card__name, .game-card__name, .rev-card__name, .popup__caption,
+.profile__caption, .profile__main__header, .func-tab, .func-chip__title{
+    font-family: var(--font-sans) !important;
+}
