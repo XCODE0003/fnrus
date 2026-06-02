@@ -6,7 +6,7 @@ return [
     "text_section_subcaption" => "We are proud to offer high-quality and reliable cheats for mobile and PC games.",
     "hero_badge" => "Get the edge over your rivals!",
     "hero_title_1" => "Exclusive",
-    "hero_title_2" => "cheats<br>for mobile<br>and PC games",
+    "hero_title_2" => "cheats<br><span class=\"hero__title-accent\">for mobile<br>and PC games</span>",
     "hero_subtitle" => "We take pride in offering high-quality and reliable cheats for your devices.",
     "hero_btn_catalog" => "Games catalog",
     "hero_btn_register" => "Register",

@@ -21454,17 +21454,18 @@ img.rev-card__avatar{display:none !important}
 /* 3. Catalog block "Мы предлагаем продукты для таких игр как:" */
 .about-page .section-caption-container .section-caption,
 .about-page .catalog .section-caption{
-    font-family:"Mazzard H", sans-serif !important;
-    font-size:44px !important;
-    font-weight:800 !important;
-    line-height:1.15 !important;
-    letter-spacing:-0.012em !important;
+    font-family:var(--font-sans) !important;
+    font-size:36px !important;
+    font-weight:600 !important;
+    color:#fff !important;
+    line-height:1.18 !important;
+    letter-spacing:-0.01em !important;
 }
 @media (max-width: 1023px){
-    .about-page .catalog .section-caption{font-size:28px !important}
+    .about-page .catalog .section-caption{font-size:30px !important}
 }
 @media (max-width: 599px){
-    .about-page .catalog .section-caption{font-size:22px !important}
+    .about-page .catalog .section-caption{font-size:24px !important}
 }
 
 /* 4. Social-cards row (Telegram канал / Наши отзывы / ...) — fix font */
@@ -24329,4 +24330,11 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
         max-height:420px !important; width:auto !important; height:auto !important;
         max-width:100% !important; display:block;
     }
+}
+
+/* ---------------------------------------------------------------------- */
+/*  v3.6.8 — hero second line accent (like screen 3 reference)            */
+/* ---------------------------------------------------------------------- */
+.hero__title-accent{
+    color:#9b76ff !important;
 }
