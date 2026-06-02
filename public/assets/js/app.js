@@ -216,7 +216,7 @@ function pmGlyph(name){
     // default — bank card (карта/visa/master/мир/банковск/kassa/freekassa/…)
     return o+'<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 9.5h19M6 15h4"/>'+c;
 }
-function pmIconHtml(name){ return '<span class="pm-glyph">' + pmGlyph(name) + '</span>'; }
+function pmIconHtml(name, src){ if (src) return '<img class="pm-img" src="' + src + '" alt="" onerror="this.style.display=\'none\'">'; return '<span class="pm-glyph">' + pmGlyph(name) + '</span>'; }
 
 function paymentMethodsTopup(price) {
 
@@ -245,7 +245,8 @@ function paymentMethodsTopup(price) {
                 var rowHtml = function(e, a) {
                     var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
                     var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconImg = pmIconHtml(name);
+                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    var iconImg = pmIconHtml(name, iconSrc);
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">' +
                         '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
@@ -272,7 +273,7 @@ function paymentMethodsTopup(price) {
 
                 if (bt_entry) {
                     items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="topup-bt-aggregator">' +
-                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title||'card') + '</span>' +
+                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title, bt_entry.icon) + '</span>' +
                         '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
                         '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
                         '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
@@ -324,7 +325,8 @@ function paymentMethodsProduct(price) {
                 var rowHtml = function(e, a) {
                     var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
                     var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconImg = pmIconHtml(name);
+                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
+                    var iconImg = pmIconHtml(name, iconSrc);
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">' +
                         '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
@@ -355,7 +357,7 @@ function paymentMethodsProduct(price) {
 
                 if (bt_entry) {
                     items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="product-bt-aggregator">' +
-                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title||'card') + '</span>' +
+                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title, bt_entry.icon) + '</span>' +
                         '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
                         '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
                         '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +

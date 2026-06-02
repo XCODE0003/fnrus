@@ -23977,3 +23977,23 @@ body::before{
     color:#fff !important;
 }
 .popup--pay .popup__payment-method__icon .pm-glyph svg{ color:inherit }
+
+/* Payment icons → real app-icon images (DB), chip transparent so the icon's
+   own rounded coloured tile shows fully */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #topup-payments-methods .popup__payment-method__icon{
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    width:44px !important; height:44px !important;
+    border-radius:12px !important;
+    overflow:hidden;
+}
+.popup--pay .popup__payment-method__icon .pm-img{
+    width:100% !important; height:100% !important;
+    object-fit:contain !important;
+    border-radius:12px !important;
+    display:block !important;
+}
+.popup--pay .popup__payment-method__icon .pm-glyph{ width:100%; height:100%; border-radius:12px; background:linear-gradient(160deg,rgba(132,86,255,.2),rgba(132,86,255,.1)); color:#cdbcff }
