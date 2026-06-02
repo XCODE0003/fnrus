@@ -24029,3 +24029,24 @@ body::before{
 }
 /* hide radio on the aggregator (it has a chevron instead) */
 .popup--pay #buy-payments-methods .popup__payment-method--aggregator::after{ display:none !important }
+
+/* ==================================================================== */
+/*  PAYMENT ICONS — no background tile, just the line glyph              */
+/* ==================================================================== */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #topup-payments-methods .popup__payment-method__icon,
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__icon,
+.popup--pay #topup-payments-methods input[type="radio"]:checked + .popup__payment-method .popup__payment-method__icon{
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    width:34px !important; height:34px !important;
+    border-radius:0 !important;
+}
+.popup--pay .popup__payment-method__icon .pm-glyph{
+    display:inline-flex !important; align-items:center; justify-content:center;
+    width:100% !important; height:100% !important;
+    background:transparent !important;
+}
+.popup--pay .popup__payment-method__icon .pm-glyph svg{ width:28px !important; height:28px !important; display:block }
