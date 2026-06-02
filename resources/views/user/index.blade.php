@@ -8,7 +8,7 @@
                     <span class="hero__badge-icon"><img src="/assets/img/hero-crown.svg" alt=""></span>
                     <span class="hero__badge-text">{{ __('site.hero_badge') }}</span>
                 </div>
-                <h1 class="hero__title">{{ __('site.hero_title_1') }}<span class="hero__title-bolt"><img src="/assets/img/icon_lightning.svg" alt=""></span>{!! __('site.hero_title_2') !!}</h1>
+                <h1 class="hero__title">{{ __('site.hero_title_1') }}{!! __('site.hero_title_2') !!}</h1>
                 <p class="hero__subtitle">{{ __('site.hero_subtitle') }}</p>
                 <div class="hero__actions">
                     <a href="/games" class="hero__btn-catalog">
