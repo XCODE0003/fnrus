@@ -169,6 +169,18 @@
             if (cards.length) reveal(cards, { scale: 0.92, stagger: 0.07, trigger: sec });
         });
 
+        /* Bullet-proof safety net: anything a reveal hid that is still hidden
+           after a moment (trigger never fired) — force it visible. Guarantees
+           no element (e.g. the first .game-list__head) ever stays stuck. */
+        setTimeout(function () {
+            qa('.game-list__head, .game-rec__title, .game-card, .catalog-card, .s2-card, .reviews .rev-card, .reviews-grid .rev-card').forEach(function (el) {
+                var cs = getComputedStyle(el);
+                if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) {
+                    gsap.set(el, { clearProps: 'opacity,visibility,transform,filter' });
+                }
+            });
+        }, 2600);
+
         /* ===================== СТРАНИЦА «Каталог игр» ================= */
         if (q('.games-catalog')) {
             reveal('.games-catalog__title, .games-catalog__subtitle, .games-catalog__controls', { y: 26, trigger: '.games-catalog' });

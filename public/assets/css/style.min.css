@@ -24294,3 +24294,22 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .func-cat__body::-webkit-scrollbar{ width:5px }
 .func-cat__body::-webkit-scrollbar-thumb{ background:#29313d; border-radius:30px }
 @media (max-width:640px){ .func-grid{ grid-template-columns:1fr !important } }
+
+/* ==================================================================== */
+/*  v3.6.6 — payment icons: crisp circles matching Figma exactly         */
+/* ==================================================================== */
+.popup--pay .popup__payment-method__icon{ width:38px !important; height:38px !important; }
+.pm-fig{
+    width:38px !important; height:38px !important;
+    border-radius:50% !important; overflow:hidden !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    flex-shrink:0; background:transparent;
+}
+/* full circular brand logos (Crypto bot, Telegram Stars, Сбер, LZT) */
+.pm-fig > img{ width:100% !important; height:100% !important; object-fit:cover !important; border-radius:50% !important; display:block; }
+/* СБП — colourful logo on a white circle, centred */
+.pm-fig--white{ background:#fff !important; }
+.pm-fig--white > img{ width:74% !important; height:74% !important; object-fit:contain !important; border-radius:0 !important; }
+/* bank cards / transfers — white card glyph on a purple circle, centred */
+.pm-fig--purple{ background:#8456ff !important; }
+.pm-fig--purple > img{ width:50% !important; height:50% !important; object-fit:contain !important; border-radius:0 !important; filter:brightness(0) invert(1) !important; }
