@@ -94,68 +94,37 @@
                         <p class="section-caption">{{ __('site.section_functional_title') }}</p>
                     </div>
 
-                    {{-- Category tabs --}}
-                    <div class="func-tabs" role="tablist" aria-label="{{ __('site.section_functional_title') }}">
+                    {{-- All categories shown side-by-side (Figma cards), no tabs --}}
+                    @php
+                        $funcIcons = [
+                            'visuals' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+                            'aimbot'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="2.5"/></svg>',
+                            'misc'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4a2 2 0 1 1 4 0v1.5H20a2 2 0 0 1 2 2v3.5h-1.5a2 2 0 1 0 0 4H22V20a2 2 0 0 1-2 2h-3.5v-1.5a2 2 0 1 0-4 0V22H4a2 2 0 0 1-2-2v-3.5h1.5a2 2 0 1 0 0-4H2V7.5a2 2 0 0 1 2-2h3.5V4a2 2 0 1 1 4 0v1.5h3z"/></svg>',
+                        ];
+                    @endphp
+                    <div class="func-grid">
                         @foreach($functional as $i => $func)
-                            @php $acc = $accentMap[$func['id'] ?? ''] ?? 'func--default'; @endphp
-                            <button type="button"
-                                    class="func-tab {{ $acc }} {{ $i === 0 ? 'is-active' : '' }}"
-                                    role="tab"
-                                    aria-selected="{{ $i === 0 ? 'true' : 'false' }}"
-                                    data-target="func-panel-{{ $i }}">
-                                <span class="func-tab__dot" aria-hidden="true"></span>
-                                <span class="func-tab__label">{{ $func['title'] }}</span>
-                            </button>
-                        @endforeach
-                    </div>
-
-                    {{-- Panels --}}
-                    <div class="func-panels">
-                        @foreach($functional as $i => $func)
-                            @php $acc = $accentMap[$func['id'] ?? ''] ?? 'func--default'; @endphp
-                            <div class="func-panel {{ $acc }} {{ $i === 0 ? 'is-active' : '' }}"
-                                 id="func-panel-{{ $i }}" role="tabpanel">
-                                <div class="func-chips">
-                                    @foreach($func['lines'] as $line)
-                                        @php
-                                            $parts = preg_split('/\s*[-–—]\s+/u', trim($line), 2);
-                                            $fTitle = trim($parts[0] ?? '');
-                                            $fDesc = isset($parts[1]) ? trim($parts[1]) : '';
-                                        @endphp
-                                        <span class="func-chip">
-                                            <span class="func-chip__check" aria-hidden="true">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                            </span>
-                                            <span class="func-chip__body">
-                                                <span class="func-chip__title">{{ $fTitle }}</span>
-                                                @if($fDesc !== '')<span class="func-chip__desc">{{ $fDesc }}</span>@endif
-                                            </span>
-                                        </span>
-                                    @endforeach
+                            @php
+                                $id = $func['id'] ?? '';
+                                $acc = $accentMap[$id] ?? 'func--default';
+                                $icon = $funcIcons[$id] ?? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6L12 16.5 6.5 19.2l1-6L3 8.9 9 8z"/></svg>';
+                            @endphp
+                            <div class="func-cat {{ $acc }}">
+                                <div class="func-cat__head">
+                                    <span class="func-cat__icon" aria-hidden="true">{!! $icon !!}</span>
+                                    <span class="func-cat__name">{{ $func['title'] }}</span>
+                                </div>
+                                <div class="func-cat__body">
+                                    <ul class="func-cat__list">
+                                        @foreach($func['lines'] as $line)
+                                            <li>{{ trim($line) }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
-                <script>
-                (function(){
-                    var root = document.getElementById('cheat-functions');
-                    if (!root) return;
-                    var tabs = root.querySelectorAll('.func-tab');
-                    var panels = root.querySelectorAll('.func-panel');
-                    function activate(tab){
-                        var target = tab.getAttribute('data-target');
-                        tabs.forEach(function(t){ t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
-                        panels.forEach(function(p){ p.classList.toggle('is-active', p.id === target); });
-                    }
-                    tabs.forEach(function(tab){
-                        tab.addEventListener('click', function(){ activate(tab); });
-                        tab.addEventListener('keydown', function(e){
-                            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(tab); }
-                        });
-                    });
-                })();
-                </script>
                 @endif
             </div>
         </section>

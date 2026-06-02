@@ -24235,3 +24235,62 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .wrapper{ min-height:100vh; display:flex; flex-direction:column; }
 .wrapper > main, .wrapper > .main, .wrapper > .cheat-page, .wrapper > .games-page{ flex:1 0 auto; }
 .wrapper > .footer{ margin-top:auto !important; flex-shrink:0; }
+
+/* ==================================================================== */
+/*  v3.6.5 — FUNCTIONAL block: side-by-side category cards (Figma)       */
+/* ==================================================================== */
+.cheat-functions .slider-arrows{ display:none !important }
+.func-grid{
+    display:grid !important;
+    grid-template-columns:repeat(auto-fit, minmax(285px, 1fr)) !important;
+    gap:16px !important;
+}
+.func-cat{
+    background:#171d28 !important;
+    border-radius:22px !important;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    padding:10px;
+}
+.func-cat__head{
+    position:relative; overflow:hidden;
+    min-height:104px;
+    border-radius:15px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px;
+    background:rgba(132,86,255,.06);
+    color:#b59aff;
+}
+.func-cat__head::before{
+    content:""; position:absolute; left:50%; top:128%;
+    transform:translate(-50%,-50%);
+    width:330px; height:330px; border-radius:50%;
+    background:repeating-radial-gradient(circle at center, currentColor 0 1.2px, transparent 1.2px 24px);
+    opacity:.16; pointer-events:none;
+    -webkit-mask-image:radial-gradient(circle at center, #000 30%, transparent 72%);
+            mask-image:radial-gradient(circle at center, #000 30%, transparent 72%);
+}
+.func-cat__icon{ position:relative; width:30px; height:30px; display:inline-flex; }
+.func-cat__icon svg{ width:100%; height:100%; }
+.func-cat__name{ position:relative; font-weight:800; font-size:18px; text-transform:uppercase; letter-spacing:.07em; line-height:1; }
+.func-cat__body{ padding:16px 18px 8px; max-height:360px; overflow-y:auto; }
+.func-cat__list{ list-style:none; margin:0; padding:0; }
+.func-cat__list li{
+    position:relative; padding-left:17px; margin-bottom:13px;
+    font-size:14px; line-height:1.45; color:rgba(255,255,255,.55);
+}
+.func-cat__list li::before{
+    content:""; position:absolute; left:2px; top:8px;
+    width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.4);
+}
+/* accent per category */
+.func--visuals .func-cat__head{ background:rgba(138,245,155,.06) }
+.func--visuals .func-cat__icon, .func--visuals .func-cat__name, .func--visuals .func-cat__head{ color:#8af59b }
+.func--aimbot  .func-cat__head{ background:rgba(255,160,51,.06) }
+.func--aimbot  .func-cat__icon, .func--aimbot  .func-cat__name, .func--aimbot  .func-cat__head{ color:#ffa033 }
+.func--misc    .func-cat__head{ background:rgba(255,92,138,.07) }
+.func--misc    .func-cat__icon, .func--misc    .func-cat__name, .func--misc    .func-cat__head{ color:#ff5c8a }
+.func--default .func-cat__head{ background:rgba(132,86,255,.08) }
+.func--default .func-cat__icon, .func--default .func-cat__name, .func--default .func-cat__head{ color:#b59aff }
+.func-cat__body::-webkit-scrollbar{ width:5px }
+.func-cat__body::-webkit-scrollbar-thumb{ background:#29313d; border-radius:30px }
+@media (max-width:640px){ .func-grid{ grid-template-columns:1fr !important } }
