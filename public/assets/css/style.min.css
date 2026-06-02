@@ -24089,9 +24089,9 @@ body::before{
 
 /* Hero — more compact (less top padding, tighter element gaps) */
 @media (min-width:1024px){
-    .hero{ padding-top:96px !important }
-    .hero__image{ bottom:-66px !important }
+    .hero{ padding-top:180px !important }
+    .hero__image{ bottom:-118px !important }
 }
-.hero__title{ margin-top:14px !important }
-.hero__subtitle{ margin-top:10px !important }
-.hero__actions{ margin-top:20px !important }
+.hero__title{ margin-top:12px !important }
+.hero__subtitle{ margin-top:8px !important }
+.hero__actions{ margin-top:14px !important }
