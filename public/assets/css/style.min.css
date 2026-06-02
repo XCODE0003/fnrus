@@ -24268,7 +24268,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     width:118%; aspect-ratio:1/1; height:auto;
     transform:translate(-50%,-50%) scale(1);
     background:url('/assets/img/func-rings.svg') center/contain no-repeat;
-    opacity:.62; mix-blend-mode:overlay; pointer-events:none;
+    opacity:.5; mix-blend-mode:overlay; pointer-events:none;
     animation:funcRings 7s ease-in-out infinite;
 }
 @keyframes funcRings{
@@ -24297,14 +24297,14 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     content:""; position:absolute; left:1px; top:10px;
     width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,.55);
 }
-/* accent per category — exact Figma colors + soft colored glow from bottom */
-.func--visuals .func-cat__head{ background:radial-gradient(140% 125% at 50% 118%, rgba(138,245,155,.20) 0%, rgba(138,245,155,.06) 40%, transparent 72%) }
+/* accent per category — exact Figma colors, flat tint */
+.func--visuals .func-cat__head{ background:rgba(138,245,155,.06) }
 .func--visuals .func-cat__icon, .func--visuals .func-cat__name, .func--visuals .func-cat__head{ color:#8af59b }
-.func--aimbot  .func-cat__head{ background:radial-gradient(140% 125% at 50% 118%, rgba(255,187,86,.18) 0%, rgba(255,187,86,.055) 40%, transparent 72%) }
+.func--aimbot  .func-cat__head{ background:rgba(255,187,86,.06) }
 .func--aimbot  .func-cat__icon, .func--aimbot  .func-cat__name, .func--aimbot  .func-cat__head{ color:#ffbb56 }
-.func--misc    .func-cat__head{ background:radial-gradient(140% 125% at 50% 118%, rgba(255,86,96,.18) 0%, rgba(255,86,96,.055) 40%, transparent 72%) }
+.func--misc    .func-cat__head{ background:rgba(255,86,96,.06) }
 .func--misc    .func-cat__icon, .func--misc    .func-cat__name, .func--misc    .func-cat__head{ color:#ff5660 }
-.func--default .func-cat__head{ background:radial-gradient(140% 125% at 50% 118%, rgba(132,86,255,.20) 0%, rgba(132,86,255,.06) 40%, transparent 72%) }
+.func--default .func-cat__head{ background:rgba(132,86,255,.08) }
 .func--default .func-cat__icon, .func--default .func-cat__name, .func--default .func-cat__head{ color:#b59aff }
 .func-cat__body::-webkit-scrollbar{ width:7px }
 .func-cat__body::-webkit-scrollbar-thumb{ background:#29313d; border-radius:30px }
