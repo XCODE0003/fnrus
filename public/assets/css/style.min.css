@@ -23997,3 +23997,35 @@ body::before{
     display:block !important;
 }
 .popup--pay .popup__payment-method__icon .pm-glyph{ width:100%; height:100%; border-radius:12px; background:linear-gradient(160deg,rgba(132,86,255,.2),rgba(132,86,255,.1)); color:#cdbcff }
+
+/* ==================================================================== */
+/*  PAYMENT METHOD — better SELECTED state (radio dot + glow)            */
+/* ==================================================================== */
+.popup--pay #buy-payments-methods .popup__payment-method,
+.popup--pay #topup-payments-methods .popup__payment-method{ position:relative !important }
+
+/* radio indicator at the far right of each row */
+.popup--pay #buy-payments-methods .popup__payment-method::after,
+.popup--pay #topup-payments-methods .popup__payment-method::after{
+    display:block !important; content:"" !important; position:static !important;
+    flex-shrink:0 !important;
+    width:20px !important; height:20px !important; border-radius:50% !important;
+    border:2px solid rgba(255,255,255,.22) !important;
+    margin-left:8px !important;
+    transition:border-color .2s ease, background .2s ease, box-shadow .2s ease !important;
+}
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method::after,
+.popup--pay #topup-payments-methods input[type="radio"]:checked + .popup__payment-method::after{
+    border-color:#9468ff !important;
+    background:#9468ff !important;
+    box-shadow:inset 0 0 0 4px #182030 !important;
+}
+/* selected row — brighter fill + soft purple glow + lift */
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method,
+.popup--pay #topup-payments-methods input[type="radio"]:checked + .popup__payment-method{
+    background:linear-gradient(180deg, rgba(132,86,255,.16), rgba(132,86,255,.08)) !important;
+    border-color:rgba(132,86,255,.65) !important;
+    box-shadow:0 0 0 1px rgba(132,86,255,.35), 0 10px 26px -12px rgba(132,86,255,.65) !important;
+}
+/* hide radio on the aggregator (it has a chevron instead) */
+.popup--pay #buy-payments-methods .popup__payment-method--aggregator::after{ display:none !important }
