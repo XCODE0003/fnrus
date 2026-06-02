@@ -24200,3 +24200,38 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .profile__caption, .profile__main__header, .func-tab, .func-chip__title{
     font-family: var(--font-sans) !important;
 }
+
+/* ==================================================================== */
+/*  v3.6.2 — СБП circle, smaller hero btns, profile layout, footer gap   */
+/* ==================================================================== */
+/* СБП — colourful logo on a white circle (restored) */
+.pm-fig--white{ background:#fff !important; }
+.pm-fig--white img{ width:64% !important; height:64% !important; object-fit:contain; border-radius:0; }
+
+/* Hero buttons — smaller, to match the updated (smaller) heading */
+.hero__btn-catalog, .hero__btn-register{
+    padding:12px 24px !important; min-height:0 !important; height:auto !important;
+    font-size:14px !important;
+}
+.hero__btn-catalog__label, .hero__btn-register .name{ font-size:14px !important; font-weight:600 !important; }
+.hero__btn-catalog__tab, .hero__btn-register__icon{ width:28px !important; height:28px !important; }
+.hero__actions{ gap:12px !important; margin-top:18px !important; }
+
+/* Hero — a touch more top padding */
+@media (min-width:1024px){ .hero{ padding-top:200px !important; } }
+
+/* Profile — gap under header, full-width main, wider sidebar, no bottom void */
+.profile{ padding-top:120px !important; padding-bottom:30px !important; }
+.profile__container{ grid-template-columns:330px minmax(0,1fr) !important; gap:26px !important; align-items:start !important; }
+.profile__sidebar{ width:100% !important; max-width:none !important; }
+.profile__main{ width:100% !important; flex:1 1 auto !important; }
+.profile__tabs__tab{ max-width:none !important; }
+
+/* Footer — tighter vertical spacing (less empty band at the very bottom) */
+.footer{ margin-top:0 !important; padding-top:24px !important; padding-bottom:10px !important; }
+.footer__container{ padding-bottom:18px !important; margin-bottom:14px !important; }
+
+/* Sticky footer — short pages (profile, FAQ) no longer leave a void below */
+.wrapper{ min-height:100vh; display:flex; flex-direction:column; }
+.wrapper > main, .wrapper > .main, .wrapper > .cheat-page, .wrapper > .games-page{ flex:1 0 auto; }
+.wrapper > .footer{ margin-top:auto !important; flex-shrink:0; }

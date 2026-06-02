@@ -216,7 +216,7 @@ function pmIconHtml(name, src){
     // purple circle + white card glyph (bank cards / transfers)
     function card(){ return '<span class="pm-fig pm-fig--purple"><img src="' + L + 'payson-card.svg" alt=""></span>'; }
 
-    if (/сбп|sbp/.test(n))                                   return white(L + 'payson-sbp.png');
+    if (/сбп|sbp/.test(n))                                   return white(L + 'payment_sbp.svg');
     if (/сбер|sber/.test(n))                                 return full(L + 'payson-sber.png');
     if (/lzt|лзт|crypto ?bot|cryptobot|крипто.?бот/.test(n)) return full(L + 'payson-cryptobot.png');
     if (/usdt|tether|crystal|\bcrypto\b|крипт|\bton\b/.test(n)) return full(L + 'payson-cryptobot.png');
@@ -224,6 +224,18 @@ function pmIconHtml(name, src){
     if (/банковск|перевод|карт|visa|master|\bмир\b|\bmir\b|остальн|streampay|stream/.test(n)) return card();
     // anything else → bank card style (never a broken/ugly remote logo).
     return card();
+}
+
+// Curated allow-list + display order (Figma). Methods not listed are hidden.
+// Returns 0 to hide, or a positive rank for ordering.
+function pmOrder(name){
+    var n = (name || '').toString().toLowerCase().trim();
+    if (/сбп|sbp/.test(n))                  return 1;
+    if (/банковск/.test(n))                 return 2;
+    if (/crypto ?bot|cryptobot/.test(n))    return 3;
+    if (/telegram stars|\bstars\b|\bxtr\b/.test(n)) return 4;
+    if (/перевод/.test(n))                  return 5;
+    return 0; // Сбер Pay, LZT, BTKassa, прочее — скрыты
 }
 
 // Right-side region / currency label per Figma (gray, by method name).
@@ -272,42 +284,20 @@ function paymentMethodsTopup(price) {
                         '</label>';
                 };
 
+                var rows = [];
                 $(data.result).each(function (index, e) {
-
-                    if (e.type === 'bt' && e.assets && e.assets.length > 0) {
-                        bt_entry = e;
-                        $(e.assets).each(function (index, a) {
-                            bt_html += rowHtml(e, a);
-                        });
-                        return;
-                    }
-
-                    $(e.assets).each(function (index, a) {
-                        items_html += rowHtml(e, a);
+                    if (e.type === 'bt') return; // BTKassa скрыт
+                    $(e.assets).each(function (j, a) {
+                        var nm = (a && a.title) || (e && e.title) || (a && a.currency) || '';
+                        var rank = pmOrder(nm);
+                        if (rank === 0) return;
+                        rows.push({ rank: rank, sub: j, html: rowHtml(e, a) });
                     });
-
                 });
+                rows.sort(function (x, y) { return (x.rank - y.rank) || (x.sub - y.sub); });
+                items_html = rows.map(function (r) { return r.html; }).join('');
 
-                if (bt_entry) {
-                    items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="topup-bt-aggregator">' +
-                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title, bt_entry.icon) + '</span>' +
-                        '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
-                        '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
-                        '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-                    '</a>';
-                }
-
-                var wrapper = '<div id="topup-bt-main">' + items_html + '</div>' +
-                    '<div id="topup-bt-sub" style="display:none">' + bt_html + '</div>';
-
-                $('#topup-payments-methods').html(wrapper);
-
-                $('#topup-payments-methods').off('click', '#topup-bt-aggregator').on('click', '#topup-bt-aggregator', function(e){
-                    e.preventDefault();
-                    var $sub = $('#topup-bt-sub');
-                    $sub.toggle();
-                    $(this).toggleClass('is-open', $sub.is(':visible'));
-                });
+                $('#topup-payments-methods').html('<div id="topup-bt-main">' + items_html + '</div>');
             }
         }
     });
@@ -352,48 +342,21 @@ function paymentMethodsProduct(price) {
                         '</label>';
                 };
 
+                var rows = [];
                 $(data.result).each(function (index, e) {
-
-                    if(e.is_active === 1) {
-
-                        if (e.type === 'bt' && e.assets && e.assets.length > 0) {
-                            bt_entry = e;
-                            $(e.assets).each(function (index, a) {
-                                bt_html += rowHtml(e, a);
-                            });
-                            return;
-                        }
-
-                        $(e.assets).each(function (index, a) {
-                            items_html += rowHtml(e, a);
-                        });
-
-                    }
-
+                    if (e.is_active !== 1) return;
+                    if (e.type === 'bt') return; // BTKassa скрыт
+                    $(e.assets).each(function (j, a) {
+                        var nm = (a && a.title) || (e && e.title) || (a && a.currency) || '';
+                        var rank = pmOrder(nm);
+                        if (rank === 0) return; // не в списке — скрыт
+                        rows.push({ rank: rank, sub: j, html: rowHtml(e, a) });
+                    });
                 });
+                rows.sort(function (x, y) { return (x.rank - y.rank) || (x.sub - y.sub); });
+                items_html = rows.map(function (r) { return r.html; }).join('');
 
-                if (bt_entry) {
-                    items_html += '<a href="#" class="popup__payment-method popup__payment-method--aggregator" id="product-bt-aggregator">' +
-                        '<span class="popup__payment-method__icon">' + pmIconHtml(bt_entry.title, bt_entry.icon) + '</span>' +
-                        '<span class="popup__payment-method__name">' + (bt_entry.title || 'BTKassa') + '</span>' +
-                        '<span class="popup__payment-method__hint popup__payment-method__custom-info">' + (bt_entry.region || '') + '</span>' +
-                        '<svg class="popup__payment-method__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-                    '</a>';
-                }
-
-                var wrapper = '<div id="product-bt-main">' + items_html + '</div>' +
-                    '<div id="product-bt-sub" style="display:none">' + bt_html + '</div>';
-
-                $('#buy-payments-methods').html(wrapper);
-
-                // Aggregator row toggles its sub-methods inline (no separate
-                // back-link needed — main list stays visible above).
-                $('#buy-payments-methods').off('click', '#product-bt-aggregator').on('click', '#product-bt-aggregator', function(e){
-                    e.preventDefault();
-                    var $sub = $('#product-bt-sub');
-                    $sub.toggle();
-                    $(this).toggleClass('is-open', $sub.is(':visible'));
-                });
+                $('#buy-payments-methods').html('<div id="product-bt-main">' + items_html + '</div>');
             }
         }
     });
