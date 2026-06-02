@@ -24265,7 +24265,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* concentric rings — exact Figma asset, full-width round arcs + breathing */
 .func-cat__head::before{
     content:""; position:absolute; left:50%; top:50%;
-    width:118%; aspect-ratio:1/1; height:auto;
+    width:88%; aspect-ratio:1/1; height:auto;
     transform:translate(-50%,-50%) scale(1);
     background:url('/assets/img/func-rings.svg') center/contain no-repeat;
     opacity:.5; mix-blend-mode:overlay; pointer-events:none;
