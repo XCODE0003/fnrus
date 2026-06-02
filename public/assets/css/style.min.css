@@ -24262,21 +24262,18 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     border:1px solid rgba(255,255,255,.10);
     color:#b59aff;
 }
-/* perfectly round concentric rings (CSS) with subtle breathing animation */
+/* concentric rings — exact Figma asset, full-width round arcs + breathing */
 .func-cat__head::before{
     content:""; position:absolute; left:50%; top:50%;
-    width:300px; height:300px; margin:-150px 0 0 -150px;
-    border-radius:50%;
-    background:repeating-radial-gradient(circle at center,
-        currentColor 0 1px, transparent 1px 22px);
-    -webkit-mask-image:radial-gradient(circle at center, #000 30%, transparent 70%);
-            mask-image:radial-gradient(circle at center, #000 30%, transparent 70%);
-    opacity:.16; pointer-events:none;
+    width:118%; aspect-ratio:1/1; height:auto;
+    transform:translate(-50%,-50%) scale(1);
+    background:url('/assets/img/func-rings.svg') center/contain no-repeat;
+    opacity:.5; mix-blend-mode:overlay; pointer-events:none;
     animation:funcRings 7s ease-in-out infinite;
 }
 @keyframes funcRings{
-    0%,100%{ transform:scale(1); opacity:.16 }
-    50%    { transform:scale(1.1); opacity:.24 }
+    0%,100%{ transform:translate(-50%,-50%) scale(1) }
+    50%    { transform:translate(-50%,-50%) scale(1.05) }
 }
 .func-cat__head{ transition:border-color .3s ease; }
 .func-cat:hover .func-cat__head{ border-color:currentColor; }
