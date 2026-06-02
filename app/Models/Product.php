@@ -245,10 +245,19 @@ class Product extends Model
                     $image_site = '/icheat';
                 }
 
+                // Build alias defensively: a single product with a missing/
+                // deleted category must NOT blow up the whole recommendations
+                // list (previously $alias_two->cid on null threw and the outer
+                // catch returned an empty result → "Рекомендуем" always empty).
+                $alias = '/'.$c->alias;
                 if($c->cid != 0){
                     $alias_two = Category::getByID($c->sid, $c->cid);
-                    $alias_one = Category::getByID($c->sid, $alias_two->cid);
-                    $alias = '/'.$alias_one->alias.'/'.$alias_two->alias.'/'.$c->alias;
+                    $alias_one = $alias_two ? Category::getByID($c->sid, $alias_two->cid) : null;
+                    if($alias_two && $alias_one){
+                        $alias = '/'.$alias_one->alias.'/'.$alias_two->alias.'/'.$c->alias;
+                    } else {
+                        continue; // skip products whose category chain is broken
+                    }
                 }
 
                 $all[] = [

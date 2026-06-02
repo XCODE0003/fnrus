@@ -1182,6 +1182,8 @@ class MethodPaymentController extends Controller
 
                 if($p->active == 1) {
 
+                    try {
+
                     $method = MethodPayment::where('psid', $p->id)->where('sid', $shop->id)->first();
 
                     if(!$method || $method->active != 1) {
@@ -1231,6 +1233,13 @@ class MethodPaymentController extends Controller
                         'assets' => $assets,
                         'is_active' => $p->active,
                     ];
+
+                    } catch (\Throwable $e) {
+                        // skip a single broken payment system instead of
+                        // failing the whole list (one bad asset/category/currency
+                        // would otherwise make ALL methods disappear)
+                        continue;
+                    }
 
                 }
             }
