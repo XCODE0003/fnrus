@@ -24342,12 +24342,12 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
         padding-top:90px !important;    /* push down a touch below header, keep image big */
     }
     .hero__image img{
-        max-height:600px !important; width:auto !important; height:auto !important;
+        max-height:460px !important; width:auto !important; height:auto !important;
         max-width:100% !important; display:block;
     }
 }
 @media (min-width:1600px){
-    .hero__image img{ max-height:680px !important; }
+    .hero__image img{ max-height:520px !important; }
 }
 
 /* ---------------------------------------------------------------------- */
