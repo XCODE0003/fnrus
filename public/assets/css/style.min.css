@@ -24219,7 +24219,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .hero__actions{ gap:12px !important; margin-top:18px !important; }
 
 /* Hero — a touch more top padding */
-@media (min-width:1024px){ .hero{ padding-top:200px !important; } }
+@media (min-width:1024px){ .hero{ padding-top:260px !important; } }
 
 /* Profile — gap under header, full-width main, wider sidebar, no bottom void */
 .profile{ padding-top:120px !important; padding-bottom:30px !important; }
