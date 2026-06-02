@@ -24074,3 +24074,24 @@ body::before{
 .popup--pay .popup__payment-method__icon .pm-img{
     width:100% !important; height:100% !important; object-fit:contain !important; display:block !important;
 }
+
+/* ==================================================================== */
+/*  v3.4.8 — ambient glow toned down for IPS + compact hero             */
+/* ==================================================================== */
+/* Glow: much softer/larger/dimmer so IPS panels don't show hard purple
+   circles & banding (OLED was already fine). */
+body::before{
+    background:
+        radial-gradient(720px 720px at 14% 18%, rgba(132,86,255,.022), transparent 58%),
+        radial-gradient(820px 820px at 88% 30%, rgba(124,99,255,.018), transparent 60%),
+        radial-gradient(720px 720px at 78% 88%, rgba(140,86,255,.015), transparent 60%) !important;
+}
+
+/* Hero — more compact (less top padding, tighter element gaps) */
+@media (min-width:1024px){
+    .hero{ padding-top:96px !important }
+    .hero__image{ bottom:-66px !important }
+}
+.hero__title{ margin-top:14px !important }
+.hero__subtitle{ margin-top:10px !important }
+.hero__actions{ margin-top:20px !important }
