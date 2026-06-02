@@ -235,8 +235,8 @@ function pmIconHtml(name, src){
     if (/umoney|юmoney|юмани|ю\.?деньги/.test(n))       return img(L + 'payment_umoney.svg');
     if (/binance|бинанс/.test(n))                       return img(L + 'payment_binance.svg');
     if (/карт|visa|master|\bмир\b|mir/.test(n))         return img(L + 'payment_visamastercard.svg');
-    // unknown method → DB icon if any, else a card glyph
-    if (src) return img(src);
+    // anything else (BTKassa, RUB/Pally, …) → clean brand-free card glyph,
+    // never a broken/ugly remote logo.
     return gl();
 }
 

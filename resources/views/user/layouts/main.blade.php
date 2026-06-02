@@ -810,6 +810,6 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
     });
 })();
 </script>
-<script src="/assets/js/app.js?v=4.5"></script>
+<script src="/assets/js/app.js?v=4.6"></script>
 </body>
 </html>
