@@ -10886,7 +10886,7 @@ html.ios .js-carousel {
 
 .game-hero__inner {
     position: relative;
-    padding: 30px 0 24px;
+    padding: 100px 0 0px;
     min-height: 430px;
 }
 
@@ -17392,7 +17392,7 @@ input.profile__tab:checked + .profile__tab__label {
 
 @media (max-width: 899px) {
     .game-hero {
-        padding: 40px 0 30px;
+        padding: 40px 0 0px;
     }
     .game-hero__inner {
         flex-direction: column;
@@ -20119,7 +20119,7 @@ main.profile {
     }
     /* cheat-block__slider (product gallery) stays visible on mobile */
     .game-hero {
-        padding-top: 80px !important;
+        padding-top: 180px !important;
         text-align: left;
     }
     .game-hero__title {
@@ -23526,13 +23526,6 @@ body::before{
     position:relative;
     background:linear-gradient(135deg,#1c2431,#141a25) !important;
 }
-.cheat-block__slider__slide::before{
-    content:"";
-    position:absolute; inset:0; z-index:0;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='72' height='72' fill='none' stroke='%235b6478' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='3'/><circle cx='8.5' cy='8.5' r='1.6'/><path d='M21 15l-5-5L5 21'/></svg>");
-    background-repeat:no-repeat; background-position:center; background-size:72px;
-    opacity:.45;
-}
 .cheat-block__slider__slide img{ position:relative; z-index:1 }
 
 /* ==================================================================== */
@@ -23723,3 +23716,66 @@ body::before{
     font-size:14px !important; font-weight:600 !important;
     color:rgb(230,221,255) !important; letter-spacing:.14px !important;
 }
+
+/* Category page — reduce dead space between hero and first platform list */
+@media (min-width:1024px){
+    .game-hero{ padding-top:80px !important; padding-bottom:24px !important }
+    .game-list{ margin-top:30px !important }
+    .game-list:first-of-type{ margin-top:16px !important }
+}
+
+/* Category hero — tighten further: shorter section, less gap to first list */
+@media (min-width:1024px){
+    .game-hero{ padding-top:72px !important; padding-bottom:16px !important }
+    .game-hero__image img{ max-height:380px !important; width:auto !important; max-width:100% !important; margin-left:auto !important; display:block }
+    .game-list:first-of-type{ margin-top:8px !important }
+}
+
+/* ==================================================================== */
+/*  v3.3.4 — notif z-index, gallery icon, FUNCTIONAL polish, hero img    */
+/* ==================================================================== */
+
+/* (A) Bottom-right notification ABOVE any modal/popup */
+.notification, .notification-container{ z-index:100000 !important }
+
+/* (B) Empty gallery — clean, centered placeholder (icon + caption) */
+.cheat-block__slider__slide{
+    position:relative !important;
+    background:linear-gradient(160deg,#1b2330 0%,#141a25 100%) !important;
+}
+/* (C) ФУНКЦИОНАЛ — clean feature cards (title + description), more spacing */
+.func-chips{ gap:14px !important }
+.func-chip{
+    align-items:flex-start !important;
+    gap:12px !important;
+    padding:15px 17px !important;
+    background:rgba(255,255,255,.035) !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-radius:14px !important;
+    transition:background .18s ease, border-color .18s ease, transform .15s ease !important;
+}
+.func-chip:hover{ background:rgba(255,255,255,.06) !important; transform:translateY(-1px) }
+.func-chip__check{
+    flex-shrink:0; margin-top:1px;
+    width:24px !important; height:24px !important;
+    display:inline-flex !important; align-items:center; justify-content:center;
+    border-radius:8px;
+    background:rgba(255,255,255,.06);
+}
+.func-chip__body{ display:flex !important; flex-direction:column; gap:4px; min-width:0 }
+.func-chip__title{ font-family:"Onest",sans-serif !important; font-weight:700 !important; font-size:15px !important; color:#fff !important; line-height:1.25 }
+.func-chip__desc{ font-family:"Onest",sans-serif !important; font-weight:500 !important; font-size:13px !important; color:rgba(255,255,255,.6) !important; line-height:1.45 }
+.func--visuals .func-chip__check{ background:rgba(138,245,155,.14) !important; color:#8af59b !important }
+.func--aimbot  .func-chip__check{ background:rgba(255,187,86,.14) !important; color:#ffbb56 !important }
+.func--misc    .func-chip__check{ background:rgba(255,140,181,.14) !important; color:#ff8cb5 !important }
+.func--default .func-chip__check{ background:rgba(132,86,255,.16) !important; color:#b59aff !important }
+.func-panels{ padding:24px !important }
+
+/* (D) Category hero image — restore + enlarge (remove earlier height cap) */
+@media (min-width:1024px){
+    .game-hero__image{ flex:0 0 60% !important; max-width:860px !important }
+    .game-hero__image img{ max-height:none !important; width:100% !important; max-width:100% !important; height:auto !important; margin-left:0 !important }
+}
+
+/* "Рекомендуем" — gap between the heading row and the cards (was 0) */
+.game-cheats .section-caption-container{ margin-bottom:26px !important }

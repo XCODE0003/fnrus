@@ -117,9 +117,19 @@
                                  id="func-panel-{{ $i }}" role="tabpanel">
                                 <div class="func-chips">
                                     @foreach($func['lines'] as $line)
+                                        @php
+                                            $parts = preg_split('/\s*[-–—]\s+/u', trim($line), 2);
+                                            $fTitle = trim($parts[0] ?? '');
+                                            $fDesc = isset($parts[1]) ? trim($parts[1]) : '';
+                                        @endphp
                                         <span class="func-chip">
-                                            <svg class="func-chip__check" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                            <span>{{ trim($line) }}</span>
+                                            <span class="func-chip__check" aria-hidden="true">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </span>
+                                            <span class="func-chip__body">
+                                                <span class="func-chip__title">{{ $fTitle }}</span>
+                                                @if($fDesc !== '')<span class="func-chip__desc">{{ $fDesc }}</span>@endif
+                                            </span>
                                         </span>
                                     @endforeach
                                 </div>
