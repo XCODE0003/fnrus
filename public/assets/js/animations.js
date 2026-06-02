@@ -54,6 +54,13 @@
             if (!el) { cb(); return; }
             var fired = false;
             function fire() { if (fired) return; fired = true; cb(); }
+            // Already in (or above) the viewport at init — reveal immediately.
+            // Covers above-the-fold sections (e.g. the first .game-list head)
+            // where IntersectionObserver can fail to deliver a callback under
+            // body{zoom}, leaving the element stuck at opacity:0/hidden.
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            var r = el.getBoundingClientRect();
+            if (r.top < vh * 0.92 && r.bottom > 0) { fire(); return; }
             if (!('IntersectionObserver' in window)) { fire(); return; }
             var io = new IntersectionObserver(function (entries) {
                 for (var i = 0; i < entries.length; i++) {
@@ -61,7 +68,7 @@
                 }
             }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
             io.observe(el);
-            setTimeout(function () { io.disconnect(); fire(); }, 7000);
+            setTimeout(function () { io.disconnect(); fire(); }, 2500);
         }
 
         /* ---- reveal: прячем через gsap.set, показываем при появлении.
