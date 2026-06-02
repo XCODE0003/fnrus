@@ -23779,3 +23779,180 @@ body::before{
 
 /* "Рекомендуем" — gap between the heading row and the cards (was 0) */
 .game-cheats .section-caption-container{ margin-bottom:26px !important }
+
+/* ==================================================================== */
+/*  PROFILE — clean, balanced settings form (was sparse/right-shifted)  */
+/* ==================================================================== */
+/* Tidy the form column so it doesn't float in the huge empty panel */
+.profile__tabs__tab{ max-width:780px !important }
+
+/* Each editable field = a neat card row: label | input | button */
+.profile__settings-block_input{
+    display:flex !important; align-items:center !important; gap:18px !important;
+    flex-wrap:nowrap !important;
+    padding:16px 20px !important;
+    margin:0 0 14px 0 !important;
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-top:1px solid rgba(255,255,255,.07) !important;
+    border-radius:14px !important;
+}
+.profile__settings-block_input .profile__settings-block__text{
+    flex:0 0 210px !important; width:auto !important;
+    padding-right:0 !important; margin-bottom:0 !important;
+}
+.profile__settings-block__name{ font-size:15px !important; font-weight:600 !important; letter-spacing:0 !important }
+.profile__settings-block__descr{ font-size:13px !important; margin-top:2px !important; line-height:1.35 !important }
+.profile__settings-block__input{
+    flex:1 1 auto !important; min-width:0 !important;
+    margin-right:0 !important;
+    padding:13px 18px !important;
+    border-radius:11px !important;
+    font-size:15px !important;
+}
+.profile__settings-block__edit-btn{
+    position:static !important;
+    width:auto !important; min-width:120px !important;
+    margin-left:0 !important;
+    padding:13px 44px 13px 20px !important;
+    border-radius:11px !important;
+    background-color:rgba(132,86,255,.14) !important;
+    color:#cbb6ff !important;
+    background-position:calc(100% - 18px) center !important;
+}
+.profile__settings-block__edit-btn:hover{ background-color:rgba(132,86,255,.24) !important; color:#fff !important }
+.profile__settings-block__cancel-btn{ flex-shrink:0 }
+
+/* "Сменить пароль" row (tab Безопасность) — same card style */
+.profile__settings-block_password{
+    padding:16px 20px !important; margin:0 0 18px 0 !important;
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-radius:14px !important;
+}
+
+/* Profile tabs wrapper must STACK (buttons on top, content below) — it was
+   display:flex, shoving the form into a right-hand column. */
+.profile__tabs{
+    display:block !important;
+    background:transparent !important;
+    border:0 !important;
+    padding:0 !important;
+    margin-bottom:8px !important;
+}
+.profile__tabs__choose{ margin-bottom:24px !important }
+.profile__tabs__tab{ max-width:780px !important; margin-left:0 !important }
+
+/* ==================================================================== */
+/*  PAYMENT METHODS (buy step 2) — clean card rows, tidy currency tag    */
+/* ==================================================================== */
+/* Container: even spacing between rows */
+.popup--pay #buy-payments-methods, .popup--pay #topup-payments-methods,
+.popup--pay #product-bt-main, .popup--pay #product-bt-sub{
+    display:flex !important; flex-direction:column !important; gap:10px !important;
+}
+/* Row = card */
+.popup--pay #buy-payments-methods .popup__payment-method,
+.popup--pay #topup-payments-methods .popup__payment-method{
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-radius:14px !important;
+    padding:12px 16px !important;
+    min-height:64px !important;
+    gap:14px !important;
+    margin:0 !important;
+    cursor:pointer;
+    transition:background .18s ease, border-color .18s ease !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method:hover{ background:rgba(255,255,255,.055) !important }
+.popup--pay #buy-payments-methods input[type="radio"]:checked + .popup__payment-method,
+.popup--pay #topup-payments-methods input[type="radio"]:checked + .popup__payment-method{
+    background:rgba(132,86,255,.10) !important;
+    border-color:rgba(132,86,255,.5) !important;
+}
+/* Icon chip — clean light tile */
+.popup--pay #buy-payments-methods .popup__payment-method__icon{
+    width:42px !important; height:42px !important; border-radius:11px !important;
+    background:#fff !important; padding:7px !important; box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+/* Name fills, currency tag stays compact on the right (was stretched to 197px) */
+.popup--pay #buy-payments-methods .popup__payment-method__name,
+.popup--pay #topup-payments-methods .popup__payment-method__name{ flex:1 1 auto !important; min-width:0 }
+.popup--pay #buy-payments-methods .popup__payment-method__hint,
+.popup--pay #buy-payments-methods .popup__payment-method__custom-info,
+.popup--pay #topup-payments-methods .popup__payment-method__hint,
+.popup--pay #topup-payments-methods .popup__payment-method__custom-info{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:max-content !important;
+    margin-left:auto !important;
+    padding:5px 12px !important;
+    font-size:11px !important;
+}
+
+/* ==================================================================== */
+/*  PROFILE — smaller sidebar buttons + fix security tab layout          */
+/* ==================================================================== */
+/* Sidebar menu items — were 74px tall, too big */
+.profile__menu{ gap:4px !important; padding:14px !important }
+.profile__menu__item a{ padding:12px 16px !important; font-size:14px !important; border-radius:12px !important }
+
+/* Security tab — "Изменить пароль" row: label left, button pushed right */
+.profile__settings-block_password{
+    display:flex !important; align-items:center !important; gap:16px !important;
+}
+.profile__settings-block_password .profile__settings-block__text{ flex:1 1 auto !important }
+.profile__settings-block_password .profile__settings-block__edit-btn{
+    margin-left:auto !important; flex-shrink:0 !important;
+    width:auto !important; min-width:120px !important;
+    padding:13px 44px 13px 20px !important; border-radius:11px !important;
+    background-color:rgba(132,86,255,.14) !important; color:#cbb6ff !important;
+    background-position:calc(100% - 18px) center !important;
+}
+.profile__settings-block_password .profile__settings-block__edit-btn:hover{ background-color:rgba(132,86,255,.24) !important; color:#fff !important }
+
+/* "Способы входа" — tidy card with separated rows */
+.profile__auth-methods{
+    margin-top:14px !important;
+    background:rgba(255,255,255,.03) !important;
+    border:1px solid rgba(255,255,255,.07) !important;
+    border-radius:14px !important;
+    padding:6px 20px !important;
+}
+.profile__auth-methods__title{ padding:14px 0 10px !important; font-size:15px !important; font-weight:700 !important }
+.profile__auth-method{
+    display:flex !important; align-items:center !important; justify-content:space-between !important;
+    padding:14px 0 !important;
+    border-top:1px solid rgba(255,255,255,.06) !important;
+}
+.profile__auth-method__name{ font-size:14px !important; font-weight:500 !important }
+
+/* Profile "Личные данные" inputs — refined look + focus state */
+.profile__settings-block__input{
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.09) !important;
+    border-radius:12px !important;
+    padding:14px 18px !important;
+    color:#fff !important;
+    font-size:15px !important;
+    font-family:"Onest",sans-serif !important;
+    transition:border-color .2s ease, background .2s ease, box-shadow .2s ease !important;
+}
+.profile__settings-block__input::placeholder{ color:rgba(255,255,255,.35) !important }
+.profile__settings-block__input[readonly]{
+    background:rgba(255,255,255,.025) !important;
+    border-color:rgba(255,255,255,.07) !important;
+    color:rgba(255,255,255,.8) !important;
+    cursor:default;
+}
+/* When the field is being edited (readonly removed) — purple highlight */
+.profile__settings-block__input:not([readonly]){
+    background:rgba(132,86,255,.06) !important;
+    border-color:rgba(132,86,255,.45) !important;
+}
+.profile__settings-block__input:not([readonly]):focus{
+    border-color:rgba(132,86,255,.65) !important;
+    box-shadow:0 0 0 3px rgba(132,86,255,.14) !important;
+    outline:none !important;
+}
+.profile__settings-block__input:hover:not([readonly]){ border-color:rgba(132,86,255,.6) !important }
