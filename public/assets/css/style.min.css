@@ -24313,3 +24313,20 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* bank cards / transfers — white card glyph on a purple circle, centred */
 .pm-fig--purple{ background:#8456ff !important; }
 .pm-fig--purple > img{ width:50% !important; height:50% !important; object-fit:contain !important; border-radius:0 !important; filter:brightness(0) invert(1) !important; }
+
+/* ==================================================================== */
+/*  v3.6.7 — hero image fits inside hero (below header, not cut at top)  */
+/* ==================================================================== */
+@media (min-width:1024px){
+    .hero__image{
+        position:absolute !important;
+        top:0 !important; bottom:0 !important; right:0 !important;
+        height:100% !important;
+        display:flex !important; align-items:center !important; justify-content:flex-end !important;
+        padding-top:130px !important;   /* clear the fixed header */
+    }
+    .hero__image img{
+        max-height:420px !important; width:auto !important; height:auto !important;
+        max-width:100% !important; display:block;
+    }
+}
