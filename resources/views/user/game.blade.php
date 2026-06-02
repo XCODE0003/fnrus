@@ -56,13 +56,15 @@
                 </ul>
 
                 {{-- Back link --}}
-                <a href="/games" class="game-hero__back" style="padding: 0 10px !important;">
-            
-                    {{ __('site.game_back') }}
+                <a href="/games" class="game-hero__back">
+                    <span class="game-hero__back__icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span class="game-hero__back__label">{{ __('site.game_back') }}</span>
                 </a>
             </div>
             <div class="game-hero__image">
-                <img src="{{ !empty($hero_image) ? '/i'.$hero_image : '/assets/img/pubg.png' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.png'">
+                <img src="{{ !empty($hero_image) ? '/'.ltrim($hero_image, '/') : '/assets/img/pubg.png' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.png'">
             </div>
         </div>
     </section>

@@ -4400,9 +4400,7 @@ section:first-child {
 }
 
 .footer__bottom-container {
-    padding-top: 40px;
     margin-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
 }
 
@@ -7584,7 +7582,6 @@ main.main .section-subcaption {
 
     .footer__bottom-container {
         margin-top: 35px;
-        padding-top: 35px;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -8577,7 +8574,6 @@ main.main .section-subcaption {
 
     .footer__bottom-container {
         margin-top: 20px;
-        padding-top: 20px;
     }
 
     .footer__bottom-container {
@@ -10314,9 +10310,8 @@ html.ios .js-carousel {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    margin: 0 4px;
+    width: auto;
+    height: 42px;
     vertical-align: -6px;
 }
 
@@ -10944,9 +10939,7 @@ html.ios .js-carousel {
     transition: 0.2s color;
 }
 
-.game-hero__back::before {
-    content: "\2190";
-}
+
 
 .game-hero__back:hover {
     color: #fff;
@@ -15374,7 +15367,7 @@ body {
 /* Index — hero / sections tighten on mobile */
 @media (max-width: 599px) {
     .hero {
-        padding-top: 24px;
+        padding-top: 160px;
         padding-bottom: 30px;
     }
     .hero__title {
@@ -17386,11 +17379,6 @@ input.profile__tab:checked + .profile__tab__label {
     border-color: rgba(132, 86, 255, 0.3);
     color: #fff !important;
 }
-.game-hero__back::before {
-    content: "←";
-    font-size: 14px;
-}
-
 .game-hero__image {
     flex-shrink: 0;
     width: 42%;
@@ -21467,8 +21455,8 @@ img.rev-card__avatar{display:none !important}
 .about-page .section-caption-container .section-caption,
 .about-page .catalog .section-caption{
     font-family:"Mazzard H", sans-serif !important;
-    font-size:38px !important;
-    font-weight:700 !important;
+    font-size:44px !important;
+    font-weight:800 !important;
     line-height:1.15 !important;
     letter-spacing:-0.012em !important;
 }
@@ -21566,9 +21554,7 @@ img.rev-card__avatar{display:none !important}
     gap:8px !important;
 }
 .game-hero__back::before{
-    content:"←";font-size:14px;line-height:1;
-    transform:translateX(0);
-    transition:transform .2s ease;
+    content:none !important;   /* arrow now provided by the SVG icon in markup */
 }
 .game-hero__back:hover{
     background:rgba(132,86,255,.10) !important;
@@ -23463,3 +23449,277 @@ body::before{
         radial-gradient(380px 380px at 30% 88%, rgba(110,80,255,.045), transparent 72%);
 }
 @media (prefers-reduced-motion: reduce){ body::before{ opacity:.6 } }
+
+/* ==================================================================== */
+/*  HOME hero polish — image lower, subtitle size, title leading       */
+/* ==================================================================== */
+
+/* (1) Hero spider — drop lower so it doesn't crowd the header/buttons */
+@media (min-width:1024px){
+    .hero__image{ bottom:-82px !important }
+}
+
+/* (2) Marketing subtitles were too large (22px) — calmer 16px */
+.hero__subtitle,
+.catalog__subtitle,
+.section2__subtitle,
+.reviews__subtitle,
+.faq__subtitle{
+    font-size:16px !important;
+    line-height:1.5 !important;
+}
+@media (max-width:599px){
+    .hero__subtitle,.catalog__subtitle,.section2__subtitle,
+    .reviews__subtitle,.faq__subtitle{ font-size:14.5px !important }
+}
+
+/* (3) Hero title — tighten line leading (remove the gap between lines) */
+.hero__title{ line-height:0.98 !important }
+
+/* ==================================================================== */
+/*  CATEGORY + CHEAT polish v3.2.0 — back btn, hero size, gallery       */
+/* ==================================================================== */
+
+/* (2) "Назад" — proper finished pill with icon chip (markup now has svg) */
+.game-hero__back{
+    display:inline-flex !important; align-items:center !important; gap:10px !important;
+    padding:9px 20px 9px 9px !important;
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.10) !important;
+    border-radius:999px !important;
+    width:auto !important; height:auto !important;
+    font-family:"Onest",sans-serif !important;
+    font-size:13px !important; font-weight:600 !important;
+    letter-spacing:.08em !important; text-transform:uppercase !important;
+    color:rgba(255,255,255,.74) !important;
+    transition:background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease !important;
+}
+.game-hero__back__icon{
+    width:32px !important; height:32px !important; flex-shrink:0;
+    display:inline-flex !important; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:rgba(132,86,255,.16);
+    color:#cbb6ff;
+}
+.game-hero__back:hover{
+    background:rgba(132,86,255,.10) !important;
+    border-color:rgba(132,86,255,.38) !important;
+    color:#fff !important;
+    transform:translateY(-1px);
+}
+.game-hero__back:hover .game-hero__back__icon{ background:rgba(132,86,255,.28); color:#fff }
+
+/* (1) Hero — enlarge title + image to fill the space */
+@media (min-width:1024px){
+    .game-hero__title{ font-size:56px !important; line-height:1.05 !important }
+    .game-hero__image{ flex:0 0 58% !important; max-width:780px !important }
+    .game-hero__image img{ width:100% !important; height:auto !important }
+}
+@media (min-width:1440px){
+    .game-hero__title{ font-size:62px !important }
+}
+
+/* (3) Gallery — robust placeholder behind every slide. Broken/missing
+       cover images (404) reveal a tasteful placeholder instead of a blank
+       black box; a real image (object-fit:cover) fully covers it. */
+.cheat-block__slider__slide{
+    position:relative;
+    background:linear-gradient(135deg,#1c2431,#141a25) !important;
+}
+.cheat-block__slider__slide::before{
+    content:"";
+    position:absolute; inset:0; z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='72' height='72' fill='none' stroke='%235b6478' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='3'/><circle cx='8.5' cy='8.5' r='1.6'/><path d='M21 15l-5-5L5 21'/></svg>");
+    background-repeat:no-repeat; background-position:center; background-size:72px;
+    opacity:.45;
+}
+.cheat-block__slider__slide img{ position:relative; z-index:1 }
+
+/* ==================================================================== */
+/*  v3.2.1 — gaps, profile identity, catalog pill, UNIFORM headings,    */
+/*           s2-card top                                                */
+/* ==================================================================== */
+
+/* (1) Category card row — tighter, even gaps */
+.game-list .game-cheats-slider .swiper-wrapper{ gap:10px !important }
+.game-list .game-cheats-slider .game-card{ margin:0 !important }
+
+/* (3) Header "Каталог читов" pill — leading icon for symmetry + emphasis */
+.header__menu__pill{
+    gap:8px !important;
+    background:rgba(132,86,255,.12) !important;
+    border-color:rgba(132,86,255,.45) !important;
+}
+.header__menu__pill:hover{
+    background:rgba(132,86,255,.20) !important;
+    border-color:rgba(132,86,255,.6) !important;
+}
+.header__menu__pill-icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#b59aff; flex-shrink:0;
+}
+.header__menu__pill-icon svg{ width:15px; height:15px }
+
+/* (2) Profile sidebar identity — readable, aligned, full nickname */
+.profile__identity{ padding:22px !important }
+.profile__identity__container{ align-items:center !important; margin-bottom:18px !important }
+.profile__avatar{ width:48px !important; height:48px !important; padding:5px !important; margin-right:12px !important }
+.profile__identity__user-info{ overflow:visible !important; min-width:0 !important; padding-right:10px !important }
+.profile__identity__nickname{
+    font-size:16px !important; font-weight:600 !important; line-height:1.25 !important;
+    white-space:normal !important; overflow:visible !important; text-overflow:clip !important;
+    word-break:break-word !important;
+}
+.profile__identity__balance{ margin-top:5px !important; font-size:15px !important; font-weight:600 !important }
+.profile__identity__exit{ width:42px !important; height:42px !important; background-size:20px !important; align-self:center }
+
+/* (4) UNIFORM section/page headings — one font, size, weight, leading,
+       letter-spacing on EVERY page (baseline = 30px home style). */
+.catalog__title, .section2__title, .reviews__title, .faq__title,
+.games-catalog__title, .reviews-page__title,
+.about-heading-section__section-caption, .status-heading-section__section-caption,
+.key__section-caption, .instruction__section-caption,
+.section-caption{
+    font-family:"Onest", sans-serif !important;
+    font-size:44px !important;
+    font-weight:800 !important;
+    line-height:1.15 !important;
+    letter-spacing:-0.02em !important;
+}
+/* matching subtitle/caption-sub tier — one size everywhere */
+.catalog__subtitle, .section2__subtitle, .reviews__subtitle, .faq__subtitle,
+.reviews-page__subtitle, .games-catalog__subtitle{
+    font-family:"Onest", sans-serif !important;
+    font-size:16px !important;
+    font-weight:600 !important;
+    line-height:1.5 !important;
+    letter-spacing:0 !important;
+}
+@media (max-width:1023px){
+    .catalog__title, .section2__title, .reviews__title, .faq__title,
+    .games-catalog__title, .reviews-page__title,
+    .about-heading-section__section-caption, .status-heading-section__section-caption,
+    .key__section-caption, .instruction__section-caption, .section-caption{ font-size:38px !important }
+}
+@media (max-width:599px){
+    .catalog__title, .section2__title, .reviews__title, .faq__title,
+    .games-catalog__title, .reviews-page__title,
+    .about-heading-section__section-caption, .status-heading-section__section-caption,
+    .key__section-caption, .instruction__section-caption, .section-caption{ font-size:32px !important }
+}
+
+/* (5) "Новый уровень" cards — content flush to top, ring bg fills top */
+.section2__grid .s2-card{ padding:34px 28px 40px !important }
+.s2-card::before{ background-size:122% 122% !important; background-position:center top !important; opacity:.5 !important }
+
+/* (4b) Override higher-specificity page-prefixed heading rules so the
+        UNIFORM 30px caption style truly applies on /games and /status. */
+.games-page .games-catalog__title,
+.status-page .status-heading-section__section-caption,
+.section-caption.status-heading-section__section-caption{
+    font-family:"Onest", sans-serif !important;
+    font-size:44px !important;
+    font-weight:800 !important;
+    line-height:1.15 !important;
+    letter-spacing:-0.02em !important;
+}
+.games-page .games-catalog__subtitle{ font-size:16px !important; line-height:1.5 !important }
+@media (max-width:1023px){
+    .games-page .games-catalog__title,
+    .status-page .status-heading-section__section-caption{ font-size:38px !important }
+}
+@media (max-width:599px){
+    .games-page .games-catalog__title,
+    .status-page .status-heading-section__section-caption{ font-size:32px !important }
+}
+
+/* ==================================================================== */
+/*  v3.2.3 — HOME hero: bolt align, bigger title, tighter gaps, top pad */
+/* ==================================================================== */
+
+/* Lightning bolt — center it on the cap height (was sitting below text) */
+.hero__title-bolt{
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    width:0.8em !important; height:0.8em !important;
+    vertical-align:middle !important;
+    position:relative !important; top:-0.07em !important;
+    margin:0 .14em !important;
+}
+.hero__title-bolt img{ width:52% !important; height:52% !important }
+
+/* Bigger hero title, tighter leading */
+.hero__title{ font-size:48px !important; line-height:1.0 !important; margin-top:18px !important }
+@media (min-width:1440px){ .hero__title{ font-size:54px !important } }
+@media (max-width:1023px){ .hero__title{ font-size:38px !important } }
+@media (max-width:599px){ .hero__title{ font-size:30px !important } }
+
+/* Subtitle a touch smaller + tighter gap */
+.hero__subtitle{ font-size:15px !important; margin-top:13px !important }
+.hero__actions{ margin-top:24px !important }
+
+/* Hero sits a bit lower from the top (breathing room under header) */
+@media (min-width:1024px){
+    .hero{ padding-top:180px !important }
+    .hero__image{ bottom:-118px !important }   /* keep image aligned after the shift */
+}
+
+/* About-page badge — match the standard site badges (purple-tint pill) */
+.section-category{
+    background:linear-gradient(176.84deg, rgba(173,87,255,.16) 9.73%, rgba(138,86,255,.16) 102.08%) !important;
+    background-color:transparent !important;
+    border-radius:18px !important;
+}
+.section-category__text{ font-family:"Onest", sans-serif !important; font-weight:600 !important; color:#fff !important }
+
+/* (5b) "Новый уровень" cards — ring decoration HALOES the icon (centered
+        on the icon, not stretched across the whole card). */
+.section2__grid .s2-card{ padding:34px 28px 40px !important; overflow:hidden !important }
+.s2-card::before{
+    content:"" !important;
+    position:absolute !important;
+    inset:auto !important;
+    top:76px !important;              /* icon vertical center (pad 34 + icon 83/2) */
+    left:50% !important;
+    width:320px !important;
+    height:320px !important;
+    transform:translate(-50%,-50%) !important;
+    background:url(../img/s2-card-bg.svg) center / contain no-repeat !important;
+    opacity:.55 !important;
+    pointer-events:none !important;
+}
+
+/* (5c) "Новый уровень" — restore the ring SVG as the full-card background
+        (its rings are baked at ~28% height to halo a top icon). Padding
+        puts the icon right in that ring centre so the rings wrap it. */
+.section2__grid .s2-card{ padding:48px 28px 52px !important; overflow:hidden !important }
+.s2-card::before{
+    content:"" !important;
+    position:absolute !important;
+    top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:auto !important; height:auto !important;
+    transform:none !important;
+    background:url(../img/s2-card-bg.svg) center / 100% 100% no-repeat !important;
+    opacity:.55 !important;
+    pointer-events:none !important;
+}
+
+/* About badge — match .catalog__badge EXACTLY (full pill, thin border, etc.) */
+.section-category{
+    gap:10px !important;
+    padding:8px 18px 8px 8px !important;
+    border-radius:999px !important;
+    background:linear-gradient(rgba(132,86,255,.12), rgba(132,86,255,.05)) !important;
+    background-color:transparent !important;
+    border:1px solid rgba(132,86,255,.22) !important;
+}
+.section-category__icon{
+    width:30px !important; height:30px !important;
+    margin-right:0 !important;
+    background:linear-gradient(135deg, rgb(148,104,255) 0%, rgb(122,78,255) 100%) !important;
+}
+.section-category__icon img{ width:55% !important; height:55% !important }
+.section-category__text{
+    font-family:"Onest", sans-serif !important;
+    font-size:14px !important; font-weight:600 !important;
+    color:rgb(230,221,255) !important; letter-spacing:.14px !important;
+}

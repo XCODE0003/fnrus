@@ -82,9 +82,9 @@
                 <span class="section2__badge-text">{{ __('site.text_why_choose_us') }}</span>
             </div>
             <h2 class="section2__title">
-                <span>{{ __('site.s2_title_1') }}</span>
+                {{ __('site.s2_title_1') }}
                 <span class="section2__title-spark"><img src="/assets/img/s2-sparkle.svg" alt=""></span>
-                <span>{{ __('site.s2_title_2') }}</span>
+                {{ __('site.s2_title_2') }}
             </h2>
             <div class="section2__grid">
                 @foreach([

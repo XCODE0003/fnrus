@@ -44,7 +44,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=3.1.8">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=3.3.1">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -138,6 +138,9 @@
             <ul class="header__menu">
                 <li class="header__menu__item header__menu__item--dropdown" data-dropdown>
                     <button type="button" class="header__menu__pill" aria-haspopup="true" aria-expanded="false">
+                        <span class="header__menu__pill-icon" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7.5" height="7.5" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2" stroke="currentColor" stroke-width="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2" stroke="currentColor" stroke-width="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" stroke="currentColor" stroke-width="2"/></svg>
+                        </span>
                         <span>{{ __('site.item_catalog') }}</span>
                         <span class="header__menu__pill-chev" aria-hidden="true">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -807,6 +810,6 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
     });
 })();
 </script>
-<script src="/assets/js/app.js?v=3.8"></script>
+<script src="/assets/js/app.js?v=3.9"></script>
 </body>
 </html>
