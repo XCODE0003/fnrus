@@ -17028,7 +17028,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 18px;
     padding: 22px 20px;
-    text-align: left;
+    text-align: center;
     transition:
         border-color 0.25s ease,
         transform 0.15s ease;
@@ -22089,8 +22089,8 @@ body{ background-color:transparent !important }
 }
 .about-contact__value{
     font-family:"Mazzard M", sans-serif !important;
-    font-size:12px !important;letter-spacing:.06em !important;
-    text-transform:uppercase !important;color:rgba(255,255,255,.5) !important;
+    font-size:12px !important;letter-spacing:.02em !important;
+    text-transform:none !important;color:rgba(255,255,255,.5) !important;
 }
 .about-section__history__caption{
     font-family:"Mazzard H", sans-serif !important;
@@ -24222,7 +24222,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 @media (min-width:1024px){ .hero{ padding-top:260px !important; } }
 
 /* Profile — gap under header, full-width main, wider sidebar, no bottom void */
-.profile{ padding-top:120px !important; padding-bottom:30px !important; }
+.profile{ padding-top:170px !important; padding-bottom:30px !important; }
 .profile__container{ grid-template-columns:330px minmax(0,1fr) !important; gap:26px !important; align-items:start !important; }
 .profile__sidebar{ width:100% !important; max-width:none !important; }
 .profile__main{ width:100% !important; flex:1 1 auto !important; }
@@ -24379,11 +24379,11 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     font-weight:700 !important;
     line-height:1.08 !important;
     letter-spacing:-0.025em !important;
-    font-size:30px !important;
+    font-size:34px !important;
 }
-@media (min-width:640px){ .hero__title{ font-size:36px !important; } }
-@media (min-width:1024px){ .hero__title{ font-size:45.6px !important; } }
-@media (min-width:1280px){ .hero__title{ font-size:48px !important; } }
+@media (min-width:640px){ .hero__title{ font-size:40px !important; } }
+@media (min-width:1024px){ .hero__title{ font-size:52px !important; } }
+@media (min-width:1280px){ .hero__title{ font-size:56px !important; } }
 .hero__title-accent{ color:#9b76ff !important; font-weight:700 !important; }
 
 .hero__subtitle{
@@ -24395,3 +24395,19 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 }
 @media (min-width:640px){ .hero__subtitle{ font-size:16px !important; } }
 @media (min-width:1024px){ .hero__subtitle{ font-size:16.8px !important; } }
+
+/* ==================================================================== */
+/*  v3.8.2 — statuses & reviews titles UPPERCASE (match About heading);  */
+/*           sticky footer also covers profile's plain <main>            */
+/* ==================================================================== */
+.status-heading-section__section-caption,
+.status-page .status-heading-section__section-caption,
+.section-caption.status-heading-section__section-caption,
+.reviews-page .reviews-page__title,
+.reviews-page__title{
+    text-transform:uppercase !important;
+}
+/* ensure profile page (section.profile inside a bare <main>) pushes footer down */
+.wrapper{ min-height:100vh !important; display:flex !important; flex-direction:column !important; }
+.wrapper > main{ flex:1 0 auto !important; }
+.footer{ margin-top:auto !important; }
