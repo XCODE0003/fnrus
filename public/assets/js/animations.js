@@ -163,7 +163,9 @@
 
         /* ================= Секции платформ (страница игры) =========== */
         qa('.game-list, .game-rec').forEach(function (sec) {
-            var head = sec.querySelector('.game-list__head, .game-rec__title');
+            /* .game-list__head animation removed entirely — it kept getting
+               stuck at opacity:0/visibility:hidden. Only .game-rec__title animates. */
+            var head = sec.querySelector('.game-rec__title');
             if (head) reveal(head, { y: 24, trigger: sec });
             var cards = sec.querySelectorAll('.game-card, .catalog-card');
             if (cards.length) reveal(cards, { scale: 0.92, stagger: 0.07, trigger: sec });

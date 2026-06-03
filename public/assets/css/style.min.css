@@ -24423,3 +24423,17 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* Footer — reduce big empty gap between the menu row and the copyright */
 .footer__container{ margin-bottom:0 !important; padding-bottom:10px !important; }
 .footer__bottom-container{ margin-top:14px !important; }
+
+/* ==================================================================== */
+/*  v3.8.4 — .game-list__head: NO animation, force always visible.       */
+/*  !important beats any leftover inline GSAP styles (opacity/visibility).*/
+/* ==================================================================== */
+.game-list__head{
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:none !important;
+    translate:none !important;
+    rotate:none !important;
+    scale:none !important;
+    filter:none !important;
+}
