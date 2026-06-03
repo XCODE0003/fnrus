@@ -24411,3 +24411,15 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .wrapper{ min-height:100vh !important; display:flex !important; flex-direction:column !important; }
 .wrapper > main{ flex:1 0 auto !important; }
 .footer{ margin-top:auto !important; }
+
+/* ==================================================================== */
+/*  v3.8.3 — tighten spacing: About (text→recommend) & footer gap       */
+/* ==================================================================== */
+/* About page — much smaller gap between the long text and "Рекомендуем" */
+.about-page .catalog{ margin-top:36px !important; padding-top:24px !important; }
+/* slightly smaller gap under the "Рекомендуем" heading before the cards */
+.about-page .catalog .catalog__cards-container{ margin-top:28px !important; }
+
+/* Footer — reduce big empty gap between the menu row and the copyright */
+.footer__container{ margin-bottom:0 !important; padding-bottom:10px !important; }
+.footer__bottom-container{ margin-top:14px !important; }
