@@ -213,8 +213,9 @@ function pmIconHtml(name, src){
     function full(p){ return '<span class="pm-fig"><img src="' + p + '" alt="" onerror="this.style.display=\'none\'"></span>'; }
     // logo glyph centred on a white circle (e.g. СБП)
     function white(p){ return '<span class="pm-fig pm-fig--white"><img src="' + p + '" alt="" onerror="this.style.display=\'none\'"></span>'; }
-    // purple circle + white card glyph (bank cards / transfers)
-    function card(){ return '<span class="pm-fig pm-fig--purple"><img src="' + L + 'payson-card.svg" alt=""></span>'; }
+    // payson-card.svg is already a complete icon (purple circle + white card),
+    // so render it as a full circular logo — NO tint/filter/bg overlay.
+    function card(){ return '<span class="pm-fig pm-fig--card"><img src="' + L + 'payson-card.svg" alt=""></span>'; }
 
     if (/сбп|sbp/.test(n))                                   return white(L + 'payment_sbp.svg');
     if (/сбер|sber/.test(n))                                 return full(L + 'payson-sber.png');

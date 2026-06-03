@@ -24437,3 +24437,14 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     scale:none !important;
     filter:none !important;
 }
+
+/* ==================================================================== */
+/*  v3.8.5 — bank-card payment icon: render payson-card.svg as-is        */
+/*  (it already contains the purple circle + white card; no tint/bg).    */
+/* ==================================================================== */
+.pm-fig--card{ background:transparent !important; }
+.pm-fig--card > img{
+    width:100% !important; height:100% !important;
+    object-fit:cover !important; border-radius:50% !important;
+    filter:none !important;
+}
