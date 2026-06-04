@@ -11994,17 +11994,18 @@ html.ios .js-carousel {
 }
 .cheat-block__slider {
     grid-area: 1/1/2/2;
-    aspect-ratio: 16/9;
-    height: auto;
+    align-self: stretch;
+    height: 100%;
     min-height: 0;
     border-radius: 16px;
     background: #171d28;
+    overflow: hidden;
 }
 .cheat-block__info {
     grid-area: 1/2/2/3;
     padding: 28px 28px 24px;
     border-radius: 16px;
-    min-height: 0;
+    min-height: 360px;
     height: 100%;
 }
 .cheat-block__requirements {
@@ -12093,10 +12094,13 @@ html.ios .js-carousel {
     .cheat-block__slider {
         grid-area: auto;
         aspect-ratio: 16/10;
+        height: auto;
+        align-self: auto;
     }
     .cheat-block__info {
         grid-area: auto;
         padding: 24px;
+        min-height: 0;
     }
     .cheat-block__requirements {
         grid-area: auto;
@@ -12114,6 +12118,8 @@ html.ios .js-carousel {
     .cheat-block__slider {
         aspect-ratio: 4/3;
         border-radius: 12px;
+        height: auto;
+        align-self: auto;
     }
     .cheat-block__info {
         padding: 18px;
@@ -23844,6 +23850,60 @@ body::before{
 .profile__tabs__choose{ margin-bottom:24px !important }
 .profile__tabs__tab{ max-width:780px !important; margin-left:0 !important }
 
+/* ---- Profile settings on MOBILE: stack each row so inputs & buttons are
+   actually visible (the !important desktop rules above forced nowrap rows
+   that overflowed the screen and got clipped by .profile__main overflow). ---- */
+@media (max-width: 767px){
+    .profile__main{ overflow:visible !important; --padding-x:18px !important; --padding-y:26px !important }
+    .profile__main .profile__block{ padding:24px 18px !important }
+    .profile__tabs__tab{ max-width:100% !important }
+
+    /* "Личные данные" — label / input / button stacked full-width */
+    .profile__settings-block_input{
+        flex-wrap:wrap !important;
+        align-items:stretch !important;
+        gap:12px !important;
+        padding:16px !important;
+    }
+    .profile__settings-block_input .profile__settings-block__text{
+        flex:1 1 100% !important;
+        width:100% !important;
+        padding-right:0 !important;
+    }
+    .profile__settings-block__input{
+        flex:1 1 100% !important;
+        width:100% !important;
+        margin-right:0 !important;
+    }
+    .profile__settings-block_input .profile__settings-block__edit-btn{
+        flex:1 1 auto !important;
+        width:auto !important;
+        min-width:0 !important;
+        margin-left:0 !important;
+    }
+    .profile__settings-block_input .profile__settings-block__cancel-btn{
+        flex:0 0 auto !important;
+        width:53px !important;
+        height:auto !important;
+    }
+
+    /* "Безопасность" — change-password row stacked */
+    .profile__settings-block_password{
+        flex-wrap:wrap !important;
+        gap:12px !important;
+    }
+    .profile__settings-block_password .profile__settings-block__text{ flex:1 1 100% !important }
+    .profile__settings-block_password .profile__settings-block__edit-btn{
+        width:100% !important;
+        min-width:0 !important;
+        margin-left:0 !important;
+    }
+
+    /* "Способы входа" card stays readable on narrow screens */
+    .profile__auth-methods{ padding:6px 16px !important }
+    .profile__auth-method{ gap:12px !important }
+}
+
 /* ==================================================================== */
 /*  PAYMENT METHODS (buy step 2) — clean card rows, tidy currency tag    */
 /* ==================================================================== */
@@ -24496,7 +24556,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* ==================================================================== */
 /*  v3.9.0 — lift the back-to-top button ABOVE the Jivo chat button      */
 /* ==================================================================== */
-.to-top{ bottom:104px !important; z-index:39 !important; }
+.to-top{ bottom:125px !important; z-index:39 !important; }
 @media (max-width:599px){ .to-top{ bottom:92px !important; } }
 
 /* ==================================================================== */
@@ -24541,3 +24601,44 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 }
 .popup__social .btn-yandex svg,
 .popup__social .btn-telegram svg{ margin:0 !important; }
+
+/* ==================================================================== */
+/*  v3.9.3 — product page: photo block stretches to the info block       */
+/*  height (no empty gap below the photos on desktop)                    */
+/* ==================================================================== */
+@media (min-width:1024px){
+    .cheat-block{ align-items:stretch !important; }
+    .cheat-block__slider{
+        aspect-ratio:auto !important;
+        height:100% !important; min-height:100% !important;
+        align-self:stretch !important;
+    }
+    .cheat-block__slider .swiper{ height:100% !important; }
+    .cheat-block__slider__slide{ height:100% !important; }
+    .cheat-block__slider__slide img{ width:100% !important; height:100% !important; object-fit:cover !important; }
+}
+
+/* ==================================================================== */
+/*  v3.9.4 — PROFILE mobile: stack to one column so the settings panel   */
+/*  is actually visible (the 330px+1fr grid squeezed it to nothing).     */
+/* ==================================================================== */
+@media (max-width:900px){
+    .profile{ padding-top:108px !important; padding-bottom:24px !important; }
+    .profile__container{
+        position:static !important;
+        display:flex !important; flex-direction:column !important;
+        grid-template-columns:1fr !important;
+        gap:16px !important; align-items:stretch !important;
+    }
+    .profile__sidebar{ width:100% !important; max-width:none !important; position:static !important; top:auto !important; }
+    .profile__main{ width:100% !important; max-width:none !important; flex:1 1 auto !important; }
+    .profile__tabs__tab{ max-width:none !important; }
+    /* keep the account menu compact above the settings */
+    .profile__menu{ display:flex !important; flex-wrap:wrap !important; gap:8px !important; }
+    .profile__menu__item{ flex:1 1 auto !important; }
+}
+@media (max-width:599px){
+    .profile{ padding-top:96px !important; }
+    .profile__main .profile__block{ padding:18px !important; }
+    .profile__menu{ flex-direction:column !important; }
+}
