@@ -89,7 +89,10 @@
             if (opts.scale != null) { start.scale = opts.scale; end.scale = 1; }
             if (opts.blur) { start.filter = 'blur(' + opts.blur + 'px)'; end.filter = 'blur(0px)'; }
             gsap.set(els, start);
-            var trigger = opts.trigger ? q(opts.trigger) : els[0];
+            // opts.trigger may be a selector string OR an already-resolved DOM element
+            var trigger = opts.trigger
+                ? (typeof opts.trigger === 'string' ? q(opts.trigger) : opts.trigger)
+                : els[0];
             onView(trigger || els[0], function () { gsap.to(els, end); });
         }
 
