@@ -811,5 +811,25 @@ function changeLanguage(locale){window.location.href='/lang/'+locale;}
 })();
 </script>
 <script src="/assets/js/app.js?v=4.9"></script>
+<!-- JivoChat Widget -->
+<script>
+(function(){
+    function loadJivo(){
+        if (window.__jivoLoaded) return;
+        window.__jivoLoaded = true;
+        var s = document.createElement('script');
+        s.src = '//code.jivo.ru/widget/3tZ9JRQowl';
+        s.async = true;
+        document.head.appendChild(s);
+    }
+    if (document.readyState === 'complete') {
+        (window.requestIdleCallback || function(cb){setTimeout(cb,3000);})(loadJivo, {timeout: 5000});
+    } else {
+        window.addEventListener('load', function(){
+            (window.requestIdleCallback || function(cb){setTimeout(cb,3000);})(loadJivo, {timeout: 5000});
+        });
+    }
+})();
+</script>
 </body>
 </html>
