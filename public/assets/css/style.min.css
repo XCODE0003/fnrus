@@ -24448,3 +24448,34 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     object-fit:cover !important; border-radius:50% !important;
     filter:none !important;
 }
+
+/* ==================================================================== */
+/*  v3.8.6 — category hero: premium reference look, in our purple style  */
+/* ==================================================================== */
+.game-hero{ overflow:hidden; }
+/* ambient depth glow across the hero */
+.game-hero::before{
+    content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background:
+        radial-gradient(680px 420px at 80% 42%, rgba(132,86,255,.20), transparent 70%),
+        radial-gradient(460px 320px at 6% 16%, rgba(132,86,255,.10), transparent 72%);
+}
+.game-hero__inner{ position:relative; z-index:1; }
+
+/* richer aura puddle behind the figure */
+.game-hero__image::before{
+    width:88% !important; height:80% !important;
+    left:54% !important; top:46% !important;
+    background:radial-gradient(closest-side, rgba(149,84,255,.55), rgba(132,86,255,.16) 62%, transparent 80%) !important;
+    opacity:.8 !important; filter:blur(56px) !important;
+}
+/* coloured halo hugging the character silhouette (like reference green glow) */
+.game-hero__image img{
+    filter:drop-shadow(0 20px 45px rgba(132,86,255,.42))
+           drop-shadow(0 0 26px rgba(132,86,255,.32)) !important;
+}
+
+/* stats polish — crisper icons, glowing "Undetected" */
+.game-hero__stat svg{ opacity:.85 !important; }
+.game-hero__stat--badge{ color:#8af59b !important; }
+.game-hero__stat--badge span{ text-shadow:0 0 12px rgba(138,245,155,.35); }
