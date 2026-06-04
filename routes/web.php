@@ -192,6 +192,31 @@ Route::get('/instruction/{alias}', function ($alias) {
 
 Route::get('/delivery/{hash}', function ($hash) {
     $order = Order::getByHashNoAuth($hash);
+    if (!$order) {
+        abort(404);
+    }
+
+    // ---- IDOR guard ----------------------------------------------------
+    // An order that belongs to a registered account (bid > 0) may only be
+    // opened by that same account. We resolve the viewer from the JWT
+    // `session_token` cookie (same mechanism as FilamentSiteAuthBridge).
+    // Guest orders (bid == 0) keep capability access via the secret hash
+    // (delivery links sent by email / Telegram bot).
+    if ((int) ($order->bid ?? 0) > 0) {
+        $viewerId = 0;
+        if ($tok = request()->cookie('session_token')) {
+            try {
+                $viewerId = (int) (\PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::setToken($tok)->authenticate()->id ?? 0);
+            } catch (\Throwable $e) {
+                $viewerId = 0;
+            }
+        }
+        if ($viewerId !== (int) $order->bid) {
+            abort(404);
+        }
+    }
+    // --------------------------------------------------------------------
+
     if ($order->status == 1) {
         return redirect()->back();
     }
