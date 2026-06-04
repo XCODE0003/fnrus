@@ -24518,3 +24518,26 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     background:rgba(34,158,217,.14) !important; border-color:rgba(34,158,217,.40) !important;
 }
 .btn-telegram svg{ fill:#27A7E7 !important; }
+
+/* ==================================================================== */
+/*  v3.9.2 — social login buttons: icon-only, side-by-side, centered     */
+/* ==================================================================== */
+.popup__social{
+    display:flex !important; justify-content:center !important; align-items:center !important;
+    gap:12px !important; margin-top:18px !important;
+}
+.popup#auth .popup__social .btn-yandex.popup__submit-btn,
+.popup#auth .popup__social .btn-telegram.popup__submit-btn,
+.popup#register .popup__social .btn-yandex.popup__submit-btn,
+.popup#register .popup__social .btn-telegram.popup__submit-btn,
+.popup#resetPass .popup__social .btn-yandex.popup__submit-btn,
+.popup#resetPass .popup__social .btn-telegram.popup__submit-btn,
+.popup__social .btn-yandex,
+.popup__social .btn-telegram{
+    width:56px !important; min-width:56px !important; max-width:56px !important;
+    height:48px !important; margin:0 !important; padding:0 !important;
+    font-size:0 !important;           /* hide the text label, keep the icon */
+    flex:0 0 auto !important;
+}
+.popup__social .btn-yandex svg,
+.popup__social .btn-telegram svg{ margin:0 !important; }

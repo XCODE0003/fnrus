@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=3.9.1">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=3.9.2">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -532,12 +532,14 @@
         <button class="btn btn-accent popup__submit-btn" style="margin-bottom: 20px;margin-top:20px" onclick="signIn();return false;">{{ __('site.btn_login') }}</button>
         <hr style="border: 1px solid #1d2533;" />
         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+            <div class="popup__social">
             <a href="/oauth/yandex/redirect" class="btn btn-yandex popup__submit-btn" style="margin-top: 20px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px">
                     <path d="M13.32 21H15.9V3h-3.78c-3.78 0-5.94 2.16-5.94 5.28 0 2.52 1.26 4.02 3.54 5.58L6 21h2.82l4.2-7.86c-2.52-1.68-3.42-2.82-3.42-5.04 0-2.1 1.38-3.42 3.42-3.42h.3V21z" />
                 </svg> {{ __('site.login_via_yandex') }}</a>
             <a href="javascript:void(0)" class="btn btn-telegram popup__submit-btn" style="margin-top: 14px" onclick="tgLogin();return false;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px">
                     <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-1.99 1.93c-.23.23-.42.42-.83.42z" />
                 </svg> {{ __('site.login_via_telegram') }}</a>
+            </div>
         </div>
 
         <p class="popup__hint">{{ __('site.text_no_account') }} <button class="popup__hint__btn" data-popup="register">{{ __('site.btn_register_two') }}</button></p>
@@ -635,12 +637,14 @@
         <button class="btn btn-accent popup__submit-btn" style="margin-bottom: 20px;margin-top:20px" onclick="signUp();">{{ __('site.btn_register_two') }}</button>
         <hr style="border: 1px solid #1d2533;" />
         <div>
+            <div class="popup__social">
             <a href="/oauth/yandex/redirect" class="btn btn-yandex popup__submit-btn" style="margin-top: 20px !important;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px">
                     <path d="M13.32 21H15.9V3h-3.78c-3.78 0-5.94 2.16-5.94 5.28 0 2.52 1.26 4.02 3.54 5.58L6 21h2.82l4.2-7.86c-2.52-1.68-3.42-2.82-3.42-5.04 0-2.1 1.38-3.42 3.42-3.42h.3V21z" />
                 </svg> {{ __('site.login_via_yandex') }}</a>
             <a href="javascript:void(0)" class="btn btn-telegram popup__submit-btn" style="margin-top: 14px !important;" onclick="tgLogin();return false;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="fill:#fff;margin-right:8px">
                     <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-1.99 1.93c-.23.23-.42.42-.83.42z" />
                 </svg> {{ __('site.login_via_telegram') }}</a>
+            </div>
 
         </div>
         <p class="popup__note">{{ __('site.text_processing_personal_data') }}</p>
