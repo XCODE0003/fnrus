@@ -23858,11 +23858,11 @@ body::before{
     .profile__main .profile__block{ padding:24px 18px !important }
     .profile__tabs__tab{ max-width:100% !important }
 
-    /* "Личные данные" — label / input / button stacked full-width */
+    /* "Личные данные" — label on top, then [input] + compact icon button in one row */
     .profile__settings-block_input{
         flex-wrap:wrap !important;
-        align-items:stretch !important;
-        gap:12px !important;
+        align-items:center !important;
+        gap:10px !important;
         padding:16px !important;
     }
     .profile__settings-block_input .profile__settings-block__text{
@@ -23871,20 +23871,25 @@ body::before{
         padding-right:0 !important;
     }
     .profile__settings-block__input{
-        flex:1 1 100% !important;
-        width:100% !important;
-        margin-right:0 !important;
-    }
-    .profile__settings-block_input .profile__settings-block__edit-btn{
-        flex:1 1 auto !important;
+        flex:1 1 0 !important;
         width:auto !important;
         min-width:0 !important;
-        margin-left:0 !important;
+        margin-right:0 !important;
     }
+    /* compact square pencil button (icon only) next to the input */
+    .profile__settings-block_input .profile__settings-block__edit-btn{
+        flex:0 0 auto !important;
+        width:50px !important; min-width:50px !important; height:50px !important;
+        padding:0 !important;
+        font-size:0 !important;                      /* hide the "Изменить" label */
+        background-position:center !important;
+        background-size:18px !important;
+        display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    }
+    .profile__settings-block_input .profile__settings-block__edit-btn .submit{ display:none !important }
     .profile__settings-block_input .profile__settings-block__cancel-btn{
         flex:0 0 auto !important;
-        width:53px !important;
-        height:auto !important;
+        width:50px !important; height:50px !important;
     }
 
     /* "Безопасность" — change-password row stacked */
