@@ -3489,7 +3489,7 @@ section:first-child {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    margin-bottom: 100px;
+    margin-bottom: 40px;
 }
 
 .popup__payment-methods input[type="radio"],
@@ -24482,3 +24482,13 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 .game-hero__stat svg{ opacity:.85 !important; }
 .game-hero__stat--badge{ color:#8af59b !important; }
 .game-hero__stat--badge span{ text-shadow:0 0 12px rgba(138,245,155,.35); }
+
+/* ==================================================================== */
+/*  v3.8.9 — category hero desc: bigger, no animation (always visible)   */
+/* ==================================================================== */
+.game-hero__desc{
+    font-size:17px !important;
+    line-height:1.6 !important;
+    max-width:680px !important;
+    opacity:1 !important; visibility:visible !important; transform:none !important;
+}

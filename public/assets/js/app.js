@@ -298,7 +298,7 @@ function paymentMethodsTopup(price) {
                 rows.sort(function (x, y) { return (x.rank - y.rank) || (x.sub - y.sub); });
                 items_html = rows.map(function (r) { return r.html; }).join('');
 
-                $('#topup-payments-methods').html('<div id="topup-bt-main">' + items_html + '</div>');
+                $('#topup-payments-methods').html('<div id="topup-bt-main" style="display: flex; flex-direction: column; gap: 10px;">' + items_html + '</div>');
             }
         }
     });
