@@ -13589,7 +13589,7 @@ body:has(.popup._active.popup--pay) .support-bubble {
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.18) inset,
         0 -1px 0 rgba(0, 0, 0, 0.2) inset,
-        0 14px 30px -10px rgba(132, 86, 255, 0.7),
+        0 6px 14px -8px rgba(132, 86, 255, 0.55),
         0 0 0 1px rgba(132, 86, 255, 0.3) !important;
     overflow: hidden;
     transition:
@@ -13618,7 +13618,7 @@ body:has(.popup._active.popup--pay) .support-bubble {
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.22) inset,
         0 -1px 0 rgba(0, 0, 0, 0.25) inset,
-        0 20px 36px -10px rgba(132, 86, 255, 0.85),
+        0 8px 18px -10px rgba(132, 86, 255, 0.7),
         0 0 0 1px rgba(132, 86, 255, 0.45) !important;
 }
 .popup--pay .pay-btn--primary:hover::before,
