@@ -24473,7 +24473,6 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     opacity:.85 !important; filter:blur(46px) !important;
 }
 /* coloured halo hugging the character silhouette (like reference green glow) */
-.game-hero__image img,
 .game-hero__image{
     filter:drop-shadow(0 20px 45px rgba(132,86,255,.42))
            drop-shadow(0 0 26px rgba(132,86,255,.32)) !important;
