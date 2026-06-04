@@ -24452,22 +24452,25 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* ==================================================================== */
 /*  v3.8.6 — category hero: premium reference look, in our purple style  */
 /* ==================================================================== */
-.game-hero{ overflow:hidden; }
-/* ambient depth glow across the hero */
+/* IMPORTANT: never clip the hero — overflow:hidden cut the glow into a hard
+   rectangle (visible flat edges top/bottom). Let the glow fade out freely. */
+.game-hero{ overflow:visible !important; }
+.game-hero__image{ overflow:visible !important; }
+/* ambient depth glow across the hero (soft, fully fades to transparent) */
 .game-hero::before{
-    content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    content:""; position:absolute; inset:-40% -8%; z-index:0; pointer-events:none;
     background:
-        radial-gradient(680px 420px at 80% 42%, rgba(132,86,255,.20), transparent 70%),
-        radial-gradient(460px 320px at 6% 16%, rgba(132,86,255,.10), transparent 72%);
+        radial-gradient(600px 460px at 80% 48%, rgba(132,86,255,.18), transparent 64%),
+        radial-gradient(440px 340px at 8% 22%, rgba(132,86,255,.07), transparent 70%);
 }
 .game-hero__inner{ position:relative; z-index:1; }
 
-/* richer aura puddle behind the figure */
+/* soft round aura behind the figure — large & fully faded, no hard edges */
 .game-hero__image::before{
-    width:88% !important; height:80% !important;
-    left:54% !important; top:46% !important;
-    background:radial-gradient(closest-side, rgba(149,84,255,.55), rgba(132,86,255,.16) 62%, transparent 80%) !important;
-    opacity:.8 !important; filter:blur(56px) !important;
+    width:128% !important; height:128% !important;
+    left:50% !important; top:50% !important;
+    background:radial-gradient(closest-side, rgba(149,84,255,.42), rgba(132,86,255,.10) 52%, transparent 74%) !important;
+    opacity:.85 !important; filter:blur(46px) !important;
 }
 /* coloured halo hugging the character silhouette (like reference green glow) */
 .game-hero__image img{
