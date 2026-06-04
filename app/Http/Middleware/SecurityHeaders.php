@@ -41,12 +41,12 @@ class SecurityHeaders
 
         $csp = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://hcaptcha.com https://*.hcaptcha.com https://yastatic.net https://mc.yandex.ru https://code.jivo.ru https://*.jivosite.com",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://hcaptcha.com https://*.hcaptcha.com https://yastatic.net https://mc.yandex.ru https://code.jivo.ru https://*.jivosite.com https://telegram.org https://oauth.telegram.org",
             "style-src 'self' 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com https://yastatic.net",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data: https:",
-            "connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com https://api.hcaptcha.com https://*.jivosite.com wss://*.jivosite.com https://mc.yandex.ru https://oauth.yandex.ru",
-            "frame-src 'self' https://hcaptcha.com https://*.hcaptcha.com https://*.jivosite.com",
+            "connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com https://api.hcaptcha.com https://*.jivosite.com wss://*.jivosite.com https://mc.yandex.ru https://oauth.yandex.ru https://oauth.telegram.org",
+            "frame-src 'self' https://hcaptcha.com https://*.hcaptcha.com https://*.jivosite.com https://oauth.telegram.org",
             "frame-ancestors 'none'",
             "base-uri 'self'",
             "form-action 'self' https://oauth.yandex.ru",

@@ -24498,3 +24498,23 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* ==================================================================== */
 .to-top{ bottom:104px !important; z-index:39 !important; }
 @media (max-width:599px){ .to-top{ bottom:92px !important; } }
+
+/* ==================================================================== */
+/*  v3.9.1 — Telegram login button (matches the Yandex pill, TG accent)  */
+/* ==================================================================== */
+.btn-telegram{ background-color:#229ED9; display:flex; align-items:center; justify-content:center; }
+.btn-telegram:hover{ background-color:#1b8ec4; }
+.popup#auth .btn-telegram.popup__submit-btn,
+.popup#register .btn-telegram.popup__submit-btn,
+.popup#resetPass .btn-telegram.popup__submit-btn{
+    height:48px !important; margin:8px 0 0 !important; border-radius:12px !important;
+    background:rgba(255,255,255,.04) !important; border:1px solid rgba(255,255,255,.08) !important;
+    color:#fff !important; font-size:14px !important; font-weight:500 !important;
+    transition:background .18s ease, border-color .18s ease !important;
+}
+.popup#auth .btn-telegram.popup__submit-btn:hover,
+.popup#register .btn-telegram.popup__submit-btn:hover,
+.popup#resetPass .btn-telegram.popup__submit-btn:hover{
+    background:rgba(34,158,217,.14) !important; border-color:rgba(34,158,217,.40) !important;
+}
+.btn-telegram svg{ fill:#27A7E7 !important; }
