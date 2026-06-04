@@ -24492,3 +24492,9 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     max-width:680px !important;
     opacity:1 !important; visibility:visible !important; transform:none !important;
 }
+
+/* ==================================================================== */
+/*  v3.9.0 — lift the back-to-top button ABOVE the Jivo chat button      */
+/* ==================================================================== */
+.to-top{ bottom:104px !important; z-index:39 !important; }
+@media (max-width:599px){ .to-top{ bottom:92px !important; } }
