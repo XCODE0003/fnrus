@@ -235,7 +235,7 @@ function pmOrder(name){
     if (/банковск/.test(n))                 return 2;
     if (/crypto ?bot|cryptobot/.test(n))    return 3;
     if (/telegram stars|\bstars\b|\bxtr\b/.test(n)) return 4;
-    if (/перевод/.test(n))                  return 5;
+    if (/перевод|streampay|stream/.test(n)) return 5;
     return 0; // Сбер Pay, LZT, BTKassa, прочее — скрыты
 }
 
@@ -244,7 +244,7 @@ function pmRegion(name, currency){
     var n = (name || '').toString().toLowerCase();
     if (/сбп|sbp|сбер|sber|банковск/.test(n)) return 'Для России';
     if (/lzt|crypto ?bot|cryptobot|telegram|stars?|xtr|звезд|usdt|tether|crypto|крипт|crystal|\bton\b/.test(n)) return 'Все страны';
-    if (/перевод/.test(n)) return 'Все страны';
+    if (/перевод|streampay|stream/.test(n)) return 'Все страны';
     return currency || '';
 }
 

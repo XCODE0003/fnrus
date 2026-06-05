@@ -954,7 +954,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=4.9"></script>
+    <script src="/assets/js/app.js?v=5.0"></script>
     <!-- Telegram login -->
     <script>
         window.__TG_BOT_ID = parseInt((document.querySelector('meta[name="tg-bot-id"]') || {}).content || '0', 10) || 0;
