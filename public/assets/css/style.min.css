@@ -24647,3 +24647,15 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     .profile__main .profile__block{ padding:18px !important; }
     .profile__menu{ flex-direction:column !important; }
 }
+
+/* ==================================================================== */
+/*  v3.9.8 — profile top↑ + kill bottom void (zoom) + FAQ heading gap    */
+/* ==================================================================== */
+/* body{zoom:.9} shrinks min-height:100vh to ~90vh → empty strip under the
+   footer. Compensate so the wrapper truly fills the viewport (desktop). */
+@media (min-width:1024px){
+    .wrapper{ min-height:111.2vh !important; }
+    .profile{ padding-top:200px !important; }
+}
+/* instruction/home FAQ: add gap between the heading and the cards */
+.faq .section-caption + .faq__container{ margin-top:26px !important; }
