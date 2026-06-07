@@ -42,4 +42,9 @@ return [
         'bot_username' => env('TELEGRAM_BOT_USERNAME'),
     ],
 
+    'analytics' => [
+        'yandex_metrika' => env('YANDEX_METRIKA_ID'),
+        'google_analytics' => env('GOOGLE_ANALYTICS_ID'),
+    ],
+
 ];

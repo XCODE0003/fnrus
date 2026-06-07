@@ -315,7 +315,7 @@ return [
 
     // === main layout ===
     "meta_subtitle" => "private cheats for mobile and PC games",
-    "meta_description" => "Fnrus — private cheats for mobile and PC games",
+    "meta_description" => "Fnrus — private cheats for mobile and PC games: PUBG Mobile, Mobile Legends, Call of Duty Mobile and more. Instant key delivery, anti-detect protection and 24/7 support.",
     "login_via_yandex" => "Sign in with Yandex",
     "login_via_telegram" => "Sign in with Telegram",
     "balance_replenished" => "Balance replenished",

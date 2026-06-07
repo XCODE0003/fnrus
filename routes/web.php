@@ -345,6 +345,34 @@ Route::get('/status', function () {
 
     return view('user/status', ['title' => __('site.page_title_statuses'), 'categories' => $categories_json]);
 });
+Route::get('/sitemap.xml', function () {
+    $base = rtrim(config('app.url') ?: url('/'), '/');
+    $urls = [
+        ['loc' => $base . '/',        'priority' => '1.0', 'freq' => 'daily'],
+        ['loc' => $base . '/games',   'priority' => '0.9', 'freq' => 'daily'],
+        ['loc' => $base . '/status',  'priority' => '0.7', 'freq' => 'weekly'],
+        ['loc' => $base . '/reviews', 'priority' => '0.6', 'freq' => 'weekly'],
+        ['loc' => $base . '/about',   'priority' => '0.5', 'freq' => 'monthly'],
+    ];
+    try {
+        $categories = Category::list_web_by_cid(0)->getData()->result ?? [];
+        foreach ($categories as $c) {
+            if (!empty($c->alias)) {
+                $urls[] = ['loc' => $base . '/' . ltrim($c->alias, '/'), 'priority' => '0.8', 'freq' => 'weekly'];
+            }
+        }
+    } catch (\Throwable $e) {}
+
+    $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    foreach ($urls as $u) {
+        $xml .= "  <url>\n    <loc>" . htmlspecialchars($u['loc'], ENT_XML1) . "</loc>\n"
+              . "    <changefreq>{$u['freq']}</changefreq>\n    <priority>{$u['priority']}</priority>\n  </url>\n";
+    }
+    $xml .= '</urlset>';
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+});
+
 Route::get('/about', function () {
     $shop = Shop::getDefault();
     $categories = Category::list_web_by_cid(0);

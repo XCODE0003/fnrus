@@ -315,7 +315,7 @@ return [
 
     // === main layout ===
     "meta_subtitle" => "приватные читы для мобильных и ПК игр",
-    "meta_description" => "Fnrus — приватные читы для мобильных и ПК игр",
+    "meta_description" => "Fnrus — приватные читы для мобильных и ПК игр: PUBG Mobile, Mobile Legends, Call of Duty Mobile и другие. Мгновенная выдача ключа, антидетект-защита и поддержка 24/7.",
     "login_via_yandex" => "Войти через Яндекс",
     "login_via_telegram" => "Войти через Telegram",
     "balance_replenished" => "Баланс пополнен",

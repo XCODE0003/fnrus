@@ -1,0 +1,13 @@
+# Fnrus
+
+> Fnrus — магазин приватных читов для мобильных и ПК игр (PUBG Mobile, Mobile Legends, Call of Duty Mobile и другие). Мгновенная выдача ключа, антидетект-защита, поддержка 24/7.
+
+## Основные разделы
+- [Главная](https://fnrus.com/)
+- [Каталог игр](https://fnrus.com/games)
+- [Статусы читов](https://fnrus.com/status)
+- [Отзывы](https://fnrus.com/reviews)
+- [О нас](https://fnrus.com/about)
+
+## Контакты
+- Telegram-поддержка: https://t.me/FNRUS_SUPPORT

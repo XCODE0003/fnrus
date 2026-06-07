@@ -133,6 +133,53 @@
             grid-template-columns: repeat(3, 1fr);
         }
     </style>
+
+    {{-- Schema.org structured data (Organization + WebSite) --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "name": "{{ config('app.name') }}",
+                "url": "{{ url('/') }}",
+                "logo": "{{ url('/assets/img/logo.png') }}",
+                "description": "{{ __('site.meta_description') }}"
+            },
+            {
+                "@type": "WebSite",
+                "name": "{{ config('app.name') }}",
+                "url": "{{ url('/') }}",
+                "inLanguage": "{{ app()->getLocale() === 'en' ? 'en' : 'ru' }}",
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "{{ url('/games') }}?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            }
+        ]
+    }
+    </script>
+
+    @if(config('services.analytics.yandex_metrika'))
+    {{-- Yandex.Metrika --}}
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+        ym({{ config('services.analytics.yandex_metrika') }}, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/{{ config('services.analytics.yandex_metrika') }}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    @endif
+
+    @if(config('services.analytics.google_analytics'))
+    {{-- Google Analytics (GA4) --}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.analytics.google_analytics') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ config('services.analytics.google_analytics') }}');
+    </script>
+    @endif
 </head>
 
 <body>

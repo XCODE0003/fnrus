@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /my/
+Disallow: /xoalfjamapfn/
+
+Sitemap: https://fnrus.com/sitemap.xml
