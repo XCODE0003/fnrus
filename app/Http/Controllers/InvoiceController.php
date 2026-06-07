@@ -1298,6 +1298,28 @@ class InvoiceController extends Controller
                         });
                     }
 
+                    // Уведомление покупателю в Telegram при покупке с САЙТА,
+                    // если у него привязан Telegram (вошёл через TG, есть tid).
+                    if($order->type == 1 && (int)($member->tid ?? 0) > 0){
+                        try {
+                            $delivery_link = config('app.url_delivery') . $order->delivery_hash;
+                            $cust_text = "✅ <b>Оплата получена!</b>\r\n"
+                                . "├ Заказ: <code>" . $order->hash . "</code>\r\n"
+                                . "└ Товар: <b>" . $product->title . " " . $status . "</b>\r\n\r\n"
+                                . "Ключ и инструкция доступны по кнопке ниже.";
+                            $cust_kp = json_encode(["inline_keyboard" => [[["text" => "🔑 Открыть заказ", "url" => $delivery_link]]]]);
+                            $tg->sendMessage([
+                                'chat_id' => $member->tid,
+                                'text' => $cust_text,
+                                "parse_mode" => "HTML",
+                                "disable_web_page_preview" => true,
+                                "reply_markup" => $cust_kp,
+                            ]);
+                        } catch (\Throwable $e) {
+                            \Log::warning('TG buyer notify (site purchase) failed: ' . $e->getMessage());
+                        }
+                    }
+
                     if($order->type == 0){
 
                         $message_text = str_replace(':order_hash', $order->hash, __('bot.alert_order_paid'));
