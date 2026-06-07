@@ -124,7 +124,16 @@
         }
 
         /* ========================= GAME HERO ========================= */
-        /* Entrance/float animation removed — hero shows instantly (no reveal). */
+        if (q('.game-hero')) {
+            gsap.timeline({ defaults: { ease: GLIDE, duration: 0.95, clearProps: 'transform,filter' } })
+                .fromTo('.game-hero__title',
+                    { autoAlpha: 0, y: 48, filter: 'blur(14px)' },
+                    { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.1 })
+                .from('.game-hero__count, .game-hero__back',
+                    { autoAlpha: 0, y: 24, stagger: 0.1, duration: 0.75 }, '-=0.65')
+                .from('.game-hero__image', { autoAlpha: 0, scale: 0.9, duration: 1.15, ease: SOFT }, '-=0.95');
+            /* floating (up/down) image animation removed per request */
+        }
 
         /* ===================== Секция «Новый уровень» ================ */
         if (q('.section2')) {
