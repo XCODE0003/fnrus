@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="hero__image">
-                <img src="/assets/img/spider-hero.png" alt="">
+                <img src="/assets/img/spider-hero.webp" alt="">
             </div>
         </div>
     </section>
