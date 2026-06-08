@@ -147,6 +147,26 @@ class BotController extends Controller
                 }
             }
 
+            // Диплинк-ВХОД на сайт: /start login_<token>
+            if(!empty($msg) && strpos($msg, 'login_') !== false){
+                $login_parts = explode('login_', $msg);
+                $login_token = trim($login_parts[1] ?? '');
+                if($login_token !== ''){
+                    $user = \App\Models\User::where('tid', $cid)->first();
+                    if(!$user){
+                        Member::add($cid, $sid, 0, Str::random(8));
+                        $user = \App\Models\User::where('tid', $cid)->first();
+                    }
+                    if($user && (int)($user->is_ban ?? 0) !== 1){
+                        Cache::put('tglogin:' . $login_token, $user->id, 300);
+                        $tg->sendMessage(['chat_id' => $cid, 'text' => "✅ <b>Вход подтверждён!</b>\r\nВернитесь на вкладку сайта — вы уже авторизованы.", "parse_mode" => "HTML"]);
+                    } else {
+                        $tg->sendMessage(['chat_id' => $cid, 'text' => "⚠️ Не удалось войти. Попробуйте позже.", "parse_mode" => "HTML"]);
+                    }
+                    exit;
+                }
+            }
+
             if(!empty($msg) && strpos($msg, 'connect_') !== false){
 
                 $param_code = explode('_', $msg);

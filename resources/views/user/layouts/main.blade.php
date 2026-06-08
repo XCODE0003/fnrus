@@ -1002,38 +1002,58 @@
         })();
     </script>
     <script src="/assets/js/app.js?v=5.0"></script>
-    <!-- Telegram login -->
+    <!-- Telegram login via bot deep-link (no widget) -->
     <script>
-        window.__TG_BOT_ID = parseInt((document.querySelector('meta[name="tg-bot-id"]') || {}).content || '0', 10) || 0;
+        (function () {
+            var tgPollTimer = null, tgDeadline = 0;
 
-        function tgLogin() {
-            var botId = window.__TG_BOT_ID || 0;
-            if (!botId) {
-                alert('Вход через Telegram скоро будет доступен');
-                return;
+            function tgCsrf() {
+                var m = document.querySelector('meta[name="csrf-token"]');
+                return m ? m.content : '';
             }
 
-            function go() {
-                window.Telegram.Login.auth({
-                    bot_id: botId,
-                    request_access: 'write'
-                }, function(data) {
-                    if (!data) return;
-                    var q = Object.keys(data).map(function(k) {
-                        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
-                    }).join('&');
-                    window.location.href = '/oauth/telegram/callback?' + q;
-                });
+            function tgFinish(jwt) {
+                // logs the user in the same way the normal login flow does
+                var exp = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+                document.cookie = 'session_token=' + jwt + '; expires=' + exp.toUTCString() + '; path=/';
+                window.location.href = '/my/profile';
             }
-            if (window.Telegram && window.Telegram.Login) {
-                go();
-            } else {
-                var s = document.createElement('script');
-                s.src = 'https://telegram.org/js/telegram-widget.js?22';
-                s.onload = go;
-                document.head.appendChild(s);
+
+            function tgPoll(token) {
+                if (Date.now() > tgDeadline) { return; } // 5 min timeout — silently stop
+                fetch('/api/auth/telegram/poll/' + token, { headers: { 'Accept': 'application/json' } })
+                    .then(function (r) { return r.json(); })
+                    .then(function (j) {
+                        if (j && j.ok && j.session_token) { tgFinish(j.session_token); return; }
+                        tgPollTimer = setTimeout(function () { tgPoll(token); }, 2000);
+                    })
+                    .catch(function () {
+                        tgPollTimer = setTimeout(function () { tgPoll(token); }, 2500);
+                    });
             }
-        }
+
+            window.tgLogin = function () {
+                if (tgPollTimer) { clearTimeout(tgPollTimer); }
+                fetch('/api/auth/telegram/start', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': tgCsrf() }
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (j) {
+                        if (!j || !j.ok || !j.link) {
+                            alert((j && j.description) || 'Вход через Telegram временно недоступен.');
+                            return;
+                        }
+                        // open the bot so the user just presses Start
+                        window.open(j.link, '_blank');
+                        tgDeadline = Date.now() + 5 * 60 * 1000;
+                        tgPoll(j.token);
+                    })
+                    .catch(function () {
+                        alert('Не удалось начать вход через Telegram. Попробуйте позже.');
+                    });
+            };
+        })();
     </script>
     <!-- JivoChat Widget -->
     <script>

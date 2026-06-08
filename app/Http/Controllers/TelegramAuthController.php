@@ -8,12 +8,49 @@ use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class TelegramAuthController
 {
+    /**
+     * Шаг 1 диплинк-входа: создаём одноразовый токен входа и отдаём фронту
+     * ссылку на бота вида https://t.me/<bot>?start=login_<token>.
+     */
+    public function loginStart()
+    {
+        $bot = config('services.telegram.bot_username');
+        if (empty($bot)) {
+            return response()->json(['ok' => false, 'description' => 'Вход через Telegram временно недоступен.'], 200);
+        }
+        $token = Str::random(40);
+        Cache::put('tglogin:' . $token, 'pending', 300); // 5 минут
+        $link = 'https://t.me/' . ltrim($bot, '@') . '?start=login_' . $token;
+        return response()->json(['ok' => true, 'token' => $token, 'link' => $link]);
+    }
+
+    /**
+     * Шаг 3 диплинк-входа: фронт опрашивает этот эндпоинт. Когда бот подтвердил
+     * вход (положил user_id в кэш), выдаём JWT — фронт ставит session_token и логинится.
+     */
+    public function loginPoll($token)
+    {
+        $val = Cache::get('tglogin:' . (string) $token);
+        if (empty($val) || $val === 'pending') {
+            return response()->json(['ok' => false, 'status' => 'pending']);
+        }
+        $user = User::find((int) $val);
+        if (!$user || (int) ($user->is_ban ?? 0) === 1) {
+            Cache::forget('tglogin:' . (string) $token);
+            return response()->json(['ok' => false, 'status' => 'error']);
+        }
+        Cache::forget('tglogin:' . (string) $token);
+        $sessionToken = Auth::login($user);
+        return response()->json(['ok' => true, 'session_token' => $sessionToken]);
+    }
+
     // Принимает данные от Telegram Login Widget (data-auth-url), проверяет
     // подпись и авторизует/создаёт пользователя по Telegram ID.
     public function callback()

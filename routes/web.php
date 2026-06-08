@@ -97,6 +97,9 @@ Route::get('/login/{hash}', [AuthController::class, 'auth_by_link'])->where('has
 Route::get('/oauth/yandex/redirect', [YandexAuthController::class, 'redirect']);
 Route::get('/oauth/yandex/callback', [YandexAuthController::class, 'callback']);
 Route::get('/oauth/telegram/callback', [\App\Http\Controllers\TelegramAuthController::class, 'callback']);
+// Диплинк-вход через бота (без виджета): старт + поллинг статуса
+Route::post('/api/auth/telegram/start', [\App\Http\Controllers\TelegramAuthController::class, 'loginStart']);
+Route::get('/api/auth/telegram/poll/{token}', [\App\Http\Controllers\TelegramAuthController::class, 'loginPoll'])->where('token', '[A-Za-z0-9]+');
 
 Route::get('/reconstruction', function () {
     return view('user.reconstruction');
