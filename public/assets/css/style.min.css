@@ -22592,11 +22592,13 @@ body{ background-color:transparent !important }
         padding:4px 0 14px !important;
         scroll-padding-left:0 !important;
         gap:14px !important;
+        scroll-snap-type:x mandatory !important;
     }
     .section2__grid .s2-card{
         flex:0 0 86% !important;
         max-width:86% !important;
         border-radius:20px !important;       /* visible rounded corners */
+        scroll-snap-align:center !important;
     }
     /* small right peek so it's clear there's more to scroll */
     .section2__grid::after{
@@ -24738,7 +24740,8 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 
     /* (3) Soft vignette on horizontally-scrolling rows (tabs, functional) */
     .profile__tabs__scroll-container,
-    .func-grid{
+    .func-grid,
+    .section2__grid{
         -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
                 mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
     }
