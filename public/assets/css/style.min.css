@@ -24687,3 +24687,44 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     .game-card{ min-height:0 !important; }
     .game-card__list{ margin-bottom:8px !important; }
 }
+
+/* ==================================================================== */
+/*  v4.1.0 — mobile pass #2 (product, functional scroll, s2, FAQ, history)*/
+/* ==================================================================== */
+/* (1) Product page: don't show an empty photo box when there's no gallery */
+.cheat-block__slider:not(:has(.swiper-slide)){ display:none !important; }
+.cheat-block:not(:has(.cheat-block__slider .swiper-slide)) .cheat-block__info{
+    grid-column:1 / -1 !important;
+}
+
+/* (2) Functional block — horizontal scroll like product cards (~1.5 per screen) */
+@media (max-width:900px){
+    .func-grid{
+        display:flex !important;
+        grid-template-columns:none !important;
+        overflow-x:auto !important;
+        gap:12px !important;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        padding-bottom:8px;
+    }
+    .func-cat{ flex:0 0 64% !important; scroll-snap-align:start; }
+}
+
+@media (max-width:599px){
+    /* (3) "Уникальные функции" s2 cards — smaller */
+    .s2-card{ padding:22px 18px !important; }
+    .s2-card__title{ font-size:18px !important; line-height:1.3 !important; }
+    .s2-card__text{ font-size:13px !important; line-height:1.45 !important; }
+    .s2-card__icon{ width:64px !important; height:64px !important; }
+
+    /* (4) FAQ — smaller text on phones */
+    .faq__container .accordion__header__content{ font-size:15px !important; line-height:1.35 !important; }
+    .faq__container .accordion__body__content{ font-size:13.5px !important; line-height:1.55 !important; }
+
+    /* (5) "История Fnrus" timeline — smaller font + no text cut-off */
+    .about-section__history__slide{ white-space:normal !important; }
+    .about-section__history__slide .years{ font-size:20px !important; }
+    .about-section__history__slide .record{ font-size:14px !important; line-height:1.3 !important; white-space:normal !important; }
+    .about-section__history__slide .small-text{ font-size:12px !important; line-height:1.4 !important; white-space:normal !important; }
+}
