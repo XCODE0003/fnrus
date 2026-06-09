@@ -24659,3 +24659,31 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 }
 /* instruction/home FAQ: add gap between the heading and the cards */
 .faq .section-caption + .faq__container{ margin-top:26px !important; }
+
+/* ==================================================================== */
+/*  v4.0.0 — mobile / tablet adaptation pass                             */
+/* ==================================================================== */
+/* Tablet: category hero a touch smaller */
+@media (max-width:1023px){
+    .game-hero__title{ font-size:30px !important; }
+    .game-hero__desc{ font-size:15px !important; }
+}
+@media (max-width:599px){
+    /* (1) Home hero — lower from the top (was pinned right under header) */
+    main.main .hero{ padding-top:120px !important; }
+
+    /* (2) Category hero — smaller text on phones (ref: HACKEXE) */
+    .game-hero__title{ font-size:23px !important; line-height:1.16 !important; margin-bottom:10px !important; }
+    .game-hero__title-dim{ font-size:inherit !important; }
+    .game-hero__desc{ font-size:13.5px !important; line-height:1.5 !important; margin-bottom:16px !important; }
+    .game-hero__stats{ gap:0 !important; flex-wrap:wrap !important; }
+    .game-hero__stat{ font-size:12px !important; padding:5px 10px !important; }
+
+    /* (4) Hide "Поддержка 24/7" on mobile + remove the dangling separator */
+    .game-hero__stat:last-child{ display:none !important; }
+    .game-hero__stat:nth-last-child(2)::after{ display:none !important; }
+
+    /* (5) Game-list cards — compact, no forced tall height / big void */
+    .game-card{ min-height:0 !important; }
+    .game-card__list{ margin-bottom:8px !important; }
+}
