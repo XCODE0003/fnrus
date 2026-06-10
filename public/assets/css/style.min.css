@@ -24754,3 +24754,20 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     .profile__identity{ gap:10px !important; }
     .profile__identity__exit{ margin-left:auto !important; }
 }
+
+/* ==================================================================== */
+/*  v4.2.2 — mobile pass #4 (gutters, width, functional cards)          */
+/* ==================================================================== */
+@media (max-width:599px){
+    /* (1,2) Smaller, symmetric side gutters so cards sit inside the bg,
+       not past the screen edge */
+    .content{ max-width:calc(100% - 28px) !important; width:auto !important; }
+
+    /* (3,4) Functional block — smaller icon/title, wider-but-cleaner card */
+    .func-cat{ flex:0 0 80% !important; }
+    .func-cat__head{ height:86px !important; gap:6px !important; }
+    .func-cat__icon{ width:34px !important; height:34px !important; }
+    .func-cat__name{ font-size:18px !important; letter-spacing:.6px !important; }
+    .func-cat__body{ padding:16px 14px 4px !important; }
+    .func-cat__list li{ font-size:15px !important; }
+}
