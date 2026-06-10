@@ -24771,3 +24771,26 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     .func-cat__body{ padding:16px 14px 4px !important; }
     .func-cat__list li{ font-size:15px !important; }
 }
+
+/* ==================================================================== */
+/*  v4.2.3 — mobile pass #5 (hero lower, card void, full-bleed carousels)*/
+/* ==================================================================== */
+@media (max-width:599px){
+    /* (2) Home hero — lower still */
+    main.main .hero{ padding-top:150px !important; }
+
+    /* (3) Catalog card — height by content (no empty void before "Подробнее") */
+    .catalog-card{ height:auto !important; }
+    .catalog-card__more{ margin-top:14px !important; padding-top:0 !important; }
+
+    /* (1) Horizontal carousels scroll edge-to-edge (full-bleed, like reference),
+       first card still aligned to the content gutter */
+    .section2__grid,
+    .func-grid{
+        margin-left:-14px !important;
+        margin-right:-14px !important;
+        padding-left:14px !important;
+        padding-right:14px !important;
+        scroll-padding-left:14px !important;
+    }
+}
