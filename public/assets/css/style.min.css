@@ -25148,26 +25148,37 @@ html::after{
 /* ==================================================================== */
 .catalog__dots{ display:none; }
 @media (max-width:767px){
+    /* hero subtitle had a fixed max-width:448 → wider than the 362 content on
+       phones, so its right edge was clipped. Constrain it to the column. */
+    .hero__subtitle{ max-width:100% !important; width:auto !important; }
+
     #catalog .catalog__cards-container{
         display:flex !important;
         grid-template-columns:none !important;
         flex-wrap:nowrap !important;
         overflow-x:auto !important;
+        overflow-y:hidden !important;
         scroll-snap-type:x mandatory !important;
-        gap:14px !important;
-        margin:14px -14px 0 !important;
-        padding:0 14px 4px !important;
-        scroll-padding-left:14px !important;
+        gap:12px !important;
+        /* stay strictly inside .content — no full-bleed negative margins
+           (they pushed the track past the viewport → the whole page scrolled
+           sideways). Internal scroll only; next card peeks via the 88% width. */
+        margin:14px 0 0 !important;
+        padding:0 !important;
+        max-width:100% !important;
+        width:100% !important;
+        box-sizing:border-box !important;
+        scroll-padding:0 !important;
         -webkit-overflow-scrolling:touch;
         scrollbar-width:none;
     }
     #catalog .catalog__cards-container::-webkit-scrollbar{ display:none; }
     #catalog .catalog-card{
-        flex:0 0 86% !important;
-        width:86% !important;
-        max-width:86% !important;
+        flex:0 0 88% !important;
+        width:88% !important;
+        max-width:88% !important;
         margin:0 !important;
-        scroll-snap-align:center !important;
+        scroll-snap-align:start !important;
     }
     /* big, dominant artwork like hackexe; drop the wordy description */
     #catalog .catalog-card__img{ height:188px !important; }
