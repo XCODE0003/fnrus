@@ -25000,32 +25000,33 @@ html::after{
    row height → a ~1300px-tall empty card. Pin the slide width, top-align it,
    and hard-clamp the card to its content height on every mobile path. */
 @media (max-width:767px){
-    html.ios .game-cheats-slider.js-carousel .swiper-wrapper{
-        align-items:flex-start !important;
-    }
+    /* iOS native-scroll: give the slide a real width (was missing → it could
+       stretch to a ~1300px-tall empty card). */
     html.ios .game-cheats-slider.js-carousel .swiper-slide{
         flex:0 0 calc(100vw - 92px) !important;
         width:calc(100vw - 92px) !important;
         max-width:calc(100vw - 92px) !important;
-        height:auto !important;
-        align-self:flex-start !important;
     }
-    /* swiper + iOS: slide and card never taller than their content */
-    .game-list .game-cheats-slider .swiper-wrapper{ align-items:flex-start !important; }
+    /* EQUAL HEIGHTS: stretch every card in a row to the tallest one, pin the
+       price/badge row to the bottom, and hard-cap the height so a runaway can
+       never blow the whole row up to 1300px again. */
+    html.ios .game-cheats-slider.js-carousel .swiper-wrapper,
+    .game-list .game-cheats-slider .swiper-wrapper{ align-items:stretch !important; }
     .game-list .game-cheats-slider .swiper-slide,
     .game-list .game-cheats-slider .game-card,
     html.ios .game-cheats-slider .swiper-slide,
     html.ios .game-cheats-slider .game-card{
         height:auto !important;
         min-height:0 !important;
-        align-self:flex-start !important;
+        align-self:stretch !important;
     }
-    /* absolute backstop: whatever happens, a card can't blow past its content */
     .game-list .game-cheats-slider .game-card,
     html.ios .game-cheats-slider .game-card{
         max-height:360px !important;
         overflow:hidden !important;
+        justify-content:space-between !important;   /* bottom row pinned down */
     }
+    .game-list .game-cheats-slider .game-card__bottom{ margin-top:auto !important; }
 }
 
 /* ==================================================================== */
@@ -25034,13 +25035,48 @@ html::after{
 /*  collapsed to its intrinsic ~100px. Stretch it to full width.           */
 /* ==================================================================== */
 @media (max-width:767px){
-    .status-page .status-heading-section__filter{ align-items:stretch !important; }
+    /* Redesign the status filter: drop the cramped box-in-a-box, render the
+       search and the status dropdown as two clean, equal, full-width fields. */
+    .status-page .status-heading-section__filter{
+        flex-direction:column !important;
+        align-items:stretch !important;
+        gap:10px !important;
+        padding:0 !important;
+        background:transparent !important;
+        border:none !important;
+        border-radius:0 !important;
+    }
+    /* search — its own field */
     .status-heading-section__filter input[type="search"],
     .status-heading-section__filter #search_query{
         width:100% !important;
         box-sizing:border-box !important;
-        margin-right:0 !important;
+        height:52px !important;
+        margin:0 !important;
+        padding:0 16px 0 46px !important;
+        background-color:#171d28 !important;
+        border:1px solid #242c3b !important;
+        border-radius:12px !important;
+        background-image:url(../img/icon_search.svg) !important;
+        background-repeat:no-repeat !important;
+        background-position:16px center !important;
+        background-size:18px !important;
+        color:#fff !important;
+        font-size:15px !important;
     }
+    .status-heading-section__filter input[type="search"]::placeholder{ color:rgba(255,255,255,.4) !important; }
+    /* status dropdown — match the search field height/radius */
+    .status-heading-section__filter .st-select{ width:100% !important; }
+    .status-heading-section__filter .st-select__trigger{
+        height:52px !important;
+        border-radius:12px !important;
+        background:#171d28 !important;
+        border:1px solid #242c3b !important;
+        padding:0 16px !important;
+        font-size:15px !important;
+    }
+    .status-heading-section__filter .st-select__bar{ height:18px !important; width:3px !important; }
+    .status-heading-section__filter .st-select__menu{ border-radius:12px !important; }
 }
 
 /* ==================================================================== */
