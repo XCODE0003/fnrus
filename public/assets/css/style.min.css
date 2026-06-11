@@ -24817,3 +24817,27 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     /* (5) Mobile menu — a bit of breathing room under the header row */
     .header__menu._active{ padding-top:14px !important; }
 }
+
+/* ==================================================================== */
+/*  v4.2.5 — reviews: ambient purple glow + cleaner text (incl. PC)      */
+/* ==================================================================== */
+/* Soft ambient glow behind the reviews block (like hackexe, in our color) */
+.reviews, .reviews-page{ position:relative; }
+.reviews::before, .reviews-page::before{
+    content:""; position:absolute; left:50%; top:-30px;
+    transform:translateX(-50%);
+    width:min(820px, 130%); height:460px; z-index:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, rgba(132,86,255,.20), rgba(132,86,255,.06) 45%, transparent 70%);
+}
+.reviews > .content, .reviews-page > .content,
+.reviews .content, .reviews-page .content{ position:relative; z-index:1; }
+
+/* Reviews text — cleaner & more readable on PC/tablet (matches request) */
+@media (min-width:600px){
+    .rev-card__text{
+        font-size:15.5px !important;
+        font-weight:400 !important;
+        line-height:1.6 !important;
+        color:rgba(255,255,255,.66) !important;
+    }
+}
