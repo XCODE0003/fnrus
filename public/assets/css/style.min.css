@@ -24993,3 +24993,37 @@ html::after{
     .game-list__platform-icon{ width:26px !important; height:26px !important; }
     .game-list__platform span{ font-size:22px !important; }
 }
+
+/* (D) THE 1300px CARD BUG. On iOS the platform slider switches to a native
+   scroll carousel (html.ios .js-carousel). For game-cheats the slide had NO
+   width and NO align-items rule, so the flex slide stretched vertically to the
+   row height → a ~1300px-tall empty card. Pin the slide width, top-align it,
+   and hard-clamp the card to its content height on every mobile path. */
+@media (max-width:767px){
+    html.ios .game-cheats-slider.js-carousel .swiper-wrapper{
+        align-items:flex-start !important;
+    }
+    html.ios .game-cheats-slider.js-carousel .swiper-slide{
+        flex:0 0 calc(100vw - 92px) !important;
+        width:calc(100vw - 92px) !important;
+        max-width:calc(100vw - 92px) !important;
+        height:auto !important;
+        align-self:flex-start !important;
+    }
+    /* swiper + iOS: slide and card never taller than their content */
+    .game-list .game-cheats-slider .swiper-wrapper{ align-items:flex-start !important; }
+    .game-list .game-cheats-slider .swiper-slide,
+    .game-list .game-cheats-slider .game-card,
+    html.ios .game-cheats-slider .swiper-slide,
+    html.ios .game-cheats-slider .game-card{
+        height:auto !important;
+        min-height:0 !important;
+        align-self:flex-start !important;
+    }
+    /* absolute backstop: whatever happens, a card can't blow past its content */
+    .game-list .game-cheats-slider .game-card,
+    html.ios .game-cheats-slider .game-card{
+        max-height:360px !important;
+        overflow:hidden !important;
+    }
+}
