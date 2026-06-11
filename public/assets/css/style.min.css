@@ -24841,3 +24841,10 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
         color:rgba(255,255,255,.66) !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.2.6 — hide catalog mega-menu quick buttons (ПК/Моб/Статусы) on mobile */
+/* ==================================================================== */
+@media (max-width:900px){
+    .header__mega__foot{ display:none !important; }
+}
