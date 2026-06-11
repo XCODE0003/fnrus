@@ -24738,8 +24738,11 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /*  v4.2.0 — mobile pass #3 (overflow/width, catalog gap, edge vignette) */
 /* ==================================================================== */
 @media (max-width:900px){
-    /* (4,5) Kill horizontal overflow so nothing goes past the screen edge */
-    html, body { overflow-x:hidden !important; max-width:100% !important; }
+    /* (4,5) Kill horizontal overflow so nothing goes past the screen edge.
+       overflow-x:clip is more reliable than :hidden on iOS Safari (no
+       horizontal rubber-band scroll, and it isn't a scroll container). */
+    html, body { overflow-x:clip !important; max-width:100% !important; }
+    .wrapper{ overflow-x:clip !important; max-width:100vw !important; }
 
     /* (3) Soft vignette on horizontally-scrolling rows (tabs, functional) */
     .profile__tabs__scroll-container,
@@ -24786,15 +24789,17 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
     .catalog-card{ height:auto !important; }
     .catalog-card__more{ margin-top:14px !important; padding-top:0 !important; }
 
-    /* (1) Horizontal carousels scroll edge-to-edge (full-bleed, like reference),
-       first card still aligned to the content gutter */
+    /* (1) Horizontal carousels stay INSIDE .content — the old full-bleed
+       (-14px side margins) pushed them past the viewport and let the whole
+       page scroll sideways. Internal scroll only; next card peeks via width. */
     .section2__grid,
     .func-grid{
-        margin-left:-14px !important;
-        margin-right:-14px !important;
-        padding-left:14px !important;
-        padding-right:14px !important;
-        scroll-padding-left:14px !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        max-width:100% !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+        scroll-padding-left:0 !important;
     }
 }
 
