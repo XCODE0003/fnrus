@@ -24848,3 +24848,41 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 @media (max-width:900px){
     .header__mega__foot{ display:none !important; }
 }
+
+/* ==================================================================== */
+/*  v4.2.7 — (A) compact game-cards on mobile  (C) global ambient glow   */
+/* ==================================================================== */
+
+/* (A) Category game-cards — kill tall empty cards (no auto bottom gap) */
+@media (max-width:768px){
+    .game-list .game-cheats-slider .swiper-wrapper{ align-items:flex-start !important; }
+    .game-list .game-cheats-slider .game-card,
+    .game-card{
+        height:auto !important;
+        min-height:0 !important;
+        align-self:flex-start !important;
+        justify-content:flex-start !important;   /* don't stretch bottom row down */
+        padding:16px !important;
+    }
+    .game-card__top{ margin-bottom:10px !important; }
+    .game-card__logo{ width:42px !important; height:42px !important; }
+    .game-card__name{ margin-bottom:6px !important; font-size:17px !important; }
+    .game-card__list{ margin:0 0 10px !important; gap:3px !important; }
+    .game-card__list li{ line-height:1.35 !important; }
+    .game-card__bottom{ margin-top:10px !important; padding-top:10px !important; }
+}
+
+/* (C) Global ambient purple glow — fixed to the viewport, always on screen.
+   Paints between the <html> bg and the (transparent) body content, alongside
+   the #bg-fx starfield canvas (both at z:-1). hackexe-style, in our color.   */
+html::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+        radial-gradient(62% 42% at 50% 0%,    rgba(132,86,255,.20), transparent 68%),
+        radial-gradient(55% 46% at 100% 30%,  rgba(124,77,255,.13), transparent 66%),
+        radial-gradient(55% 50% at 0% 72%,    rgba(124,77,255,.11), transparent 66%);
+}
