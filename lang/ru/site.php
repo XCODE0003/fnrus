@@ -77,7 +77,7 @@ return [
     "section_user_orders_table_col_price" => "Стоимость",
 
 
-    "section_statuses_caption" => "Статусы <span class=\"section-caption__icon\"><span></span></span> читов",
+    "section_statuses_caption" => "Статусы <span class=\"section-caption__accent\">читов</span>",
     "section_statuses_subcaption" => "Рекомендация к использованию не дает 100% гарантии, что Вы не будете забанены.",
     "section_statuses_attention" => "Статус читов может быть обновлён в любой момент.",
     "section_statuses_header_title" => "Статусы читов",
@@ -202,7 +202,7 @@ return [
 
     // === about page ===
     "about_store_label" => "Fnrus - магазин читов",
-    "about_heading" => "мы предлагаем <br> читы для <span class=\"section-caption__icon\"><span></span></span> mobile и ПК игр",
+    "about_heading" => "мы предлагаем <br> читы для <span class=\"section-caption__accent\">mobile и ПК</span> игр",
     "about_get_result" => "Получите результат",
     "about_description" => "Fnrus – это ведущая компания на рынке продажи приватных читов, специализирующаяся на самых востребованных мобильных и ПК играх. Заслужив уважение среди геймеров, мы выделяемся уникальным ассортиментом и непревзойдённым качеством.",
     "about_purchases" => "Покупок",

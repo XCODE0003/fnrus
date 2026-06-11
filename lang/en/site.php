@@ -77,7 +77,7 @@ return [
     "section_user_orders_table_col_price" => "Price",
 
 
-    "section_statuses_caption" => "Cheat <span class=\"section-caption__icon\"><span></span></span> statuses",
+    "section_statuses_caption" => "Cheat <span class=\"section-caption__accent\">statuses</span>",
     "section_statuses_subcaption" => "A recommendation for use does not guarantee 100% that you will not be banned.",
     "section_statuses_attention" => "Cheat status may be updated at any time.",
     "section_statuses_header_title" => "Cheat statuses",
@@ -202,7 +202,7 @@ return [
 
     // === about page ===
     "about_store_label" => "Fnrus - cheat store",
-    "about_heading" => "we offer <br> cheats for <span class=\"section-caption__icon\"><span></span></span> mobile and PC games",
+    "about_heading" => "we offer <br> cheats for <span class=\"section-caption__accent\">mobile and PC</span> games",
     "about_get_result" => "Get the result",
     "about_description" => "Fnrus is a leading company in the private cheat market, specializing in the most popular mobile and PC games. Having earned the respect of gamers, we stand out with our unique assortment and unmatched quality.",
     "about_purchases" => "Purchases",

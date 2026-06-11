@@ -24941,3 +24941,15 @@ html::after{
     .status-page .status-heading-section__section-caption{ font-size:24px !important; }
     .status-heading-section__section-subcaption{ font-size:13px !important; }
 }
+
+/* ==================================================================== */
+/*  v4.2.9 — drop the awkward inline lightning badge inside headings;    */
+/*  use a clean purple accent word instead (like the home hero).         */
+/* ==================================================================== */
+.section-caption__accent{
+    color:#9b76ff !important;
+    font-weight:inherit;
+}
+/* belt-and-suspenders: if any cached markup still ships the inline icon, hide it */
+.status-heading-section__section-caption .section-caption__icon,
+.about-heading-section__section-caption .section-caption__icon{ display:none !important; }
