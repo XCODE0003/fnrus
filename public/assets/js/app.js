@@ -1663,3 +1663,53 @@ function submitReview() {
     });
 }
 
+
+/* ============================================================== */
+/*  Home "Выберите свою игру" — mobile carousel pagination dots    */
+/*  (hackexe-style). Dots are built for every card; CSS shows them */
+/*  only on mobile, where the cards become a horizontal carousel.  */
+/* ============================================================== */
+(function () {
+    function initCatalogDots() {
+        var cont = document.querySelector('#catalog .catalog__cards-container');
+        if (!cont || cont.dataset.dotsInit) return;
+        var cards = Array.prototype.slice.call(cont.querySelectorAll('.catalog-card'));
+        if (cards.length < 2) return;
+        cont.dataset.dotsInit = '1';
+
+        var dots = document.createElement('div');
+        dots.className = 'catalog__dots';
+        cards.forEach(function (card, i) {
+            var d = document.createElement('span');
+            d.className = 'catalog__dots__dot' + (i === 0 ? ' is-active' : '');
+            d.addEventListener('click', function () {
+                card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            });
+            dots.appendChild(d);
+        });
+        cont.parentNode.insertBefore(dots, cont);
+
+        var dotEls = Array.prototype.slice.call(dots.children);
+        var ticking = false;
+        function update() {
+            ticking = false;
+            var center = cont.scrollLeft + cont.clientWidth / 2;
+            var best = 0, bestDist = Infinity;
+            cards.forEach(function (c, i) {
+                var cc = c.offsetLeft + c.offsetWidth / 2;
+                var dist = Math.abs(cc - center);
+                if (dist < bestDist) { bestDist = dist; best = i; }
+            });
+            dotEls.forEach(function (d, i) { d.classList.toggle('is-active', i === best); });
+        }
+        cont.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+        }, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCatalogDots);
+    } else {
+        initCatalogDots();
+    }
+})();

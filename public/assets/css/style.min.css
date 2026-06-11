@@ -25140,3 +25140,58 @@ html::after{
     /* keep the card content crisp above the translucent surface */
     .game-card > *, .rev-card > *, .catalog-card > *, .s2-card > *{ position:relative; z-index:1; }
 }
+
+/* ==================================================================== */
+/*  v4.4.0 — Home "Выберите свою игру": hackexe-style horizontal carousel */
+/*  of big game cards + pagination dots (mobile only; #catalog = home,    */
+/*  NOT the /games grid). Dots built in app.js, hidden on desktop.        */
+/* ==================================================================== */
+.catalog__dots{ display:none; }
+@media (max-width:767px){
+    #catalog .catalog__cards-container{
+        display:flex !important;
+        grid-template-columns:none !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+        scroll-snap-type:x mandatory !important;
+        gap:14px !important;
+        margin:14px -14px 0 !important;
+        padding:0 14px 4px !important;
+        scroll-padding-left:14px !important;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+    }
+    #catalog .catalog__cards-container::-webkit-scrollbar{ display:none; }
+    #catalog .catalog-card{
+        flex:0 0 86% !important;
+        width:86% !important;
+        max-width:86% !important;
+        margin:0 !important;
+        scroll-snap-align:center !important;
+    }
+    /* big, dominant artwork like hackexe; drop the wordy description */
+    #catalog .catalog-card__img{ height:188px !important; }
+    #catalog .catalog-card__desc{ display:none !important; }
+
+    /* pagination dots strip (sits between the heading and the carousel) */
+    .catalog__dots{
+        display:flex !important;
+        align-items:center;
+        gap:7px;
+        margin:18px 0 0 !important;
+        padding:0;
+    }
+    .catalog__dots__dot{
+        width:8px; height:8px;
+        border-radius:50%;
+        background:rgba(255,255,255,.16);
+        transition:width .25s ease, background .25s ease;
+        cursor:pointer;
+        flex:0 0 auto;
+    }
+    .catalog__dots__dot.is-active{
+        width:24px;
+        border-radius:4px;
+        background:linear-gradient(90deg,#9b76ff,#8456ff);
+    }
+}
