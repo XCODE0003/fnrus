@@ -22510,9 +22510,10 @@ body{ background-color:transparent !important }
 /*  MOBILE — kill excess top whitespace + fit titles + function cards   */
 /* ==================================================================== */
 @media (max-width: 599px){
-    /* (1) Home hero — less space above the badge */
+    /* (1) Home hero — clear the 98px header + a little breathing room (was 74,
+       which tucked the badge under the header). */
     main.main section:first-child,
-    main.main .hero{ padding-top:74px !important }
+    main.main .hero{ padding-top:104px !important }
 
     /* (2) Reviews / (3) Status / About / Profile — less top space */
     .status-page > section:first-of-type,
@@ -22616,7 +22617,9 @@ body{ background-color:transparent !important }
         min-height: 0 !important;
     }
     main.main .hero__col{ padding-bottom: 0 !important }
-    main.main .catalog{ margin-top: 24px !important }
+    /* kill the huge gap between the hero and the "Выберите свою игру" section
+       (catalog had padding-top:60 + margin-top) */
+    main.main .catalog{ margin-top: 8px !important; padding-top: 18px !important }
 
     /* (2) "Смотреть весь каталог" — compact auto-width pill (like reviews) */
     .catalog__more-wrap{ margin-top: 28px !important; padding-bottom: 8px }
@@ -24981,9 +24984,10 @@ html::after{
     transform:none !important;
 }
 
-/* (C) Category hero on mobile — remove the dead band: tight stats→back→list */
+/* (C) Category hero on mobile — clear the fixed header (was padding-top:30 → the
+   breadcrumb/title slid UNDER the 98px header), then keep the rest tight. */
 @media (max-width:599px){
-    .game-hero{ padding:30px 0 18px !important; }
+    .game-hero{ padding:calc(var(--header-height) + 14px) 0 18px !important; }
     .game-hero__stats{ margin-bottom:14px !important; row-gap:8px !important; }
     .game-hero__back{ margin-top:0 !important; }
     .game-hero__desc{ margin-bottom:14px !important; }
@@ -24992,6 +24996,13 @@ html::after{
     .game-list__head{ margin-bottom:14px !important; }
     .game-list__platform-icon{ width:26px !important; height:26px !important; }
     .game-list__platform span{ font-size:22px !important; }
+}
+
+/* (C2) Touch devices: the hover "Подробнее" overlay sticks after a tap and makes
+   the card look cluttered/stretched. The whole card is already a link → just hide
+   the overlay on mobile so cards read clean like the desktop (non-hovered) state. */
+@media (hover:none), (max-width:768px){
+    .game-card__hover{ display:none !important; }
 }
 
 /* (D) THE 1300px CARD BUG. On iOS the platform slider switches to a native
