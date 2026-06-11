@@ -111,8 +111,10 @@
                     <a href="/{{ $alias }}/{{ $p['alias'] }}" class="swiper-slide game-card">
                         <div>
                             <div class="game-card__top">
-                                <div class="game-card__logo">
-                                    <img src="/i{{ $p['image_site'] }}" alt="">
+                                <div class="game-card__logo {{ trim($p['image_site']) === '' ? 'game-card__logo--empty' : '' }}" data-letter="{{ mb_strtoupper(mb_substr(trim($p['title']), 0, 1)) }}">
+                                    @if(trim($p['image_site']) !== '')
+                                    <img src="/i{{ $p['image_site'] }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('game-card__logo--empty');this.remove();">
+                                    @endif
                                 </div>
                                 <span class="game-card__status cheat-status_{{ $p['status_class'] }}">
                                     <svg width="11" height="13" viewBox="0 0 10.0001 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

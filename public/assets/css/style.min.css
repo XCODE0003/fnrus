@@ -24953,3 +24953,43 @@ html::after{
 /* belt-and-suspenders: if any cached markup still ships the inline icon, hide it */
 .status-heading-section__section-caption .section-caption__icon,
 .about-heading-section__section-caption .section-caption__icon{ display:none !important; }
+
+/* ==================================================================== */
+/*  v4.3.0 — category (game) page: broken logo fallback + tighter hero   */
+/* ==================================================================== */
+
+/* (A) Product logo that fails to load (/i<hash> missing) → clean branded
+   placeholder instead of the browser's broken-image glyph. */
+.game-card__logo--empty{
+    background:linear-gradient(135deg,#222c3d 0%,#161c27 100%) !important;
+    position:relative;
+}
+.game-card__logo--empty::after{
+    content:"";
+    position:absolute; inset:0;
+    background:url('/assets/img/favicon-64.png') center/52% no-repeat;
+    opacity:.42;
+}
+
+/* (B) Category hero — the GSAP reveal often never completes, leaving the
+   НАЗАД button (and others) stuck at opacity:0 → a dead empty band. Force the
+   whole hero column visible so nothing disappears / leaves a gap. */
+.game-hero__crumbs, .game-hero__title, .game-hero__desc,
+.game-hero__stats, .game-hero__stat, .game-hero__back, .game-hero__image{
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:none !important;
+}
+
+/* (C) Category hero on mobile — remove the dead band: tight stats→back→list */
+@media (max-width:599px){
+    .game-hero{ padding:30px 0 18px !important; }
+    .game-hero__stats{ margin-bottom:14px !important; row-gap:8px !important; }
+    .game-hero__back{ margin-top:0 !important; }
+    .game-hero__desc{ margin-bottom:14px !important; }
+    /* platform section sits closer under the hero */
+    .game-list{ padding-top:6px !important; }
+    .game-list__head{ margin-bottom:14px !important; }
+    .game-list__platform-icon{ width:26px !important; height:26px !important; }
+    .game-list__platform span{ font-size:22px !important; }
+}
