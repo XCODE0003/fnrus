@@ -24794,3 +24794,26 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
         scroll-padding-left:14px !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.2.4 — mobile pass #6 (heading icon/spacing, reviews, menu)        */
+/* ==================================================================== */
+@media (max-width:599px){
+    /* (2,3) Heading sections — kill the huge empty top (min-height:100vh),
+       shrink the inline lightning icon so it doesn't break the heading */
+    .about-heading-section{ min-height:auto !important; padding-bottom:40px !important; }
+    .status-heading-section{ min-height:auto !important; }
+    .section-caption__icon{ width:0.62em !important; height:0.62em !important; margin:0 2px !important; }
+
+    /* (3) Status page heading + subcaption smaller */
+    .status-heading-section__section-caption{ font-size:26px !important; line-height:1.18 !important; }
+    .status-heading-section__section-subcaption{ font-size:13.5px !important; }
+
+    /* (4) Reviews — lighter/smaller text, and make the date actually show
+       (it was position:absolute and could be clipped) */
+    .rev-card__text{ font-size:14px !important; font-weight:400 !important; line-height:1.5 !important; }
+    .rev-card__date{ position:static !important; display:block !important; margin-top:6px !important; }
+
+    /* (5) Mobile menu — a bit of breathing room under the header row */
+    .header__menu._active{ padding-top:14px !important; }
+}
