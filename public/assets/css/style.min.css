@@ -25142,8 +25142,6 @@ html::after{
         -webkit-backdrop-filter:blur(9px) saturate(115%) !important;
         backdrop-filter:blur(9px) saturate(115%) !important;
     }
-    /* keep the card content crisp above the translucent surface */
-    .game-card > *, .rev-card > *, .catalog-card > *, .s2-card > *{ position:relative; z-index:1; }
 }
 
 /* ==================================================================== */
