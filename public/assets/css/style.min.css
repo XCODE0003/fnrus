@@ -24886,3 +24886,58 @@ html::after{
         radial-gradient(55% 46% at 100% 30%,  rgba(124,77,255,.13), transparent 66%),
         radial-gradient(55% 50% at 0% 72%,    rgba(124,77,255,.11), transparent 66%);
 }
+
+/* ==================================================================== */
+/*  v4.2.8 — reviews font/date + heading icon & top spacing (mobile)     */
+/* ==================================================================== */
+
+/* (1) Reviews text — clean neutral sans (hackexe-like), lighter & calmer.
+   Mazzard falls back to the system UI sans (SF on iOS) for that crisp look. */
+.rev-card__text, .reviews-page .rev-card__text{
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-weight:400 !important;
+    color:rgba(255,255,255,.62) !important;
+    letter-spacing:0 !important;
+}
+@media (min-width:600px){
+    .rev-card__text{ font-size:15px !important; line-height:1.66 !important; }
+}
+
+/* Home review card — name + date stacked under the avatar */
+.reviews-grid .rev-card__meta{ display:flex; flex-direction:column; gap:2px; }
+.reviews-grid .rev-card__date{
+    font-family:"Mazzard M", sans-serif;
+    font-size:12.5px; font-weight:500;
+    color:rgba(255,255,255,.4);
+}
+
+@media (max-width:599px){
+    /* (1) Reviews — smaller, lighter text + visible date */
+    .rev-card__text{ font-size:13.5px !important; line-height:1.5 !important; }
+    .reviews-grid .rev-card__date{ font-size:12px; }
+    /* quote glyph — smaller & tucked in so it doesn't crowd the edge */
+    .rev-card::after{ font-size:60px !important; top:10px !important; right:18px !important; }
+
+    /* (2,3) Heading inline lightning icon — smaller, evenly spaced, centered */
+    .section-caption__icon{
+        width:0.6em !important; height:0.6em !important;
+        margin:0 0.12em !important;
+        vertical-align:0.02em !important;
+    }
+
+    /* (2,3) Heading sections — remove the double top gap. The page <main> already
+       reserves 78px; an earlier rule ALSO pads the first section 78px → badge lands
+       at 156 (58px below the 98px fixed header). Trim the section to 34px so the
+       title clears the header by ~14px. Same selector as the offending rule, placed
+       later so it wins on the specificity tie. */
+    .status-page > section:first-of-type,
+    .about-page > section:first-of-type,
+    .reviews-page > section:first-of-type,
+    .about-heading-section,
+    .status-heading-section{ padding-top:34px !important; }
+
+    /* (2) Status caption a touch smaller */
+    .status-heading-section__section-caption,
+    .status-page .status-heading-section__section-caption{ font-size:24px !important; }
+    .status-heading-section__section-subcaption{ font-size:13px !important; }
+}

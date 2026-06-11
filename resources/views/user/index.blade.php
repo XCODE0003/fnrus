@@ -134,7 +134,10 @@
                 <div class="rev-card">
                     <div class="rev-card__head">
                         <span class="rev-card__avatar" aria-hidden="true">{{ $initials ?: '?' }}</span>
-                        <p class="rev-card__name">{{ $review->author }}</p>
+                        <div class="rev-card__meta">
+                            <p class="rev-card__name">{{ $review->author }}</p>
+                            @if(!empty($review->created_at))<span class="rev-card__date">{{ \Carbon\Carbon::parse($review->created_at)->translatedFormat('j M Y') }}</span>@endif
+                        </div>
                     </div>
                     <div class="rev-card__stars">
                         @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
