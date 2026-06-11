@@ -25027,3 +25027,18 @@ html::after{
         overflow:hidden !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.3.3 — status page: search input clipped ("Пои…"). In the stacked   */
+/*  (column) filter the input's flex:1 controls height, not width, so it   */
+/*  collapsed to its intrinsic ~100px. Stretch it to full width.           */
+/* ==================================================================== */
+@media (max-width:767px){
+    .status-page .status-heading-section__filter{ align-items:stretch !important; }
+    .status-heading-section__filter input[type="search"],
+    .status-heading-section__filter #search_query{
+        width:100% !important;
+        box-sizing:border-box !important;
+        margin-right:0 !important;
+    }
+}
