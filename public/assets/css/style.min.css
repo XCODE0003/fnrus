@@ -25042,3 +25042,18 @@ html::after{
         margin-right:0 !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.3.4 — burger open: give the (otherwise transparent) header a solid  */
+/*  background so the page no longer shows through behind it and in the    */
+/*  sliver above the menu. Same dark as the menu → seamless panel.         */
+/* ==================================================================== */
+@media (max-width:768px){
+    .header:has(.header__menu._active){
+        background:#0b0f16 !important;
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+        border-bottom-color:transparent !important;
+        box-shadow:none !important;
+    }
+}
