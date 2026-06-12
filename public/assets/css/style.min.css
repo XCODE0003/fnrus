@@ -24744,13 +24744,14 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
        sideways-shift cause (full-bleed -14px margins) is removed separately. */
     html, body { overflow-x:hidden !important; max-width:100% !important; }
 
-    /* (3) Soft vignette on horizontally-scrolling rows (tabs, functional) */
-    .profile__tabs__scroll-container,
-    .func-grid,
-    .section2__grid{
+    /* (3) Soft vignette only on the profile tab strip. The card carousels used
+       to have it too, but it faded the card edges into the page ("карточки
+       заходят за фон") — removed there. */
+    .profile__tabs__scroll-container{
         -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
                 mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
     }
+    .func-grid, .section2__grid{ -webkit-mask-image:none !important; mask-image:none !important; }
 }
 @media (max-width:599px){
     /* (1) Catalog card — remove the big empty gap before "Подробнее" */
@@ -24891,8 +24892,7 @@ html::after{
     /* centered + soft only — no edge-anchored gradients (they showed hard
        bright seams on the left/right viewport edges, "видны края"). */
     background:
-        radial-gradient(90% 55% at 50% -5%,  rgba(132,86,255,.11), transparent 72%),
-        radial-gradient(100% 65% at 50% 45%, rgba(124,77,255,.055), transparent 80%);
+        radial-gradient(140% 95% at 50% -35%, rgba(128,82,255,.12), rgba(128,82,255,.035) 45%, transparent 78%);
 }
 
 /* ==================================================================== */
@@ -25171,6 +25171,7 @@ html::after{
         width:100% !important;
         box-sizing:border-box !important;
         scroll-padding:0 !important;
+        touch-action:pan-x !important;   /* horizontal swipe only — don't drag the page up/down */
         -webkit-overflow-scrolling:touch;
         scrollbar-width:none;
     }
@@ -25191,7 +25192,7 @@ html::after{
         display:flex !important;
         align-items:center;
         gap:7px;
-        margin:18px 0 0 !important;
+        margin:2px 0 12px !important;   /* raised up, with breathing room before the cards */
         padding:0;
     }
     .catalog__dots__dot{
@@ -25239,7 +25240,7 @@ html::after{
         overflow-x:auto !important;
         overflow-y:hidden !important;
         -webkit-overflow-scrolling:touch !important;
-        touch-action:pan-x pan-y !important;
+        touch-action:pan-x !important;   /* horizontal only — don't drag the page up/down */
         scroll-snap-type:x proximity !important;
     }
     .game-cheats-slider .swiper-wrapper,
@@ -25254,3 +25255,17 @@ html::after{
         scroll-snap-align:start !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.5.2 — equal-height cards in every game-cheats slider (incl. PC).    */
+/*  Cards stretch to the tallest in the row; price/badge row pinned down.  */
+/* ==================================================================== */
+.game-cheats-slider .swiper-wrapper{ align-items:stretch !important; }
+.game-cheats-slider .swiper-slide.game-card,
+.game-cheats-slider .game-card{
+    height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:space-between !important;
+}
+.game-cheats-slider .game-card__bottom{ margin-top:auto !important; }
