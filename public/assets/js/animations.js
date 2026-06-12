@@ -111,17 +111,11 @@
             });
         }
 
-        /* ============================ HERO — refined cinematic intro === */
-        if (q('.hero')) {
-            gsap.timeline({ defaults: { ease: GLIDE, duration: 0.85, clearProps: 'transform,opacity,filter' } })
-                .from('.hero__badge',    { autoAlpha: 0, y: 22, duration: 0.7, ease: SOFT })
-                .from('.hero__title',    { autoAlpha: 0, y: 28, filter: 'blur(6px)', duration: 0.95 }, '-=0.55')
-                .from('.hero__title-bolt', { scale: 0.4, autoAlpha: 0, rotate: -15, duration: 0.75, ease: POP }, '-=0.7')
-                .from('.hero__subtitle', { autoAlpha: 0, y: 18, duration: 0.7 }, '-=0.6')
-                .from('.hero__actions > *', { autoAlpha: 0, y: 16, scale: 0.96, stagger: 0.08, duration: 0.6, ease: SOFT }, '-=0.5')
-                .from('.hero__image',    { autoAlpha: 0, y: 32, scale: 0.94, duration: 1.05 }, '-=0.85');
-            /* Idle float on hero image disabled — image stays static. */
-        }
+        /* ============================ HERO intro — DISABLED ============
+           The cinematic .from() timeline occasionally got stuck (elements left
+           at opacity:0 / transformed → "главная ломается"). Removed entirely so
+           the hero is always rendered immediately. */
+        /* (home hero entrance animation intentionally removed) */
 
         /* ========================= GAME HERO ========================= */
         if (q('.game-hero')) {

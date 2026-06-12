@@ -25224,3 +25224,33 @@ html::after{
     .header__login,
     .header__hamburger{ transform:none !important; }
 }
+
+/* ==================================================================== */
+/*  v4.4.8 — bulletproof horizontal scroll for card carousels on mobile.  */
+/*  On touch devices these MUST scroll natively regardless of Swiper's     */
+/*  mode. Force overflow + touch-action; neutralise any leftover wrapper   */
+/*  transform (cssMode uses scroll, not transform, so this is safe).       */
+/* ==================================================================== */
+@media (max-width:900px){
+    .game-cheats-slider,
+    .section2__grid,
+    .game-cards-slider,
+    .reviews-slider{
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        -webkit-overflow-scrolling:touch !important;
+        touch-action:pan-x pan-y !important;
+        scroll-snap-type:x proximity !important;
+    }
+    .game-cheats-slider .swiper-wrapper,
+    .section2__grid .swiper-wrapper,
+    .game-cards-slider .swiper-wrapper,
+    .reviews-slider .swiper-wrapper{
+        transform:none !important;
+        width:auto !important;
+        min-width:0 !important;
+    }
+    .game-cheats-slider .swiper-slide{
+        scroll-snap-align:start !important;
+    }
+}
