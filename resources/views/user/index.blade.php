@@ -131,13 +131,23 @@
                         ->take(2)
                         ->implode('');
                 @endphp
+                @php
+                    $productLine = $review->link ?? '';
+                    if ($productLine && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $productLine, $m)) {
+                        $productLine = trim($m[1]);
+                    }
+                    if ($productLine && preg_match('~^https?://~i', $productLine)) {
+                        $productLine = '';
+                    }
+                @endphp
                 <div class="rev-card">
                     <div class="rev-card__head">
                         <span class="rev-card__avatar" aria-hidden="true">{{ $initials ?: '?' }}</span>
                         <div class="rev-card__meta">
                             <p class="rev-card__name">{{ $review->author }}</p>
-                            @if(!empty($review->created_at))<span class="rev-card__date">{{ \Carbon\Carbon::parse($review->created_at)->translatedFormat('j M Y') }}</span>@endif
+                            @if(!empty($productLine))<p class="rev-card__sub">{{ $productLine }}</p>@endif
                         </div>
+                        @if(!empty($review->created_at))<span class="rev-card__date">{{ \Carbon\Carbon::parse($review->created_at)->translatedFormat('j M Y') }}</span>@endif
                     </div>
                     <div class="rev-card__stars">
                         @for($i = 0; $i < 5; $i++)<img src="/assets/img/rv-star.svg" alt="">@endfor
