@@ -22619,7 +22619,7 @@ body{ background-color:transparent !important }
     main.main .hero__col{ padding-bottom: 0 !important }
     /* kill the huge gap between the hero and the "Выберите свою игру" section
        (catalog had padding-top:60 + margin-top) */
-    main.main .catalog{ margin-top: 34px !important; padding-top: 18px !important }
+    main.main .catalog{ margin-top: 64px !important; padding-top: 18px !important }
 
     /* (2) "Смотреть весь каталог" — compact auto-width pill (like reviews) */
     .catalog__more-wrap{ margin-top: 28px !important; padding-bottom: 8px }
