@@ -38,6 +38,7 @@ class ReviewController extends Controller
                 'author' => 'required|string|min:2|max:255',
                 'text' => 'required|string|min:10|max:2000',
                 'link' => 'nullable|string|max:255',
+                'product' => 'nullable|string|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -50,6 +51,7 @@ class ReviewController extends Controller
                 'text' => trim($request->text),
                 'avatar' => '/assets/img/default_avatar.svg',
                 'link' => $request->link ?? '',
+                'product' => trim($request->product ?? ''),
                 'created_at' => time(),
                 'status' => 0,
             ]);

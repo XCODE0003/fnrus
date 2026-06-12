@@ -103,14 +103,16 @@
                         ->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))
                         ->take(2)
                         ->implode('');
-                    // Display: prefer pure product name; legacy records stored "5★ · ProductName"
-                    $productLine = $review->link ?? '';
-                    if ($productLine && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $productLine, $m)) {
-                        $productLine = trim($m[1]);
-                    }
-                    // Hide raw URLs (legacy data may contain t.me links)
-                    if ($productLine && preg_match('~^https?://~i', $productLine)) {
-                        $productLine = '';
+                    // Prefer the dedicated product column; fall back to legacy data
+                    // stored in `link` ("5★ · Name" or a plain product name; URLs hidden).
+                    $productLine = trim($review->product ?? '');
+                    if ($productLine === '') {
+                        $l = $review->link ?? '';
+                        if ($l && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $l, $m)) {
+                            $productLine = trim($m[1]);
+                        } elseif ($l && !preg_match('~^https?://~i', $l)) {
+                            $productLine = trim($l);
+                        }
                     }
                 @endphp
                 <div class="rev-card">
@@ -216,17 +218,14 @@
                 if (window.showNotification) window.showNotification(@json(__('site.review_form_validation')), 'fail');
                 return;
             }
-            // Encode rating + product into link field so it's stored alongside review
-            // Store ONLY the selected product name in the link field — rating is already
-            // saved separately as stars on display side. Avoids "5★ · " prefix clutter.
-            var meta = product || '';
+            // Product is stored in its OWN column now (shown under the nickname).
             submit.disabled = true;
             $.ajax({
                 type: 'POST',
                 url: (window.api_url || (location.origin + '/api')) + '/reviews/submit',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify({ author: author, text: text, link: meta }),
+                data: JSON.stringify({ author: author, text: text, link: '', product: product || '' }),
                 success: function(data){
                     submit.disabled = false;
                     if (data.ok === true) {

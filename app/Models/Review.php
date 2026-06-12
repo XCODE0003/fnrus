@@ -17,6 +17,7 @@ class Review extends Model
         'avatar',
         'created_at',
         'link',
+        'product',
         'status'
     ];
 

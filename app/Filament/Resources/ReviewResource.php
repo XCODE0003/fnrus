@@ -62,6 +62,12 @@ class ReviewResource extends Resource
                 ->dehydrated(true)
                 ->helperText('jpg/png/gif/webp, до 5 MB'),
 
+            Forms\Components\TextInput::make('product')
+                ->label('Товар (под ником)')
+                ->maxLength(255)
+                ->placeholder('Напр. Zolo Cheat')
+                ->helperText('Название товара, которое показывается под именем автора. Можно оставить пустым.'),
+
             Forms\Components\TextInput::make('link')
                 ->label('Ссылка на отзыв')
                 ->maxLength(255)

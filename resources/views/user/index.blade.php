@@ -132,12 +132,16 @@
                         ->implode('');
                 @endphp
                 @php
-                    $productLine = $review->link ?? '';
-                    if ($productLine && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $productLine, $m)) {
-                        $productLine = trim($m[1]);
-                    }
-                    if ($productLine && preg_match('~^https?://~i', $productLine)) {
-                        $productLine = '';
+                    // Prefer the dedicated product column; fall back to legacy data
+                    // stored in `link` ("5★ · Name" or a plain product name).
+                    $productLine = trim($review->product ?? '');
+                    if ($productLine === '') {
+                        $l = $review->link ?? '';
+                        if ($l && preg_match('/^\s*\d+★\s*·\s*(.+)$/u', $l, $m)) {
+                            $productLine = trim($m[1]);
+                        } elseif ($l && !preg_match('~^https?://~i', $l)) {
+                            $productLine = trim($l);
+                        }
                     }
                 @endphp
                 <div class="rev-card">
