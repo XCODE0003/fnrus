@@ -21088,10 +21088,17 @@ body{ background-color:transparent !important }
     mix-blend-mode:normal !important;          /* revert: screen made it worse */
 }
 .hero__image img{
-    /* Aggressive radial mask — center spider sharp, edges fade out fast.
-       28% solid → 65% half-fade → 95% transparent. */
-    -webkit-mask-image:radial-gradient(ellipse 58% 65% at 50% 52%, #000 28%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 95%);
-    mask-image:radial-gradient(ellipse 58% 65% at 50% 52%, #000 28%, rgba(0,0,0,.45) 65%, rgba(0,0,0,0) 95%);
+    /* Dissolve the image's rectangular scene background into the page — keep the
+       spider, fade everything around it (esp. the top, where the misty bg showed).
+       Composite mask: a wider ellipse for the legs + a stronger top fade. */
+    -webkit-mask-image:
+        radial-gradient(ellipse 60% 52% at 50% 56%, #000 16%, rgba(0,0,0,.30) 50%, transparent 80%),
+        linear-gradient(180deg, transparent 0%, #000 22%);
+    mask-image:
+        radial-gradient(ellipse 60% 52% at 50% 56%, #000 16%, rgba(0,0,0,.30) 50%, transparent 80%),
+        linear-gradient(180deg, transparent 0%, #000 22%);
+    -webkit-mask-composite:source-in;
+            mask-composite:intersect;
     -webkit-mask-repeat:no-repeat;
     mask-repeat:no-repeat;
     filter:none !important;

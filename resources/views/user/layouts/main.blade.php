@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.5.3">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.5.4">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -348,10 +348,8 @@
                             <div class="header__mega__grid">
                                 @foreach(($__headerCategories ?? collect())->take(8) as $__cat)
                                 <a class="header__mega__card" href="/{{ $__cat->alias }}" role="menuitem">
-                                    <span class="header__mega__card-img" data-letter="{{ mb_substr($__cat->title, 0, 1) }}">
-                                        @if(!empty($__cat->image_url))
-                                        <img src="{{ $__cat->image_url }}" alt="" loading="lazy" onerror="this.onerror=null;this.remove()" onload="if(!this.naturalWidth){this.remove()}">
-                                        @endif
+                                    <span class="header__mega__card-img header__mega__card-img--letter" data-letter="{{ mb_substr($__cat->title, 0, 1) }}">
+                                        {{-- letter only — game cover images are heavily compressed and look bad --}}
                                     </span>
                                     <span class="header__mega__card-text">
                                         <span class="header__mega__card-name">{{ $__cat->title }}</span>
