@@ -21294,7 +21294,7 @@ img.rev-card__avatar{display:none !important}
 }
 .rev-card__date{
     position:absolute !important;
-    right:0 !important;top:4px !important;
+    right:0 !important;top:13px !important;   /* nudged down to sit level with the nickname */
     font-size:12px !important;
     color:rgba(255,255,255,.42) !important;
     white-space:nowrap;
