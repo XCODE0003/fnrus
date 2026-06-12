@@ -12,8 +12,16 @@
                             <div class="swiper-wrapper">
                                 @if($product->gallery != 'null')
                                 @foreach(json_decode($product->gallery, true) as $image)
+                                    @php
+                                        // Normalise to the resizer URL /i{attachmentId}. New uploads store the
+                                        // bare 40-char hash; legacy values were stored as "i"+hash (41 chars).
+                                        $gid = ltrim((string) $image, '/');
+                                        if (mb_strlen($gid) === 41 && \Illuminate\Support\Str::startsWith($gid, 'i')) {
+                                            $gid = mb_substr($gid, 1);
+                                        }
+                                    @endphp
                                     <div class="swiper-slide cheat-block__slider__slide">
-                                        <img src="/{{ $image }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-empty');this.remove();">
+                                        <img src="/i{{ $gid }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-empty');this.remove();">
                                     </div>
                                 @endforeach
                                 @endif
