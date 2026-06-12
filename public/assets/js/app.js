@@ -1665,17 +1665,27 @@ function submitReview() {
 
 
 /* ============================================================== */
-/*  Home "Выберите свою игру" — mobile carousel pagination dots    */
-/*  (hackexe-style). Dots are built for every card; CSS shows them */
-/*  only on mobile, where the cards become a horizontal carousel.  */
+/*  Mobile carousel pagination dots (hackexe-style) for EVERY        */
+/*  horizontal scroll carousel. CSS shows the dots only on mobile.   */
+/*  Active dot follows whichever card is nearest the viewport centre */
+/*  of the scroller — works for both CSS-scroll and Swiper cssMode.  */
 /* ============================================================== */
 (function () {
-    function initCatalogDots() {
-        var cont = document.querySelector('#catalog .catalog__cards-container');
-        if (!cont || cont.dataset.dotsInit) return;
-        var cards = Array.prototype.slice.call(cont.querySelectorAll('.catalog-card'));
+    // [scroller selector, card selector inside it]
+    var CAROUSELS = [
+        ['#catalog .catalog__cards-container', '.catalog-card'],
+        ['.section2__grid', '.s2-card'],
+        ['.game-cheats-slider', '.swiper-slide'],
+        ['.reviews-slider', '.swiper-slide'],
+        ['.game-cards-slider', '.swiper-slide']
+    ];
+
+    function buildDots(scroller, cardSel) {
+        if (!scroller || scroller.dataset.dotsInit) return;
+        var cards = Array.prototype.slice.call(scroller.querySelectorAll(cardSel))
+            .filter(function (c) { return !c.classList.contains('swiper-slide-duplicate'); });
         if (cards.length < 2) return;
-        cont.dataset.dotsInit = '1';
+        scroller.dataset.dotsInit = '1';
 
         var dots = document.createElement('div');
         dots.className = 'catalog__dots';
@@ -1687,29 +1697,42 @@ function submitReview() {
             });
             dots.appendChild(d);
         });
-        cont.parentNode.insertBefore(dots, cont);
+        scroller.parentNode.insertBefore(dots, scroller);
 
         var dotEls = Array.prototype.slice.call(dots.children);
         var ticking = false;
         function update() {
             ticking = false;
-            var center = cont.scrollLeft + cont.clientWidth / 2;
+            var sRect = scroller.getBoundingClientRect();
+            var center = sRect.left + sRect.width / 2;
             var best = 0, bestDist = Infinity;
             cards.forEach(function (c, i) {
-                var cc = c.offsetLeft + c.offsetWidth / 2;
-                var dist = Math.abs(cc - center);
+                var r = c.getBoundingClientRect();
+                var dist = Math.abs((r.left + r.width / 2) - center);
                 if (dist < bestDist) { bestDist = dist; best = i; }
             });
             dotEls.forEach(function (d, i) { d.classList.toggle('is-active', i === best); });
         }
-        cont.addEventListener('scroll', function () {
+        // the actual scrolling element may be the node itself or a child wrapper
+        scroller.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+        }, { passive: true });
+        var wrap = scroller.querySelector('.swiper-wrapper');
+        if (wrap) wrap.addEventListener('scroll', function () {
             if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
         }, { passive: true });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCatalogDots);
+    function initAllDots() {
+        CAROUSELS.forEach(function (pair) {
+            document.querySelectorAll(pair[0]).forEach(function (sc) { buildDots(sc, pair[1]); });
+        });
+    }
+
+    // run after Swiper has had a chance to initialise (it may add/clone slides)
+    if (document.readyState === 'complete') {
+        initAllDots();
     } else {
-        initCatalogDots();
+        window.addEventListener('load', function () { setTimeout(initAllDots, 60); });
     }
 })();
