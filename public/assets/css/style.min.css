@@ -25312,3 +25312,45 @@ html::after{
     .popup--pay .pay-order-info{ padding:12px 14px !important; margin:10px 0 12px !important; }
     .popup--pay .pay-order-info__row{ margin:0 0 6px !important; }
 }
+
+/* ==================================================================== */
+/*  v4.5.6 — payment method rows: name + region/currencies stacked (two   */
+/*  lines) so the full name shows (no "кар…" truncation) and the currency */
+/*  list ("Валюты: AZN, BYN, …") fits. Row = icon | text-column | radio.   */
+/* ==================================================================== */
+.popup--pay .popup__payment-method__text{
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    gap:2px !important;
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    text-align:left !important;
+}
+.popup--pay .popup__payment-method__name{
+    white-space:normal !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    line-height:1.2 !important;
+    margin:0 !important;
+    flex:0 0 auto !important;
+}
+.popup--pay .popup__payment-method__region,
+.popup--pay #buy-payments-methods .popup__payment-method__region,
+.popup--pay #topup-payments-methods .popup__payment-method__region{
+    margin:0 !important;            /* kill the old margin-left:auto that shoved it right */
+    font-size:12.5px !important;
+    line-height:1.25 !important;
+    color:rgba(255,255,255,.5) !important;
+    white-space:normal !important;
+    flex:0 0 auto !important;
+    align-self:flex-start !important;
+}
+@media (max-width:767px){
+    /* two lines need a touch more height; keep rows still compact */
+    .popup--pay #buy-payments-methods .popup__payment-method{
+        min-height:56px !important;
+        align-items:center !important;
+    }
+    .popup--pay .popup__payment-method__region{ font-size:12px !important; }
+}

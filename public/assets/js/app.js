@@ -242,10 +242,16 @@ function pmOrder(name){
 // Right-side region / currency label per Figma (gray, by method name).
 function pmRegion(name, currency){
     var n = (name || '').toString().toLowerCase();
+    var cur = (currency || '').toString().trim();
     if (/сбп|sbp|сбер|sber|банковск/.test(n)) return 'Для России';
+    // Переводы/карты — show the actual currency list (как в дизайне/invoice):
+    // a comma-separated list renders as "Валюты: ...", a single one as-is.
+    if (/перевод|streampay|stream/.test(n)) {
+        if (cur.indexOf(',') !== -1) return 'Валюты: ' + cur;
+        return cur || 'Все страны';
+    }
     if (/lzt|crypto ?bot|cryptobot|telegram|stars?|xtr|звезд|usdt|tether|crypto|крипт|crystal|\bton\b/.test(n)) return 'Все страны';
-    if (/перевод|streampay|stream/.test(n)) return 'Все страны';
-    return currency || '';
+    return cur || '';
 }
 
 function paymentMethodsTopup(price) {
@@ -280,8 +286,10 @@ function paymentMethodsTopup(price) {
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">' +
                         '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
-                            '<span class="popup__payment-method__name">' + name + '</span>' +
-                            '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                            '<span class="popup__payment-method__text">' +
+                                '<span class="popup__payment-method__name">' + name + '</span>' +
+                                '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                            '</span>' +
                         '</label>';
                 };
 
@@ -338,8 +346,10 @@ function paymentMethodsProduct(price) {
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">' +
                         '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
-                            '<span class="popup__payment-method__name">' + name + '</span>' +
-                            '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                            '<span class="popup__payment-method__text">' +
+                                '<span class="popup__payment-method__name">' + name + '</span>' +
+                                '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                            '</span>' +
                         '</label>';
                 };
 

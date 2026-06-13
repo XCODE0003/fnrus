@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.5.5">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.5.8">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -999,7 +999,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=5.2"></script>
+    <script src="/assets/js/app.js?v=5.3"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {
