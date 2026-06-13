@@ -25319,6 +25319,15 @@ html::after{
 /*  lines) so the full name shows (no "кар…" truncation) and the currency */
 /*  list ("Валюты: AZN, BYN, …") fits. Row = icon | text-column | radio.   */
 /* ==================================================================== */
+/* Gap between method rows — the JS injects <div id="product-bt-main"> WITHOUT an
+   inline style, so the old `> div[style]{gap}` rule never matched → rows touched. */
+.popup--pay #buy-payments-methods > div,
+.popup--pay #topup-payments-methods > div{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:10px !important;
+}
+
 .popup--pay .popup__payment-method__text{
     display:flex !important;
     flex-direction:column !important;
