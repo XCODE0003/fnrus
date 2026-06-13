@@ -25243,7 +25243,8 @@ html::after{
     .game-cheats-slider,
     .section2__grid,
     .game-cards-slider,
-    .reviews-slider{
+    .reviews-slider,
+    .cheat-block__slider .swiper{
         overflow-x:auto !important;
         overflow-y:hidden !important;
         -webkit-overflow-scrolling:touch !important;
@@ -25253,12 +25254,14 @@ html::after{
     .game-cheats-slider .swiper-wrapper,
     .section2__grid .swiper-wrapper,
     .game-cards-slider .swiper-wrapper,
-    .reviews-slider .swiper-wrapper{
+    .reviews-slider .swiper-wrapper,
+    .cheat-block__slider .swiper-wrapper{
         transform:none !important;
         width:auto !important;
         min-width:0 !important;
     }
-    .game-cheats-slider .swiper-slide{
+    .game-cheats-slider .swiper-slide,
+    .cheat-block__slider .swiper-slide{
         scroll-snap-align:start !important;
     }
 }
@@ -25363,4 +25366,13 @@ html::after{
         align-items:center !important;
     }
     .popup--pay .popup__payment-method__region{ font-size:12px !important; }
+}
+
+/* ==================================================================== */
+/*  v4.6.2 — "Смотреть все отзывы": its purple glow was clipped at the    */
+/*  bottom by .reviews{overflow:hidden}. Give the button room below so    */
+/*  the box-shadow fits inside the section before the overflow edge.      */
+/* ==================================================================== */
+.reviews .content > .reviews__all-bottom{
+    margin-bottom:34px !important;
 }
