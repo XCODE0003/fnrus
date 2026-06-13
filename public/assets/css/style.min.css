@@ -25376,3 +25376,26 @@ html::after{
 .reviews .content > .reviews__all-bottom{
     margin-bottom:34px !important;
 }
+
+/* ==================================================================== */
+/*  v4.6.3 — carousels: full-bleed to the viewport with a 14px inner      */
+/*  gutter (first card aligns to the page) and a soft edge fade, so cards  */
+/*  dissolve at the screen edges instead of being hard-cut into the dark   */
+/*  ("заходит за фон"). overflow-x:hidden on html/body keeps the page from */
+/*  ever scrolling sideways, so 100vw here is safe.                        */
+/* ==================================================================== */
+@media (max-width:767px){
+    #catalog .catalog__cards-container,
+    .section2__grid{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:calc(50% - 50vw) !important;
+        margin-right:calc(50% - 50vw) !important;
+        padding-left:14px !important;
+        padding-right:14px !important;
+        scroll-padding-left:14px !important;
+        box-sizing:border-box !important;
+        -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+                mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+    }
+}
