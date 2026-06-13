@@ -25276,3 +25276,39 @@ html::after{
     justify-content:space-between !important;
 }
 .game-cheats-slider .game-card__bottom{ margin-top:auto !important; }
+
+/* ==================================================================== */
+/*  v4.5.5 — mobile buy popup fits the screen: the method list scrolls    */
+/*  internally, the order summary + "Оплатить" button stay pinned/visible. */
+/* ==================================================================== */
+@media (max-width:767px){
+    .popup--pay .popup__step[data-popup-step="2"]._active{
+        display:flex !important;
+        flex-direction:column !important;
+        max-height:86vh !important;
+        min-height:0 !important;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-card__title{ flex:0 0 auto; }
+    .popup--pay .popup__step[data-popup-step="2"] #buy-payments-methods{
+        flex:1 1 auto !important;
+        min-height:0 !important;
+        overflow-y:auto !important;
+        -webkit-overflow-scrolling:touch !important;
+        padding-right:2px;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-order-info,
+    .popup--pay .popup__step[data-popup-step="2"] .pay-actions{ flex:0 0 auto !important; }
+    /* compact method rows so more fit before scrolling */
+    .popup--pay #buy-payments-methods .popup__payment-method{
+        min-height:50px !important;
+        padding:8px 12px !important;
+        gap:10px !important;
+    }
+    .popup--pay #buy-payments-methods .popup__payment-method .pm-fig,
+    .popup--pay #buy-payments-methods .popup__payment-method__icon{
+        width:36px !important; height:36px !important; flex:0 0 36px !important;
+    }
+    .popup--pay #buy-payments-methods .popup__payment-method__name{ font-size:15px !important; }
+    .popup--pay .pay-order-info{ padding:12px 14px !important; margin:10px 0 12px !important; }
+    .popup--pay .pay-order-info__row{ margin:0 0 6px !important; }
+}

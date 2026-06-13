@@ -132,6 +132,7 @@ class MaintenanceDashboard extends Page
                     ->label('Какие заказы')
                     ->options([
                         BulkCleanupService::ORDER_TYPE_EXPIRED => 'Просроченные',
+                        BulkCleanupService::ORDER_TYPE_CANCELLED => 'Отменённые',
                         BulkCleanupService::ORDER_TYPE_PAID => 'Оплаченные (старше 365 дней)',
                     ])
                     ->required(),

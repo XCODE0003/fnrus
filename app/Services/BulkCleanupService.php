@@ -22,8 +22,9 @@ class BulkCleanupService
     public const MAX_PER_CALL = 5000;
     private const CHUNK = 200;
 
-    public const ORDER_TYPE_EXPIRED = 'expired'; // status = 4
-    public const ORDER_TYPE_PAID    = 'paid';    // status = 2
+    public const ORDER_TYPE_EXPIRED   = 'expired';   // status = 4
+    public const ORDER_TYPE_PAID      = 'paid';      // status = 2
+    public const ORDER_TYPE_CANCELLED = 'cancelled'; // status = 3
 
     public const FILE_TYPE_COVERS  = 'covers';
     public const FILE_TYPE_AVATARS = 'avatars';
@@ -32,6 +33,7 @@ class BulkCleanupService
     public const VALID_ORDER_TYPES = [
         self::ORDER_TYPE_EXPIRED,
         self::ORDER_TYPE_PAID,
+        self::ORDER_TYPE_CANCELLED,
     ];
 
     public const VALID_FILE_TYPES = [
@@ -46,7 +48,11 @@ class BulkCleanupService
         if (!in_array($type, self::VALID_ORDER_TYPES, true)) {
             throw new \InvalidArgumentException('Unknown order type: ' . $type);
         }
-        $statusValue = $type === self::ORDER_TYPE_EXPIRED ? 4 : 2;
+        $statusValue = match ($type) {
+            self::ORDER_TYPE_EXPIRED   => 4,
+            self::ORDER_TYPE_CANCELLED => 3,
+            default                    => 2, // paid
+        };
 
         return $this->deleteOldestInChunks(
             'orders',
