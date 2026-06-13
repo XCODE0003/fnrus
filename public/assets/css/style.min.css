@@ -25300,13 +25300,14 @@ html::after{
     .popup--pay .popup__step[data-popup-step="2"] .pay-actions{ flex:0 0 auto !important; }
     /* compact method rows so more fit before scrolling */
     .popup--pay #buy-payments-methods .popup__payment-method{
-        min-height:50px !important;
-        padding:8px 12px !important;
-        gap:10px !important;
+        min-height:56px !important;
+        padding:8px 14px !important;
+        gap:14px !important;
     }
     .popup--pay #buy-payments-methods .popup__payment-method .pm-fig,
     .popup--pay #buy-payments-methods .popup__payment-method__icon{
-        width:36px !important; height:36px !important; flex:0 0 36px !important;
+        width:38px !important; height:38px !important; flex:0 0 38px !important;
+        margin-right:2px !important;
     }
     .popup--pay #buy-payments-methods .popup__payment-method__name{ font-size:15px !important; }
     .popup--pay .pay-order-info{ padding:12px 14px !important; margin:10px 0 12px !important; }
