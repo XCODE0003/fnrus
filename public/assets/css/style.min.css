@@ -25386,7 +25386,9 @@ html::after{
 /* ==================================================================== */
 @media (max-width:767px){
     #catalog .catalog__cards-container,
-    .section2__grid{
+    .section2__grid,
+    .game-cheats-slider,
+    .game-cards-slider{
         width:100vw !important;
         max-width:100vw !important;
         margin-left:calc(50% - 50vw) !important;
@@ -25395,7 +25397,17 @@ html::after{
         padding-right:14px !important;
         scroll-padding-left:14px !important;
         box-sizing:border-box !important;
+        scroll-snap-type:x mandatory !important;   /* snap one card at a time — open the next cleanly */
         -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
                 mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+    }
+    /* every card/slide snaps to the gutter so scrolling reveals the next one
+       fully, not a half-card "chain" */
+    #catalog .catalog-card,
+    .section2__grid .s2-card,
+    .game-cheats-slider .swiper-slide,
+    .game-cards-slider .swiper-slide{
+        scroll-snap-align:start !important;
+        scroll-snap-stop:always !important;
     }
 }
