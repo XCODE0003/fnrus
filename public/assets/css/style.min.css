@@ -25166,7 +25166,7 @@ html::after{
         grid-template-columns:none !important;
         flex-wrap:nowrap !important;
         overflow-x:auto !important;
-        overflow-y:hidden !important;
+        overflow-y:visible !important;   /* let vertical swipes bubble to the page (like .func-grid) */
         scroll-snap-type:x mandatory !important;
         gap:12px !important;
         /* stay strictly inside .content — no full-bleed negative margins
@@ -25246,7 +25246,7 @@ html::after{
     .reviews-slider,
     .cheat-block__slider .swiper{
         overflow-x:auto !important;
-        overflow-y:hidden !important;
+        overflow-y:visible !important;   /* let vertical swipes bubble to the page (like .func-grid) */
         -webkit-overflow-scrolling:touch !important;
         touch-action:auto !important;   /* native axis-lock: horizontal swipe scrolls the carousel, vertical scrolls the page */
         scroll-snap-type:x proximity !important;
