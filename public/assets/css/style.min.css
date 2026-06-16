@@ -25239,7 +25239,7 @@ html::after{
 /*  mode. Force overflow + touch-action; neutralise any leftover wrapper   */
 /*  transform (cssMode uses scroll, not transform, so this is safe).       */
 /* ==================================================================== */
-@media (max-width:900px){
+@media (max-width:767px){
     .game-cheats-slider,
     .section2__grid,
     .game-cards-slider,
