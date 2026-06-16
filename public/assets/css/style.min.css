@@ -25422,3 +25422,24 @@ html::after{
         scroll-snap-stop:always !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.7.0 — game-card bottom row: keep the price on one line (no "от/5₽"  */
+/*  wrap) and let the status tag take the remaining width cleanly.         */
+/* ==================================================================== */
+.game-card__bottom{
+    flex-wrap:nowrap !important;
+    gap:8px !important;
+    align-items:center !important;
+}
+.game-card__price{
+    white-space:nowrap !important;
+    flex:0 0 auto !important;
+}
+.game-card__tag{
+    flex:0 1 auto !important;
+    min-width:0 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+}
