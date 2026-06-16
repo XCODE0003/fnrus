@@ -25443,3 +25443,12 @@ html::after{
     overflow:hidden !important;
     text-overflow:ellipsis !important;
 }
+
+/* ==================================================================== */
+/*  v4.7.1 — product gallery: switch images INSTANTLY (no slide animation) */
+/* ==================================================================== */
+.cheat-block__slider .swiper{ scroll-behavior:auto !important; }
+.cheat-block__slider .swiper-wrapper{
+    transition:none !important;
+    transition-duration:0ms !important;
+}
