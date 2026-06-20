@@ -25452,3 +25452,111 @@ html::after{
     transition:none !important;
     transition-duration:0ms !important;
 }
+
+/* ==================================================================== */
+/*  v4.7.2 — Desktop header: the search pill sat only ~15px from the      */
+/*  "Вход/Регистрация" button, so their rounded ends read as overlapping. */
+/*  Give a comfortable gap (matches the 30px lang→search rhythm) so the    */
+/*  login button is clearly separated from the search field.              */
+/* ==================================================================== */
+@media (min-width: 1024px) {
+    .header__search { margin-right: 50px !important; }
+}
+
+/* ==================================================================== */
+/*  v4.7.3 — Tablet (768-900) hero polish. On phones the hero art fills   */
+/*  the width, but on tablet a max-width:560px cap left big empty gutters  */
+/*  (~106px each side) and dead vertical space. Let the art fill the       */
+/*  column like on phone, keep aspect (contain), tighten the top gap.      */
+/* ==================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* 901-1023 kept the art position:absolute (top:-160, ~830px wide) so it
+       overlapped the header and text. Pull it back into normal flow below the
+       text and let it fill the column — same clean stack as the phone view. */
+    .hero__image {
+        position: static !important;
+        -webkit-transform: none !important;
+                transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 8px auto 0 !important;
+        inset: auto !important;
+    }
+    .hero__image img {
+        width: 100% !important;
+        height: auto !important;
+        -o-object-fit: contain !important;
+        object-fit: contain !important;
+    }
+}
+
+/* v4.7.3 (cont.) — same tablet polish for the product (game) hero image:
+   it sat at max-width:440px centered with ~166px empty gutters. Let it grow
+   so the character art reads as a proper hero, capped by height to stay tidy. */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .game-hero__inner { -ms-flex-direction: column-reverse !important; flex-direction: column-reverse !important; }
+    .game-hero__text { max-width: 100% !important; }
+    .game-hero__image {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+    .game-hero__image img {
+        width: auto !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 420px !important;
+        -o-object-fit: contain !important;
+        object-fit: contain !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.7.4 — "Функционал" cards: on tablet/mobile .func-grid scrolls       */
+/*  horizontally and showed a raw, ugly scrollbar. Hide the bar — it stays */
+/*  swipeable/scrollable, just clean (matches the other carousels).        */
+/* ==================================================================== */
+@media (max-width: 1023px) {
+    .func-grid {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .func-grid::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.7.5 — Profile: the logout button (.profile__identity__exit) is      */
+/*  position:absolute;right:67px from 1400 down, but its card had no        */
+/*  positioning context, so on tablet it anchored too far right and got     */
+/*  clipped by the card edge. Anchor it to the identity card and pull it    */
+/*  inside so it sits cleanly within the balance block.                     */
+/* ==================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .profile__identity { position: relative !important; }
+    .profile__identity__exit { right: 20px !important; }
+    /* 901-1023 kept a 2-col grid (300px + 1fr) where the main panel
+       overflowed and the "Изменить" buttons were clipped. Stack it. */
+    .profile__container {
+        display: -webkit-box !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .profile__sidebar,
+    .profile__main {
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
