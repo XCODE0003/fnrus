@@ -25577,3 +25577,48 @@ html::after{
     scroll-snap-align: start !important;
     scroll-snap-stop: always !important;
 }
+
+/* ==================================================================== */
+/*  v4.7.9 — Cheat buy row: "Видео обзор" (flex-shrink:0, fixed width)     */
+/*  could overflow the info card's right edge when "Купить" + the video    */
+/*  button don't fit on one line. Allow the row to wrap so the video        */
+/*  button drops to its own line instead of spilling past the card.        */
+/* ==================================================================== */
+.cheat-block__info__btn-line {
+    -ms-flex-wrap: wrap !important;
+    flex-wrap: wrap !important;
+    gap: 12px;
+}
+.cheat-block__info__btn-line .btn-play {
+    margin-left: 0 !important;
+}
+
+/* ==================================================================== */
+/*  v4.8.0 — "Функционал" cards on tablet/mobile: were flex 0 0 64% so the  */
+/*  view showed ~1.5 cards and clipped them. Show one card per view,        */
+/*  centered, with a small peek of the neighbours, and clean snapping.      */
+/* ==================================================================== */
+@media (max-width: 1023px) {
+    .func-grid {
+        scroll-padding-left: 6% !important;
+        scroll-padding-right: 6% !important;
+    }
+    .func-grid .func-cat {
+        -webkit-box-flex: 0 !important;
+        -ms-flex: 0 0 88% !important;
+        flex: 0 0 88% !important;
+        scroll-snap-align: center !important;
+        scroll-snap-stop: always !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.0 (cont.) — Profile on tablet (768-900): the content sat a full    */
+/*  header-height (138px) below the top, leaving a gap under the logo.      */
+/*  Pull it up a touch so the identity card sits closer to the header.      */
+/* ==================================================================== */
+@media (min-width: 768px) and (max-width: 900px) {
+    .profile {
+        padding-top: calc(var(--header-height) ) !important;
+    }
+}
