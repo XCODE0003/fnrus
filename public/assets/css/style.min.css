@@ -7831,7 +7831,6 @@ main.main .section-subcaption {
 
     .profile__identity__replenishment-btn {
         width: 260px;
-        margin-right: 79px;
     }
 
     .profile__identity {
@@ -25559,4 +25558,22 @@ html::after{
         width: 100% !important;
         max-width: none !important;
     }
+}
+
+/* ==================================================================== */
+/*  v4.7.8 — Cheat slider first-card clipping. The slider is a native      */
+/*  scroll carousel; freeMode momentum (now off in JS) + soft snap let it   */
+/*  rest mid-card, clipping the first card on the left. Force the native    */
+/*  scroll to ALWAYS land on a whole card.                                  */
+/* ==================================================================== */
+.game-list .game-cheats-slider,
+.game-cheats-slider {
+    -webkit-scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-padding-left: 0 !important;
+}
+.game-list .game-cheats-slider .game-card,
+.game-cheats-slider .swiper-slide {
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
 }
