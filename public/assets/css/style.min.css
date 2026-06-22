@@ -22411,7 +22411,7 @@ body{ background-color:transparent !important }
 }
 
 @media (max-width: 768px){
-    .game-hero{padding:84px 0 24px !important}
+    .game-hero{padding:120px 0 24px !important}
     .game-hero__inner{padding:0 !important;min-height:0 !important}
     /* Title bigger on mobile (screen 3) */
     .game-hero__title{font-size:38px !important;line-height:1.1 !important}
@@ -25644,4 +25644,32 @@ html::after{
 @media (max-width: 1023px) {
     .about-section__stats .about-section__stat:not(:last-child) { margin-right: 0 !important; }
     .about-section__stats .about-section__stat::after { display: none !important; }
+}
+
+/* ==================================================================== */
+/*  v4.8.3 — Game hero header overlap on tablet. With the hero art hidden   */
+/*  (v4.8.1) the breadcrumb could slide under the absolute 138px header,    */
+/*  because clearance depended on .game-hero__inner's image-reserve padding */
+/*  (varies by width). Pin a fixed clearance to the header height instead.  */
+/* ==================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .game-hero {
+        padding-top: calc(var(--header-height) + 14px) !important;
+    }
+    .game-hero__inner {
+        padding-top: 0 !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.4 — Single-product slider card squished. A platform section with  */
+/*  one product (e.g. iOS=Fluorite) rendered its card super narrow when the */
+/*  Swiper didn't stretch it. Floor the card width so it never squishes     */
+/*  below a sane size, regardless of slide count or cached JS.              */
+/* ==================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .game-card {
+        min-width: 280px !important;
+    }
 }
