@@ -25847,3 +25847,20 @@ html::after{
         min-width:0 !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.1 — "не доскролить до последней карточки". With scroll-snap       */
+/*  mandatory + snap-align:start on every slide, the LAST slide's start    */
+/*  snap point sits past max-scroll, so a swipe to the end snaps back to   */
+/*  the previous card and the last one can't rest in view. Give the last   */
+/*  slide snap-align:end so its snap point lands at max-scroll (reachable).*/
+/* ==================================================================== */
+@media (max-width:1200px){
+    .game-list .game-cheats-slider .swiper-slide:last-child,
+    .game-cheats-slider .swiper-slide:last-child,
+    .game-cheats-slider .game-card:last-child,
+    .game-cards-slider .swiper-slide:last-child,
+    .func-grid .func-cat:last-child{
+        scroll-snap-align:end !important;
+    }
+}
