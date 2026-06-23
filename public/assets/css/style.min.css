@@ -25922,3 +25922,36 @@ html::after{
         min-width:0 !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.7 — two tablet polish fixes:                                      */
+/*  (1) "Рекомендуем" slider used a 22px gap vs 16px on the game page —     */
+/*      tighten it so the cards don't show a wide "щель".                  */
+/*  (2) Games catalog filter bar: search + sort didn't fit beside the      */
+/*      tabs, wrapped to two rows, which stretched the tabs pill box tall   */
+/*      with empty space. Drop search+sort to their own full-width row      */
+/*      (side by side) under the tabs, so the tabs box keeps its natural    */
+/*      height.                                                             */
+/* ==================================================================== */
+@media (max-width:1200px){
+    .game-cheats__slider-container .game-cheats-slider .swiper-slide{
+        margin-right:16px !important;
+    }
+}
+@media (min-width:600px) and (max-width:1100px){
+    .games-catalog__tools{
+        -ms-flex:1 0 100% !important;
+        flex:1 0 100% !important;
+        min-width:100% !important;
+    }
+    .games-catalog__tools .games-search{
+        -ms-flex:1 1 auto !important;
+        flex:1 1 auto !important;
+        width:auto !important;
+        min-width:0 !important;
+    }
+    .games-catalog__tools .games-select{
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+    }
+}
