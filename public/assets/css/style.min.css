@@ -25819,3 +25819,31 @@ html::after{
         max-width:960px !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.0 — iPad Mini / small tablets (600–767) were caught by the        */
+/*  phone-only html.ios native-scroll rule, which sized each game-cheats   */
+/*  slide to calc(100vw - 92px) — ONE wide card shoved to the left edge    */
+/*  ("карточки широкие стали и влево сместились"). A >=600px viewport is    */
+/*  never a phone, so show two cards + a peek like every other tablet.     */
+/*  High-specificity selectors (incl. html.ios .js-carousel) so this wins  */
+/*  over the older rule regardless of the iOS class.                       */
+/* ==================================================================== */
+@media (min-width:600px) and (max-width:767px){
+    html.ios .game-cheats-slider.js-carousel .swiper-slide,
+    html.ios .game-cheats-slider .swiper-slide,
+    html.ios .game-cheats-slider .game-card,
+    .game-list .game-cheats-slider .swiper-slide,
+    .game-list .game-cheats-slider .game-card,
+    .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .game-card,
+    .game-cards-slider .swiper-slide,
+    .game-cards-slider .game-card{
+        -webkit-box-flex:0 !important;
+        -ms-flex:0 0 calc(50vw - 40px) !important;
+        flex:0 0 calc(50vw - 40px) !important;
+        width:calc(50vw - 40px) !important;
+        max-width:calc(50vw - 40px) !important;
+        min-width:0 !important;
+    }
+}
