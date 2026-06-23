@@ -25864,3 +25864,19 @@ html::after{
         scroll-snap-align:end !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.2 — first card "заходит за экран" on phones. v4.7.8 forced        */
+/*  scroll-padding-left:0 on .game-cheats-slider, so scroll-snap pulled    */
+/*  the first card flush to the screen edge (left:0) where the 14px edge   */
+/*  mask fades it. Restore scroll-padding-left = the 14px gutter so the     */
+/*  first card rests INSIDE the screen with a clean gutter (snap lands at  */
+/*  scrollLeft:0, card at 14px), not under the fade.                       */
+/* ==================================================================== */
+@media (max-width:767px){
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider{
+        scroll-padding-left:14px !important;
+    }
+}
