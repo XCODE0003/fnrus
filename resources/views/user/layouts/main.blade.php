@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.8.4">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.8.9">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -1079,6 +1079,28 @@
                     });
                 });
             }
+        })();
+    </script>
+
+    <script>
+        /* Edge-fade для горизонтальных каруселей (.func-grid): затухание только
+           с той стороны, где выглядывает соседняя карточка (по позиции скролла). */
+        (function() {
+            function update(el) {
+                var max = el.scrollWidth - el.clientWidth;
+                el.classList.toggle('fade-l', el.scrollLeft > 2);
+                el.classList.toggle('fade-r', el.scrollLeft < max - 2);
+            }
+            function bind(el) {
+                update(el);
+                el.addEventListener('scroll', function() { update(el); }, { passive: true });
+                window.addEventListener('resize', function() { update(el); }, { passive: true });
+            }
+            function init() {
+                document.querySelectorAll('.func-grid, .game-cheats-slider, .game-cards-slider').forEach(bind);
+            }
+            if (document.readyState !== 'loading') init();
+            else document.addEventListener('DOMContentLoaded', init);
         })();
     </script>
 </body>

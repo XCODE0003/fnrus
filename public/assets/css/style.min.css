@@ -25673,3 +25673,149 @@ html::after{
         min-width: 280px !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.8.5 — "Функционал" edge-fade: плавное затухание ТОЛЬКО с той стороны, */
+/*  где из-за края выглядывает соседняя карточка. Классы fade-l / fade-r    */
+/*  ставит скролл-хендлер (см. main.blade) по позиции прокрутки: слева —     */
+/*  только если проскроллено вправо, справа — только если есть ещё контент.  */
+/* ==================================================================== */
+@media (max-width: 1023px) {
+    .func-grid { -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+    .func-grid.fade-l.fade-r {
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+                mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+    }
+    .func-grid.fade-l:not(.fade-r) {
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 100%);
+                mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 100%);
+    }
+    .func-grid.fade-r:not(.fade-l) {
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 40px), transparent 100%);
+                mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 40px), transparent 100%);
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.6 — TABLET (768–1023): same full-bleed carousels as phone.       */
+/*  On tablet the game/cheat sliders were inset into the 40px content      */
+/*  gutter, so the first card was hard-cut on the left and neighbours      */
+/*  never reached the screen edge ("вжата внутрь safe area"). Make them    */
+/*  span the full viewport (100vw) with a 40px inner gutter — the first    */
+/*  card stays aligned to the page, and the next/prev cards now exit past  */
+/*  the screen edge. Edge fade is driven by .fade-l/.fade-r (JS) so only   */
+/*  the side a card actually exits from softens.                           */
+/* ==================================================================== */
+@media (min-width:768px) and (max-width:1200px){
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .func-grid{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:calc(50% - 50vw) !important;
+        margin-right:calc(50% - 50vw) !important;
+        padding-left:40px !important;
+        padding-right:40px !important;
+        scroll-padding-left:40px !important;
+        scroll-padding-right:40px !important;
+        box-sizing:border-box !important;
+        overflow-x:auto !important;
+        scroll-snap-type:x mandatory !important;
+        scrollbar-width:none !important;
+        -webkit-mask-repeat:no-repeat !important;
+                mask-repeat:no-repeat !important;
+    }
+    .game-list .game-cheats-slider::-webkit-scrollbar,
+    .game-cheats-slider::-webkit-scrollbar,
+    .game-cards-slider::-webkit-scrollbar,
+    .func-grid::-webkit-scrollbar{ display:none !important; height:0 !important; }
+
+    /* two cards per row + a small peek of the next (not 4 narrow ones) */
+    .game-list .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .game-card,
+    .game-cards-slider .swiper-slide,
+    .game-cards-slider .game-card{
+        flex:0 0 calc(50vw - 66px) !important;
+        width:calc(50vw - 66px) !important;
+        max-width:calc(50vw - 66px) !important;
+        min-width:0 !important;
+        scroll-snap-align:start !important;
+        scroll-snap-stop:always !important;
+    }
+
+    /* dynamic edge fade — fade only the side a card exits from (40px ramp) */
+    .game-cheats-slider.fade-l.fade-r,
+    .game-cards-slider.fade-l.fade-r,
+    .func-grid.fade-l.fade-r{
+        -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%) !important;
+                mask-image:linear-gradient(90deg,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%) !important;
+    }
+    .game-cheats-slider.fade-l:not(.fade-r),
+    .game-cards-slider.fade-l:not(.fade-r),
+    .func-grid.fade-l:not(.fade-r){
+        -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40px,#000 100%) !important;
+                mask-image:linear-gradient(90deg,transparent 0,#000 40px,#000 100%) !important;
+    }
+    .game-cheats-slider.fade-r:not(.fade-l),
+    .game-cards-slider.fade-r:not(.fade-l),
+    .func-grid.fade-r:not(.fade-l){
+        -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 40px),transparent 100%) !important;
+                mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 40px),transparent 100%) !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.7 — at >=1024 body has zoom:.9, which makes plain 100vw fall    */
+/*  short of the real viewport (the carousel landed 51px in, not at the  */
+/*  edge). Divide the viewport units by the zoom factor so the full-bleed */
+/*  carousel truly reaches the screen edges on iPad-Pro-class tablets.   */
+/* ==================================================================== */
+@media (min-width:1024px) and (max-width:1200px){
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .func-grid{
+        width:calc(100vw / 0.9) !important;
+        max-width:calc(100vw / 0.9) !important;
+        margin-left:calc(50% - 50vw / 0.9) !important;
+        margin-right:calc(50% - 50vw / 0.9) !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.8 — tablet fixes for the catalog grid and the "Функционал"       */
+/*  carousel:                                                             */
+/*  1) Games catalog showed 4 columns on iPad-class tablets, making the   */
+/*     cards too narrow — show 2 per row instead.                         */
+/*  2) .func-grid cards snapped to CENTER (v4.8.0), so the previous card   */
+/*     rested hard-cut inside the 40px content gutter ("вжата в safe       */
+/*     area"). Snap to START like the full-bleed game sliders, so the      */
+/*     neighbour card exits cleanly past the screen edge with the fade.    */
+/* ==================================================================== */
+@media (min-width:768px) and (max-width:1200px){
+    .games-page .catalog__cards-container,
+    .catalog__cards-container{
+        grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    }
+    .func-grid .func-cat{
+        scroll-snap-align:start !important;
+        scroll-snap-stop:always !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.8.9 — feature cards (.section2__grid "Новый уровень") showed 4     */
+/*  across on iPad-Pro-class tablets: body{zoom:.9} (>=1024) makes the    */
+/*  effective width ~1138px, so the base @media(max-width:1024px) 2-col   */
+/*  rule never caught. Force 2 columns up through the zoomed tablet width */
+/*  and widen the block so the two cards fill the row (the old max-width   */
+/*  640px bunched them into a narrow centered column).                    */
+/* ==================================================================== */
+@media (min-width:768px) and (max-width:1200px){
+    .section2__grid{
+        grid-template-columns:repeat(2, 1fr) !important;
+        max-width:960px !important;
+    }
+}
