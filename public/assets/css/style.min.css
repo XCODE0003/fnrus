@@ -25884,7 +25884,7 @@ html::after{
 /* ==================================================================== */
 /*  v4.9.4 — phone game cards were too WIDE (≈full width, next card hidden */
 /*  behind the edge) on non-iOS phones, while iOS got a narrower card.     */
-/*  Unify: on phones (≤599) the card is calc(100vw - 84px) so it's smaller */
+/*  Unify: on phones (≤599) the card is calc(100vw - 110px) so it's smaller */
 /*  with a clear peek of the next one. High specificity (incl. html.ios)   */
 /*  so it wins on every platform.                                          */
 /* ==================================================================== */
@@ -25899,10 +25899,10 @@ html::after{
     .game-cards-slider .swiper-slide,
     .game-cards-slider .game-card{
         -webkit-box-flex:0 !important;
-        -ms-flex:0 0 calc(100vw - 84px) !important;
-        flex:0 0 calc(100vw - 84px) !important;
-        width:calc(100vw - 84px) !important;
-        max-width:calc(100vw - 84px) !important;
+        -ms-flex:0 0 calc(100vw - 110px) !important;
+        flex:0 0 calc(100vw - 110px) !important;
+        width:calc(100vw - 110px) !important;
+        max-width:calc(100vw - 110px) !important;
         min-width:0 !important;
     }
 }
