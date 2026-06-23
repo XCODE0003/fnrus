@@ -25882,21 +25882,27 @@ html::after{
 }
 
 /* ==================================================================== */
-/*  v4.9.3 — "Функционал" cards looked stretched/elongated on tablet:      */
-/*  the flex row stretched every .func-cat to the tallest card's height    */
-/*  (the 7-item one), leaving big empty space under cards with fewer        */
-/*  items. Top-align them and let each size to its own content.            */
+/*  v4.9.4 — phone game cards were too WIDE (≈full width, next card hidden */
+/*  behind the edge) on non-iOS phones, while iOS got a narrower card.     */
+/*  Unify: on phones (≤599) the card is calc(100vw - 84px) so it's smaller */
+/*  with a clear peek of the next one. High specificity (incl. html.ios)   */
+/*  so it wins on every platform.                                          */
 /* ==================================================================== */
-@media (max-width:1200px){
-    .func-grid{
-        -webkit-box-align:start !important;
-        -ms-flex-align:start !important;
-        align-items:flex-start !important;
-    }
-    .func-grid .func-cat{
-        height:auto !important;
-        min-height:0 !important;
-        -ms-flex-item-align:start !important;
-        align-self:flex-start !important;
+@media (max-width:599px){
+    html.ios .game-cheats-slider.js-carousel .swiper-slide,
+    html.ios .game-cheats-slider .swiper-slide,
+    html.ios .game-cheats-slider .game-card,
+    .game-list .game-cheats-slider .swiper-slide,
+    .game-list .game-cheats-slider .game-card,
+    .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .game-card,
+    .game-cards-slider .swiper-slide,
+    .game-cards-slider .game-card{
+        -webkit-box-flex:0 !important;
+        -ms-flex:0 0 calc(100vw - 84px) !important;
+        flex:0 0 calc(100vw - 84px) !important;
+        width:calc(100vw - 84px) !important;
+        max-width:calc(100vw - 84px) !important;
+        min-width:0 !important;
     }
 }
