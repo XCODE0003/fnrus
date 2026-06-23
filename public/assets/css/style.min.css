@@ -25955,3 +25955,17 @@ html::after{
         flex:0 0 auto !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.8 — native-scroll game carousels: arrows are driven by JS by the */
+/*  real scroll position (Swiper's own disabled state is frozen at slide   */
+/*  0 because it's decoupled from the native scroll). .cf-arrow-off is our */
+/*  own "at the edge" state — dim + non-clickable.                         */
+/* ==================================================================== */
+.slider-arrows__arrow.cf-arrow-off,
+.swiper-button-next.cf-arrow-off,
+.swiper-button-prev.cf-arrow-off{
+    opacity:.35 !important;
+    pointer-events:none !important;
+    cursor:default !important;
+}

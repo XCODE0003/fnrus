@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.9.7">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.9.8">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -1083,24 +1083,89 @@
     </script>
 
     <script>
-        /* Edge-fade для горизонтальных каруселей (.func-grid): затухание только
-           с той стороны, где выглядывает соседняя карточка (по позиции скролла). */
+        /* Горизонтальные карусели на нативном скролле (.func-grid + game-слайдеры):
+           1) edge-fade только со стороны, где выглядывает соседняя карточка;
+           2) стрелки ‹ › управляются по реальной позиции скролла (а не Swiper),
+              т.к. Swiper-состояние оторвано от нативного скролла: его transform
+              по клику съезжал на «свою» ширину слайда (≠ CSS), обрезая первую
+              карточку и оставляя щель, а кнопка prev застревала disabled. */
         (function() {
+            function isNative(el) {
+                return getComputedStyle(el).overflowX === 'auto';
+            }
+            function isGame(el) {
+                return el.classList.contains('game-cheats-slider') || el.classList.contains('game-cards-slider');
+            }
+            function arrowsFor(el) {
+                var n = el;
+                while (n && n !== document.body) {
+                    var p = n.querySelector('.slider-arrows__prev, .swiper-button-prev');
+                    var x = n.querySelector('.slider-arrows__next, .swiper-button-next');
+                    if (p || x) return { prev: p, next: x };
+                    n = n.parentElement;
+                }
+                return {};
+            }
             function update(el) {
                 var max = el.scrollWidth - el.clientWidth;
-                el.classList.toggle('fade-l', el.scrollLeft > 2);
-                el.classList.toggle('fade-r', el.scrollLeft < max - 2);
+                var atStart = el.scrollLeft <= 2;
+                var atEnd = el.scrollLeft >= max - 2;
+                el.classList.toggle('fade-l', !atStart);
+                el.classList.toggle('fade-r', !atEnd);
+                if (isGame(el) && isNative(el)) {
+                    var a = arrowsFor(el);
+                    var prevOff = atStart || max <= 2;
+                    var nextOff = atEnd || max <= 2;
+                    if (a.prev) { setArrow(a.prev, prevOff); }
+                    if (a.next) { setArrow(a.next, nextOff); }
+                }
+            }
+            function setArrow(btn, off) {
+                /* Swiper выставляет у <button> атрибут disabled (а disabled-кнопка
+                   не даёт click вовсе) и aria-disabled — снимаем их и ведём
+                   состояние сами по реальному скроллу. */
+                btn.classList.remove('swiper-button-disabled');
+                btn.classList.toggle('cf-arrow-off', off);
+                btn.disabled = off;
+                if (off) { btn.setAttribute('aria-disabled', 'true'); }
+                else { btn.removeAttribute('aria-disabled'); btn.removeAttribute('tabindex'); }
             }
             function bind(el) {
                 update(el);
                 el.addEventListener('scroll', function() { update(el); }, { passive: true });
-                window.addEventListener('resize', function() { update(el); }, { passive: true });
+                window.addEventListener('resize', function() { setTimeout(function(){ update(el); }, 50); }, { passive: true });
             }
             function init() {
                 document.querySelectorAll('.func-grid, .game-cheats-slider, .game-cards-slider').forEach(bind);
             }
             if (document.readyState !== 'loading') init();
             else document.addEventListener('DOMContentLoaded', init);
+
+            function sliderFor(arrow) {
+                var n = arrow;
+                while (n && n !== document.body) {
+                    var s = n.querySelector('.game-cheats-slider, .game-cards-slider');
+                    if (s) return s;
+                    n = n.parentElement;
+                }
+                return null;
+            }
+            document.addEventListener('click', function(e) {
+                var arrow = e.target.closest('.slider-arrows__arrow, .swiper-button-next, .swiper-button-prev, [class*="slider-arrow"]');
+                if (!arrow) return;
+                var slider = sliderFor(arrow);
+                if (!slider || !isNative(slider)) return;  // desktop Swiper-mode: leave to Swiper
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                if (arrow.classList.contains('cf-arrow-off')) return; // at the edge
+                if (slider.swiper) { try { slider.swiper.setTranslate(0); } catch (err) {} }
+                var w = slider.querySelector('.swiper-wrapper');
+                if (w) w.style.transform = 'none';
+                var slide = slider.querySelector('.swiper-slide');
+                var pitch = slide ? Math.round(slide.getBoundingClientRect().width) + 16 : Math.round(slider.clientWidth * 0.85);
+                var isPrev = /prev|left/i.test(arrow.className);
+                slider.scrollBy({ left: (isPrev ? -1 : 1) * pitch, behavior: 'smooth' });
+            }, true);
         })();
     </script>
 </body>
