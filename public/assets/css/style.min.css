@@ -25880,3 +25880,23 @@ html::after{
         scroll-padding-left:14px !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.3 — "Функционал" cards looked stretched/elongated on tablet:      */
+/*  the flex row stretched every .func-cat to the tallest card's height    */
+/*  (the 7-item one), leaving big empty space under cards with fewer        */
+/*  items. Top-align them and let each size to its own content.            */
+/* ==================================================================== */
+@media (max-width:1200px){
+    .func-grid{
+        -webkit-box-align:start !important;
+        -ms-flex-align:start !important;
+        align-items:flex-start !important;
+    }
+    .func-grid .func-cat{
+        height:auto !important;
+        min-height:0 !important;
+        -ms-flex-item-align:start !important;
+        align-self:flex-start !important;
+    }
+}
