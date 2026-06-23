@@ -12115,7 +12115,7 @@ html.ios .js-carousel {
         margin-bottom: 40px;
     }
     .cheat-block__slider {
-        aspect-ratio: 4/3;
+        aspect-ratio: 16/9;   /* game screenshots are 16:9 — 4/3 cropped them hard on the sides */
         border-radius: 12px;
         height: auto;
         align-self: auto;
@@ -25968,4 +25968,20 @@ html::after{
     opacity:.35 !important;
     pointer-events:none !important;
     cursor:default !important;
+}
+
+/* ==================================================================== */
+/*  v4.9.9 — homepage "Выберите свою игру" cards were too tall on tablet/  */
+/*  phone (188px image + a roomy body = ~341px). Shrink the artwork and    */
+/*  tighten the body so the card is noticeably shorter.                    */
+/* ==================================================================== */
+@media (max-width:767px){
+    #catalog .catalog-card__img{ height:140px !important; }
+    #catalog .catalog-card__body{
+        padding-top:14px !important;
+        padding-bottom:16px !important;
+        gap:8px !important;
+    }
+    /* "Подробнее" had a 24px padding-top (empty gap) above 600px — trim it */
+    #catalog .catalog-card__more{ padding-top:8px !important; }
 }
