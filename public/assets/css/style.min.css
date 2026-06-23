@@ -25906,3 +25906,19 @@ html::after{
         min-width:0 !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.5 — "Функционал" cards were too WIDE on tablet (flex 0 0 88% =    */
+/*  one card filling the row). Narrow them to ~two-per-row (same width as  */
+/*  the game cards) so they're smaller and a second card + peek show.      */
+/* ==================================================================== */
+@media (min-width:600px) and (max-width:1200px){
+    .func-grid .func-cat{
+        -webkit-box-flex:0 !important;
+        -ms-flex:0 0 calc(50vw - 66px) !important;
+        flex:0 0 calc(50vw - 66px) !important;
+        width:calc(50vw - 66px) !important;
+        max-width:calc(50vw - 66px) !important;
+        min-width:0 !important;
+    }
+}
