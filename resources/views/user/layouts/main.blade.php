@@ -45,7 +45,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.9.14">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.9.15">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -1166,6 +1166,38 @@
                 var isPrev = /prev|left/i.test(arrow.className);
                 slider.scrollBy({ left: (isPrev ? -1 : 1) * pitch, behavior: 'smooth' });
             }, true);
+        })();
+    </script>
+    <script>
+        /* Прячем галерею товара, если в ней нет ни одной живой картинки
+           (пусто или все битые) — чтобы не висел большой пустой бокс.
+           Инфо-колонка тогда занимает всю ширину. */
+        (function() {
+            function settle(slider) {
+                var imgs = slider.querySelectorAll('img');
+                var good = false;
+                imgs.forEach(function(im) { if (im.naturalWidth > 0) good = true; });
+                if (!good) {
+                    slider.style.display = 'none';
+                    var block = slider.closest('.cheat-block');
+                    if (block) block.classList.add('cheat-block--no-gallery');
+                }
+            }
+            function init() {
+                document.querySelectorAll('.cheat-block__slider').forEach(function(slider) {
+                    var imgs = slider.querySelectorAll('img');
+                    if (imgs.length === 0) { settle(slider); return; }
+                    var pending = imgs.length;
+                    function done() { if (--pending <= 0) settle(slider); }
+                    imgs.forEach(function(im) {
+                        if (im.complete) { done(); }
+                        else { im.addEventListener('load', done); im.addEventListener('error', done); }
+                    });
+                    setTimeout(function() { settle(slider); }, 2500);
+                });
+            }
+            if (document.readyState !== 'loading') init();
+            else document.addEventListener('DOMContentLoaded', init);
         })();
     </script>
 </body>
