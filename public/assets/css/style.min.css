@@ -26014,3 +26014,22 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         flex:0 0 auto !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.12 — homepage "Выберите свою игру" on tablets (iPad Mini 744):    */
+/*  one giant card per view looked huge — show 2 per view (phones keep 1   */
+/*  big card). And force the cheat gallery to 16:9 on phones so a missing/  */
+/*  slow image doesn't render a tall empty box.                            */
+/* ==================================================================== */
+@media (min-width:600px) and (max-width:767px){
+    #catalog .catalog-card{
+        -webkit-box-flex:0 !important;
+        -ms-flex:0 0 calc(50% - 22px) !important;
+        flex:0 0 calc(50% - 22px) !important;
+        width:calc(50% - 22px) !important;
+        max-width:calc(50% - 22px) !important;
+    }
+}
+@media (max-width:599px){
+    .cheat-block__slider{ aspect-ratio:16/9 !important; }
+}
