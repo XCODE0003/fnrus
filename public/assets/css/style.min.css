@@ -26033,3 +26033,47 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
 @media (max-width:599px){
     .cheat-block__slider{ aspect-ratio:16/9 !important; }
 }
+
+/* ==================================================================== */
+/*  v4.9.13 — three tablet/phone card-width tweaks:                        */
+/*  1) "Новый уровень" (.section2__grid) on iPad Mini showed one giant     */
+/*     card — show 2 per view.                                             */
+/*  2) "Функционал" at zoomed iPad Pro (1024, zoom:.9) showed 3 cards      */
+/*     because 50vw-66 under-counts — zoom-correct to 2.                   */
+/*  3) iOS phone game card a touch narrower (per request).                 */
+/* ==================================================================== */
+@media (min-width:600px) and (max-width:767px){
+    .section2__grid .s2-card{
+        -webkit-box-flex:0 !important;
+        -ms-flex:0 0 calc(50% - 8px) !important;
+        flex:0 0 calc(50% - 8px) !important;
+        width:calc(50% - 8px) !important;
+        max-width:calc(50% - 8px) !important;
+        min-width:0 !important;
+    }
+}
+@media (min-width:1024px) and (max-width:1200px){
+    .func-grid{
+        display:-ms-flexbox !important;
+        display:flex !important;
+        -ms-flex-wrap:nowrap !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+    }
+    .func-grid .func-cat{
+        -ms-flex:0 0 calc(50vw / 0.9 - 66px) !important;
+        flex:0 0 calc(50vw / 0.9 - 66px) !important;
+        width:calc(50vw / 0.9 - 66px) !important;
+        max-width:calc(50vw / 0.9 - 66px) !important;
+    }
+}
+@media (max-width:599px){
+    html.ios .game-cheats-slider.js-carousel .swiper-slide,
+    html.ios .game-cheats-slider .swiper-slide,
+    html.ios .game-cheats-slider .game-card{
+        -ms-flex:0 0 calc(100vw - 134px) !important;
+        flex:0 0 calc(100vw - 134px) !important;
+        width:calc(100vw - 134px) !important;
+        max-width:calc(100vw - 134px) !important;
+    }
+}
