@@ -67,7 +67,7 @@
                 </a>
             </div>
             <div class="game-hero__image">
-                <img src="{{ !empty($hero_image) ? '/'.ltrim($hero_image, '/') : '/assets/img/pubg.webp' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.webp'">
+                <img src="{{ !empty($hero_image) ? '/i'.ltrim($hero_image, '/') : '/assets/img/pubg.webp' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.webp'">
             </div>
         </div>
     </section>

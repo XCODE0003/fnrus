@@ -39,7 +39,7 @@ class AttachmentImageUpload
             ->directory('covers')
             ->visibility('public')
             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/gif'])
-            ->maxSize(5120);
+            ->maxSize(15360); // 15 MB — hero artwork can be 4-10 MB (PHP limits raised in public/.user.ini)
 
         return $upload
             ->saveUploadedFileUsing(function (UploadedFile $file, FileUpload $component) {
