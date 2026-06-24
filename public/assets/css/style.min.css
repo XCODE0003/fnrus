@@ -25971,17 +25971,46 @@ html::after{
 }
 
 /* ==================================================================== */
-/*  v4.9.9 — homepage "Выберите свою игру" cards were too tall on tablet/  */
-/*  phone (188px image + a roomy body = ~341px). Shrink the artwork and    */
-/*  tighten the body so the card is noticeably shorter.                    */
+/*  v4.9.11 — revert the homepage card image shrink (v4.9.9): keep the big */
+/*  artwork as before. Only the leftover empty gap above "Подробнее" is     */
+/*  trimmed (that was the real wasted space).                              */
 /* ==================================================================== */
 @media (max-width:767px){
-    #catalog .catalog-card__img{ height:140px !important; }
-    #catalog .catalog-card__body{
-        padding-top:14px !important;
-        padding-bottom:16px !important;
-        gap:8px !important;
-    }
     /* "Подробнее" had a 24px padding-top (empty gap) above 600px — trim it */
-    #catalog .catalog-card__more{ padding-top:8px !important; }
+    #catalog .catalog-card__more{ padding-top:10px !important; }
+}
+
+/* ==================================================================== */
+/*  v4.9.11 — Android tap highlight: Chromium shows a translucent grey/blue */
+/*  square over tapped buttons/links. Kill it site-wide.                   */
+/* ==================================================================== */
+*{
+    -webkit-tap-highlight-color: transparent !important;
+}
+a, button, [role="button"], input[type="button"], input[type="submit"],
+.btn, .slider-arrows__arrow, .catalog-card, .game-card, .func-cat,
+.header__burger, [class*="arrow"]{
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none;
+}
+
+/* ==================================================================== */
+/*  v4.9.11 — cheat buy row: keep "Видео обзор" from spilling off the      */
+/*  right edge on phones — let the row wrap and the buy button flex.       */
+/* ==================================================================== */
+@media (max-width:599px){
+    .cheat-block__info__btn-line{
+        -ms-flex-wrap:wrap !important;
+        flex-wrap:wrap !important;
+        gap:12px !important;
+    }
+    .cheat-block__info__btn-line .btn-accent{
+        -ms-flex:1 1 200px !important;
+        flex:1 1 200px !important;
+        min-width:0 !important;
+    }
+    .cheat-block__info__btn-line .btn-play{
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+    }
 }
