@@ -15748,7 +15748,9 @@ body {
     position: relative;
     flex-shrink: 0;
 }
-@media (min-width: 1024px) {
+@media (min-width: 1401px) {
+    /* hide the burger only when the desktop inline menu appears (>=1401);
+       1024-1400 is mobile-menu mode, so the burger must stay to open it */
     .header__hamburger {
         display: none !important;
     }
