@@ -26254,22 +26254,37 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
 }
 
 /* ==================================================================== */
-/*  v4.9.18 — cheat buy row: on phones stack the buttons (Купить full      */
-/*  width, "Видео обзор" full width below) so the video button can never   */
-/*  spill past the right edge.                                            */
+/*  v4.9.19 — cheat buy row on phones: keep the buttons side by side —     */
+/*  "Купить" flexes to fill, "Видео обзор" is a compact square icon button */
+/*  next to it. (Stacking made the icon-only video button a big empty      */
+/*  full-width bar in Safari.) min-width:0 lets "Купить" shrink so the      */
+/*  pair never overflows the right edge.                                   */
 /* ==================================================================== */
 @media (max-width:560px){
     .cheat-block__info__btn-line{
-        -ms-flex-direction:column !important;
-        flex-direction:column !important;
+        -ms-flex-direction:row !important;
+        flex-direction:row !important;
+        -ms-flex-wrap:nowrap !important;
+        flex-wrap:nowrap !important;
         -ms-flex-align:stretch !important;
         align-items:stretch !important;
+        gap:10px !important;
     }
-    .cheat-block__info__btn-line .btn-accent,
-    .cheat-block__info__btn-line .btn-play{
-        width:100% !important;
+    .cheat-block__info__btn-line .btn-accent{
+        -ms-flex:1 1 auto !important;
+        flex:1 1 auto !important;
+        min-width:0 !important;
+        width:auto !important;
         max-width:none !important;
+    }
+    .cheat-block__info__btn-line .btn-play{
         -ms-flex:0 0 auto !important;
         flex:0 0 auto !important;
+        width:54px !important;
+        min-width:54px !important;
+        max-width:54px !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+        margin:0 !important;
     }
 }
