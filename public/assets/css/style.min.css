@@ -26094,7 +26094,7 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         width:100% !important;
         height:calc(100vh - var(--header-height)) !important;
         margin:0 !important;
-        padding:24px 18px 32px !important;
+        padding:24px max(18px, calc((100% - 560px) / 2)) 32px !important;
         display:flex !important;
         -ms-flex-direction:column !important;
         flex-direction:column !important;
@@ -26122,11 +26122,25 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
     .header__menu__item{
         width:100% !important;
         max-width:none !important;
-        padding:0 !important;
         margin:0 !important;
+        padding:0 !important;
         opacity:1 !important;
         -webkit-transform:none !important;
         transform:none !important;
+    }
+    /* kill the per-item stagger transforms (≤1400 nth-child reveal) so the
+       items line up in a clean centered column, not scattered left/right */
+    .header__menu._active .header__menu__item:nth-child(1),
+    .header__menu._active .header__menu__item:nth-child(2),
+    .header__menu._active .header__menu__item:nth-child(3),
+    .header__menu._active .header__menu__item:nth-child(4),
+    .header__menu._active .header__menu__item:nth-child(5),
+    .header__menu._active .header__menu__item:nth-child(n){
+        opacity:1 !important;
+        -webkit-transform:none !important;
+        transform:none !important;
+        -webkit-transition:none !important;
+        transition:none !important;
     }
     .header__menu__item > a,
     .header__menu__pill{
@@ -26145,6 +26159,32 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         font-weight:600 !important;
         font-size:15px !important;
         text-align:left !important;
+    }
+    /* catalog pill: icon + label hug the left, chevron sits at the right */
+    .header__menu._active .header__menu__pill > span.header__menu__pill-icon{
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+        width:auto !important;
+        max-width:28px !important;
+        min-width:0 !important;
+        -webkit-box-ordinal-group:0 !important;
+        -ms-flex-order:-1 !important;
+        order:-1 !important;
+    }
+    .header__menu__pill > span:not(.header__menu__pill-icon):not(.header__menu__pill-chev){
+        -ms-flex:1 1 auto !important;
+        flex:1 1 auto !important;
+        text-align:left !important;
+    }
+    .header__menu__pill > .header__menu__pill-chev{
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+        margin-left:auto !important;
+    }
+    /* link items: arrow ">" to the right edge */
+    .header__menu__item:not(.header__menu__item--dropdown) > a{
+        -ms-flex-pack:justify !important;
+        justify-content:space-between !important;
     }
     .header__mega{
         position:static !important;
