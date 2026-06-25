@@ -26203,3 +26203,73 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
     grid-column:1 / -1 !important;
 }
 .cheat-block--no-gallery .cheat-block__slider{ display:none !important; }
+
+/* ==================================================================== */
+/*  v4.9.17 — header on 1024-1400 (burger range): the desktop profile     */
+/*  pill (icon + username + chevron) is wide and collided with / pushed    */
+/*  the burger off the edge, esp. with a long username. Show the profile   */
+/*  as an icon only here so it + the burger fit cleanly.                   */
+/* ==================================================================== */
+@media (min-width:1024px) and (max-width:1400px){
+    .header__login .header__login__label,
+    .header__login .header__login__chev{
+        display:none !important;
+    }
+    .header__login{
+        gap:0 !important;
+        min-width:0 !important;
+        padding:7px !important;
+        width:auto !important;
+    }
+    .header__login .btn__icon{ margin:0 !important; }
+}
+
+/* ==================================================================== */
+/*  v4.9.18 — games catalog filter tabs: were natural-width (flex:0 0     */
+/*  auto) so they left empty space on tablet and overflowed/clipped on    */
+/*  phones. Make each tab flex to fill the row equally; on phones shrink   */
+/*  the font and drop the icon so "МОБИЛЬНЫЕ ИГРЫ" fits without a cut.     */
+/* ==================================================================== */
+@media (max-width:1023px){
+    .games-catalog__tabs{
+        overflow:hidden !important;
+    }
+    .games-catalog__tabs .catalog__tab{
+        -webkit-box-flex:1 !important;
+        -ms-flex:1 1 0 !important;
+        flex:1 1 0 !important;
+        min-width:0 !important;
+        -ms-flex-pack:center !important;
+        justify-content:center !important;
+    }
+}
+@media (max-width:560px){
+    .games-catalog__tabs .catalog__tab{
+        font-size:11px !important;
+        letter-spacing:0 !important;
+        padding:10px 6px !important;
+        gap:5px !important;
+    }
+    .games-catalog__tabs .catalog__tab .catalog__tab-ico{ display:none !important; }
+}
+
+/* ==================================================================== */
+/*  v4.9.18 — cheat buy row: on phones stack the buttons (Купить full      */
+/*  width, "Видео обзор" full width below) so the video button can never   */
+/*  spill past the right edge.                                            */
+/* ==================================================================== */
+@media (max-width:560px){
+    .cheat-block__info__btn-line{
+        -ms-flex-direction:column !important;
+        flex-direction:column !important;
+        -ms-flex-align:stretch !important;
+        align-items:stretch !important;
+    }
+    .cheat-block__info__btn-line .btn-accent,
+    .cheat-block__info__btn-line .btn-play{
+        width:100% !important;
+        max-width:none !important;
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+    }
+}
