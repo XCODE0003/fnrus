@@ -26288,3 +26288,38 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         margin:0 !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.20 — cheat page on mobile: make the .cheat-block a plain flex     */
+/*  column instead of a grid. When the screenshot slider is present, the   */
+/*  grid + aspect-ratio could squeeze the info column / shift the buy row  */
+/*  in Safari (products WITHOUT a slider were fine). A flex column makes    */
+/*  slider + info + requirements each full width, identical with or        */
+/*  without the slider.                                                    */
+/* ==================================================================== */
+@media (max-width:1023px){
+    .cheat-block{
+        display:-webkit-box !important;
+        display:-ms-flexbox !important;
+        display:flex !important;
+        -webkit-box-orient:vertical !important;
+        -webkit-box-direction:normal !important;
+        -ms-flex-direction:column !important;
+        flex-direction:column !important;
+        gap:14px !important;
+    }
+    .cheat-block > *{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+    }
+    /* slider keeps its 16:9 box; flex needs an explicit basis so Safari
+       doesn't collapse the aspect-ratio element */
+    .cheat-block__slider{
+        -ms-flex:0 0 auto !important;
+        flex:0 0 auto !important;
+        width:100% !important;
+    }
+}
