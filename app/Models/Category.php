@@ -35,6 +35,28 @@ class Category extends Model
         'created_at'
     ];
 
+    /**
+     * Several string columns are NOT NULL with no default. When an admin
+     * leaves a field empty (e.g. "Краткое описание (для SEO)"), Filament
+     * sends null, which triggers a 1048 integrity violation (500) on save.
+     * Coerce null -> '' for those columns — but only when they're actually
+     * being changed, so partial updates never overwrite untouched values.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $category) {
+            $notNullStringCols = [
+                'title_en', 'seo_description', 'seo_keywords', 'description',
+                'image', 'image_site', 'image_hero', 'image_spoiler', 'alias',
+            ];
+            foreach ($category->getDirty() as $key => $value) {
+                if ($value === null && in_array($key, $notNullStringCols, true)) {
+                    $category->setAttribute($key, '');
+                }
+            }
+        });
+    }
+
     public function getLocalizedTitleAttribute()
     {
         if (app()->getLocale() === 'en' && !empty($this->title_en)) {
