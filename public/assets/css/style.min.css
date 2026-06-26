@@ -26323,3 +26323,46 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         width:100% !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.9.21 — About history timeline cut off on the RIGHT in iOS Safari.   */
+/*  An html.ios rule breaks the slider out to width:100vw (a horizontal    */
+/*  full-bleed carousel), but the ≤767 rules render it as a vertical       */
+/*  timeline inside the card — so slides/text ended up wider than the card */
+/*  and got clipped. Force the iOS history to the same in-card vertical     */
+/*  column as non-iOS, with wrapping text.                                 */
+/* ==================================================================== */
+@media (max-width:767px){
+    html.ios .about-section__history__slider.js-carousel{
+        width:100% !important;
+        max-width:100% !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+        scroll-padding-left:0 !important;
+        scroll-padding-right:0 !important;
+    }
+    html.ios .about-section__history__slider.js-carousel .swiper-wrapper{
+        -ms-flex-direction:column !important;
+        flex-direction:column !important;
+        width:100% !important;
+    }
+    html.ios .about-section__history__slide,
+    html.ios .about-section__history__slide.swiper-slide{
+        width:100% !important;
+        max-width:100% !important;
+        margin-right:0 !important;
+        scroll-margin-left:0 !important;
+    }
+    html.ios .about-section__history__slide .years,
+    html.ios .about-section__history__slide .record,
+    html.ios .about-section__history__slide .small-text{
+        white-space:normal !important;
+        -ms-word-break:break-word !important;
+        word-break:break-word !important;
+        overflow-wrap:anywhere !important;
+        max-width:100% !important;
+        width:auto !important;
+    }
+}
