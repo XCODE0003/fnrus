@@ -139,14 +139,18 @@ class ProductResource extends Resource
                             if (! $record || ! $record->functional) {
                                 return;
                             }
-                            $decoded = json_decode((string) $record->functional, true) ?: [];
+                            $decoded = json_decode((string) $record->functional, true);
                             $state = [];
-                            foreach ($decoded as $block) {
+                            foreach ((is_array($decoded) ? $decoded : []) as $block) {
+                                // Guard against malformed data (null/string blocks) — a
+                                // null block here threw "array offset on null" (500 on open).
+                                if (! is_array($block)) {
+                                    continue;
+                                }
+                                $lines = $block['lines'] ?? '';
                                 $state[] = [
-                                    'title' => $block['title'] ?? '',
-                                    'lines' => isset($block['lines']) && is_array($block['lines'])
-                                        ? implode("\n", $block['lines'])
-                                        : '',
+                                    'title' => is_scalar($block['title'] ?? null) ? (string) $block['title'] : '',
+                                    'lines' => is_array($lines) ? implode("\n", $lines) : (is_scalar($lines) ? (string) $lines : ''),
                                 ];
                             }
                             $component->state($state);

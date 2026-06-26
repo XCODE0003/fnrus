@@ -54,6 +54,31 @@ class Product extends Model
         'updated_at',
     ];
 
+    /**
+     * NOT NULL string columns get null when an admin clears a field, causing
+     * a 1048 integrity violation (500) on save. Coerce null -> '' for those
+     * columns, but only when they're actually being changed (getDirty) so a
+     * partial update never overwrites untouched values.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $product) {
+            // Plain string NOT NULL columns only. JSON columns (gallery,
+            // functional, advantages, system_platforms) have JSON_VALID check
+            // constraints — '' would violate them, so they're excluded here.
+            $notNullStringCols = [
+                'seo_description', 'seo_keywords', 'description',
+                'image_site', 'image', 'image_spoiler',
+                'alias', 'link_video', 'system_versions', 'system_auth',
+            ];
+            foreach ($product->getDirty() as $key => $value) {
+                if ($value === null && in_array($key, $notNullStringCols, true)) {
+                    $product->setAttribute($key, '');
+                }
+            }
+        });
+    }
+
 
     public static function getByID($sid, $id){
         return Product::where('sid', $sid)->where('id', $id)->first();
