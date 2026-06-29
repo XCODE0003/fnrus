@@ -83,13 +83,38 @@ class AttachmentImageUpload
                     return null;
                 }
 
+                // Auto-convert PNG/JPEG uploads to WebP (smaller, alpha kept).
+                // Only adopt the WebP when it's actually lighter than the
+                // original, so a tiny flat PNG is never made bigger.
+                if (in_array($ext, \App\Support\ImageWebp::CONVERTIBLE, true)) {
+                    $srcAbs  = Storage::disk('public')->path('covers/' . $hash . '.' . $ext);
+                    $webpAbs = Storage::disk('public')->path('covers/' . $hash . '.webp');
+                    try {
+                        if (\App\Support\ImageWebp::encode($srcAbs, $webpAbs)
+                            && filesize($webpAbs) < filesize($srcAbs)
+                        ) {
+                            @unlink($srcAbs);
+                            $ext = 'webp';
+                        } elseif (is_file($webpAbs)) {
+                            @unlink($webpAbs); // non-improving — discard
+                        }
+                    } catch (\Throwable $e) {
+                        if (is_file($webpAbs)) { @unlink($webpAbs); }
+                        \Log::warning('AttachmentImageUpload webp convert skipped', [
+                            'hash' => $hash, 'error' => $e->getMessage(),
+                        ]);
+                    }
+                }
+
+                $finalSize = @filesize(Storage::disk('public')->path('covers/' . $hash . '.' . $ext));
+
                 try {
                     DB::table('attachments')->insert([
                         'id'          => $hash,
                         'title'       => (string) $file->getClientOriginalName(),
                         'uid'         => 0,
                         'ext'         => $ext,
-                        'size'        => (int) $file->getSize(),
+                        'size'        => (int) ($finalSize ?: $file->getSize()),
                         'type'        => 0,
                         'uploaded_at' => time(),
                     ]);

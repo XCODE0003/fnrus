@@ -4,6 +4,10 @@
 <head>
     <meta charset="utf-8">
 
+    {{-- Image load-in: mark <html> early so images start hidden before JS
+         wires the fade. Safety timeout reveals everything if JS stalls. --}}
+    <script>(function(){var d=document.documentElement;d.className+=' imgfade';setTimeout(function(){d.className=d.className.replace(/\bimgfade\b/,'');},5000);})();</script>
+
     @php
     $_isHome = Route::currentRouteName() === 'home';
     $_pageTitle = !empty($title)
@@ -45,7 +49,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.9.21">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.10.0">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -1196,6 +1200,72 @@
                     setTimeout(function() { settle(slider); }, 2500);
                 });
             }
+            if (document.readyState !== 'loading') init();
+            else document.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+
+    {{-- Smooth, unobtrusive image load-in. Applies decoding="async" to every
+         image, then fades each one in only once it has actually decoded so it
+         materialises together with its card instead of popping in. Cached
+         images appear instantly (no flash). A MutationObserver covers images
+         injected later by scripts.min.js. --}}
+    <script>
+        (function () {
+            if (!document.getElementsByTagName) return;
+
+            function reveal(img, animate) {
+                if (img.__imgfadeDone) return;
+                img.__imgfadeDone = true;
+                if (!animate) { img.classList.add('imgfade-done'); return; }
+                // Arm the transition, force a reflow so opacity:0 is the committed
+                // baseline, then flip to opacity:1 so it animates. (No rAF — that
+                // is paused on hidden/background tabs and would never fire.)
+                img.classList.add('imgfade-anim');
+                void img.offsetWidth;
+                img.classList.add('imgfade-done');
+            }
+
+            function process(img) {
+                if (img.__imgfadeSeen) return;
+                img.__imgfadeSeen = true;
+
+                img.setAttribute('decoding', 'async');
+
+                // Already painted (cache / instant) — reveal with no transition.
+                if (img.complete && img.naturalWidth > 0) { reveal(img, false); return; }
+
+                var onDone = function () { reveal(img, true); };
+                img.addEventListener('load', onDone, { once: true });
+                // Broken image must not stay invisible.
+                img.addEventListener('error', onDone, { once: true });
+
+                if (typeof img.decode === 'function') {
+                    img.decode().then(onDone).catch(function () { /* load/error handles it */ });
+                }
+            }
+
+            function scan(root) {
+                if (root.tagName === 'IMG') { process(root); return; }
+                if (!root.getElementsByTagName) return;
+                var imgs = root.getElementsByTagName('img');
+                for (var i = 0; i < imgs.length; i++) process(imgs[i]);
+            }
+
+            function init() {
+                scan(document);
+                if (!window.MutationObserver) return;
+                new MutationObserver(function (muts) {
+                    for (var i = 0; i < muts.length; i++) {
+                        var nodes = muts[i].addedNodes;
+                        for (var j = 0; j < nodes.length; j++) {
+                            var n = nodes[j];
+                            if (n.nodeType === 1) scan(n);
+                        }
+                    }
+                }).observe(document.documentElement, { childList: true, subtree: true });
+            }
+
             if (document.readyState !== 'loading') init();
             else document.addEventListener('DOMContentLoaded', init);
         })();

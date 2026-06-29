@@ -26366,3 +26366,20 @@ a, button, [role="button"], input[type="button"], input[type="submit"],
         width:auto !important;
     }
 }
+
+/* ============================================================
+   v4.10  Плавное появление картинок (глобально, незаметно, без лоадера)
+   ------------------------------------------------------------
+   html.imgfade выставляется ранним inline-скриптом в <head>, поэтому
+   картинки не мигают до инициализации JS. Каждая <img> стартует
+   прозрачной и плавно проявляется, когда реально декодирована; уже
+   закешированные показываются мгновенно без перехода (без вспышки).
+   Страховочный таймер в head-скрипте снимает html.imgfade через 5с,
+   так что ни одна картинка не может «застрять» невидимой.
+   ============================================================ */
+html.imgfade img:not(.imgfade-done){ opacity:0; }
+html.imgfade img.imgfade-done{ opacity:1; }
+html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity; }
+@media (prefers-reduced-motion: reduce){
+    html.imgfade img{ opacity:1 !important; transition:none !important; }
+}

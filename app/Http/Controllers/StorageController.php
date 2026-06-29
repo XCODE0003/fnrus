@@ -17,17 +17,29 @@ class StorageController extends Controller
             $image = DB::table('attachments')->where('id', $hash)->first();
             if (!$image) {abort(404);}
 
-            $exists = Storage::disk('public')->exists('covers/' . $image->id . '.' . $image->ext);
+            $relPath = 'covers/' . $image->id . '.' . $image->ext;
 
-            if ($exists) {
+            if (Storage::disk('public')->exists($relPath)) {
 
-                $content = Storage::get('public/covers/' . $image->id . '.' . $image->ext);
-                $mime = Storage::mimeType('public/covers/' . $image->id . '.' . $image->ext);
+                $content = Storage::get('public/' . $relPath);
+                $mime = Storage::mimeType('public/' . $relPath);
 
-                $response = Response::make($content, 200);
-                $response->header("Content-Type", $mime);
+                // Cover files are content-addressed (hash filename) and their
+                // bytes never change in place — so they're safe to cache hard.
+                // ext is part of the key so a png->webp swap busts the cache.
+                $etag = '"' . md5($image->id . '.' . $image->ext . '|' . strlen($content)) . '"';
+                $cacheControl = 'public, max-age=31536000, immutable';
 
-                return $response;
+                if (trim((string) request()->header('If-None-Match')) === $etag) {
+                    return Response::make('', 304)
+                        ->header('ETag', $etag)
+                        ->header('Cache-Control', $cacheControl);
+                }
+
+                return Response::make($content, 200)
+                    ->header('Content-Type', $mime)
+                    ->header('Cache-Control', $cacheControl)
+                    ->header('ETag', $etag);
 
             } else {
                 abort(404);
