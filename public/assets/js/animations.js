@@ -71,45 +71,17 @@
             setTimeout(function () { io.disconnect(); fire(); }, 2500);
         }
 
-        /* ---- reveal: прячем через gsap.set, показываем при появлении.
-           Симметричные start/end — анимируется только то, что задано. ---- */
-        function reveal(targets, opts) {
-            opts = opts || {};
-            var els = qa(targets);
-            if (!els.length) return;
-            var start = { autoAlpha: 0 };
-            var end = {
-                autoAlpha: 1,
-                duration: opts.duration || 0.9,
-                ease: opts.ease || EASE,
-                stagger: opts.stagger != null ? opts.stagger : 0.09,
-                clearProps: 'transform,filter,opacity,visibility'
-            };
-            if (opts.y != null) { start.y = opts.y; end.y = 0; }
-            if (opts.scale != null) { start.scale = opts.scale; end.scale = 1; }
-            if (opts.blur) { start.filter = 'blur(' + opts.blur + 'px)'; end.filter = 'blur(0px)'; }
-            gsap.set(els, start);
-            // opts.trigger may be a selector string OR an already-resolved DOM element
-            var trigger = opts.trigger
-                ? (typeof opts.trigger === 'string' ? q(opts.trigger) : opts.trigger)
-                : els[0];
-            onView(trigger || els[0], function () { gsap.to(els, end); });
-        }
+        /* ---- reveal: ОТКЛЮЧЕНО по просьбе. ----
+           Анимации появления (прятать через autoAlpha:0 + blur/translate/scale,
+           затем проявлять при долистывании) убраны: они «поднимали» карточки и
+           те обрезались скролл-контейнерами («проваливались под фон»), а текст
+           появлялся уже после загрузки страницы. Теперь весь контент виден сразу.
+           Оставлено no-op, чтобы все вызовы reveal(...) ниже были безвредны. */
+        function reveal() { /* intentionally no-op */ }
 
-        /* ---- Счётчик чисел («20к+» → 0…20 + «к+») ---- */
-        function counter(el) {
-            var m = el.textContent.trim().match(/^(\D*)([\d\s.,]+)(.*)$/);
-            if (!m) return;
-            var pre = m[1], suf = m[3];
-            var end = parseFloat(m[2].replace(/[^\d.]/g, '')) || 0;
-            onView(el, function () {
-                var o = { v: 0 };
-                gsap.to(o, {
-                    v: end, duration: 1.6, ease: SOFT,
-                    onUpdate: function () { el.textContent = pre + Math.round(o.v) + suf; }
-                });
-            });
-        }
+        /* ---- Счётчик чисел — ОТКЛЮЧЕНО. Цифры («8к+») показываются сразу,
+           без отложенной анимации после загрузки. ---- */
+        function counter() { /* intentionally no-op */ }
 
         /* ============================ HERO intro — DISABLED ============
            The cinematic .from() timeline occasionally got stuck (elements left
@@ -117,17 +89,9 @@
            the hero is always rendered immediately. */
         /* (home hero entrance animation intentionally removed) */
 
-        /* ========================= GAME HERO ========================= */
-        if (q('.game-hero')) {
-            gsap.timeline({ defaults: { ease: GLIDE, duration: 0.95, clearProps: 'transform,filter' } })
-                .fromTo('.game-hero__title',
-                    { autoAlpha: 0, y: 48, filter: 'blur(14px)' },
-                    { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.1 })
-                .from('.game-hero__count, .game-hero__back',
-                    { autoAlpha: 0, y: 24, stagger: 0.1, duration: 0.75 }, '-=0.65')
-                .from('.game-hero__image', { autoAlpha: 0, scale: 0.9, duration: 1.15, ease: SOFT }, '-=0.95');
-            /* floating (up/down) image animation removed per request */
-        }
+        /* ========================= GAME HERO =========================
+           Интро-таймлайн убран — заголовок/счётчик/картинка показываются
+           сразу, без появления после загрузки. */
 
         /* ===================== Секция «Новый уровень» ================ */
         if (q('.section2')) {
@@ -196,16 +160,8 @@
 
         /* ===================== СТРАНИЦА «О нас» ====================== */
         if (q('.about-page')) {
-            /* Шапка — интро по загрузке (над сгибом, без зависимости от скролла). */
-            if (q('.about-heading-section')) {
-                gsap.timeline({ defaults: { ease: GLIDE, duration: 0.9, clearProps: 'transform,filter' } })
-                    .from('.about-heading-section .section-category', { autoAlpha: 0, y: 24, scale: 0.94, duration: 0.7 })
-                    .fromTo('.about-heading-section__section-caption',
-                        { autoAlpha: 0, y: 44, filter: 'blur(14px)' },
-                        { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.05 }, '-=0.4')
-                    .from('.about-heading-section__section-subcaption', { autoAlpha: 0, y: 24 }, '-=0.65')
-                    .from('.about-heading-section__btn', { autoAlpha: 0, y: 22, scale: 0.96, duration: 0.65 }, '-=0.55');
-            }
+            /* Интро шапки «О нас» убрано — заголовок «МЫ ПРЕДЛАГАЕМ…» больше не
+               появляется с блюром/сдвигом после загрузки, виден сразу. */
             reveal('.about-section__stat', { scale: 0.92, y: 26, stagger: 0.1, trigger: '.about-section__stats' });
             qa('.about-section__stat p').forEach(counter);
             reveal('.about-contact', { scale: 0.94, y: 22, stagger: 0.08, trigger: '.about-section__contacts' });

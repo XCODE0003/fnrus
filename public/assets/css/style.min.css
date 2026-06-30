@@ -26383,3 +26383,14 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 @media (prefers-reduced-motion: reduce){
     html.imgfade img{ opacity:1 !important; transition:none !important; }
 }
+
+/* ============================================================
+   v4.10.1  Карточки не «подпрыгивают» на hover/tap
+   ------------------------------------------------------------
+   .catalog-card лежит в скролл-контейнере с overflow:auto; подъём
+   translateY(-6px) обрезался верхним краем контейнера — карточка
+   визуально «уходила под фон». Убираем подъём, оставляя подсветку
+   рамкой/тенью и зум картинки (они не двигают геометрию карточки).
+   ============================================================ */
+.catalog-card:hover,
+.catalog-card:active{ transform:none !important; }
