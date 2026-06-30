@@ -48,40 +48,94 @@
         var qa = function (s) { return gsap.utils.toArray(s); };
 
         /* ---- Надёжный «появился в зоне видимости» ----
-           IntersectionObserver срабатывает на реальном пересечении (учитывает
-           zoom). Страховка: если по какой-то причине не сработал — таймер. */
+           Scroll-based (getBoundingClientRect на скролле) вместо
+           IntersectionObserver: IO иногда не доставлял колбэк под body{zoom},
+           и блоки «застревали» невидимыми. Этот способ zoom-устойчив и
+           гарантированно срабатывает при реальной прокрутке. */
+        var _vQueue = [];
+        var _vScheduled = false;
+        function _vCheck() {
+            _vScheduled = false;
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            for (var i = _vQueue.length - 1; i >= 0; i--) {
+                var it = _vQueue[i];
+                var r = it.el.getBoundingClientRect();
+                if (r.top < vh * 0.92 && r.bottom > 0) {
+                    _vQueue.splice(i, 1);
+                    it.cb();
+                }
+            }
+        }
+        function _vSchedule() {
+            if (_vScheduled) return;
+            _vScheduled = true;
+            setTimeout(_vCheck, 0); // rAF is paused on hidden tabs — use timeout
+        }
+        window.addEventListener('scroll', _vSchedule, { passive: true });
+        window.addEventListener('resize', _vSchedule, { passive: true });
+        // Re-check once layout/fonts/images settle (rect can shift after load).
+        window.addEventListener('load', function () { setTimeout(_vCheck, 60); });
+
         function onView(el, cb) {
             if (!el) { cb(); return; }
-            var fired = false;
-            function fire() { if (fired) return; fired = true; cb(); }
-            // Already in (or above) the viewport at init — reveal immediately.
-            // Covers above-the-fold sections (e.g. the first .game-list head)
-            // where IntersectionObserver can fail to deliver a callback under
-            // body{zoom}, leaving the element stuck at opacity:0/hidden.
             var vh = window.innerHeight || document.documentElement.clientHeight;
             var r = el.getBoundingClientRect();
-            if (r.top < vh * 0.92 && r.bottom > 0) { fire(); return; }
-            if (!('IntersectionObserver' in window)) { fire(); return; }
-            var io = new IntersectionObserver(function (entries) {
-                for (var i = 0; i < entries.length; i++) {
-                    if (entries[i].isIntersecting) { io.disconnect(); fire(); return; }
-                }
-            }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
-            io.observe(el);
-            setTimeout(function () { io.disconnect(); fire(); }, 2500);
+            if (r.top < vh * 0.92 && r.bottom > 0) { cb(); return; } // already visible
+            _vQueue.push({ el: el, cb: cb });
         }
 
-        /* ---- reveal: ОТКЛЮЧЕНО по просьбе. ----
-           Анимации появления (прятать через autoAlpha:0 + blur/translate/scale,
-           затем проявлять при долистывании) убраны: они «поднимали» карточки и
-           те обрезались скролл-контейнерами («проваливались под фон»), а текст
-           появлялся уже после загрузки страницы. Теперь весь контент виден сразу.
-           Оставлено no-op, чтобы все вызовы reveal(...) ниже были безвредны. */
-        function reveal() { /* intentionally no-op */ }
+        /* ---- reveal: мягкое появление при прокрутке. ----
+           Принципы (чтобы не было прошлых багов):
+             • анимируем ТОЛЬКО opacity + translateY — на GPU, без лагов;
+               никакого blur/scale (они вызывали клиппинг и «проваливание под фон»);
+             • элементы, уже видимые при загрузке (above-the-fold), НЕ прячем —
+               значит никакого «текст появился после загрузки страницы»;
+             • clearProps в конце — чтобы hover и прочие трансформы потом работали. */
+        function reveal(targets, opts) {
+            opts = opts || {};
+            var els = qa(targets);
+            if (!els.length) return;
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            var y = opts.y != null ? opts.y : 22;
 
-        /* ---- Счётчик чисел — ОТКЛЮЧЕНО. Цифры («8к+») показываются сразу,
-           без отложенной анимации после загрузки. ---- */
-        function counter() { /* intentionally no-op */ }
+            // Прячем только то, что сейчас НЕ видно (ниже сгиба).
+            var hidden = els.filter(function (el) {
+                var r = el.getBoundingClientRect();
+                return !(r.top < vh * 0.95 && r.bottom > 0);
+            });
+            if (!hidden.length) return;
+
+            gsap.set(hidden, { autoAlpha: 0, y: y });
+
+            // Trigger on the first hidden element itself (not the section) so a
+            // tall section never reveals its below-fold cards prematurely.
+            onView(hidden[0], function () {
+                gsap.to(hidden, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: opts.duration || 0.7,
+                    ease: opts.ease || EASE,
+                    stagger: opts.stagger != null ? opts.stagger : 0.08,
+                    clearProps: 'transform,opacity,visibility'
+                });
+            });
+        }
+
+        /* ---- Счётчик чисел («8к+» → 0…8 + «к+») при появлении. ---- */
+        function counter(el) {
+            var m = el.textContent.trim().match(/^(\D*)([\d\s.,]+)(.*)$/);
+            if (!m) return;
+            var pre = m[1], suf = m[3];
+            var end = parseFloat(m[2].replace(/[^\d.]/g, '')) || 0;
+            if (!end) return;
+            onView(el, function () {
+                var o = { v: 0 };
+                gsap.to(o, {
+                    v: end, duration: 1.4, ease: SOFT,
+                    onUpdate: function () { el.textContent = pre + Math.round(o.v) + suf; }
+                });
+            });
+        }
 
         /* ============================ HERO intro — DISABLED ============
            The cinematic .from() timeline occasionally got stuck (elements left
@@ -128,16 +182,20 @@
             if (cards.length) reveal(cards, { scale: 0.92, stagger: 0.07, trigger: sec });
         });
 
-        /* Bullet-proof safety net: anything a reveal hid that is still hidden
-           after a moment (trigger never fired) — force it visible. Guarantees
-           no element (e.g. the first .game-list__head) ever stays stuck. */
+        /* Safety net: un-stick ONLY elements the user can currently see but
+           that stayed hidden (rare IO miss). Below-the-fold blocks are left to
+           the scroll reveal — we must not pop them in early. */
         setTimeout(function () {
-            qa('.game-list__head, .game-rec__title, .game-card, .catalog-card, .s2-card, .reviews .rev-card, .reviews-grid .rev-card').forEach(function (el) {
-                var cs = getComputedStyle(el);
-                if (cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) {
-                    gsap.set(el, { clearProps: 'opacity,visibility,transform,filter' });
-                }
-            });
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            qa('.game-rec__title, .game-card, .catalog-card, .s2-card, .reviews .rev-card, .reviews-grid .rev-card, .about-section__stat, .about-contact, .about-section__history__caption, .about-section__history__slide')
+                .forEach(function (el) {
+                    var r = el.getBoundingClientRect();
+                    var inView = r.top < vh && r.bottom > 0;
+                    var cs = getComputedStyle(el);
+                    if (inView && (cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05)) {
+                        gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.5, clearProps: 'transform,opacity,visibility' });
+                    }
+                });
         }, 2600);
 
         /* ===================== СТРАНИЦА «Каталог игр» ================= */

@@ -26394,3 +26394,88 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
    ============================================================ */
 .catalog-card:hover,
 .catalog-card:active{ transform:none !important; }
+
+/* ============================================================
+   v4.11  Анимации: FAQ (плавный CSS), hover карточек (фиолетовый,
+   как в референсе), плавные переходы между страницами.
+   ============================================================ */
+
+/* ---- FAQ аккордеон: плавное открытие через height (без jQuery slideToggle).
+   Точную высоту проставляет JS (см. обработчик .accordion__header), CSS только
+   анимирует. height-анимация надёжнее grid-fr при body{zoom}. ---- */
+.accordion__body{
+    display:block !important;
+    height:0;
+    overflow:hidden !important;
+    padding:0 35px !important;
+    border-top:0 !important;
+    transition:height .4s cubic-bezier(.4,0,.2,1) !important;
+}
+.accordion._active .accordion__body{
+    border-top:1px solid rgba(61,69,85,.7) !important;
+}
+.accordion__body__content{
+    padding:26px 0 30px !important;
+}
+@media (prefers-reduced-motion: reduce){
+    .accordion__body{ transition:none !important; }
+}
+
+/* ---- Hover карточек: фиолетовое свечение + лёгкий подъём + зум картинки ----
+   Контейнерам-скроллерам даём вертикальный запас (padding + отриц. margin),
+   чтобы подъём и тень не обрезались overflow:auto («не уходили под фон»). */
+.catalog__cards-container,
+.game-cheats-slider,
+.game-cards-slider{
+    padding-top:12px !important;
+    padding-bottom:26px !important;
+    margin-top:-12px !important;
+    margin-bottom:-26px !important;
+}
+.catalog-card,
+.game-card{
+    transition:transform .28s cubic-bezier(.2,.7,.2,1),
+               border-color .28s ease,
+               box-shadow .28s ease,
+               background-color .28s ease !important;
+    will-change:transform;
+}
+.catalog-card:hover,
+.catalog-card:active,
+.game-card:hover{
+    transform:translateY(-6px) !important;
+    border-color:rgba(132,86,255,.55) !important;
+    box-shadow:0 16px 36px -16px rgba(132,86,255,.5),
+               0 6px 18px -12px rgba(0,0,0,.55) !important;
+}
+.catalog-card__img img,
+.game-card__logo img{
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);
+}
+.catalog-card:hover .catalog-card__img img,
+.game-card:hover .game-card__logo img{
+    transform:scale(1.05);
+}
+@media (prefers-reduced-motion: reduce){
+    .catalog-card, .game-card,
+    .catalog-card:hover, .catalog-card:active, .game-card:hover{
+        transform:none !important; transition:none !important;
+    }
+}
+
+/* ---- Плавные переходы между страницами (View Transitions API).
+   В Chromium даёт мягкий fade; в Safari/Firefox — обычная навигация (без
+   анимации, ничего не ломается). Шапка снимается отдельным снимком и не
+   мигает/не смещается. ---- */
+@view-transition{ navigation: auto; }
+::view-transition-old(root){ animation: vtFadeOut .20s ease both; }
+::view-transition-new(root){ animation: vtFadeIn .28s ease both; }
+@keyframes vtFadeOut{ to{ opacity:0 } }
+@keyframes vtFadeIn{ from{ opacity:0 } }
+.header{ view-transition-name: site-header; }
+::view-transition-group(site-header){ animation:none !important; }
+::view-transition-old(site-header),
+::view-transition-new(site-header){ animation:none !important; }
+@media (prefers-reduced-motion: reduce){
+    ::view-transition-old(root), ::view-transition-new(root){ animation:none !important; }
+}
