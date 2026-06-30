@@ -37,6 +37,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="tg-bot-id" content="{{ (int) strtok((string) config('services.telegram.bot_token'), ':') }}">
 
+    {{-- Session length: derive the session_token cookie lifetime from the JWT
+         TTL so the cookie never outlives (or dies before) the token. One knob:
+         JWT_TTL in .env. --}}
+    <script>window.SESSION_TTL_DAYS = {{ (int) max(1, ceil(config('jwt.ttl') / 1440)) }};</script>
+
     {{-- Suppress Yandex Browser image overlay (camera/search) + image indexing --}}
     <meta name="yandex" content="noimageindex">
     <meta name="robots" content="noimageindex">
@@ -1003,7 +1008,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=5.3"></script>
+    <script src="/assets/js/app.js?v=5.4"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {
@@ -1016,7 +1021,7 @@
 
             function tgFinish(jwt) {
                 // logs the user in the same way the normal login flow does
-                var exp = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+                var exp = new Date(Date.now() + (window.SESSION_TTL_DAYS || 15) * 24 * 60 * 60 * 1000);
                 document.cookie = 'session_token=' + jwt + '; expires=' + exp.toUTCString() + '; path=/';
                 window.location.href = '/my/profile';
             }

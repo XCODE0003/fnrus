@@ -9,7 +9,7 @@
     $(document).ready(function() {
 
         var expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 15);
+        expirationDate.setDate(expirationDate.getDate() + {{ (int) max(1, ceil(config('jwt.ttl') / 1440)) }});
 
         document.cookie = "session_token={{ $session_token }}; expires=" + expirationDate.toUTCString() + "; path=/";
 

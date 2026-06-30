@@ -89,7 +89,10 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60*24*15),
+    // 30 days by default (minutes). Storefront session length is bound by
+    // this — the session_token cookie expiry is derived from it (see
+    // window.SESSION_TTL_DAYS in main.blade), so this is the single knob.
+    'ttl' => env('JWT_TTL', 60*24*30),
 
     /*
     |--------------------------------------------------------------------------
@@ -108,7 +111,8 @@ return [
     |
     */
 
-    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    // Keep >= ttl so a token can always be refreshed within its own lifetime.
+    'refresh_ttl' => env('JWT_REFRESH_TTL', 60*24*30),
 
     /*
     |--------------------------------------------------------------------------

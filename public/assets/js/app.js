@@ -1459,7 +1459,7 @@ function signIn() {
         async: true,
         success: function(data) {
             if (data.ok === true) {
-                createCookie('session_token', data.result.token, 15);
+                createCookie('session_token', data.result.token, window.SESSION_TTL_DAYS || 15);
                 if (getCookie('session_token') !== undefined) {
                     showNotification(data.description,'success');
                     setTimeout(function() {
@@ -1549,7 +1549,7 @@ function signUp() {
         async: true,
         success: function(data) {
             if (data.ok === true) {
-                createCookie('session_token', data.result.token, 15);
+                createCookie('session_token', data.result.token, window.SESSION_TTL_DAYS || 15);
                 if (getCookie('session_token') !== undefined) {
                     showNotification(data.description,'success');
                     setTimeout(function() {
