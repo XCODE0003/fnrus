@@ -924,7 +924,7 @@
         <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
     </div>
 
-    <script src="/assets/js/scripts.min.js?64"></script>
+    <script src="/assets/js/scripts.min.js?65"></script>
     <script src="/assets/js/animations.js?v=25"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=2" defer></script>
