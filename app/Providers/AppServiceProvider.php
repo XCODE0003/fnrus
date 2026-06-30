@@ -26,6 +26,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Storefront session length is admin-configurable (ShopSettings.
+        // session_ttl_days, edited on the "Срок сессии" settings page).
+        // Override the JWT TTL from it so newly issued tokens — and the
+        // session_token cookie, whose lifetime is derived from config('jwt.ttl')
+        // in main.blade — both honour the chosen number of days. Guarded:
+        // falls back to the env/config default if the table/column isn't
+        // there yet (fresh DB, mid-migration) or the DB is unreachable.
+        try {
+            // Missing column -> null (no error); missing table -> caught below.
+            $days = (int) optional(\App\Models\ShopSettings::getDefault())->session_ttl_days;
+            if ($days >= 1) {
+                $minutes = $days * 24 * 60;
+                config(['jwt.ttl' => $minutes, 'jwt.refresh_ttl' => $minutes]);
+            }
+        } catch (\Throwable $e) {
+            // keep config('jwt.ttl') default
+        }
+
         // Force HTTPS scheme for generated URLs when running behind a TLS-terminating
         // proxy. Set APP_FORCE_HTTPS=true on hosts where the proxy doesn't pass a
         // reliable X-Forwarded-Proto header. Filament otherwise emits asset URLs
