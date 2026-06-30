@@ -26473,9 +26473,12 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 @keyframes vtFadeOut{ to{ opacity:0 } }
 @keyframes vtFadeIn{ from{ opacity:0 } }
 .header{ view-transition-name: site-header; }
+/* Show ONLY the new header snapshot, instantly. Hiding the old one (instead of
+   leaving both at opacity:1) is what prevents the "two headers" double-render
+   during the transition. The header stays put — no fade, no shift, no jerk. */
 ::view-transition-group(site-header){ animation:none !important; }
-::view-transition-old(site-header),
-::view-transition-new(site-header){ animation:none !important; }
+::view-transition-old(site-header){ animation:none !important; opacity:0 !important; }
+::view-transition-new(site-header){ animation:none !important; opacity:1 !important; }
 @media (prefers-reduced-motion: reduce){
     ::view-transition-old(root), ::view-transition-new(root){ animation:none !important; }
 }
