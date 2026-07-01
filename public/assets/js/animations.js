@@ -147,39 +147,34 @@
            Интро-таймлайн убран — заголовок/счётчик/картинка показываются
            сразу, без появления после загрузки. */
 
+        /* ВАЖНО: заголовки/сабтайтлы/бейджи НЕ анимируем — только карточки и
+           блоки. Так текст не «появляется после загрузки» и не наезжает на
+           соседний текст из-за остаточного смещения. */
+
         /* ===================== Секция «Новый уровень» ================ */
         if (q('.section2')) {
-            reveal('.section2__badge', { y: 20, duration: 0.7, trigger: '.section2' });
-            reveal('.section2__title', { y: 26, duration: 0.85, trigger: '.section2' });
-            reveal('.s2-card', { y: 28, scale: 0.96, stagger: 0.09, duration: 0.7, trigger: '.section2__grid' });
+            reveal('.s2-card', { y: 28, stagger: 0.09, duration: 0.7, trigger: '.section2__grid' });
         }
 
         /* ============================ КАТАЛОГ ======================== */
         if (q('.catalog')) {
-            reveal('.catalog__badge, .catalog__title, .catalog__subtitle', { y: 22, stagger: 0.08, duration: 0.75, trigger: '.catalog' });
-            reveal('.catalog-card', { y: 26, scale: 0.96, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
+            reveal('.catalog-card', { y: 26, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
         }
 
         /* ===================== ОТЗЫВЫ (главная) ====================== */
         if (q('.reviews')) {
-            reveal('.reviews__badge, .reviews__title, .reviews__subtitle, .reviews__all', { y: 22, stagger: 0.07, duration: 0.7, trigger: '.reviews' });
-            reveal('.reviews .rev-card', { y: 22, scale: 0.96, stagger: 0.06, duration: 0.65, trigger: '.reviews-grid' });
+            reveal('.reviews .rev-card', { y: 22, stagger: 0.06, duration: 0.65, trigger: '.reviews-grid' });
         }
 
         /* ============================== FAQ ========================== */
         if (q('.faq')) {
-            reveal('.faq__badge, .faq__title', { y: 20, stagger: 0.07, duration: 0.7, trigger: '.faq' });
             reveal('.faq__container .accordion', { y: 18, stagger: 0.06, duration: 0.6, trigger: '.faq__container' });
         }
 
         /* ================= Секции платформ (страница игры) =========== */
         qa('.game-list, .game-rec').forEach(function (sec) {
-            /* .game-list__head animation removed entirely — it kept getting
-               stuck at opacity:0/visibility:hidden. Only .game-rec__title animates. */
-            var head = sec.querySelector('.game-rec__title');
-            if (head) reveal(head, { y: 24, trigger: sec });
             var cards = sec.querySelectorAll('.game-card, .catalog-card');
-            if (cards.length) reveal(cards, { scale: 0.92, stagger: 0.07, trigger: sec });
+            if (cards.length) reveal(cards, { y: 24, stagger: 0.07, trigger: sec });
         });
 
         /* Safety net: un-stick ONLY elements the user can currently see but
@@ -199,39 +194,32 @@
         }, 2600);
 
         /* ===================== СТРАНИЦА «Каталог игр» ================= */
-        if (q('.games-catalog')) {
-            reveal('.games-catalog__title, .games-catalog__subtitle, .games-catalog__controls', { y: 26, trigger: '.games-catalog' });
-        }
+        /* (заголовок/сабтайтл не анимируем — только карточки ниже через
+           общий .game-list/.game-rec проход) */
 
         /* ===================== СТРАНИЦА «Отзывы» ===================== */
         if (q('.reviews-page')) {
-            reveal('.reviews-page__title, .reviews-page__subtitle, .reviews-page__leave-btn', { y: 26, trigger: '.reviews-page' });
-            reveal('.reviews-grid .rev-card', { scale: 0.94, stagger: 0.06, trigger: '.reviews-grid' });
+            reveal('.reviews-grid .rev-card', { y: 22, stagger: 0.06, trigger: '.reviews-grid' });
         }
 
         /* ===================== СТРАНИЦА «Статусы» ==================== */
         if (q('.status-page')) {
-            reveal('.status-heading-section__section-caption, .status-heading-section__section-subcaption, .status-heading-section__attention, .status-heading-section__filter',
-                { y: 26, trigger: '.status-heading-section' });
-            reveal('.game-status-block', { scale: 0.96, y: 26, stagger: 0.07, trigger: '.cheat-statuses' });
+            reveal('.game-status-block', { y: 26, stagger: 0.07, trigger: '.cheat-statuses' });
         }
 
         /* ===================== СТРАНИЦА «О нас» ====================== */
         if (q('.about-page')) {
             /* Интро шапки «О нас» убрано — заголовок «МЫ ПРЕДЛАГАЕМ…» больше не
                появляется с блюром/сдвигом после загрузки, виден сразу. */
-            reveal('.about-section__stat', { scale: 0.92, y: 26, stagger: 0.1, trigger: '.about-section__stats' });
+            reveal('.about-section__stat', { y: 26, stagger: 0.1, trigger: '.about-section__stats' });
             qa('.about-section__stat p').forEach(counter);
-            reveal('.about-contact', { scale: 0.94, y: 22, stagger: 0.08, trigger: '.about-section__contacts' });
+            reveal('.about-contact', { y: 22, stagger: 0.08, trigger: '.about-section__contacts' });
             if (q('.about-section__history')) {
-                reveal('.about-section__history__caption', { y: 32, blur: 10, trigger: '.about-section__history' });
-                reveal('.about-section__history__slide', { scale: 0.94, stagger: 0.08, trigger: '.about-section__history' });
+                reveal('.about-section__history__slide', { y: 22, stagger: 0.08, trigger: '.about-section__history' });
             }
-            reveal('.about-section__text', { y: 28, trigger: '.about-section__text' });
         }
 
-        /* ============================ ФУТЕР ========================== */
-        reveal('.footer__container > *', { y: 28, stagger: 0.09, trigger: '.footer' });
+        /* ============================ ФУТЕР — статичный (текст/ссылки) === */
 
         /* ===================== Магнитные CTA (десктоп) =============== */
         if (desktop && gsap.quickTo) {

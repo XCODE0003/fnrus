@@ -26421,43 +26421,43 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
     .accordion__body{ transition:none !important; }
 }
 
-/* ---- Hover карточек: фиолетовое свечение + лёгкий подъём + зум картинки ----
-   Контейнерам-скроллерам даём вертикальный запас (padding + отриц. margin),
-   чтобы подъём и тень не обрезались overflow:auto («не уходили под фон»). */
-.catalog__cards-container,
-.game-cheats-slider,
-.game-cards-slider{
-    padding-top:12px !important;
-    padding-bottom:26px !important;
-    margin-top:-12px !important;
-    margin-bottom:-26px !important;
-}
+/* ---- Hover карточек (ТОЛЬКО десктоп с мышью): вся карточка плавно
+   увеличивается + фиолетовое свечение/рамка, как в референсе.
+   На мобиле/тач hover-scale и запас-padding НЕ применяем — там нет курсора,
+   а padding+отриц.margin обрезали карточку сверху в скролл-слайдере. */
 .catalog-card,
 .game-card{
     transition:transform .42s cubic-bezier(.22,1,.36,1),
                border-color .3s ease,
                box-shadow .42s cubic-bezier(.22,1,.36,1) !important;
-    will-change:transform;
     transform-origin:center center;
 }
-/* Hover = вся карточка плавно увеличивается + фиолетовое свечение/рамка
-   (как в референсе). Картинка внутри НЕ скейлится отдельно. */
-.catalog-card:hover,
-.catalog-card:active,
-.game-card:hover{
-    transform:scale(1.035) !important;
-    border-color:rgba(150,116,255,.95) !important;
-    box-shadow:0 0 0 1.5px rgba(150,116,255,.9),
-               0 26px 60px -20px rgba(132,86,255,.7),
-               0 10px 28px -16px rgba(0,0,0,.6) !important;
-    z-index:3;
-    position:relative;
-}
-/* отключаем прежний зум картинки внутри карточки */
-.catalog-card:hover .catalog-card__img img,
-.game-card:hover .game-card__logo img,
-.catalog-card:active .catalog-card__img img{
-    transform:none !important;
+@media (hover:hover) and (min-width:768px){
+    /* Запас в скролл-контейнерах, чтобы увеличение/тень не обрезались */
+    .catalog__cards-container,
+    .game-cheats-slider,
+    .game-cards-slider{
+        padding-top:14px !important;
+        padding-bottom:26px !important;
+        margin-top:-14px !important;
+        margin-bottom:-26px !important;
+    }
+    .catalog-card{ will-change:transform; }
+    .catalog-card:hover,
+    .game-card:hover{
+        transform:scale(1.035) !important;
+        border-color:rgba(150,116,255,.95) !important;
+        box-shadow:0 0 0 1.5px rgba(150,116,255,.9),
+                   0 26px 60px -20px rgba(132,86,255,.7),
+                   0 10px 28px -16px rgba(0,0,0,.6) !important;
+        z-index:3;
+        position:relative;
+    }
+    /* картинка внутри НЕ скейлится отдельно */
+    .catalog-card:hover .catalog-card__img img,
+    .game-card:hover .game-card__logo img{
+        transform:none !important;
+    }
 }
 @media (prefers-reduced-motion: reduce){
     .catalog-card, .game-card,
@@ -26485,3 +26485,7 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 @media (prefers-reduced-motion: reduce){
     ::view-transition-old(root), ::view-transition-new(root){ animation:none !important; }
 }
+
+/* v4.11.4 — отступ сабтайтла каталога от заголовка (был слишком тесный,
+   визуально наезжал на «Выберите свою игру»). */
+.catalog__subtitle{ margin-top:16px !important; }
