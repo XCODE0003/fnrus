@@ -104,6 +104,11 @@ class BotController extends Controller
                 $cd = $callbackQuery->getData();
 
                 $message = $callbackQuery->getMessage();
+                // Callbacks from inline messages have no attached message/chat —
+                // ignore them instead of crashing on getMessageId()/getChat().
+                if (!$message || !$message->getChat()) {
+                    return response()->json(['ok' => true]);
+                }
                 $msg_id = $message->getMessageId();
                 $cid = $message->getChat()->getId();
 
@@ -113,6 +118,12 @@ class BotController extends Controller
 
                 if($update->getMessage()) {
                     $message = $update->getMessage();
+                    // Some updates (my_chat_member, channel posts, service
+                    // messages) carry a message with no chat — bail cleanly so
+                    // the webhook returns 200 instead of a 500 (getId() on null).
+                    if (!$message->getChat()) {
+                        return response()->json(['ok' => true]);
+                    }
                     $cid = $message->getChat()->getId();
                     $first_name = $message->getChat()->getFirstName();
                     $username = $message->getChat()->getUsername();
