@@ -26446,8 +26446,9 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 .catalog-card:active,
 .game-card:hover{
     transform:scale(1.035) !important;
-    border-color:rgba(132,86,255,.65) !important;
-    box-shadow:0 26px 60px -22px rgba(132,86,255,.6),
+    border-color:rgba(150,116,255,.95) !important;
+    box-shadow:0 0 0 1.5px rgba(150,116,255,.9),
+               0 26px 60px -20px rgba(132,86,255,.7),
                0 10px 28px -16px rgba(0,0,0,.6) !important;
     z-index:3;
     position:relative;
