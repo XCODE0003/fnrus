@@ -26520,3 +26520,25 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
         scroll-snap-align:none !important;
     }
 }
+
+/* v4.11.9 — Легенда статусов: чипы по контенту с переносом, чтобы длинные
+   лейблы («Рекомендуем к использованию») не обрезались в фикс-сетке на
+   планшете/iPad. */
+@media (max-width:1200px){
+    .cheat-statuses__header__all-statuses{
+        display:flex !important;
+        flex-wrap:wrap !important;
+        grid-template-columns:none !important;
+        gap:10px 14px !important;
+        width:100% !important;
+    }
+    .cheat-statuses__header__all-statuses .status{
+        width:auto !important;
+        max-width:none !important;
+        overflow:visible !important;
+        text-overflow:clip !important;
+        white-space:nowrap !important;
+        flex:0 0 auto !important;
+        margin-right:0 !important;
+    }
+}

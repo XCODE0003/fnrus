@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Telegram\Bot\Api;
 
 class TelegramAuthController
 {
@@ -21,14 +22,49 @@ class TelegramAuthController
      */
     public function loginStart()
     {
-        $bot = config('services.telegram.bot_username');
+        $bot = $this->resolveBotUsername();
         if (empty($bot)) {
             return response()->json(['ok' => false, 'description' => 'Вход через Telegram временно недоступен.'], 200);
         }
         $token = Str::random(40);
         Cache::put('tglogin:' . $token, 'pending', 300); // 5 минут
-        $link = 'https://t.me/' . ltrim($bot, '@') . '?start=login_' . $token;
+        $link = 'https://t.me/' . $bot . '?start=login_' . $token;
         return response()->json(['ok' => true, 'token' => $token, 'link' => $link]);
+    }
+
+    /**
+     * Username бота для диплинка. Берём из TELEGRAM_BOT_USERNAME; если он не
+     * задан (частая причина «Вход через Telegram временно недоступен»), но есть
+     * TELEGRAM_BOT_TOKEN — добываем username из самого бота через getMe и
+     * кешируем. Пустой результат НЕ кешируем, чтобы разовый сбой API не
+     * «залипал» на неделю.
+     */
+    private function resolveBotUsername(): string
+    {
+        $configured = trim((string) config('services.telegram.bot_username'));
+        if ($configured !== '') {
+            return ltrim($configured, '@');
+        }
+
+        $cached = Cache::get('tg_bot_username');
+        if (is_string($cached) && $cached !== '') {
+            return $cached;
+        }
+
+        $token = (string) config('services.telegram.bot_token');
+        if ($token === '') {
+            return '';
+        }
+        try {
+            $username = ltrim((string) (new Api($token))->getMe()->getUsername(), '@');
+            if ($username !== '') {
+                Cache::put('tg_bot_username', $username, 604800); // 7 дней
+                return $username;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Telegram getMe (bot username) failed: ' . $e->getMessage());
+        }
+        return '';
     }
 
     /**
