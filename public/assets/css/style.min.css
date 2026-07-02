@@ -25733,15 +25733,16 @@ html::after{
     .game-cards-slider::-webkit-scrollbar,
     .func-grid::-webkit-scrollbar{ display:none !important; height:0 !important; }
 
-    /* two cards per row + a small peek of the next (not 4 narrow ones) */
+    /* three cards per row + a small peek — на планшете (768–1200) прежние
+       2 карточки были слишком широкие/«вытянутые». */
     .game-list .game-cheats-slider .swiper-slide,
     .game-cheats-slider .swiper-slide,
     .game-cheats-slider .game-card,
     .game-cards-slider .swiper-slide,
     .game-cards-slider .game-card{
-        flex:0 0 calc(50vw - 66px) !important;
-        width:calc(50vw - 66px) !important;
-        max-width:calc(50vw - 66px) !important;
+        flex:0 0 calc(33.333vw - 40px) !important;
+        width:calc(33.333vw - 40px) !important;
+        max-width:calc(33.333vw - 40px) !important;
         min-width:0 !important;
         scroll-snap-align:start !important;
         scroll-snap-stop:always !important;
