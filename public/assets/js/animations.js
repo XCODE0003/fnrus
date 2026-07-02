@@ -76,6 +76,17 @@
         // Re-check once layout/fonts/images settle (rect can shift after load).
         window.addEventListener('load', function () { setTimeout(_vCheck, 60); });
 
+        // The site uses a custom (transform-based) smooth-scroll that does NOT
+        // fire the window 'scroll' event, so the listeners above miss it and
+        // blocks could stay hidden until something else nudged layout ("не
+        // появляется, пока не поводишь по экрану"). Poll getBoundingClientRect
+        // (zoom- and smooth-scroll-safe) while anything is still queued; stop
+        // as soon as the queue drains. Guaranteed no content stays invisible.
+        var _vPoll = setInterval(function () {
+            if (! _vQueue.length) { clearInterval(_vPoll); return; }
+            _vCheck();
+        }, 220);
+
         function onView(el, cb) {
             if (!el) { cb(); return; }
             var vh = window.innerHeight || document.documentElement.clientHeight;

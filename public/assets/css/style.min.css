@@ -26494,3 +26494,28 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 /* v4.11.4 — отступ сабтайтла каталога от заголовка (был слишком тесный,
    визуально наезжал на «Выберите свою игру»). */
 .catalog__subtitle{ margin-top:16px !important; }
+
+/* v4.11.7 — Функционал: на планшете/ландшафте (≥768) держим аккуратную СЕТКУ,
+   а не full-bleed горизонтальный скроллер (из-за body{zoom} мобильные ≤900
+   правила ловились на iPad-ландшафте, и блоки вылезали за края экрана). */
+@media (min-width:768px){
+    .func-grid{
+        display:grid !important;
+        grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)) !important;
+        gap:20px !important;
+        width:100% !important;
+        max-width:100% !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        overflow:visible !important;
+        scroll-snap-type:none !important;
+        -webkit-mask-image:none !important;
+                mask-image:none !important;
+    }
+    .func-grid .func-cat{
+        flex:none !important;
+        width:auto !important;
+        min-width:0 !important;
+        scroll-snap-align:none !important;
+    }
+}
