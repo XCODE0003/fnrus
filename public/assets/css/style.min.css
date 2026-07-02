@@ -26433,23 +26433,23 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
     transform-origin:center center;
 }
 @media (hover:hover) and (min-width:768px){
-    /* Запас в скролл-контейнерах, чтобы увеличение/тень не обрезались */
+    /* Небольшой запас со всех сторон, чтобы мягкое свечение/увеличение не
+       обрезалось краем контейнера («не заходило за фон» по бокам/снизу). */
     .catalog__cards-container,
     .game-cheats-slider,
     .game-cards-slider{
-        padding-top:14px !important;
-        padding-bottom:26px !important;
-        margin-top:-14px !important;
-        margin-bottom:-26px !important;
+        padding:12px !important;
+        margin:-12px !important;
     }
     .catalog-card{ will-change:transform; }
+    /* Мягкий тонкий контур + деликатное свечение (без «засвета» снизу),
+       лёгкое увеличение. */
     .catalog-card:hover,
     .game-card:hover{
-        transform:scale(1.035) !important;
-        border-color:rgba(150,116,255,.95) !important;
-        box-shadow:0 0 0 1.5px rgba(150,116,255,.9),
-                   0 26px 60px -20px rgba(132,86,255,.7),
-                   0 10px 28px -16px rgba(0,0,0,.6) !important;
+        transform:scale(1.02) !important;
+        border-color:rgba(150,116,255,.6) !important;
+        box-shadow:0 0 0 1px rgba(150,116,255,.4),
+                   0 6px 22px -10px rgba(132,86,255,.35) !important;
         z-index:3;
         position:relative;
     }

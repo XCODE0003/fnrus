@@ -157,7 +157,10 @@
         }
 
         /* ============================ КАТАЛОГ ======================== */
-        if (q('.catalog')) {
+        /* Карточки-игры анимируем ТОЛЬКО на десктопе (там это сетка). На
+           мобиле/планшете каталог — горизонтальный скролл-слайдер, и выезд
+           из translateY оставлял зазор сверху карточки, пока она «садится». */
+        if (desktop && q('.catalog')) {
             reveal('.catalog-card', { y: 26, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
         }
 
@@ -172,10 +175,14 @@
         }
 
         /* ================= Секции платформ (страница игры) =========== */
-        qa('.game-list, .game-rec').forEach(function (sec) {
-            var cards = sec.querySelectorAll('.game-card, .catalog-card');
-            if (cards.length) reveal(cards, { y: 24, stagger: 0.07, trigger: sec });
-        });
+        /* game-card всегда живёт в горизонтальном слайдере — на мобиле/планшете
+           выезд оставлял зазор сверху. Анимируем только на десктопе. */
+        if (desktop) {
+            qa('.game-list, .game-rec').forEach(function (sec) {
+                var cards = sec.querySelectorAll('.game-card, .catalog-card');
+                if (cards.length) reveal(cards, { y: 24, stagger: 0.07, trigger: sec });
+            });
+        }
 
         /* Safety net: un-stick ONLY elements the user can currently see but
            that stayed hidden (rare IO miss). Below-the-fold blocks are left to
