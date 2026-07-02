@@ -86,8 +86,30 @@ class AccessControl extends Page
 
     public function refreshAttempts(): void
     {
-        $this->attempts = DB::table('login_attempts')
-            ->orderBy('id', 'desc')
+        // "Контроль доступа" is about ADMIN access — show only login attempts
+        // aimed at an admin account (matched by the admin's email/username),
+        // not every regular site-user login. Otherwise a normal registration
+        // + login would show up here with status "ок", which is confusing
+        // (that account has no panel access). MySQL collation is
+        // case-insensitive, so whereIn matches regardless of typed case.
+        $min = (int) config('admin.min_role_id', 1);
+        $adminIdentifiers = DB::table('users')
+            ->where('role_id', '>=', $min)
+            ->get(['email', 'username'])
+            ->flatMap(fn ($u) => [(string) $u->email, (string) $u->username])
+            ->filter(fn ($v) => $v !== '')
+            ->unique()
+            ->values()
+            ->all();
+
+        $query = DB::table('login_attempts')->orderBy('id', 'desc');
+        if ($adminIdentifiers === []) {
+            $query->whereRaw('1 = 0'); // no admins configured — show nothing
+        } else {
+            $query->whereIn('username', $adminIdentifiers);
+        }
+
+        $this->attempts = $query
             ->limit(50)
             ->get()
             ->map(fn ($r) => [
