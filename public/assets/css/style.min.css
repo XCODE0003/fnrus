@@ -26435,11 +26435,16 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
 @media (hover:hover) and (min-width:768px){
     /* Небольшой запас со всех сторон, чтобы мягкое свечение/увеличение не
        обрезалось краем контейнера («не заходило за фон» по бокам/снизу). */
-    .catalog__cards-container,
     .game-cheats-slider,
     .game-cards-slider{
         padding:12px !important;
         margin:-12px !important;
+    }
+    /* Каталог игр: тот же запас под свечение, но СВЕРХУ — заметный отступ от
+       сабтайтла «Выберите игру…» (иначе карточки подтягивались вплотную). */
+    .catalog__cards-container{
+        padding:12px !important;
+        margin:24px -12px -12px !important;
     }
     .catalog-card{ will-change:transform; }
     /* Мягкий тонкий контур + деликатное свечение (без «засвета» снизу),
