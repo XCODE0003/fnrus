@@ -55,6 +55,10 @@ return [
         'issuer'            => env('ADMIN_2FA_ISSUER', env('APP_NAME', 'Fnrus')),
         'window'            => (int) env('ADMIN_2FA_WINDOW', 1),
         'recovery_count'    => 10,
+        // How long a passed 2FA challenge is remembered before re-prompting.
+        // Admin-overridable via ShopSettings.two_factor_ttl_hours (see
+        // AppServiceProvider). Default 12h.
+        'ttl_seconds'       => (int) env('ADMIN_2FA_TTL_SECONDS', 43200),
     ],
 
     /*

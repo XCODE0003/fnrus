@@ -35,13 +35,21 @@ class AppServiceProvider extends ServiceProvider
         // there yet (fresh DB, mid-migration) or the DB is unreachable.
         try {
             // Missing column -> null (no error); missing table -> caught below.
-            $days = (int) optional(\App\Models\ShopSettings::getDefault())->session_ttl_days;
+            $settings = \App\Models\ShopSettings::getDefault();
+
+            $days = (int) optional($settings)->session_ttl_days;
             if ($days >= 1) {
                 $minutes = $days * 24 * 60;
                 config(['jwt.ttl' => $minutes, 'jwt.refresh_ttl' => $minutes]);
             }
+
+            // Admin-configurable 2FA re-prompt period (hours -> seconds).
+            $twoFaHours = (int) optional($settings)->two_factor_ttl_hours;
+            if ($twoFaHours >= 1) {
+                config(['admin.two_factor.ttl_seconds' => $twoFaHours * 3600]);
+            }
         } catch (\Throwable $e) {
-            // keep config('jwt.ttl') default
+            // keep config defaults
         }
 
         // Force HTTPS scheme for generated URLs when running behind a TLS-terminating

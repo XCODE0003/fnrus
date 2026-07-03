@@ -56,16 +56,19 @@ class FilamentTwoFactorChallenge
         }
 
         $now = time();
+        // Admin-configurable re-prompt period (ShopSettings.two_factor_ttl_hours
+        // overrides config in AppServiceProvider); falls back to 12h.
+        $ttl = (int) config('admin.two_factor.ttl_seconds', self::TTL_SECONDS);
 
         // Fast path: session marker fresh.
         $sessionAt = (int) ($request->session()->get(self::SESSION_KEY) ?? 0);
-        if ($sessionAt > 0 && ($now - $sessionAt) < self::TTL_SECONDS) {
+        if ($sessionAt > 0 && ($now - $sessionAt) < $ttl) {
             return $next($request);
         }
 
         // Persistent path: saved on user row (survives Laravel session GC).
         $userAt = (int) ($user->two_factor_passed_at ?? 0);
-        if ($userAt > 0 && ($now - $userAt) < self::TTL_SECONDS) {
+        if ($userAt > 0 && ($now - $userAt) < $ttl) {
             $request->session()->put(self::SESSION_KEY, $userAt);
             return $next($request);
         }

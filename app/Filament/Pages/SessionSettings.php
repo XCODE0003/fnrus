@@ -25,7 +25,7 @@ class SessionSettings extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static ?string $navigationGroup = 'Настройки';
     protected static ?string $navigationLabel = 'Срок сессии';
-    protected static ?string $title = 'Срок сессии пользователей';
+    protected static ?string $title = 'Сроки: сессия пользователей и 2FA';
     protected static ?int $navigationSort = 90;
 
     protected static string $view = 'filament.pages.settings-form';
@@ -33,26 +33,41 @@ class SessionSettings extends Page implements HasForms
 
     protected function settingsFields(): array
     {
-        return ['session_ttl_days'];
+        return ['session_ttl_days', 'two_factor_ttl_hours'];
     }
 
     public function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Placeholder::make('hint')
-                ->label('')
-                ->content('Сколько дней пользователь остаётся в аккаунте без повторного входа. По истечении срока сессия сбрасывается и нужно войти заново. Применяется к сессиям, начатым после сохранения.'),
+            Forms\Components\Section::make('Сессия пользователей')
+                ->description('Сколько дней пользователь остаётся в аккаунте без повторного входа. По истечении срока сессия сбрасывается. Применяется к сессиям, начатым после сохранения.')
+                ->schema([
+                    Forms\Components\TextInput::make('session_ttl_days')
+                        ->label('Срок сессии')
+                        ->numeric()
+                        ->required()
+                        ->minValue(1)
+                        ->maxValue(365)
+                        ->default(30)
+                        ->suffix('дней')
+                        ->helperText('От 1 до 365 дней. Рекомендуется 30.')
+                        ->columnSpan(1),
+                ]),
 
-            Forms\Components\TextInput::make('session_ttl_days')
-                ->label('Срок сессии')
-                ->numeric()
-                ->required()
-                ->minValue(1)
-                ->maxValue(365)
-                ->default(30)
-                ->suffix('дней')
-                ->helperText('От 1 до 365 дней. Рекомендуется 30.')
-                ->columnSpan(1),
+            Forms\Components\Section::make('Двухфакторная аутентификация (админка)')
+                ->description('Как часто в админке снова спрашивать код 2FA. После успешного ввода кода 2FA не запрашивается в течение указанного срока.')
+                ->schema([
+                    Forms\Components\TextInput::make('two_factor_ttl_hours')
+                        ->label('Повторный запрос 2FA')
+                        ->numeric()
+                        ->required()
+                        ->minValue(1)
+                        ->maxValue(720)
+                        ->default(12)
+                        ->suffix('часов')
+                        ->helperText('От 1 до 720 часов (30 дней). По умолчанию 12.')
+                        ->columnSpan(1),
+                ]),
         ])->statePath('data');
     }
 }

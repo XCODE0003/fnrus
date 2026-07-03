@@ -52,6 +52,7 @@ class ShopSettings extends Model
         'status_broadcast_chat_id',
         'editor_max_upload_mb',
         'session_ttl_days',
+        'two_factor_ttl_hours',
     ];
 
     public static function getDefault(){

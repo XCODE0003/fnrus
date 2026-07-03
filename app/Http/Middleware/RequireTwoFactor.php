@@ -45,10 +45,13 @@ class RequireTwoFactor
         }
 
         $now = time();
+        // Admin-configurable re-prompt period (ShopSettings.two_factor_ttl_hours
+        // overrides config in AppServiceProvider); falls back to 12h.
+        $ttl = (int) config('admin.two_factor.ttl_seconds', self::TTL_SECONDS);
 
         // Fast path: session marker still warm.
         $sessionAt = (int) ($request->session()->get(self::SESSION_KEY) ?? 0);
-        if ($sessionAt > 0 && ($now - $sessionAt) < self::TTL_SECONDS) {
+        if ($sessionAt > 0 && ($now - $sessionAt) < $ttl) {
             return $next($request);
         }
 
@@ -56,7 +59,7 @@ class RequireTwoFactor
         // Survives Laravel session GC (SESSION_LIFETIME=120min) since JWT
         // (15-day TTL) re-authenticates the user and we restore the marker.
         $userAt = (int) ($user->two_factor_passed_at ?? 0);
-        if ($userAt > 0 && ($now - $userAt) < self::TTL_SECONDS) {
+        if ($userAt > 0 && ($now - $userAt) < $ttl) {
             try { $request->session()->put(self::SESSION_KEY, $userAt); } catch (\Throwable $e) {}
             return $next($request);
         }
