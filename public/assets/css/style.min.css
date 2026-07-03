@@ -26597,11 +26597,46 @@ html.imgfade .game-hero__image img{
     }
 }
 
-/* v4.11.14 — убираем полупрозрачный hover-оверлей «Подробнее» на карточках
-   читов: он просвечивал контент и кнопка наезжала на текст. Вся карточка
-   кликабельна, а hover-подсветка (рамка/увеличение) уже даёт обратную связь —
-   как в референсе. */
-.game-card__hover{ display:none !important; }
+/* v4.11.16 — «Подробнее» ПОСТОЯННОЙ ссылкой внизу карточки (и на ПК, и на
+   мобиле), вместо прежнего hover-оверлея, который наезжал на текст. */
+.game-card__hover{
+    display:flex !important;
+    position:static !important;
+    inset:auto !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    background:none !important;
+    pointer-events:none !important;   /* сама карточка уже ссылка */
+    align-items:center !important;
+    justify-content:flex-start !important;
+    padding:0 !important;
+    margin-top:14px !important;
+    transition:none !important;
+}
+.game-card__hover-btn{
+    background:none !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    border-radius:0 !important;
+    width:auto !important;
+    max-width:none !important;
+    color:#a97bff !important;
+    font-weight:600 !important;
+    font-size:14px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:6px !important;
+}
+.game-card__hover-btn::after{ content:"→"; font-size:15px; }
+
+/* Плавный свайп слайдеров на мобиле: карточки всё ещё выравниваются (mandatory),
+   но НЕ «стопорятся» жёстко на каждой — быстрый свайп проходит несколько карточек
+   без рывков («скачет на телефоне»). */
+.game-cheats-slider .game-card, .game-cheats-slider .swiper-slide,
+.game-cards-slider .game-card, .game-cards-slider .swiper-slide,
+.catalog-card{
+    scroll-snap-stop:normal !important;
+}
 
 /* v4.11.15 — карточки читов/каталога НЕ поднимаются и не увеличиваются на
    hover (по просьбе): глобально гасим любой transform, оставляя только

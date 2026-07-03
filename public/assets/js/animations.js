@@ -43,6 +43,10 @@
         var SOFT = 'power2.out';
         var POP = 'back.out(1.7)';
         var desktop = window.matchMedia('(min-width: 1024px)').matches;
+        // Touch/coarse-pointer devices (phones/tablets): skip scroll reveals
+        // entirely. On mobile they added jank/lag ("скачет на телефоне") and
+        // the smooth-scroll made them unreliable — content just shows instantly.
+        var isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
         var q = function (s) { return document.querySelector(s); };
         var qa = function (s) { return gsap.utils.toArray(s); };
@@ -103,6 +107,9 @@
                значит никакого «текст появился после загрузки страницы»;
              • clearProps в конце — чтобы hover и прочие трансформы потом работали. */
         function reveal(targets, opts) {
+            // На тач-устройствах не прячем/не анимируем — контент виден сразу
+            // (без лагов и «скачков» на телефоне).
+            if (isTouch) return;
             opts = opts || {};
             var els = qa(targets);
             if (!els.length) return;
@@ -134,6 +141,7 @@
 
         /* ---- Счётчик чисел («8к+» → 0…8 + «к+») при появлении. ---- */
         function counter(el) {
+            if (isTouch) return; // без анимации счётчика на мобиле — не поллим
             var m = el.textContent.trim().match(/^(\D*)([\d\s.,]+)(.*)$/);
             if (!m) return;
             var pre = m[1], suf = m[3];
