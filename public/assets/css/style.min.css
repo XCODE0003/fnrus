@@ -26569,3 +26569,30 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
     align-self:flex-start !important;
     height:auto !important;
 }
+
+/* v4.11.12 — не «мигать» логотипом и hero-картинкой (паук) при каждой загрузке:
+   исключаем их из общего fade-in картинок — показываем сразу. */
+html.imgfade .header__logo img,
+html.imgfade .footer__logo img,
+html.imgfade .hero__image img,
+html.imgfade .game-hero__image img{
+    opacity:1 !important;
+}
+
+/* v4.11.13 — на планшете/десктопе (≥1024, где активен body{zoom}) НЕ делаем
+   слайдеры full-bleed 100vw: zoom ломает calc(50% - 50vw), и первая карточка
+   обрезалась слева + пустота справа. Держим слайдер внутри .content. */
+@media (min-width:1024px){
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider{
+        width:auto !important;
+        max-width:100% !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+        -webkit-mask-image:none !important;
+                mask-image:none !important;
+    }
+}
