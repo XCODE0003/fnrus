@@ -1,4 +1,9 @@
 <x-filament-panels::page>
+    @php
+        $setupHeading = $enabled ? 'Переподключение приложения' : 'Подключение';
+        $enableBtnLabel = $enabled ? 'Подтвердить переподключение' : 'Включить 2FA';
+    @endphp
+
     <div class="max-w-xl mx-auto w-full space-y-6">
 
         {{-- Резервные коды — показываются один раз --}}
@@ -17,13 +22,15 @@
         <x-filament::section>
             <x-slot name="heading">Статус</x-slot>
             @if ($enabled && ! $configuring)
-                <div class="flex items-center gap-2 text-sm font-medium text-success-600 dark:text-success-400">
-                    <x-filament::icon icon="heroicon-o-shield-check" class="h-5 w-5" />
-                    Двухфакторная защита включена
+                <div class="text-sm font-medium text-success-600 dark:text-success-400">
+                    ✓ Двухфакторная защита включена
                 </div>
             @elseif (! $enabled)
                 <div class="text-sm text-warning-600 dark:text-warning-400">
-                    2FA не подключена.@if ($enforced) Она обязательна — подключите ниже.@endif
+                    2FA не подключена.
+                    @if ($enforced)
+                        Она обязательна — подключите ниже.
+                    @endif
                 </div>
             @endif
         </x-filament::section>
@@ -31,7 +38,7 @@
         {{-- Подключение / переподключение (QR) --}}
         @if ($configuring)
             <x-filament::section>
-                <x-slot name="heading">@if ($enabled) Переподключение приложения @else Подключение @endif</x-slot>
+                <x-slot name="heading">{{ $setupHeading }}</x-slot>
                 <x-slot name="description">
                     Отсканируйте QR-код в Google Authenticator / Authy / 1Password / Yandex Key
                     (или введите ключ вручную), затем введите шестизначный код.
@@ -62,7 +69,7 @@
                             </x-filament::button>
                         @endif
                         <x-filament::button type="submit" icon="heroicon-o-shield-check">
-                            @if ($enabled) Подтвердить переподключение @else Включить 2FA @endif
+                            {{ $enableBtnLabel }}
                         </x-filament::button>
                     </div>
                 </form>
@@ -73,8 +80,8 @@
             <x-filament::section>
                 <x-slot name="heading">Управление</x-slot>
                 <x-slot name="description">
-                    Чтобы перевыпустить резервные коды@if (! $enforced) или отключить 2FA@endif,
-                    введите текущий код из приложения (или резервный).
+                    Чтобы перевыпустить резервные коды или (если 2FA не обязательна) отключить её,
+                    введите текущий код из приложения либо резервный код.
                 </x-slot>
 
                 {{ $this->form }}

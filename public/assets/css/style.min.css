@@ -26448,11 +26448,11 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
         margin:24px -12px -12px !important;
     }
     .catalog-card{ will-change:transform; }
-    /* Мягкий тонкий контур + деликатное свечение (без «засвета» снизу),
-       лёгкое увеличение. */
+    /* Только мягкий контур + деликатное свечение, БЕЗ подъёма/увеличения
+       карточки (по просьбе — убрали scale). */
     .catalog-card:hover,
     .game-card:hover{
-        transform:scale(1.02) !important;
+        transform:none !important;
         border-color:rgba(150,116,255,.6) !important;
         box-shadow:0 0 0 1px rgba(150,116,255,.4),
                    0 6px 22px -10px rgba(132,86,255,.35) !important;
@@ -26602,3 +26602,9 @@ html.imgfade .game-hero__image img{
    кликабельна, а hover-подсветка (рамка/увеличение) уже даёт обратную связь —
    как в референсе. */
 .game-card__hover{ display:none !important; }
+
+/* v4.11.15 — карточки читов/каталога НЕ поднимаются и не увеличиваются на
+   hover (по просьбе): глобально гасим любой transform, оставляя только
+   подсветку рамкой/тенью из hover-правила выше. */
+.catalog-card:hover, .catalog-card:active,
+.game-card:hover, .game-card:active{ transform:none !important; }
