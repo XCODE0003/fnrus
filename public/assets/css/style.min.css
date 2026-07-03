@@ -26542,3 +26542,30 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
         margin-right:0 !important;
     }
 }
+
+/* v4.11.10 — Карточки читов не «вытянутые»: ограничиваем название и пункты
+   одной строкой (ellipsis), чтобы один товар с очень длинным словом не
+   раздувал высоту всего ряда (карточки равной высоты через align-items:stretch). */
+.game-card__name{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+}
+.game-card__list li{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    max-width:100% !important;
+}
+
+/* v4.11.11 — карточки читов по высоте контента (не растягиваем под самую
+   высокую), чтобы не были «вытянутыми» с пустотой снизу. */
+.game-cheats-slider .swiper-wrapper,
+.game-cards-slider .swiper-wrapper{
+    align-items:flex-start !important;
+}
+.game-cheats-slider .game-card,
+.game-cards-slider .game-card{
+    align-self:flex-start !important;
+    height:auto !important;
+}
