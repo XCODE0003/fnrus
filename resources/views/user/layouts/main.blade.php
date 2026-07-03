@@ -925,7 +925,7 @@
     </div>
 
     <script src="/assets/js/scripts.min.js?66"></script>
-    <script src="/assets/js/animations.js?v=27"></script>
+    <script src="/assets/js/animations.js?v=28"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=2" defer></script>
     <script>

@@ -172,7 +172,10 @@
            мобиле/планшете каталог — горизонтальный скролл-слайдер, и выезд
            из translateY оставлял зазор сверху карточки, пока она «садится». */
         if (desktop && q('.catalog')) {
-            reveal('.catalog-card', { y: 26, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
+            // y:0 — чистое затухание без сдвига: карточки в горизонтальном
+            // слайдере (overflow клипает по вертикали) иначе обрезались сверху
+            // во время анимации.
+            reveal('.catalog-card', { y: 0, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
         }
 
         /* ===================== ОТЗЫВЫ (главная) ====================== */
@@ -191,7 +194,9 @@
         if (desktop) {
             qa('.game-list, .game-rec').forEach(function (sec) {
                 var cards = sec.querySelectorAll('.game-card, .catalog-card');
-                if (cards.length) reveal(cards, { y: 24, stagger: 0.07, trigger: sec });
+                // y:0 — карточки живут в горизонтальном слайдере; вертикальный
+                // сдвиг обрезался бы верхним краем контейнера.
+                if (cards.length) reveal(cards, { y: 0, stagger: 0.07, trigger: sec });
             });
         }
 
