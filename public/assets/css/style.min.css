@@ -26599,6 +26599,8 @@ html.imgfade .game-hero__image img{
 
 /* v4.11.16 — «Подробнее» ПОСТОЯННОЙ ссылкой внизу карточки (и на ПК, и на
    мобиле), вместо прежнего hover-оверлея, который наезжал на текст. */
+/* Фиолетовая кнопка-пилюля «Подробнее» — как раньше (скрин 2), но ПОСТОЯННАЯ
+   внизу карточки, а не оверлей поверх текста. Видна и на ПК, и на мобиле. */
 .game-card__hover{
     display:flex !important;
     position:static !important;
@@ -26608,26 +26610,25 @@ html.imgfade .game-hero__image img{
     background:none !important;
     pointer-events:none !important;   /* сама карточка уже ссылка */
     align-items:center !important;
-    justify-content:flex-start !important;
+    justify-content:center !important;
     padding:0 !important;
     margin-top:14px !important;
     transition:none !important;
 }
 .game-card__hover-btn{
-    background:none !important;
-    box-shadow:none !important;
-    padding:0 !important;
-    border-radius:0 !important;
-    width:auto !important;
+    width:100% !important;
     max-width:none !important;
-    color:#a97bff !important;
-    font-weight:600 !important;
-    font-size:14px !important;
     display:inline-flex !important;
     align-items:center !important;
-    gap:6px !important;
+    justify-content:center !important;
+    padding:12px 24px !important;
+    border-radius:999px !important;
+    background:linear-gradient(180deg, #9466ff, #7340ff) !important;
+    color:#fff !important;
+    font-weight:600 !important;
+    font-size:14px !important;
+    box-shadow:0 12px 28px -10px rgba(132,86,255,0.6) !important;
 }
-.game-card__hover-btn::after{ content:"→"; font-size:15px; }
 
 /* Плавный свайп слайдеров на мобиле: карточки всё ещё выравниваются (mandatory),
    но НЕ «стопорятся» жёстко на каждой — быстрый свайп проходит несколько карточек
