@@ -26597,38 +26597,12 @@ html.imgfade .game-hero__image img{
     }
 }
 
-/* v4.11.16 — «Подробнее» ПОСТОЯННОЙ ссылкой внизу карточки (и на ПК, и на
-   мобиле), вместо прежнего hover-оверлея, который наезжал на текст. */
-/* Фиолетовая кнопка-пилюля «Подробнее» — как раньше (скрин 2), но ПОСТОЯННАЯ
-   внизу карточки, а не оверлей поверх текста. Видна и на ПК, и на мобиле. */
-.game-card__hover{
-    display:flex !important;
-    position:static !important;
-    inset:auto !important;
-    opacity:1 !important;
-    visibility:visible !important;
-    background:none !important;
-    pointer-events:none !important;   /* сама карточка уже ссылка */
-    align-items:center !important;
-    justify-content:center !important;
-    padding:0 !important;
-    margin-top:14px !important;
-    transition:none !important;
-}
-.game-card__hover-btn{
-    width:100% !important;
-    max-width:none !important;
-    display:inline-flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    padding:12px 24px !important;
-    border-radius:999px !important;
-    background:linear-gradient(180deg, #9466ff, #7340ff) !important;
-    color:#fff !important;
-    font-weight:600 !important;
-    font-size:14px !important;
-    box-shadow:0 12px 28px -10px rgba(132,86,255,0.6) !important;
-}
+/* v4.11.18 — «Подробнее» снова HOVER-ОВЕРЛЕЕМ, как было изначально (скрин 1):
+   при наведении на карточку фиолетовая пилюля «Подробнее» плавно проявляется
+   поверх контента с лёгкой фиолетовой заливкой. Постоянную пилюлю внизу
+   (v4.11.16/17) убрали — снова работает базовое правило .game-card__hover
+   (оверлей, opacity 0→1) из блока выше. На тач-устройствах оверлей по-прежнему
+   скрыт media-блоком C2 выше, чтобы он не «залипал» после тапа. */
 
 /* Плавный свайп слайдеров на мобиле: карточки всё ещё выравниваются (mandatory),
    но НЕ «стопорятся» жёстко на каждой — быстрый свайп проходит несколько карточек
