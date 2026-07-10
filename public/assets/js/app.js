@@ -254,6 +254,34 @@ function pmRegion(name, currency){
     return cur || '';
 }
 
+// Gateway list for checkout: ONE row per payment SYSTEM (not per currency),
+// named by the system title. Returns display order (rank) + right-side region
+// label for the 7 enabled gateways; null → gateway hidden.
+//   pp Pally · cb CryptoBot · bt BTKassa · cp Crystal Pay ·
+//   fk Freekassa · sm StreamPay · ts Telegram Stars
+function pmGatewayMeta(type){
+    switch((type || '').toString().toLowerCase()){
+        case 'pp': return { rank: 1, region: 'Все страны' };
+        case 'cb': return { rank: 2, region: 'Все страны' };
+        case 'bt': return { rank: 3, region: 'Все страны' };
+        case 'cp': return { rank: 4, region: 'Все страны' };
+        case 'fk': return { rank: 5, region: 'Для России' };
+        case 'sm': return { rank: 6, region: 'Все страны' };
+        case 'ts': return { rank: 7, region: 'Все страны' };
+        default:   return null;
+    }
+}
+
+// Pick the system's representative payable asset: prefer the storefront
+// currency, else the first active asset returned by the API.
+function pmPickAsset(assets, mainCur){
+    if (!assets || !assets.length) return null;
+    for (var k = 0; k < assets.length; k++){
+        if (assets[k] && assets[k].currency === mainCur) return assets[k];
+    }
+    return assets[0];
+}
+
 function paymentMethodsTopup(price) {
 
     $.ajax({
@@ -276,34 +304,32 @@ function paymentMethodsTopup(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
-                // Row renderer matching buy modal (icon chip + name + currency pill).
-                // Prefer the asset's own title over the payment-system title.
+                // One row per PAYMENT SYSTEM (gateway), named by the system title.
+                // The attached asset is only used to carry the payable currency /
+                // min amount / asset id for the invoice.
                 var rowHtml = function(e, a) {
-                    var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
-                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconImg = pmIconHtml(name, iconSrc);
+                    var name = (e && e.title) || (a && a.title) || (a && a.currency) || '';
+                    var meta = pmGatewayMeta(e && e.type);
+                    var iconImg = pmIconHtml(name, (e && e.icon) || '');
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="topup_method" id="topup_method_' + a.id + '">' +
                         '<label for="topup_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__text">' +
                                 '<span class="popup__payment-method__name">' + name + '</span>' +
-                                '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                                '<span class="popup__payment-method__region">' + (meta ? meta.region : '') + '</span>' +
                             '</span>' +
                         '</label>';
                 };
 
                 var rows = [];
                 $(data.result).each(function (index, e) {
-                    if (e.type === 'bt') return; // BTKassa скрыт
-                    $(e.assets).each(function (j, a) {
-                        var nm = (a && a.title) || (e && e.title) || (a && a.currency) || '';
-                        var rank = pmOrder(nm);
-                        if (rank === 0) return;
-                        rows.push({ rank: rank, sub: j, html: rowHtml(e, a) });
-                    });
+                    var meta = pmGatewayMeta(e.type);
+                    if (!meta) return;                 // не один из 7 шлюзов — скрыт
+                    var a = pmPickAsset(e.assets, window._mainCurrency);
+                    if (!a) return;                    // нет активной валюты — платить нечем
+                    rows.push({ rank: meta.rank, html: rowHtml(e, a) });
                 });
-                rows.sort(function (x, y) { return (x.rank - y.rank) || (x.sub - y.sub); });
+                rows.sort(function (x, y) { return x.rank - y.rank; });
                 items_html = rows.map(function (r) { return r.html; }).join('');
 
                 $('#topup-payments-methods').html('<div id="topup-bt-main" style="display: flex; flex-direction: column; gap: 10px;">' + items_html + '</div>');
@@ -335,20 +361,20 @@ function paymentMethodsProduct(price) {
                 var bt_html = '';
                 var bt_entry = null;
 
-                // Row renderer — icon + name + currency pill (Figma "оплата 4"/"6").
-                // Prefer the ASSET's own title (e.g. "Банковская карта", "USDT") over
-                // the payment-system title so rows aren't all "Freekassa".
+                // One row per PAYMENT SYSTEM (gateway), named by the system title
+                // (Pally, CryptoBot, BTKassa, Crystal Pay, Freekassa, StreamPay,
+                // Telegram Stars). The attached asset only carries the payable
+                // currency / min amount / asset id for the invoice.
                 var rowHtml = function(e, a) {
-                    var name = (a && a.title) || (e && e.title) || (a && a.currency) || '';
-                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconSrc = (a && a.icon) || (e && e.icon) || '';
-                    var iconImg = pmIconHtml(name, iconSrc);
+                    var name = (e && e.title) || (a && a.title) || (a && a.currency) || '';
+                    var meta = pmGatewayMeta(e && e.type);
+                    var iconImg = pmIconHtml(name, (e && e.icon) || '');
                     return '<input type="radio" data-id="' + a.id + '" data-min="' + a.min_main + '" data-currency="' + a.currency + '" name="payment_method" id="payment_method_' + a.id + '">' +
                         '<label for="payment_method_' + a.id + '" class="popup__payment-method">' +
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__text">' +
                                 '<span class="popup__payment-method__name">' + name + '</span>' +
-                                '<span class="popup__payment-method__region">' + pmRegion(name, a.currency) + '</span>' +
+                                '<span class="popup__payment-method__region">' + (meta ? meta.region : '') + '</span>' +
                             '</span>' +
                         '</label>';
                 };
@@ -356,15 +382,13 @@ function paymentMethodsProduct(price) {
                 var rows = [];
                 $(data.result).each(function (index, e) {
                     if (e.is_active !== 1) return;
-                    if (e.type === 'bt') return; // BTKassa скрыт
-                    $(e.assets).each(function (j, a) {
-                        var nm = (a && a.title) || (e && e.title) || (a && a.currency) || '';
-                        var rank = pmOrder(nm);
-                        if (rank === 0) return; // не в списке — скрыт
-                        rows.push({ rank: rank, sub: j, html: rowHtml(e, a) });
-                    });
+                    var meta = pmGatewayMeta(e.type);
+                    if (!meta) return;                 // не один из 7 шлюзов — скрыт
+                    var a = pmPickAsset(e.assets, window._mainCurrency);
+                    if (!a) return;                    // нет активной валюты — платить нечем
+                    rows.push({ rank: meta.rank, html: rowHtml(e, a) });
                 });
-                rows.sort(function (x, y) { return (x.rank - y.rank) || (x.sub - y.sub); });
+                rows.sort(function (x, y) { return x.rank - y.rank; });
                 items_html = rows.map(function (r) { return r.html; }).join('');
 
                 $('#buy-payments-methods').html('<div id="product-bt-main">' + items_html + '</div>');
