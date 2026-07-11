@@ -217,12 +217,23 @@ function pmIconHtml(name, src){
     // so render it as a full circular logo — NO tint/filter/bg overlay.
     function card(){ return '<span class="pm-fig pm-fig--card"><img src="' + L + 'payson-card.svg" alt=""></span>'; }
 
+    // Per-gateway icons — one distinct mark per payment system. The checkout
+    // now passes the system title (Pally, CryptoBot, …) as `name`, so match it
+    // first. Real brand logos where publicly available; clean monogram badges
+    // for Pally/BTKassa (no public logo online). Keep these BEFORE the generic
+    // asset-name rules below.
+    if (/free ?kassa|фрикасса/.test(n))              return white(L + 'payson-freekassa.png');
+    if (/crystal ?pay|crystal|кристал/.test(n))      return full(L + 'payson-crystalpay.png');
+    if (/stream ?pay|стримпей|стрим/.test(n))        return full(L + 'payson-streampay.png');
+    if (/pally|paypalych|palych/.test(n))            return full(L + 'payson-pally.svg');
+    if (/btkassa|бткасса/.test(n))                   return full(L + 'payson-btkassa.svg');
+
     if (/сбп|sbp/.test(n))                                   return white(L + 'payment_sbp.svg');
     if (/сбер|sber/.test(n))                                 return full(L + 'payson-sber.png');
     if (/lzt|лзт|crypto ?bot|cryptobot|крипто.?бот/.test(n)) return full(L + 'payson-cryptobot.png');
-    if (/usdt|tether|crystal|\bcrypto\b|крипт|\bton\b/.test(n)) return full(L + 'payson-cryptobot.png');
+    if (/usdt|tether|\bcrypto\b|крипт|\bton\b/.test(n))      return full(L + 'payson-cryptobot.png');
     if (/xtr|stars?|звезд|telegram|телеграм/.test(n))        return full(L + 'payson-tgstars.png');
-    if (/банковск|перевод|карт|visa|master|\bмир\b|\bmir\b|остальн|streampay|stream/.test(n)) return card();
+    if (/банковск|перевод|карт|visa|master|\bмир\b|\bmir\b|остальн/.test(n)) return card();
     // anything else → bank card style (never a broken/ugly remote logo).
     return card();
 }
