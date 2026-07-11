@@ -26618,3 +26618,103 @@ html.imgfade .game-hero__image img{
    подсветку рамкой/тенью из hover-правила выше. */
 .catalog-card:hover, .catalog-card:active,
 .game-card:hover, .game-card:active{ transform:none !important; }
+
+/* ===================================================================== */
+/*  Buy modal — mobile bottom-sheet (≤767) v4.11.19                       */
+/*  Full-width sheet docked to the bottom. On the payment step ONLY the   */
+/*  method list scrolls; the order summary + «Оплатить» stay pinned and    */
+/*  always visible. Steps 1/3/4 keep a normal single scroll. Supersedes    */
+/*  the earlier v4.5.5 block above.                                        */
+/* ===================================================================== */
+@media (max-width: 767px){
+    /* Dock the card to the bottom of the screen; no outer scroll */
+    .popup--pay .popup__wrapper{
+        padding: 0 !important;
+        max-height: 100% !important;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        overflow: hidden !important;
+    }
+    .popup--pay .popup__inner{
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+    .popup--pay #result{
+        width: 100% !important;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    /* The sheet body */
+    .popup--pay #body{
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 92vh !important;
+        max-height: 92dvh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;            /* steps 1/3/4 scroll as one */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        border-radius: 22px 22px 0 0 !important;
+        padding: 46px 16px calc(14px + env(safe-area-inset-bottom)) !important;
+        box-shadow: 0 -16px 46px -20px rgba(0, 0, 0, 0.78) !important;
+    }
+    /* On the payment step turn the sheet into a fixed frame: only the
+       method list inside it scrolls (see rules below). */
+    .popup--pay #body:has(.popup__step[data-popup-step="2"]._active){
+        display: flex;
+        flex-direction: column;
+        overflow: hidden !important;
+    }
+
+    /* Keep the close button pinned to the sheet's top-right corner */
+    .popup--pay .popup__close{
+        top: 13px !important;
+        right: 13px !important;
+    }
+
+    /* Tighter vertical rhythm */
+    .popup--pay .pay-card__title{ font-size: 21px; margin-bottom: 14px; }
+    .popup--pay .pay-card__title--sm{ margin-bottom: 12px; }
+
+    /* Step 2 fills the sheet: title (fixed) · methods (scroll) ·
+       summary (fixed) · actions (fixed, always visible) */
+    .popup--pay .popup__step[data-popup-step="2"]._active{
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] #buy-payments-methods{
+        flex: 1 1 auto !important;
+        min-height: 64px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain;
+        margin-bottom: 12px !important;
+        padding-right: 2px;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-order-info,
+    .popup--pay .popup__step[data-popup-step="2"] .pay-actions{
+        flex: 0 0 auto !important;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-order-info{
+        margin-bottom: 12px !important;
+        padding: 14px 16px !important;
+    }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-actions{ margin-top: 4px; }
+    .popup--pay .popup__step[data-popup-step="2"] .pay-btn{
+        min-height: 50px;
+        padding: 13px 16px;
+        font-size: 15px;
+    }
+
+    /* Hide the Jivo chat bubble while the sheet is open so it can't
+       overlap the pay buttons */
+    body:has(.popup--pay._active) jdiv{ display: none !important; }
+}
