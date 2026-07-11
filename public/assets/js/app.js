@@ -222,10 +222,10 @@ function pmIconHtml(name, src){
     // first. Real brand logos where publicly available; clean monogram badges
     // for Pally/BTKassa (no public logo online). Keep these BEFORE the generic
     // asset-name rules below.
-    if (/free ?kassa|фрикасса/.test(n))              return white(L + 'payson-freekassa.png');
+    if (/free ?kassa|фрикасса/.test(n))              return full(L + 'payson-freekassa.svg');
     if (/crystal ?pay|crystal|кристал/.test(n))      return full(L + 'payson-crystalpay.png');
-    if (/stream ?pay|стримпей|стрим/.test(n))        return full(L + 'payson-streampay.png');
-    if (/pally|paypalych|palych/.test(n))            return full(L + 'payson-pally.svg');
+    if (/stream ?pay|стримпей|стрим/.test(n))        return full(L + 'payson-streampay.svg');
+    if (/pally|paypalych|palych/.test(n))            return card(); // фиолетовая карта — переводы/карты
     if (/btkassa|бткасса/.test(n))                   return full(L + 'payson-btkassa.svg');
 
     if (/сбп|sbp/.test(n))                                   return white(L + 'payment_sbp.svg');
