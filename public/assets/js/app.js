@@ -128,37 +128,14 @@ function createOrderWeb(product_id) {
         return;
     }
 
-    let price = parseInt($('#block_tariffs input[name="tariff_id"]:checked').attr('data-price')) || 0;
-    paymentMethodsProduct(price);
-
     createOrder(product_id, tariff_id, email, promocode, is_applied, 0, function(data) {
         if (data.ok == true) {
-            $('#buy #buy-expired').text(data.result.time_expired);
-            $('#buy #buy-sum').text(data.result.amount);
-            checkOrder(data.result.hash, 0);
-            window._createdOrderId = data.result.id;
-            window._createdOrderPrice = parseFloat(data.result.amount_full) || price;
-
-            let popup = $('[data-popup-step="1"]').closest(".popup");
-            popup.find("[data-popup-step]._active").removeClass("_active");
-            $('[data-popup-step="2"]').addClass("_active");
-
-            $('#buy #btn-pay').off('click').on('click', function() {
-                var method_pay_id = $('input[name="payment_method"]:checked').attr('data-id');
-                if(!method_pay_id) {
-                    showNotification(window.lang.choose_payment_method, 'fail');
-                    return;
-                }
-                var selectedInput = $('input[name="payment_method"]:checked');
-                var minAmount = parseFloat(selectedInput.attr('data-min')) || 0;
-                var methodCurrency = window._mainCurrency || selectedInput.attr('data-currency') || '';
-                if(minAmount > 0 && window._createdOrderPrice < minAmount) {
-                    var msg = window.lang.min_payment_amount.replace(':min', minAmount).replace(':currency', methodCurrency);
-                    showNotification(msg, 'fail');
-                    return;
-                }
-                getOrdersPaymentLink(window._createdOrderId, 0, "product");
-            });
+            // Designer's two-screen flow: after the order is created, go to the
+            // standalone invoice page (/invoice/{hash}) — payment-method picker
+            // with currencies, order info, and the "check payment" button. This
+            // replaces the old cramped inline step 2 (methods + info on one
+            // scroll), which confused users on mobile.
+            window.location.href = '/invoice/' + data.result.hash;
         }
     });
 }
