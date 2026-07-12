@@ -246,41 +246,74 @@
                     </button>
                 </div>
 
-                {{-- ========== Step 2: payment methods + order info ========== --}}
+                {{-- ========== Step 2: (A) choose method → (B) order info ========== --}}
                 <div class="popup__step" data-popup-step="2">
-                    <p class="pay-card__title pay-card__title--sm">{{ __('site.invoice_choose_method') }}</p>
-                    <div class="pay-methods popup__payment-methods" id="buy-payments-methods"></div>
 
-                    <div class="pay-order-info">
-                        <div class="pay-order-info__row">
-                            <span class="pay-order-info__label">{{ __('site.modal_buy_label_validity_period') }}</span>
-                            <span class="pay-order-info__value" id="buy-expired">…</span>
-                        </div>
-                        <div class="pay-order-info__row" id="block_payment">
-                            <span class="pay-order-info__label">{{ __('site.modal_buy_label_email') }}</span>
-                            <span class="pay-order-info__value" id="buy-email">…</span>
-                        </div>
-                        <div class="pay-order-info__row">
-                            <span class="pay-order-info__label">{{ __('site.modal_buy_total_payable') }}</span>
-                            <span class="pay-order-info__value pay-order-info__value--accent" id="buy-sum">…</span>
-                        </div>
-                        <div class="pay-order-info__row">
-                            <span class="pay-order-info__label">{{ __('site.modal_buy_label_expired_payment') }}</span>
-                            <span class="pay-order-info__value pay-order-info__value--accent" id="timer">…</span>
-                        </div>
-                    </div>
-
-                    <div class="pay-actions">
-                        <button type="button" class="pay-btn pay-btn--primary popup__submit-btn" id="btn-pay">
-                            {{ __('site.modal_buy_btn_payment') }}
-                        </button>
-                        <div class="pay-actions__row">
+                    {{-- ----- Screen A: payment method picker (with currencies) ----- --}}
+                    <div class="pay-substep _active" data-substep="method">
+                        <p class="pay-card__title pay-card__title--sm">{{ __('site.invoice_choose_method') }}</p>
+                        <div class="pay-methods popup__payment-methods" id="buy-payments-methods"></div>
+                        <div class="pay-actions">
+                            <button type="button" class="pay-btn pay-btn--primary" id="buy-method-continue">
+                                {{ __('site.invoice_continue') }}
+                            </button>
                             <button type="button" class="pay-btn pay-btn--secondary popup__back-btn" data-popup-switch-step="1" onclick="clearInterval(timerInterval);">
                                 {{ __('site.modal_buy_btn_back') }}
                             </button>
-                            <button type="button" class="pay-btn pay-btn--secondary pay-btn--danger" id="buy-cancel-trigger">
-                                {{ __('site.invoice_cancel_order') }}
+                        </div>
+                    </div>
+
+                    {{-- ----- Screen B: order info + pay ----- --}}
+                    <div class="pay-substep" data-substep="order">
+                        <p class="pay-card__title pay-card__title--sm">{{ __('site.invoice_order_info') }}</p>
+
+                        <div class="pay-fields">
+                            <div class="pay-field">
+                                <span class="pay-field__label">{{ __('site.invoice_product_name') }}</span>
+                                <div class="pay-field__box" id="buy-product-name">…</div>
+                            </div>
+                            <div class="pay-field">
+                                <span class="pay-field__label">{{ __('site.invoice_order_id') }}</span>
+                                <div class="pay-field__box" id="buy-order-id">…</div>
+                            </div>
+                            <div class="pay-field pay-field--half">
+                                <span class="pay-field__label">{{ __('site.invoice_product_period') }}</span>
+                                <div class="pay-field__box" id="buy-period">…</div>
+                            </div>
+                            <div class="pay-field pay-field--half">
+                                <span class="pay-field__label">{{ __('site.modal_buy_total_payable') }}</span>
+                                <div class="pay-field__box pay-field__box--accent" id="buy-sum">…</div>
+                            </div>
+                        </div>
+
+                        <p class="pay-timer">
+                            <span class="pay-timer__label">{{ __('site.invoice_payment_period') }}</span>
+                            <span class="pay-timer__value" id="timer">…</span>
+                        </p>
+                        <span class="pay-hidden" id="buy-expired" hidden></span>
+
+                        <div class="pay-note" role="note">
+                            <span class="pay-note__icon" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm-1 5h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/></svg>
+                            </span>
+                            <span class="pay-note__text">{!! __('site.invoice_hint_must_check') !!}</span>
+                        </div>
+
+                        <div class="pay-actions">
+                            <button type="button" class="pay-btn pay-btn--primary popup__submit-btn" id="btn-pay">
+                                {{ __('site.modal_buy_btn_payment') }}
                             </button>
+                            <button type="button" class="pay-btn pay-btn--check" id="buy-check-pay" data-checking="{{ __('site.invoice_checking') }}">
+                                {{ __('site.invoice_check_payment') }}
+                            </button>
+                            <div class="pay-actions__row">
+                                <button type="button" class="pay-btn pay-btn--secondary" data-substep-back="method">
+                                    {{ __('site.modal_buy_btn_back') }}
+                                </button>
+                                <button type="button" class="pay-btn pay-btn--secondary pay-btn--danger" id="buy-cancel-trigger">
+                                    {{ __('site.invoice_cancel_order') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
 

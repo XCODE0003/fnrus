@@ -382,6 +382,7 @@ return [
     "invoice_choose_method" => "Choose payment method",
     "invoice_pay" => "Pay",
     "invoice_cancel_title" => "Cancel order",
+    "invoice_continue" => "Continue",
     "invoice_continue_pay" => "Continue payment",
     "invoice_currencies" => "Currencies",
     "invoice_copied" => "Copied",

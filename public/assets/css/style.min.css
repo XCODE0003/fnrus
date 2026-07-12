@@ -26718,3 +26718,78 @@ html.imgfade .game-hero__image img{
        overlap the pay buttons */
     body:has(.popup--pay._active) jdiv{ display: none !important; }
 }
+
+/* ===================================================================== */
+/*  Buy modal — two-screen payment inside the modal (v4.11.20)           */
+/*  Screen A: method picker (currencies) → «Продолжить».                  */
+/*  Screen B: order info (chip fields) → «Оплатить / Проверить / Отмена». */
+/* ===================================================================== */
+.popup--pay .pay-substep{ display:none; }
+.popup--pay .pay-substep._active{ display:block; }
+.popup--pay .pay-hidden{ display:none !important; }
+
+/* Order-info chip fields (design screen 2) */
+.popup--pay .pay-fields{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:14px;
+}
+.popup--pay .pay-field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+.popup--pay .pay-field:not(.pay-field--half){ grid-column:1 / -1; }
+.popup--pay .pay-field__label{
+    font-size:13px; font-weight:600; color:rgba(255,255,255,0.5);
+}
+.popup--pay .pay-field__box{
+    background:#1b2330;
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:12px;
+    padding:13px 16px;
+    font-size:15px; font-weight:600; color:#fff;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.popup--pay .pay-field__box--accent{ color:#8456ff; }
+
+/* Payment countdown line */
+.popup--pay .pay-timer{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin:0 0 14px; font-size:14px; font-weight:600;
+}
+.popup--pay .pay-timer__label{ color:rgba(255,255,255,0.5); }
+.popup--pay .pay-timer__value{ color:#8456ff; }
+
+/* "Must press check payment" note */
+.popup--pay .pay-note{
+    display:flex; gap:10px; align-items:flex-start;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:12px;
+    padding:12px 14px; margin:0 0 16px;
+    font-size:13px; line-height:1.4; color:rgba(255,255,255,0.6);
+}
+.popup--pay .pay-note__icon{ flex:0 0 auto; margin-top:1px; color:rgba(255,255,255,0.55); }
+.popup--pay .pay-note b,
+.popup--pay .pay-note strong{ color:#fff; font-weight:700; }
+
+/* "Проверить оплату" — accent outline button */
+.popup--pay .pay-btn--check{
+    background:rgba(132,86,255,0.12);
+    border:1px solid rgba(132,86,255,0.5);
+    color:#c6b2ff;
+}
+.popup--pay .pay-btn--check:hover:not(:disabled){
+    background:rgba(132,86,255,0.2); color:#fff;
+}
+
+/* Mobile: the active sub-step fills the bottom-sheet; on the method screen
+   only the list scrolls (existing rule) with «Продолжить» pinned; on the
+   order screen the pay buttons sit pinned at the bottom. */
+@media (max-width:767px){
+    .popup--pay .popup__step[data-popup-step="2"]._active .pay-substep._active{
+        display:flex;
+        flex-direction:column;
+        flex:1 1 auto;
+        min-height:0;
+    }
+    .popup--pay [data-substep="order"] .pay-actions{ margin-top:auto; }
+}

@@ -128,14 +128,40 @@ function createOrderWeb(product_id) {
         return;
     }
 
+    let price = parseInt($('#block_tariffs input[name="tariff_id"]:checked').attr('data-price')) || 0;
+    let periodDays = $.trim($('#block_tariffs input[name="tariff_id"]:checked').next('label').find('b').text());
+    paymentMethodsProduct(price);
+
     createOrder(product_id, tariff_id, email, promocode, is_applied, 0, function(data) {
         if (data.ok == true) {
-            // Designer's two-screen flow: after the order is created, go to the
-            // standalone invoice page (/invoice/{hash}) — payment-method picker
-            // with currencies, order info, and the "check payment" button. This
-            // replaces the old cramped inline step 2 (methods + info on one
-            // scroll), which confused users on mobile.
-            window.location.href = '/invoice/' + data.result.hash;
+            window._createdOrderId = data.result.id;
+            window._createdOrderHash = data.result.hash;
+            window._createdOrderPrice = parseFloat(data.result.amount_full) || price;
+
+            // Fill the "Информация о заказе" sub-screen.
+            $('#buy #buy-product-name').text($.trim($('#buy #modal_title').text()) || '—');
+            $('#buy #buy-order-id').text(data.result.hash);
+            $('#buy #buy-period').text(periodDays || '—');
+            $('#buy #buy-sum').text(data.result.amount);
+            $('#buy #buy-expired').text(data.result.time_expired);
+
+            checkOrder(data.result.hash, 0);
+
+            // Open step 2 on the payment-method sub-screen (screen A).
+            let popup = $('[data-popup-step="1"]').closest(".popup");
+            popup.find("[data-popup-step]._active").removeClass("_active");
+            $('[data-popup-step="2"]').addClass("_active");
+            if (window._buyShowSubstep) { window._buyShowSubstep('method'); }
+
+            // "Оплатить" — method already chosen & validated on the picker screen.
+            $('#buy #btn-pay').off('click').on('click', function() {
+                if(!$('input[name="payment_method"]:checked').length) {
+                    if (window._buyShowSubstep) { window._buyShowSubstep('method'); }
+                    showNotification(window.lang.choose_payment_method, 'fail');
+                    return;
+                }
+                getOrdersPaymentLink(window._createdOrderId, 0, "product");
+            });
         }
     });
 }
@@ -270,6 +296,21 @@ function pmPickAsset(assets, mainCur){
     return assets[0];
 }
 
+// Right-side label per gateway: region for crypto/SBP gateways, or the list
+// of supported currencies for card/transfer aggregators (matches the design).
+function pmRegionText(e){
+    var t = (e && e.type ? String(e.type) : '').toLowerCase();
+    if (t === 'cb' || t === 'cp' || t === 'ts') return 'Все страны';
+    if (t === 'fk') return 'Для России';
+    var curs = [];
+    (e && e.assets ? e.assets : []).forEach(function(a){
+        if (a && a.currency && curs.indexOf(a.currency) === -1) curs.push(a.currency);
+    });
+    if (curs.length > 1) return 'Валюты: ' + curs.join(', ');
+    if (curs.length === 1) return curs[0] === 'RUB' ? 'Для России' : curs[0];
+    return 'Все страны';
+}
+
 function paymentMethodsTopup(price) {
 
     $.ajax({
@@ -304,7 +345,7 @@ function paymentMethodsTopup(price) {
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__text">' +
                                 '<span class="popup__payment-method__name">' + name + '</span>' +
-                                '<span class="popup__payment-method__region">' + (meta ? meta.region : '') + '</span>' +
+                                '<span class="popup__payment-method__region">' + pmRegionText(e) + '</span>' +
                             '</span>' +
                         '</label>';
                 };
@@ -362,7 +403,7 @@ function paymentMethodsProduct(price) {
                             '<span class="popup__payment-method__icon">' + iconImg + '</span>' +
                             '<span class="popup__payment-method__text">' +
                                 '<span class="popup__payment-method__name">' + name + '</span>' +
-                                '<span class="popup__payment-method__region">' + (meta ? meta.region : '') + '</span>' +
+                                '<span class="popup__payment-method__region">' + pmRegionText(e) + '</span>' +
                             '</span>' +
                         '</label>';
                 };
@@ -1758,3 +1799,45 @@ function submitReview() {
         window.addEventListener('load', function () { setTimeout(initAllDots, 60); });
     }
 })();
+
+
+/* ============================================================
+ * Buy modal — two-screen payment (design in-modal, not a page):
+ *   screen A: choose method (with currencies)  →  «Продолжить»
+ *   screen B: order info  →  «Оплатить / Проверить оплату / Отменить»
+ * ============================================================ */
+jQuery(function ($) {
+    window._buyShowSubstep = function (name) {
+        $('#buy [data-substep]').removeClass('_active');
+        $('#buy [data-substep="' + name + '"]').addClass('_active');
+        var b = document.getElementById('body'); if (b) { b.scrollTop = 0; }
+        var m = document.getElementById('buy-payments-methods'); if (m) { m.scrollTop = 0; }
+    };
+
+    // A → B: validate a method is chosen (and the amount fits) before showing order info.
+    $(document).on('click', '#buy-method-continue', function () {
+        var sel = $('#buy input[name="payment_method"]:checked');
+        if (!sel.length) { showNotification(window.lang.choose_payment_method, 'fail'); return; }
+        var minAmount = parseFloat(sel.attr('data-min')) || 0;
+        var cur = window._mainCurrency || sel.attr('data-currency') || '';
+        if (minAmount > 0 && (window._createdOrderPrice || 0) < minAmount) {
+            showNotification(window.lang.min_payment_amount.replace(':min', minAmount).replace(':currency', cur), 'fail');
+            return;
+        }
+        window._buyShowSubstep('order');
+    });
+
+    // B → A
+    $(document).on('click', '[data-substep-back]', function () {
+        window._buyShowSubstep($(this).attr('data-substep-back'));
+    });
+
+    // Manual "Проверить оплату" — force an immediate order-status check.
+    $(document).on('click', '#buy-check-pay', function () {
+        if (!window._createdOrderHash) { return; }
+        var msg = $(this).attr('data-checking');
+        if (msg) { showNotification(msg, 'success'); }
+        try { clearTimeout(timerInterval); } catch (e) {}
+        checkOrder(window._createdOrderHash, 0);
+    });
+});

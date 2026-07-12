@@ -382,6 +382,7 @@ return [
     "invoice_choose_method" => "Выберите способ оплаты",
     "invoice_pay" => "Оплатить",
     "invoice_cancel_title" => "Отмена заказа",
+    "invoice_continue" => "Продолжить",
     "invoice_continue_pay" => "Продолжить оплату",
     "invoice_currencies" => "Валюты",
     "invoice_copied" => "Скопировано",
