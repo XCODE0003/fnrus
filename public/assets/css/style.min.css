@@ -26793,3 +26793,76 @@ html.imgfade .game-hero__image img{
     }
     .popup--pay [data-substep="order"] .pay-actions{ margin-top:auto; }
 }
+
+/* ===================================================================== */
+/*  Buy modal — compact method rows per the designer (v4.11.21)          */
+/*  Row = [icon] name ............ currencies(right, may wrap).           */
+/*  Tight enough that all gateways fit without scrolling; selection is    */
+/*  shown by the border/background, so the radio dot is dropped.          */
+/* ===================================================================== */
+.popup--pay #buy-payments-methods > div,
+.popup--pay #buy-payments-methods #product-bt-main{
+    gap:6px !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method{
+    min-height:44px !important;
+    height:auto !important;
+    padding:6px 12px !important;
+    gap:10px !important;
+    align-items:center !important;
+    border-radius:10px !important;
+}
+/* smaller brand chip */
+.popup--pay #buy-payments-methods .popup__payment-method__icon,
+.popup--pay #buy-payments-methods .popup__payment-method .pm-fig{
+    width:28px !important;
+    height:28px !important;
+    flex:0 0 28px !important;
+    margin:0 !important;
+    border-radius:50% !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__icon img,
+.popup--pay #buy-payments-methods .popup__payment-method .pm-fig img{
+    width:100% !important;
+    height:100% !important;
+    padding:0 !important;
+    border-radius:50% !important;
+}
+/* name left · currencies right (was stacked, which made rows tall) */
+.popup--pay #buy-payments-methods .popup__payment-method__text{
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:10px !important;
+    width:100% !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__name{
+    font-size:13.5px !important;
+    line-height:1.25 !important;
+    flex:1 1 auto !important;
+    min-width:0 !important;
+}
+.popup--pay #buy-payments-methods .popup__payment-method__region{
+    font-size:10.5px !important;
+    line-height:1.25 !important;
+    text-align:right !important;
+    align-self:center !important;
+    margin-left:auto !important;
+    flex:0 1 auto !important;
+    max-width:48% !important;
+    white-space:normal !important;
+    color:rgba(255,255,255,0.45) !important;
+}
+/* selection = border + tint; no radio dot (matches the design) */
+.popup--pay #buy-payments-methods .popup__payment-method::after{
+    display:none !important;
+}
+@media (min-width:768px){
+    .popup--pay #buy-payments-methods .popup__payment-method{ min-height:48px !important; }
+    .popup--pay #buy-payments-methods .popup__payment-method__name{ font-size:15px !important; }
+    .popup--pay #buy-payments-methods .popup__payment-method__region{ font-size:12px !important; }
+    .popup--pay #buy-payments-methods .popup__payment-method__icon,
+    .popup--pay #buy-payments-methods .popup__payment-method .pm-fig{
+        width:32px !important; height:32px !important; flex:0 0 32px !important;
+    }
+}
