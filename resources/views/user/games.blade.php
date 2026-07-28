@@ -92,7 +92,23 @@
         var search = document.getElementById('games-search');
         var sort = document.getElementById('games-sort');
         var empty = document.getElementById('games-empty');
-        var platform = 'all';
+
+        // ТЗ §7 — keep the chosen platform in the URL so the filter survives a
+        // reload, can be shared, and "Все игры" is a real reset.
+        var params = new URLSearchParams(location.search);
+        var platform = params.get('platform');
+        if (['all', 'pc', 'mobile'].indexOf(platform) === -1) { platform = 'all'; }
+        var initialQuery = params.get('q') || '';
+        if (initialQuery) { search.value = initialQuery; }
+
+        function syncUrl() {
+            var p = new URLSearchParams(location.search);
+            if (platform === 'all') { p.delete('platform'); } else { p.set('platform', platform); }
+            var q = (search.value || '').trim();
+            if (q) { p.set('q', q); } else { p.delete('q'); }
+            var qs = p.toString();
+            history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+        }
 
         function render() {
             var q = (search.value || '').toLowerCase().trim();
@@ -117,16 +133,24 @@
             empty.hidden = visible.length > 0;
         }
 
+        function markActiveTab() {
+            tabs.forEach(function(t) {
+                t.classList.toggle('is-active', t.getAttribute('data-platform') === platform);
+            });
+        }
+
         tabs.forEach(function(tab) {
             tab.addEventListener('click', function() {
-                tabs.forEach(function(t) { t.classList.remove('is-active'); });
-                tab.classList.add('is-active');
                 platform = tab.getAttribute('data-platform');
+                markActiveTab();
+                syncUrl();
                 render();
             });
         });
-        search.addEventListener('input', render);
+        search.addEventListener('input', function() { syncUrl(); render(); });
         sort.addEventListener('change', render);
+
+        markActiveTab();
         render();
     })();
 </script>

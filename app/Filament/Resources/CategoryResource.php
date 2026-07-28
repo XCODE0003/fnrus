@@ -78,7 +78,24 @@ class CategoryResource extends Resource
                     ->label('Категория')
                     ->options(fn () => [0 => 'Без категории'] + Category::where('cid', 0)->orderBy('sort')->pluck('title', 'id')->all())
                     ->default(0)
+                    ->live()
                     ->required(),
+
+                // ТЗ §7 — platform of the game, drives the catalog filter
+                // ("Все игры / ПК игры / Мобильные игры"). Only meaningful for a
+                // top-level game (cid = 0); the child platform buckets inherit it.
+                Forms\Components\Select::make('platform')
+                    ->label('Платформа игры')
+                    ->helperText('По этому полю работает фильтр в каталоге. Обязательно для игры.')
+                    ->options([
+                        'pc' => 'ПК',
+                        'mobile' => 'Мобильные',
+                        'pc mobile' => 'ПК и мобильные',
+                    ])
+                    ->default('pc mobile')
+                    ->native(false)
+                    ->visible(fn (Forms\Get $get) => (int) $get('cid') === 0)
+                    ->required(fn (Forms\Get $get) => (int) $get('cid') === 0),
 
                 Forms\Components\RichEditor::make('description')
                     ->label('Описание')
@@ -144,10 +161,22 @@ class CategoryResource extends Resource
                     ->label('Видим.')
                     ->formatStateUsing(fn ($state) => self::VISIBILITY_OPTIONS[$state] ?? $state)
                     ->colors(['success' => 1, 'info' => 2, 'warning' => 3, 'danger' => 0]),
+                Tables\Columns\TextColumn::make('platform')
+                    ->label('Платформа')
+                    ->formatStateUsing(fn ($state) => [
+                        'pc' => 'ПК',
+                        'mobile' => 'Мобильные',
+                        'pc mobile' => 'ПК и моб.',
+                    ][$state] ?? '—'),
                 Tables\Columns\TextColumn::make('sort')->label('Сорт.')->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('visibility')->options(self::VISIBILITY_OPTIONS),
+                Tables\Filters\SelectFilter::make('platform')->label('Платформа')->options([
+                    'pc' => 'ПК',
+                    'mobile' => 'Мобильные',
+                    'pc mobile' => 'ПК и мобильные',
+                ]),
                 Tables\Filters\Filter::make('top_level')->label('Только корневые')
                     ->query(fn ($query) => $query->where('cid', 0)),
             ])

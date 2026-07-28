@@ -25,6 +25,7 @@ class Category extends Model
         'image_hero',
         'image_spoiler',
         'alias',
+        'platform',
         'disable_web_page_preview',
         'display_products',
         'count_views',
@@ -48,6 +49,7 @@ class Category extends Model
             $notNullStringCols = [
                 'title_en', 'seo_description', 'seo_keywords', 'description',
                 'image', 'image_site', 'image_hero', 'image_spoiler', 'alias',
+                'platform',
             ];
             foreach ($category->getDirty() as $key => $value) {
                 if ($value === null && in_array($key, $notNullStringCols, true)) {
@@ -125,10 +127,17 @@ class Category extends Model
                     }
                 }
 
-                $platforms = [];
-                if ($hasPc) { $platforms[] = 'pc'; }
-                if ($hasMobile) { $platforms[] = 'mobile'; }
-                if (empty($platforms)) { $platforms = ['pc', 'mobile']; }
+                // ТЗ §7 — the platform is an explicit admin field now; the
+                // child-title guess is only a fallback for rows never saved.
+                $explicit = trim((string) ($c->platform ?? ''));
+                if ($explicit !== '') {
+                    $platforms = preg_split('/\s+/', $explicit);
+                } else {
+                    $platforms = [];
+                    if ($hasPc) { $platforms[] = 'pc'; }
+                    if ($hasMobile) { $platforms[] = 'mobile'; }
+                    if (empty($platforms)) { $platforms = ['pc', 'mobile']; }
+                }
 
                 $image = '';
                 if($c->image != ''){
