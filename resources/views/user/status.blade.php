@@ -69,10 +69,13 @@
             <div class="cheat-statuses__header">
                 <p>{{ __('site.section_statuses_header_title') }}</p>
                 <div class="cheat-statuses__header__all-statuses">
-                    <span class="status _recommend">{{ __('site.section_statuses_status_1') }}</span>
-                    <span class="status _risk">{{ __('site.section_statuses_status_4') }}</span>
-                    <span class="status _on-update">{{ __('site.section_statuses_status_3') }}</span>
-                    <span class="status _not-recommend">{{ __('site.section_statuses_status_2') }}</span>
+                    @foreach([1 => 'check', 4 => 'warning', 3 => 'refresh', 2 => 'cross'] as $__st => $__ic)
+                        @php $__m = \App\Models\StatusCheat::statusMeta($__st); @endphp
+                        <span class="status _{{ $__m['key'] }}">
+                            @include('user.partials.status-icon', ['icon' => $__m['icon']])
+                            <span class="status__label">{{ $__m['label'] }}</span>
+                        </span>
+                    @endforeach
                 </div>
             </div>
             <div id="results_empty"></div>
@@ -83,7 +86,11 @@
                             <p class="game-status-block__name">{{ $card['title'] }}</p>
                             <div class="game-status-block__cheats">
                                 @foreach($card['cheats'] as $c)
-                                    <span class="status _{{ $c['status'] }}">{{ $c['title'] }}</span>
+                                    <span class="status _{{ $c['status'] }}">
+                                        @include('user.partials.status-icon', ['icon' => $c['status_icon'] ?? 'question'])
+                                        <span class="status__name">{{ $c['title'] }}</span>
+                                        <span class="status__label">{{ $c['status_label'] ?? '' }}</span>
+                                    </span>
                                 @endforeach
                             </div>
                         </div>

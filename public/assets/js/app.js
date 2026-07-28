@@ -209,6 +209,18 @@ function getProductByAlias(alias) {
 // Payment icons per Figma "payson-keys / оплата 4" — decided IN CODE by the
 // method name (no DB dependency) so it works everywhere after a plain git pull.
 // Assets are repo files in /assets/img (payson-*).
+// ТЗ §10 — status glyphs. Mirrors resources/views/user/partials/status-icon.blade.php;
+// change both together or the AJAX-filtered grid stops matching the server render.
+function stStatusIcon(icon){
+    var p = {
+        check:   '<path d="M4 12.5l5.5 5.5L20 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>',
+        cross:   '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
+        refresh: '<path d="M20 12a8 8 0 1 1-2.4-5.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M20 4v5h-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+        warning: '<path d="M12 4.5L21 19H3L12 4.5z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 10v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1.1" fill="currentColor"/>'
+    }[icon] || '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.2"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/>';
+    return '<svg class="status__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">' + p + '</svg>';
+}
+
 function pmIconHtml(name, src){
     var n = (name || '').toString().toLowerCase();
     var L = '/assets/img/';
@@ -1032,7 +1044,15 @@ function searchStatus(query, status) {
                     var cheats = [];
 
                     $(e.cheats).each(function(index, s) {
-                        cheats.push('<span class="status _' + s.status + '">' + s.title + '</span>');
+                        // Must stay byte-identical to the Blade chip in
+                        // resources/views/user/status.blade.php — this rebuilds
+                        // the same grid after a search/filter.
+                        cheats.push(
+                            '<span class="status _' + s.status + '">' +
+                                stStatusIcon(s.status_icon) +
+                                '<span class="status__name">' + s.title + '</span>' +
+                                '<span class="status__label">' + (s.status_label || '') + '</span>' +
+                            '</span>');
                     });
 
                     results +=

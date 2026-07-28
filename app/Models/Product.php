@@ -122,26 +122,10 @@ class Product extends Model
                     continue;
                 }
 
-                if ($status->status == 0) {
-                    $status_title = 'Неизвестно';
-                    $status_class = 'undetected';
-                }
-                if ($status->status == 1) {
-                    $status_title = 'Рекомендуем';
-                    $status_class = 'undetected';
-                }
-                if ($status->status == 2) {
-                    $status_title = 'Не рекомендуем';
-                    $status_class = 'on-update';
-                }
-                if ($status->status == 3) {
-                    $status_title = 'На обновлении';
-                    $status_class = 'on-update';
-                }
-                if ($status->status == 4) {
-                    $status_title = 'На страх и риск';
-                    $status_class = 'risk';
-                }
+                $statusMeta = StatusCheat::statusMeta($status->status);
+                $status_title = $statusMeta['label'];
+                $status_class = $statusMeta['key'];
+                $status_icon = $statusMeta['icon'];
 
                 // if($c->status == 0){$status_title = 'Не обнаружен';$status_class = 'undetected';}
                 // if($c->status == 1){$status_title = 'На обновлении';$status_class = 'on-update';}
@@ -239,26 +223,10 @@ class Product extends Model
                     continue;
                 }
 
-                if ($status->status == 0) {
-                    $status_title = 'Неизвестно';
-                    $status_class = 'undetected';
-                }
-                if ($status->status == 1) {
-                    $status_title = 'Рекомендуем';
-                    $status_class = 'undetected';
-                }
-                if ($status->status == 2) {
-                    $status_title = 'Не рекомендуем';
-                    $status_class = 'on-update';
-                }
-                if ($status->status == 3) {
-                    $status_title = 'На обновлении';
-                    $status_class = 'on-update';
-                }
-                if ($status->status == 4) {
-                    $status_title = 'На страх и риск';
-                    $status_class = 'risk';
-                }
+                $statusMeta = StatusCheat::statusMeta($status->status);
+                $status_title = $statusMeta['label'];
+                $status_class = $statusMeta['key'];
+                $status_icon = $statusMeta['icon'];
 
                 $image = $c->image;
                 if($c->image == ''){

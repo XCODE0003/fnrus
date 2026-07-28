@@ -27447,3 +27447,120 @@ html.imgfade .game-hero__image img{
     .consent__actions{ flex-direction:column-reverse; }
     .consent__btn{ width:100%; }
 }
+
+/* ===================================================================== */
+/*  ТЗ §10 — cheat statuses: icon + colour + text                        */
+/*  One palette for both class families. .cheat-status_recommend and      */
+/*  _not-recommend did not exist before, so the cheat/game-card chips     */
+/*  rendered unstyled as soon as the PHP mapping was corrected.           */
+/* ===================================================================== */
+:root{
+    --st-recommend:#8af59b;
+    --st-on-update:#f1ff9d;
+    --st-risk:#f5c48a;
+    --st-not-recommend:#ff8a8a;
+    --st-unknown:#9aa4b5;
+}
+
+/* chips on /status (server-rendered and AJAX-rendered alike) */
+.status{
+    display:inline-flex !important;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+/* the old decorative dot is replaced by a real glyph */
+.status .status__icon{
+    flex:0 0 auto;
+    color:var(--color,var(--st-unknown));
+}
+.status .status__name{ font-weight:600; }
+.status .status__label{
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    color:var(--color,var(--st-unknown));
+    opacity:.95;
+}
+.status .status__name + .status__label::before{
+    content:"·";
+    margin-right:6px;
+    opacity:.5;
+}
+
+.status._recommend{ --color:var(--st-recommend); }
+.status._on-update{ --color:var(--st-on-update); }
+.status._risk{ --color:var(--st-risk); }
+.status._not-recommend{ --color:var(--st-not-recommend); }
+.status._unknown{ --color:var(--st-unknown); }
+
+/* the legend reads as chips too, not bare words */
+.cheat-statuses__header__all-statuses .status{
+    padding:7px 14px;
+    border-radius:999px;
+    background:color-mix(in srgb, var(--color,var(--st-unknown)) 12%, transparent);
+    border:1px solid color-mix(in srgb, var(--color,var(--st-unknown)) 38%, transparent);
+    color:var(--color,var(--st-unknown));
+}
+.cheat-statuses__header__all-statuses .status .status__label{ font-size:12.5px; }
+
+/* the cheat page / game cards use the other family — give it the same palette,
+   including the two keys that had no rule at all */
+.cheat-status_recommend{ --color:var(--st-recommend); color:var(--st-recommend); }
+.cheat-status_not-recommend{ --color:var(--st-not-recommend); color:var(--st-not-recommend); }
+.cheat-status_on-update{ --color:var(--st-on-update); color:var(--st-on-update); }
+.cheat-status_risk{ --color:var(--st-risk); color:var(--st-risk); }
+.cheat-status_unknown{ --color:var(--st-unknown); color:var(--st-unknown); }
+.game-card__status.cheat-status_recommend{ color:var(--st-recommend) !important; }
+.game-card__status.cheat-status_not-recommend{ color:var(--st-not-recommend) !important; }
+.game-card__status.cheat-status_unknown{ color:var(--st-unknown) !important; }
+
+@media (max-width:599px){
+    .status .status__label{ font-size:11px; }
+    .cheat-statuses__header__all-statuses .status{ padding:6px 12px; }
+}
+/* The legacy grid styles every <span> inside .game-status-block__cheats as a
+   pill of its own, which boxed the new name/label spans. Keep the pill on
+   .status itself and let its children be plain text. */
+.game-status-block__cheats .status{
+    flex-wrap:nowrap !important;
+    white-space:nowrap !important;
+    gap:7px !important;
+}
+.game-status-block__cheats .status > span,
+.cheat-statuses__header__all-statuses .status > span{
+    padding:0 !important;
+    margin:0 !important;
+    background:none !important;
+    border:0 !important;
+    border-radius:0 !important;
+    min-height:0 !important;
+    box-shadow:none !important;
+    display:inline !important;
+    white-space:nowrap !important;
+}
+.game-status-block__cheats .status > span::before,
+.cheat-statuses__header__all-statuses .status > span::before{
+    content:none !important;
+    display:none !important;
+}
+/* the glyph replaces the decorative dot */
+.status:has(.status__icon)::before{ display:none !important; content:none !important; }
+.cheat-statuses__header__all-statuses .status{
+    min-height:0 !important;
+    gap:8px !important;
+    white-space:nowrap !important;
+}
+/* Legend: let each chip size to its own text and wrap onto a second row
+   instead of being clipped by an equal-width grid. */
+.cheat-statuses__header__all-statuses{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:10px !important;
+    grid-template-columns:none !important;
+}
+.cheat-statuses__header__all-statuses .status{
+    width:auto !important;
+    flex:0 0 auto !important;
+    overflow:visible !important;
+}

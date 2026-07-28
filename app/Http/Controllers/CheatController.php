@@ -50,22 +50,15 @@ class CheatController extends Controller
 
                 foreach ($cheats as $p) {
 
-                    if ($p->status == 1) {
-                        $status_class = 'recommend';
-                    }
-                    if ($p->status == 2) {
-                        $status_class = 'not-recommend';
-                    }
-                    if ($p->status == 3) {
-                        $status_class = 'on-update';
-                    }
-                    if ($p->status == 4) {
-                        $status_class = 'risk';
-                    }
+                    // $status_class used to leak from the previous row when
+                    // status was 0 — statusMeta() always returns a class.
+                    $meta = \App\Models\StatusCheat::statusMeta($p->status);
 
                     $cheats_json[] = [
                         'title' => $p->title,
-                        'status' => $status_class
+                        'status' => $meta['key'],
+                        'status_label' => $meta['label'],
+                        'status_icon' => $meta['icon'],
                     ];
                 }
 

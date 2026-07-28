@@ -315,23 +315,13 @@ Route::get('/status', function () {
 
         foreach ($cheats as $p) {
 
-            $status_class = 'undetected';
-            if ($p->status == 1) {
-                $status_class = 'recommend';
-            }
-            if ($p->status == 2) {
-                $status_class = 'not-recommend';
-            }
-            if ($p->status == 3) {
-                $status_class = 'on-update';
-            }
-            if ($p->status == 4) {
-                $status_class = 'risk';
-            }
+            $meta = StatusCheat::statusMeta($p->status);
 
             $cheats_json[] = [
                 'title' => $p->title,
-                'status' => $status_class
+                'status' => $meta['key'],
+                'status_label' => $meta['label'],
+                'status_icon' => $meta['icon'],
             ];
         }
 
@@ -797,26 +787,10 @@ Route::get('/{alias}/{alias_two}/{alias_product}', function ($alias, $alias_two,
 
     $status = StatusCheat::getByID($product->status_id);
 
-    if ($status->status == 0) {
-        $status_title = 'Неизвестно';
-        $status_class = 'undetected';
-    }
-    if ($status->status == 1) {
-        $status_title = 'Рекомендуем';
-        $status_class = 'undetected';
-    }
-    if ($status->status == 2) {
-        $status_title = 'Не рекомендуем';
-        $status_class = 'on-update';
-    }
-    if ($status->status == 3) {
-        $status_title = 'На обновлении';
-        $status_class = 'on-update';
-    }
-    if ($status->status == 4) {
-        $status_title = 'На страх и риск';
-        $status_class = 'risk';
-    }
+    $statusMeta = StatusCheat::statusMeta($status->status ?? 0);
+    $status_title = $statusMeta['label'];
+    $status_class = $statusMeta['key'];
+    $status_icon = $statusMeta['icon'];
 
     $tariffs = Tariff::getListByPid($sid, $product->id);
 
