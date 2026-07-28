@@ -409,12 +409,27 @@ Route::get('/reviews', function () {
         'products' => $products,
     ]);
 })->name('reviews');
-Route::get('/policy', function () {
+// ТЗ §4 — the old combined "Пользовательское соглашение" is split in two.
+// Both pages are admin-editable (Filament → Настройки); when the column is
+// empty the lang-file text is rendered instead.
+Route::get('/privacy', function () {
     $shop_set = ShopSettings::getDefault();
-    $locale = app()->getLocale();
-    $policy_content = $locale === 'en' ? $shop_set->policy_content_en : $shop_set->policy_content_ru;
-    return view('user/policy', ['title' => __('site.page_title_policy'), 'policy_content' => $policy_content]);
-});
+    $content = app()->getLocale() === 'en'
+        ? ($shop_set?->privacy_content_en)
+        : ($shop_set?->privacy_content_ru);
+    return view('user/privacy', ['title' => __('site.page_title_privacy'), 'content' => $content]);
+})->name('privacy');
+
+Route::get('/terms', function () {
+    $shop_set = ShopSettings::getDefault();
+    $content = app()->getLocale() === 'en'
+        ? ($shop_set?->terms_content_en)
+        : ($shop_set?->terms_content_ru);
+    return view('user/terms', ['title' => __('site.page_title_terms'), 'content' => $content]);
+})->name('terms');
+
+// Keep indexed/old links alive — the old page was mostly terms.
+Route::redirect('/policy', '/terms', 301);
 
 Route::get('/my/profile', function () {
     return view('user/profile', ['title' => __('site.page_title_profile')]);

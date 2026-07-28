@@ -20,7 +20,7 @@ class SupportSettings extends Page implements HasForms
     protected static ?string $navigationGroup = 'Настройки';
     protected static ?string $navigationLabel = 'Техподдержка';
     protected static ?string $title = 'Окно техподдержки';
-    protected static ?int $navigationSort = 78;
+    protected static ?int $navigationSort = 79;
 
     protected static string $view = 'filament.pages.settings-form';
     protected static ?string $slug = 'settings/support';

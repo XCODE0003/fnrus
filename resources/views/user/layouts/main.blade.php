@@ -484,7 +484,8 @@
                     <li class="footer__menu__item"><a href="/status">{{ __('site.item_statuses') }}</a></li>
                     <li class="footer__menu__item"><a href="/about">{{ __('site.item_about') }}</a></li>
                     <li class="footer__menu__item"><a href="/#faq">{{ __('site.item_help') }}</a></li>
-                    <li class="footer__menu__item"><a href="/policy">{{ __('site.item_policy') }}</a></li>
+                    <li class="footer__menu__item"><a href="/privacy">{{ __('site.item_privacy') }}</a></li>
+                    <li class="footer__menu__item"><a href="/terms">{{ __('site.item_terms') }}</a></li>
                 </ul>
                 <a href="{{ \App\Models\ShopSettings::getDefault()->btn_tg_bot_url ?? 'https://t.me/Fanru_bot' }}" class="social-btn footer__social-btn" target="_blank">
                     <span class="social-btn__icon">
@@ -494,7 +495,8 @@
                 </a>
             </div>
             <div class="content footer__bottom-container">
-                <a href="/policy" class="footer__menu__item">{{ __('site.item_policy') }}</a>
+                <a href="/privacy" class="footer__menu__item">{{ __('site.item_privacy') }}</a>
+                <a href="/terms" class="footer__menu__item">{{ __('site.item_terms') }}</a>
                 <p class="footer__copy">© Fnrus 2026. {{ __('site.text_all_rights_reserved') }}</p>
             </div>
         </footer>

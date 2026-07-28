@@ -11,45 +11,50 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 
-class DeliveryTextSettings extends Page implements HasForms
+class PrivacyPolicySettings extends Page implements HasForms
 {
     use InteractsWithForms;
     use SavesShopSettings;
 
-    protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
     protected static ?string $navigationGroup = 'Настройки';
-    protected static ?string $navigationLabel = 'Текст после оплаты';
-    protected static ?string $title = 'Текст на странице после оплаты';
-    protected static ?int $navigationSort = 78;
+    protected static ?string $navigationLabel = 'Политика конфиденциальности';
+    protected static ?string $title = 'Политика конфиденциальности';
+    protected static ?int $navigationSort = 76;
 
     protected static string $view = 'filament.pages.settings-form';
-    protected static ?string $slug = 'settings/delivery-text';
+    protected static ?string $slug = 'settings/privacy';
 
     protected function settingsFields(): array
     {
-        return ['delivery_text_ru', 'delivery_text_en'];
+        return ['privacy_content_ru', 'privacy_content_en'];
     }
 
     public function form(Form $form): Form
     {
+        $toolbar = [
+            'attachFiles', 'blockquote', 'bold', 'bulletList',
+            'codeBlock', 'h2', 'h3', 'italic', 'link',
+            'orderedList', 'strike', 'underline', 'redo', 'undo',
+        ];
+
         return $form->schema([
             Forms\Components\Placeholder::make('hint')
                 ->label('')
-                ->content('Этот текст показывается на странице доставки ключа после оплаты (блок «Внимание»).'),
-
+                ->content('Текст страницы https://<сайт>/privacy. Если поле пустое — показывается текст по умолчанию из языковых файлов.'),
             Forms\Components\Section::make('Русский')->schema([
-                Forms\Components\RichEditor::make('delivery_text_ru')
+                Forms\Components\RichEditor::make('privacy_content_ru')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'attachFiles', 'redo', 'undo'])
+                    ->toolbarButtons($toolbar)
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('covers')
                     ->fileAttachmentsVisibility('public')
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                Forms\Components\RichEditor::make('delivery_text_en')
+                Forms\Components\RichEditor::make('privacy_content_en')
                     ->label('')
-                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'attachFiles', 'redo', 'undo'])
+                    ->toolbarButtons($toolbar)
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('covers')
                     ->fileAttachmentsVisibility('public')

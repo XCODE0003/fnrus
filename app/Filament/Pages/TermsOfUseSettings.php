@@ -11,23 +11,23 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 
-class UserAgreementSettings extends Page implements HasForms
+class TermsOfUseSettings extends Page implements HasForms
 {
     use InteractsWithForms;
     use SavesShopSettings;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Настройки';
-    protected static ?string $navigationLabel = 'Пользовательское соглашение';
-    protected static ?string $title = 'Пользовательское соглашение';
-    protected static ?int $navigationSort = 76;
+    protected static ?string $navigationLabel = 'Условия пользования';
+    protected static ?string $title = 'Условия пользования';
+    protected static ?int $navigationSort = 77;
 
     protected static string $view = 'filament.pages.settings-form';
-    protected static ?string $slug = 'settings/policy';
+    protected static ?string $slug = 'settings/terms';
 
     protected function settingsFields(): array
     {
-        return ['policy_content_ru', 'policy_content_en'];
+        return ['terms_content_ru', 'terms_content_en'];
     }
 
     public function form(Form $form): Form
@@ -39,8 +39,11 @@ class UserAgreementSettings extends Page implements HasForms
         ];
 
         return $form->schema([
+            Forms\Components\Placeholder::make('hint')
+                ->label('')
+                ->content('Текст страницы https://<сайт>/terms. Если поле пустое — показывается текст по умолчанию из языковых файлов.'),
             Forms\Components\Section::make('Русский')->schema([
-                Forms\Components\RichEditor::make('policy_content_ru')
+                Forms\Components\RichEditor::make('terms_content_ru')
                     ->label('')
                     ->toolbarButtons($toolbar)
                     ->fileAttachmentsDisk('public')
@@ -49,7 +52,7 @@ class UserAgreementSettings extends Page implements HasForms
                     ->columnSpanFull(),
             ]),
             Forms\Components\Section::make('English')->schema([
-                Forms\Components\RichEditor::make('policy_content_en')
+                Forms\Components\RichEditor::make('terms_content_en')
                     ->label('')
                     ->toolbarButtons($toolbar)
                     ->fileAttachmentsDisk('public')

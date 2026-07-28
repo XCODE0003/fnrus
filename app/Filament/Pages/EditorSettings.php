@@ -20,7 +20,7 @@ class EditorSettings extends Page implements HasForms
     protected static ?string $navigationGroup = 'Настройки';
     protected static ?string $navigationLabel = 'Загрузка в едиторе';
     protected static ?string $title = 'Лимит загрузки в RichEditor';
-    protected static ?int $navigationSort = 79;
+    protected static ?int $navigationSort = 80;
 
     protected static string $view = 'filament.pages.settings-form';
     protected static ?string $slug = 'settings/editor';

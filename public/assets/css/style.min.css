@@ -27094,3 +27094,96 @@ html.imgfade .game-hero__image img{
     .support__card{ padding:16px 18px; gap:12px; border-radius:14px; }
     .support__card-icon{ width:44px; height:44px; flex:0 0 44px; border-radius:12px; }
 }
+
+/* ===================================================================== */
+/*  ТЗ §4 — legal pages (/privacy, /terms): styling for admin-authored    */
+/*  rich HTML. Moved verbatim out of the old policy.blade.php inline      */
+/*  <style> so both pages share one copy.                                 */
+/* ===================================================================== */
+/* Regular text paragraphs */
+                .policy__content p {
+                    padding-left: 16px;
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 500;
+                    color: rgba(255, 255, 255, .6);
+                    margin-bottom: 4px;
+                }
+                .policy__content p a {
+                    color: #c0a8ff;
+                    text-decoration: underline;
+                }
+                .policy__content p a:hover {
+                    text-decoration: none;
+                }
+                /* Legacy class-based headers */
+                .policy__content p.policy__part-caption {
+                    padding-left: 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                    font-family: 'Mazzard M';
+                    margin-bottom: 15px;
+                    color: rgba(255, 255, 255, 1);
+                }
+                .policy__content p.policy__part-caption:not(:first-child) {
+                    margin-top: 35px;
+                }
+                /* Quill header tags — section titles */
+                .policy__content h1,
+                .policy__content h2,
+                .policy__content h3 {
+                    padding-left: 0;
+                    font-weight: 600;
+                    font-family: 'Mazzard M';
+                    margin-bottom: 15px;
+                    color: rgba(255, 255, 255, 1);
+                }
+                .policy__content h1 { font-size: 20px; }
+                .policy__content h2 { font-size: 18px; }
+                .policy__content h3 { font-size: 16px; }
+                .policy__content h1:not(:first-child),
+                .policy__content h2:not(:first-child),
+                .policy__content h3:not(:first-child) {
+                    margin-top: 35px;
+                }
+                .policy__content h1 a,
+                .policy__content h2 a,
+                .policy__content h3 a {
+                    color: #c0a8ff;
+                    text-decoration: underline;
+                }
+                /* Quill size classes */
+                .policy__content .ql-size-small { font-size: 12px; }
+                .policy__content .ql-size-large { font-size: 18px; }
+                .policy__content .ql-size-huge { font-size: 24px; }
+                .policy__content .ql-size-14px { font-size: 14px; }
+                .policy__content .ql-size-16px { font-size: 16px; }
+                .policy__content .ql-size-18px { font-size: 18px; }
+                .policy__content .ql-size-20px { font-size: 20px; }
+                .policy__content .ql-size-24px { font-size: 24px; }
+                /* Quill indent classes */
+                .policy__content .ql-indent-1 { padding-left: 3em; }
+                .policy__content .ql-indent-2 { padding-left: 6em; }
+                .policy__content .ql-indent-3 { padding-left: 9em; }
+                /* Quill alignment */
+                .policy__content .ql-align-center { text-align: center; }
+                .policy__content .ql-align-right { text-align: right; }
+                .policy__content .ql-align-justify { text-align: justify; }
+                /* Quill lists */
+                .policy__content ol, .policy__content ul {
+                    padding-left: 32px;
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: 500;
+                    color: rgba(255, 255, 255, .6);
+                    margin-bottom: 4px;
+                }
+                /* Quill blockquote */
+                .policy__content blockquote {
+                    border-left: 3px solid rgba(255, 255, 255, .3);
+                    padding-left: 16px;
+                    margin-left: 16px;
+                    font-size: 14px;
+                    color: rgba(255, 255, 255, .5);
+                    font-style: italic;
+                }
