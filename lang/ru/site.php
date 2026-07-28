@@ -173,6 +173,13 @@ return [
 
 
     "item_home" => "Главная",
+    // ТЗ §5 — support section under FAQ
+    "item_support" => "Техподдержка",
+    "support_eyebrow" => "Поддержка",
+    "support_heading" => "Онлайн",
+    "support_heading_accent" => "24/7",
+    "support_desc" => "Наша команда всегда готова помочь вам с любыми вопросами. Среднее время ответа — 15 минут.",
+    "support_reply_time" => "~15 мин ответ",
     // ТЗ §6 — unified page headings (breadcrumbs + pill)
     "crumb_status" => "Статусы",
     "crumb_reviews" => "Отзывы",

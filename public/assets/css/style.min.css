@@ -26987,3 +26987,110 @@ html.imgfade .game-hero__image img{
     margin-right:0 !important;
     align-self:flex-start !important;
 }
+
+/* ===================================================================== */
+/*  ТЗ §5 — technical-support section (sits under FAQ, /#support anchor)  */
+/* ===================================================================== */
+#support{ scroll-margin-top:120px; }
+.support{ padding:20px 0 80px; }
+.support__grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,520px);
+    gap:48px;
+    align-items:center;
+}
+.support__eyebrow{
+    display:inline-block;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:12px;
+    font-weight:700 !important;
+    color:#b59aff;
+    margin-bottom:14px;
+}
+.support__title{
+    margin:0 0 14px;
+    font-size:56px !important;
+    font-weight:700 !important;
+    line-height:1.05;
+    letter-spacing:-.02em;
+    color:#fff;
+    text-transform:none !important;
+}
+.support__title-accent{ color:#8456ff; }
+.support__desc{
+    max-width:520px;
+    margin:0 0 22px;
+    font-size:16px !important;
+    line-height:1.6;
+    color:rgba(255,255,255,.55);
+}
+.support__chip{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 16px;
+    border-radius:999px;
+    background:rgba(132,86,255,.1);
+    border:1px solid rgba(132,86,255,.28);
+    color:#cbb6ff;
+    font-size:13px;
+    font-weight:600 !important;
+}
+.support__cards{ display:flex; flex-direction:column; gap:14px; }
+.support__card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:22px 24px;
+    background:linear-gradient(180deg,#1d2533 0%,#171d28 100%);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;
+    text-decoration:none;
+    transition:border-color .2s, transform .15s, box-shadow .25s;
+}
+.support__card:hover{
+    border-color:rgba(132,86,255,.4);
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px -16px rgba(132,86,255,.5);
+}
+.support__card-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:14px;
+    background:linear-gradient(180deg,rgba(132,86,255,.2),rgba(132,86,255,.08));
+    border:1px solid rgba(132,86,255,.15);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:#cbb6ff;
+}
+.support__card-body{ display:flex; flex-direction:column; gap:3px; min-width:0; flex:1 1 auto; }
+.support__card-label{ color:#fff; font-weight:600 !important; font-size:16px; }
+.support__card-value{
+    color:rgba(255,255,255,.5);
+    font-size:13px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.support__card-arrow{
+    flex:0 0 auto;
+    color:rgba(255,255,255,.35);
+    display:inline-flex;
+    transition:transform .2s, color .2s;
+}
+.support__card:hover .support__card-arrow{ transform:translateX(4px); color:#cbb6ff; }
+
+@media (max-width:1023px){
+    .support__grid{ grid-template-columns:1fr; gap:28px; }
+    .support__title{ font-size:38px !important; }
+    .support__desc{ max-width:none; }
+}
+@media (max-width:600px){
+    .support{ padding:8px 0 56px; }
+    .support__title{ font-size:30px !important; }
+    .support__card{ padding:16px 18px; gap:12px; border-radius:14px; }
+    .support__card-icon{ width:44px; height:44px; flex:0 0 44px; border-radius:12px; }
+}

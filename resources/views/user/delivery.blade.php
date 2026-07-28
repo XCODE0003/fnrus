@@ -76,5 +76,8 @@
         </div>
     </section>
     @endif
+
+    {{-- ТЗ §5 — support block directly under FAQ (outside the guard so #support always exists) --}}
+    @include('user.components.support')
 </main>
 @endsection

@@ -54,7 +54,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.1">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.2">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -403,6 +403,7 @@
                     <li class="header__menu__item"><a href="/reviews">{{ __('site.item_reviews') }}</a></li>
                     <li class="header__menu__item"><a href="/about">{{ __('site.item_about') }}</a></li>
                     <li class="header__menu__item"><a href="/#faq" data-scroll="#faq">{{ __('site.item_help') }}</a></li>
+                    <li class="header__menu__item header__menu__item--support"><a href="/#support" data-scroll="#support">{{ __('site.item_support') }}</a></li>
                 </ul>
                 <div class="select header__lang">
                     <select name="lang">
