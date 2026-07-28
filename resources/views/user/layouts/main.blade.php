@@ -54,7 +54,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.2">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.5">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -474,30 +474,88 @@
         </header>
 
         @yield('content')
+        {{-- ТЗ §3 — four-column footer (brand · catalog · info · contacts)
+             + a documents bar. Contacts reuse the settings/support buttons. --}}
+        @php
+            $__f = \App\Models\ShopSettings::getDefault();
+            $__fContacts = [];
+            foreach ([1, 2, 3] as $__i) {
+                $__u = trim((string) ($__f->{'support_btn' . $__i . '_url'} ?? ''));
+                if ($__u === '') { continue; }
+                $__t = trim((string) ($__f->{'support_btn' . $__i . '_text'} ?? '')) ?: parse_url($__u, PHP_URL_HOST);
+                $__h = strtolower((string) parse_url($__u, PHP_URL_HOST));
+                $__ic = str_contains($__h, 't.me') || str_contains($__h, 'telegram') ? 'telegram'
+                    : (str_contains($__h, 'discord') ? 'discord'
+                    : (str_contains($__h, 'vk.') ? 'vk' : 'link'));
+                $__fContacts[] = ['url' => $__u, 'text' => $__t, 'icon' => $__ic];
+            }
+            if (!count($__fContacts) && !empty($__f->btn_tg_bot_url)) {
+                $__fContacts[] = ['url' => $__f->btn_tg_bot_url, 'text' => 'Telegram', 'icon' => 'telegram'];
+            }
+        @endphp
         <footer class="footer">
-            <div class="content footer__container">
-                <a href="/" class="footer__logo">
-                    <img src="/assets/img/logo.png" alt="">
-                </a>
-                <ul class="footer__menu">
-                    <li class="footer__menu__item"><a href="/">{{ __('site.item_home') }}</a></li>
-                    <li class="footer__menu__item"><a href="/status">{{ __('site.item_statuses') }}</a></li>
-                    <li class="footer__menu__item"><a href="/about">{{ __('site.item_about') }}</a></li>
-                    <li class="footer__menu__item"><a href="/#faq">{{ __('site.item_help') }}</a></li>
-                    <li class="footer__menu__item"><a href="/privacy">{{ __('site.item_privacy') }}</a></li>
-                    <li class="footer__menu__item"><a href="/terms">{{ __('site.item_terms') }}</a></li>
-                </ul>
-                <a href="{{ \App\Models\ShopSettings::getDefault()->btn_tg_bot_url ?? 'https://t.me/Fanru_bot' }}" class="social-btn footer__social-btn" target="_blank">
-                    <span class="social-btn__icon">
-                        @include('user.partials.icon', ['icon' => \App\Models\ShopSettings::getDefault()->btn_tg_bot_icon ?? 'telegram', 'color' => '#FFFFFF', 'size' => 80])
-                    </span>
-                    <span class="social-btn__text">{{ \App\Models\ShopSettings::getDefault()->btn_tg_bot_text ?: __('site.footer_tg_bot') }}</span>
-                </a>
+            <div class="content footer__grid">
+                <div class="footer__brand">
+                    <a href="/" class="footer__logo"><img src="/assets/img/logo.png" alt="{{ config('app.name') }}"></a>
+                    <p class="footer__desc">{{ __('site.footer_desc') }}</p>
+                    <a href="/#support" data-scroll="#support" class="footer__support-btn">
+                        {{ __('site.footer_support_btn') }}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer__col">
+                    <p class="footer__col-title">{{ __('site.footer_col_catalog') }}</p>
+                    <ul class="footer__links">
+                        <li><a href="/games">{{ __('site.item_catalog') }}</a></li>
+                        @foreach(($__headerCategories ?? collect())->take(4) as $__cat)
+                            <li><a href="/{{ $__cat->alias }}">{{ $__cat->title }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="footer__col">
+                    <p class="footer__col-title">{{ __('site.footer_col_info') }}</p>
+                    <ul class="footer__links">
+                        <li><a href="/about">{{ __('site.item_about') }}</a></li>
+                        <li><a href="/reviews">{{ __('site.item_reviews') }}</a></li>
+                        <li><a href="/status">{{ __('site.item_statuses') }}</a></li>
+                        <li><a href="/#faq">{{ __('site.item_help') }}</a></li>
+                        <li><a href="/#support" data-scroll="#support">{{ __('site.item_support') }}</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer__col footer__col--contacts">
+                    <p class="footer__col-title">{{ __('site.footer_col_contacts') }}</p>
+                    <div class="footer__note">
+                        <span>{{ __('site.footer_reply_fast') }}</span>
+                        <span>{{ __('site.footer_reply_always') }}</span>
+                    </div>
+                    <a class="footer__email" href="mailto:{{ __('site.footer_email') }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 7l8.5 6 8.5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        {{ __('site.footer_email') }}
+                    </a>
+                    @if(count($__fContacts))
+                        <div class="footer__socials">
+                            @foreach($__fContacts as $__c)
+                                <a class="footer__social" href="{{ $__c['url'] }}" target="_blank" rel="noopener noreferrer">
+                                    @include('user.partials.icon', ['icon' => $__c['icon'], 'color' => '#cbb6ff', 'size' => 16])
+                                    <span>{{ $__c['text'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div class="content footer__bottom-container">
-                <a href="/privacy" class="footer__menu__item">{{ __('site.item_privacy') }}</a>
-                <a href="/terms" class="footer__menu__item">{{ __('site.item_terms') }}</a>
-                <p class="footer__copy">© Fnrus 2026. {{ __('site.text_all_rights_reserved') }}</p>
+
+            <div class="content footer__bottom">
+                <div class="footer__docs">
+                    <span class="footer__docs-title">{{ __('site.footer_docs') }}</span>
+                    <a href="/privacy">{{ __('site.item_privacy') }}</a>
+                    <a href="/terms">{{ __('site.item_terms') }}</a>
+                    <button type="button" class="footer__docs-btn" onclick="if(window.openConsentSettings)openConsentSettings()">{{ __('site.cookie_settings') }}</button>
+                </div>
+                <p class="footer__copy">© {{ config('app.name') }} {{ date('Y') }}. {{ __('site.text_all_rights_reserved') }}</p>
             </div>
         </footer>
     </div>

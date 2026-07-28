@@ -27187,3 +27187,177 @@ html.imgfade .game-hero__image img{
                     color: rgba(255, 255, 255, .5);
                     font-style: italic;
                 }
+
+/* ===================================================================== */
+/*  ТЗ §3 — rebuilt footer: brand · catalog · info · contacts + docs bar  */
+/*  New .footer__grid / __brand / __col / __links / __bottom namespace,   */
+/*  so none of the ~16 legacy .footer__container/.footer__menu blocks     */
+/*  apply. Appended last so it wins over the .footer base rules.          */
+/* ===================================================================== */
+.footer{
+    margin-top:auto !important;
+    padding:56px 0 22px !important;
+    border-top:1px solid rgba(255,255,255,.06);
+    background:linear-gradient(180deg,rgba(255,255,255,.012),transparent);
+}
+.footer__grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);
+    gap:40px;
+    align-items:start;
+}
+.footer__brand{ display:flex; flex-direction:column; align-items:flex-start; gap:16px; }
+.footer .footer__logo{ display:inline-block; }
+.footer .footer__logo img{ height:44px; width:auto; object-fit:contain; }
+.footer__desc{
+    margin:0;
+    max-width:330px;
+    font-size:14px !important;
+    line-height:1.6;
+    color:rgba(255,255,255,.45);
+}
+.footer__support-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 22px;
+    border-radius:999px;
+    background:linear-gradient(180deg,#9466ff,#7340ff);
+    color:#fff !important;
+    font-size:14px;
+    font-weight:600 !important;
+    text-decoration:none;
+    box-shadow:0 12px 28px -12px rgba(132,86,255,.65);
+    transition:transform .15s, box-shadow .2s;
+}
+.footer__support-btn:hover{ transform:translateY(-1px); box-shadow:0 16px 32px -12px rgba(132,86,255,.8); }
+
+.footer__col{ display:flex; flex-direction:column; gap:14px; min-width:0; }
+.footer__col-title{
+    margin:0;
+    font-size:12px !important;
+    font-weight:700 !important;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.85);
+}
+.footer__links{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.footer__links li{ margin:0; padding:0; }
+.footer__links li::before{ content:none !important; }
+.footer__links a{
+    font-size:14px;
+    color:rgba(255,255,255,.5);
+    text-decoration:none;
+    transition:color .15s ease;
+}
+.footer__links a:hover{ color:#fff; }
+
+.footer__note{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding:12px 16px;
+    border-radius:12px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    font-size:13px;
+    color:rgba(255,255,255,.6);
+}
+.footer__email{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:14px;
+    color:rgba(255,255,255,.6);
+    text-decoration:none;
+    transition:color .15s ease;
+}
+.footer__email:hover{ color:#fff; }
+.footer__socials{ display:flex; flex-wrap:wrap; gap:10px; }
+.footer__social{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    color:rgba(255,255,255,.75) !important;
+    font-size:13px;
+    font-weight:600 !important;
+    text-decoration:none;
+    transition:border-color .2s, background .2s, color .2s;
+}
+.footer__social:hover{
+    border-color:rgba(132,86,255,.45);
+    background:rgba(132,86,255,.1);
+    color:#fff !important;
+}
+.footer__social svg{ flex:0 0 auto; }
+
+.footer__bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:34px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.06);
+}
+.footer__docs{ display:flex; align-items:center; flex-wrap:wrap; gap:8px 20px; }
+.footer__docs-title{
+    font-size:12px;
+    font-weight:700 !important;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.75);
+}
+.footer__docs a,
+.footer__docs-btn{
+    font-size:13px;
+    color:rgba(255,255,255,.45);
+    text-decoration:none;
+    transition:color .15s ease;
+}
+.footer__docs-btn{
+    background:none;
+    border:0;
+    padding:0;
+    font-family:inherit;
+    font-weight:inherit;
+    cursor:pointer;
+}
+.footer__docs a:hover,
+.footer__docs-btn:hover{ color:#fff; }
+.footer .footer__copy{
+    margin:0;
+    font-size:13px !important;
+    color:rgba(255,255,255,.35) !important;
+}
+
+@media (max-width:1023px){
+    .footer{ padding:44px 0 20px !important; }
+    .footer__grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; }
+    .footer__brand{ grid-column:1 / -1; }
+    .footer__desc{ max-width:520px; }
+}
+@media (max-width:599px){
+    .footer{ padding:36px 0 18px !important; }
+    .footer__grid{ grid-template-columns:1fr; gap:26px; }
+    .footer .footer__logo img{ height:38px; }
+    .footer__bottom{ margin-top:26px; align-items:flex-start; flex-direction:column; gap:14px; }
+    .footer__docs{ gap:8px 16px; }
+    .footer__social{ padding:8px 14px; }
+}
+/* Legacy pass uppercased the copyright; the rebuilt footer uses normal case. */
+.footer .footer__copy{ text-transform:none !important; letter-spacing:0 !important; }
+/* A legacy ≤599px rule pushed .footer__logo to order:1 / centre — in the
+   rebuilt footer the logo is the first item of the brand column. */
+.footer .footer__brand .footer__logo{
+    order:0 !important;
+    align-self:flex-start !important;
+    margin:0 !important;
+}
+.footer .footer__brand .footer__logo img{ height:38px !important; width:auto !important; }
+@media (min-width:600px){ .footer .footer__brand .footer__logo img{ height:44px !important; } }

@@ -173,6 +173,16 @@ return [
 
 
     "item_home" => "Home",
+    // ТЗ §3 — footer
+    "footer_desc" => "Private cheats for mobile and PC games: instant delivery, vetted products, updates after patches and daily support.",
+    "footer_col_catalog" => "Catalog",
+    "footer_col_info" => "Information",
+    "footer_col_contacts" => "Contacts",
+    "footer_docs" => "Documents",
+    "footer_support_btn" => "Support",
+    "footer_reply_fast" => "Average reply — under 15 minutes",
+    "footer_reply_always" => "Every day, 24/7",
+    "footer_email" => "Fnrus@proton.me",
     // ТЗ §5 — support section under FAQ
     "item_support" => "Support",
     "support_eyebrow" => "Support",
@@ -466,6 +476,7 @@ return [
     "invoice_currencies" => "Currencies",
     "invoice_copied" => "Copied",
     "cookie_title" => "We use Cookies",
+    "cookie_settings" => "Analytics settings",
     "cookie_text" => "To improve the website, we use Cookies and other technologies. By using the site, you agree to the processing of Cookie files.",
     "cookie_accept" => "Accept",
     "cookie_decline" => "Decline",

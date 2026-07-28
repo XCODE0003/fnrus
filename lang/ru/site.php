@@ -173,6 +173,16 @@ return [
 
 
     "item_home" => "Главная",
+    // ТЗ §3 — footer
+    "footer_desc" => "Приватные читы для мобильных и ПК игр: мгновенная выдача, проверенные продукты, обновления после патчей и ежедневная поддержка.",
+    "footer_col_catalog" => "Каталог",
+    "footer_col_info" => "Информация",
+    "footer_col_contacts" => "Контакты",
+    "footer_docs" => "Документы",
+    "footer_support_btn" => "Поддержка",
+    "footer_reply_fast" => "Средний ответ — до 15 минут",
+    "footer_reply_always" => "Каждый день, 24/7",
+    "footer_email" => "Fnrus@proton.me",
     // ТЗ §5 — support section under FAQ
     "item_support" => "Техподдержка",
     "support_eyebrow" => "Поддержка",
@@ -466,6 +476,7 @@ return [
     "invoice_currencies" => "Валюты",
     "invoice_copied" => "Скопировано",
     "cookie_title" => "Мы используем Cookie",
+    "cookie_settings" => "Настройки аналитики",
     "cookie_text" => "Чтобы улучшить работу сайта, мы используем Cookie и прочие технологии. Используя сайт, вы соглашаетесь на обработку файлов Cookie",
     "cookie_accept" => "Принять",
     "cookie_decline" => "Отклонить",
