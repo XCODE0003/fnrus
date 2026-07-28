@@ -27361,3 +27361,89 @@ html.imgfade .game-hero__image img{
 }
 .footer .footer__brand .footer__logo img{ height:38px !important; width:auto !important; }
 @media (min-width:600px){ .footer .footer__brand .footer__logo img{ height:44px !important; } }
+
+/* ===================================================================== */
+/*  ТЗ §11 — analytics consent dialog (replaces the old cookie bar).      */
+/*  Centred modal card; re-openable from the footer's documents bar.      */
+/* ===================================================================== */
+.consent{
+    position:fixed;
+    inset:0;
+    z-index:1200;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(9,12,18,.62);
+    -webkit-backdrop-filter:blur(4px);
+    backdrop-filter:blur(4px);
+    opacity:0;
+    transition:opacity .28s ease;
+}
+.consent[hidden]{ display:none; }
+.consent.is-visible{ opacity:1; }
+.consent__panel{
+    width:100%;
+    max-width:620px;
+    padding:26px 28px;
+    border-radius:20px;
+    background:linear-gradient(180deg,#1a2230 0%,#161c27 100%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 30px 80px -24px rgba(0,0,0,.8);
+    transform:translateY(14px) scale(.98);
+    transition:transform .28s cubic-bezier(.2,.72,.24,1);
+}
+.consent.is-visible .consent__panel{ transform:none; }
+.consent__title{
+    margin:0 0 10px;
+    font-size:20px !important;
+    font-weight:700 !important;
+    color:#fff;
+    text-transform:none !important;
+}
+.consent__desc{
+    margin:0 0 20px;
+    font-size:14px !important;
+    line-height:1.6;
+    color:rgba(255,255,255,.55);
+}
+.consent__desc a{ color:#b59aff; text-decoration:none; }
+.consent__desc a:hover{ text-decoration:underline; }
+.consent__actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+.consent__btn{
+    flex:0 1 auto;
+    padding:13px 22px;
+    border-radius:12px;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600 !important;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:background .2s, border-color .2s, transform .12s;
+}
+.consent__btn:active{ transform:translateY(1px); }
+.consent__btn--primary{
+    background:linear-gradient(180deg,#9466ff,#7340ff);
+    color:#fff;
+    box-shadow:0 12px 26px -12px rgba(132,86,255,.65);
+}
+.consent__btn--primary:hover{ background:linear-gradient(180deg,#a179ff,#8354ff); }
+.consent__btn--ghost{
+    background:rgba(255,255,255,.05);
+    border-color:rgba(255,255,255,.1);
+    color:rgba(255,255,255,.8);
+}
+.consent__btn--ghost:hover{ background:rgba(255,255,255,.09); color:#fff; }
+/* Mark the currently stored choice so it can be seen and flipped. */
+.consent__btn[aria-pressed="true"]{ border-color:rgba(132,86,255,.6); }
+
+@media (max-width:599px){
+    .consent{ align-items:flex-end; padding:0; }
+    .consent__panel{
+        max-width:none;
+        border-radius:20px 20px 0 0;
+        padding:22px 18px calc(20px + env(safe-area-inset-bottom));
+    }
+    .consent__actions{ flex-direction:column-reverse; }
+    .consent__btn{ width:100%; }
+}

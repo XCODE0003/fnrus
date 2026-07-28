@@ -54,7 +54,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.5">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.12.6">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -170,25 +170,35 @@
     }
     </script>
 
-    @if(config('services.analytics.yandex_metrika'))
-    {{-- Yandex.Metrika --}}
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-        ym({{ config('services.analytics.yandex_metrika') }}, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/{{ config('services.analytics.yandex_metrika') }}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    @endif
-
-    @if(config('services.analytics.google_analytics'))
-    {{-- Google Analytics (GA4) --}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.analytics.google_analytics') }}"></script>
+    {{-- ТЗ §11 — analytics are consent-gated: nothing is requested from
+         mc.yandex.ru / googletagmanager.com until the visitor allows it in the
+         "Настройки аналитики" dialog. The ids are passed to the client, the
+         loader below is what actually injects the tags. --}}
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ config('services.analytics.google_analytics') }}');
+        window.__analytics = {
+            ym: {{ (int) config('services.analytics.yandex_metrika') }},
+            ga: @json((string) config('services.analytics.google_analytics'))
+        };
+        window.enableAnalytics = function () {
+            if (window.__analyticsLoaded) { return; }
+            window.__analyticsLoaded = true;
+            var cfg = window.__analytics || {};
+            if (cfg.ym) {
+                (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+                ym(cfg.ym, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+            }
+            if (cfg.ga) {
+                var s = document.createElement('script');
+                s.async = true;
+                s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(cfg.ga);
+                document.head.appendChild(s);
+                window.dataLayer = window.dataLayer || [];
+                window.gtag = function(){ window.dataLayer.push(arguments); };
+                gtag('js', new Date());
+                gtag('config', cfg.ga);
+            }
+        };
     </script>
-    @endif
 </head>
 
 <body>
@@ -560,44 +570,97 @@
         </footer>
     </div>
 
-    <div class="cookie-banner" id="cookie-banner" hidden role="dialog" aria-live="polite" aria-labelledby="cookie-banner-title">
-        <div class="cookie-banner__inner">
-            <div class="cookie-banner__text">
-                <p class="cookie-banner__title" id="cookie-banner-title">{{ __('site.cookie_title') }}</p>
-                <p class="cookie-banner__desc">{{ __('site.cookie_text') }}</p>
-            </div>
-            <div class="cookie-banner__actions">
-                <button type="button" class="cookie-banner__btn cookie-banner__btn--primary" data-cookie-action="accept">{{ __('site.cookie_accept') }}</button>
-                <button type="button" class="cookie-banner__btn cookie-banner__btn--secondary" data-cookie-action="decline">{{ __('site.cookie_decline') }}</button>
+    {{-- ТЗ §11 — analytics consent. Shown once until a choice is made, and
+         re-openable from the footer so the previous choice can be changed. --}}
+    <div class="consent" id="consent" hidden role="dialog" aria-modal="true" aria-labelledby="consent-title">
+        <div class="consent__panel">
+            <p class="consent__title" id="consent-title">{{ __('site.cookie_settings') }}</p>
+            <p class="consent__desc">
+                {{ __('site.consent_text') }}
+                <a href="/privacy">{{ __('site.item_privacy') }}</a>
+            </p>
+            <div class="consent__actions">
+                <button type="button" class="consent__btn consent__btn--ghost" data-cookie-action="decline">{{ __('site.consent_only_necessary') }}</button>
+                <button type="button" class="consent__btn consent__btn--primary" data-cookie-action="accept">{{ __('site.consent_allow') }}</button>
             </div>
         </div>
     </div>
     <script>
-        (function() {
-            try {
-                var KEY = 'cookie_consent_v1';
-                if (localStorage.getItem(KEY)) return;
-                var banner = document.getElementById('cookie-banner');
-                if (!banner) return;
-                // Defer show a bit so it doesn't fight the page reveal animation
-                setTimeout(function() {
-                    banner.hidden = false;
-                    requestAnimationFrame(function() {
-                        banner.classList.add('is-visible');
-                    });
-                }, 600);
-                banner.addEventListener('click', function(e) {
-                    var btn = e.target.closest('[data-cookie-action]');
-                    if (!btn) return;
-                    try {
-                        localStorage.setItem(KEY, btn.dataset.cookieAction + ':' + Date.now());
-                    } catch (_) {}
-                    banner.classList.remove('is-visible');
-                    setTimeout(function() {
-                        banner.hidden = true;
-                    }, 280);
+        (function () {
+            var KEY = 'cookie_consent_v1';
+            var el = document.getElementById('consent');
+
+            function read() {
+                try { return localStorage.getItem(KEY) || ''; } catch (_) { return ''; }
+            }
+            function mark() {
+                // Reflect the stored choice so a returning visitor can see it.
+                if (!el) { return; }
+                var current = read().split(':')[0];
+                el.querySelectorAll('[data-cookie-action]').forEach(function (b) {
+                    b.setAttribute('aria-pressed', String(b.dataset.cookieAction === current));
                 });
-            } catch (_) {}
+            }
+            function show() {
+                if (!el) { return; }
+                mark();
+                el.hidden = false;
+                // Force a reflow instead of rAF: rAF callbacks are throttled in
+                // background tabs, which would leave the dialog at opacity 0.
+                void el.offsetWidth;
+                el.classList.add('is-visible');
+            }
+            function hide() {
+                if (!el) { return; }
+                el.classList.remove('is-visible');
+                setTimeout(function () { el.hidden = true; }, 280);
+            }
+            function dropAnalyticsCookies() {
+                // Revoking has to actually revoke: clear what Metrika/GA left.
+                var names = ['_ym_uid', '_ym_d', '_ym_isad', '_ym_visorc', '_ga', '_gid'];
+                document.cookie.split(';').forEach(function (c) {
+                    var n = c.split('=')[0].trim();
+                    if (n.indexOf('_ga_') === 0 || names.indexOf(n) !== -1) { names.push(n); }
+                });
+                var host = location.hostname;
+                names.forEach(function (n) {
+                    ['/', ''].forEach(function (p) {
+                        document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + (p || '/');
+                        document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=' + host;
+                        document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + host;
+                    });
+                });
+            }
+
+            window.setConsent = function (choice) {
+                try { localStorage.setItem(KEY, choice + ':' + Date.now()); } catch (_) {}
+                if (choice === 'accept') {
+                    if (window.enableAnalytics) { window.enableAnalytics(); }
+                } else {
+                    dropAnalyticsCookies();
+                }
+                hide();
+            };
+            window.openConsentSettings = function () { show(); };
+
+            if (el) {
+                el.addEventListener('click', function (e) {
+                    var btn = e.target.closest('[data-cookie-action]');
+                    if (btn) { window.setConsent(btn.dataset.cookieAction); return; }
+                    if (e.target === el) { hide(); }   // backdrop click just closes
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && !el.hidden) { hide(); }
+                });
+            }
+
+            // Load analytics straight away for a visitor who already opted in;
+            // otherwise ask. If localStorage is unavailable we fail open (ask).
+            if (read().indexOf('accept') === 0) {
+                if (window.enableAnalytics) { window.enableAnalytics(); }
+            } else if (!read()) {
+                setTimeout(show, 600);
+            }
         })();
     </script>
 
