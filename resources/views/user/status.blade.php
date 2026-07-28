@@ -3,8 +3,16 @@
 <main class="status-page">
     <section class="status-heading-section">
         <div class="content status-heading-section__container">
-            <p class="section-caption status-heading-section__section-caption">{!! __('site.section_statuses_caption') !!}</p>
-            <p class="section-subcaption status-heading-section__section-subcaption">{{ __('site.section_statuses_subcaption') }}</p>
+            @include('user.partials.page-heading', [
+                'crumbs' => [
+                    ['label' => __('site.item_home'), 'url' => '/'],
+                    ['label' => __('site.crumb_status')],
+                ],
+                'badge' => __('site.status_badge_label'),
+                'badgeIcon' => '/assets/img/hero-crown.svg',
+                'title' => __('site.section_statuses_caption'),
+                'subtitle' => __('site.section_statuses_subcaption'),
+            ])
             <div class="attention status-heading-section__attention">
                 <svg width="18" height="21" viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_435_92979)">

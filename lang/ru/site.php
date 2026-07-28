@@ -173,6 +173,12 @@ return [
 
 
     "item_home" => "Главная",
+    // ТЗ §6 — unified page headings (breadcrumbs + pill)
+    "crumb_status" => "Статусы",
+    "crumb_reviews" => "Отзывы",
+    "crumb_about" => "О нас",
+    "status_badge_label" => "Статусы читов",
+    "reviews_badge_label" => "Отзывы клиентов",
     "item_statuses" => "Статусы читов",
     "item_catalog" => "Каталог читов",
     "menu_catalog" => "Магазин",

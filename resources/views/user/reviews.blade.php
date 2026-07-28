@@ -8,14 +8,16 @@
 <main class="reviews-page">
     <section class="reviews-page__section">
         <div class="content">
-            <div class="reviews-page__head">
-                <div class="reviews__badge">
-                    <span class="reviews__badge-icon"><img src="/assets/img/rv-badge.svg" alt=""></span>
-                    <span class="reviews__badge-text">{{ __('site.section_reviews_title') }}</span>
-                </div>
-                <h1 class="reviews-page__title">{{ __('site.reviews_title') }}</h1>
-                <p class="reviews-page__subtitle">{{ __('site.reviews_subtitle') }}</p>
-            </div>
+            @include('user.partials.page-heading', [
+                'crumbs' => [
+                    ['label' => __('site.item_home'), 'url' => '/'],
+                    ['label' => __('site.crumb_reviews')],
+                ],
+                'badge' => __('site.reviews_badge_label'),
+                'badgeIcon' => '/assets/img/rv-badge.svg',
+                'title' => __('site.reviews_title'),
+                'subtitle' => __('site.reviews_subtitle'),
+            ])
 
             {{-- ==== Rating stats card ==== --}}
             <div class="reviews-stats">

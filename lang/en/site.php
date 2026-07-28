@@ -173,6 +173,12 @@ return [
 
 
     "item_home" => "Home",
+    // ТЗ §6 — unified page headings (breadcrumbs + pill)
+    "crumb_status" => "Statuses",
+    "crumb_reviews" => "Reviews",
+    "crumb_about" => "About us",
+    "status_badge_label" => "Cheat statuses",
+    "reviews_badge_label" => "Customer reviews",
     "item_statuses" => "Cheat statuses",
     "item_catalog" => "Cheats catalog",
     "menu_catalog" => "Shop",

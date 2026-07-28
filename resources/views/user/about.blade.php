@@ -6,12 +6,16 @@
             <div class="decor about-heading-section__decor1"></div>
             <div class="decor about-heading-section__decor2"></div>
             <div class="decor about-heading-section__decor3"></div>
-            <div class="section-category">
-                <div class="section-category__icon"><img src="/assets/img/icon_star.svg" alt=""></div>
-                <span class="section-category__text">{{ __('site.about_store_label') }}</span>
-            </div>
-            <p class="section-caption about-heading-section__section-caption">{!! __('site.about_heading') !!} <span class="about-heading-section__get-result">{{ __('site.about_get_result') }}</span></p>
-            <p class="section-subcaption about-heading-section__section-subcaption">{{ __('site.about_description') }}</p>
+            @include('user.partials.page-heading', [
+                'crumbs' => [
+                    ['label' => __('site.item_home'), 'url' => '/'],
+                    ['label' => __('site.crumb_about')],
+                ],
+                'badge' => __('site.about_store_label'),
+                'badgeIcon' => '/assets/img/icon_star.svg',
+                'title' => __('site.about_heading'),
+                'subtitle' => __('site.about_description'),
+            ])
             <button href="/" class="btn about-heading-section__btn" data-scroll=".catalog">
                 <span class="btn__icon"><img src="/assets/img/icon_1.svg" alt=""></span>
                 {{ __('site.btn_catalog_cheats') }}
