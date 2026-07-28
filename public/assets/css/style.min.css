@@ -27677,3 +27677,68 @@ html.imgfade .game-hero__image img{
 /* A legacy #cheat-video rule reserved 56px of top padding for the old
    floating close button; the close now lives inside the header. */
 .video-modal .video-modal__panel{ padding:0 !important; }
+
+/* ===================================================================== */
+/*  ТЗ §2 — profile navigation                                           */
+/*  ≤900px the sidebar menu becomes a horizontal scrolling tab rail, so   */
+/*  the four sections stay one tap away instead of stacking above the     */
+/*  content and pushing it off-screen.                                    */
+/* ===================================================================== */
+@media (max-width:900px){
+    .profile__sidebar .profile__menu{
+        display:flex !important;
+        flex-direction:row !important;
+        flex-wrap:nowrap !important;
+        gap:8px !important;
+        overflow-x:auto;
+        overflow-y:hidden;
+        -webkit-overflow-scrolling:touch;
+        scroll-snap-type:x proximity;
+        padding:8px !important;
+        margin:0 0 14px !important;
+        scrollbar-width:none;
+    }
+    .profile__sidebar .profile__menu::-webkit-scrollbar{ display:none; }
+    .profile__sidebar .profile__menu__item{
+        flex:0 0 auto !important;
+        margin:0 !important;
+        scroll-snap-align:start;
+    }
+    .profile__sidebar .profile__menu__item > a{
+        display:inline-flex !important;
+        align-items:center;
+        gap:8px;
+        white-space:nowrap;
+        padding:10px 16px !important;
+        border-radius:999px;
+        background:rgba(255,255,255,.04);
+        border:1px solid rgba(255,255,255,.07);
+        font-size:14px;
+    }
+    .profile__sidebar .profile__menu__item._active > a{
+        background:linear-gradient(180deg,rgba(132,86,255,.22),rgba(132,86,255,.1));
+        border-color:rgba(132,86,255,.5);
+        color:#fff;
+    }
+    .profile__sidebar .profile__menu__item > a svg{ flex:0 0 auto; width:18px; height:18px; }
+    /* fade the rail edges so it reads as scrollable */
+    .profile__sidebar .profile__menu{
+        -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%);
+        mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%);
+    }
+}
+
+/* Inner tab rail (Личные данные / Безопасность / Уведомления): the buttons
+   were shrinkable and wrapped mid-word on narrow screens. */
+.profile__tabs__choose__inner{ flex-wrap:nowrap !important; }
+.profile__tabs__choose__btn{ flex-shrink:0 !important; white-space:nowrap !important; }
+/* On mobile the tab rail is the primary control — keep it above the
+   account card (a legacy rule ordered the identity block first). */
+@media (max-width:900px){
+    .profile__sidebar{
+        display:flex !important;
+        flex-direction:column !important;
+    }
+    .profile__sidebar .profile__menu{ order:-1 !important; }
+    .profile__sidebar .profile__identity{ order:0 !important; }
+}

@@ -1950,3 +1950,37 @@ jQuery(function ($) {
         });
     });
 })();
+
+
+/* ============================================================
+ * ТЗ §2 — remember the open profile tab.
+ * The tab widget reset to the first panel on every load, so returning to
+ * /my/profile (or refreshing after saving something) always dropped the
+ * user back to "Личные данные".
+ * ============================================================ */
+jQuery(function ($) {
+    var rail = $('.profile__tabs');
+    if (!rail.length) { return; }
+
+    function activate(tab) {
+        var btn = rail.find('.profile__tabs__choose__btn[data-tab="' + tab + '"]');
+        if (!btn.length) { return false; }
+        rail.find('.profile__tabs__choose__btn').removeClass('_active');
+        rail.find('.profile__tabs__tab').removeClass('_active');
+        btn.addClass('_active');
+        rail.find('.profile__tabs__tab[data-tab="' + tab + '"]').addClass('_active');
+        if (btn[0] && btn[0].scrollIntoView) {
+            try { btn[0].scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
+        }
+        return true;
+    }
+
+    var fromHash = (location.hash || '').replace('#tab-', '');
+    if (fromHash) { activate(fromHash); }
+
+    rail.on('click', '.profile__tabs__choose__btn', function () {
+        var tab = $(this).attr('data-tab');
+        if (!tab) { return; }
+        try { history.replaceState(null, '', location.pathname + '#tab-' + tab); } catch (e) {}
+    });
+});
