@@ -1132,7 +1132,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.0"></script>
+    <script src="/assets/js/app.js?v=6.1"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

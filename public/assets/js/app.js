@@ -138,6 +138,19 @@ function createOrderWeb(product_id) {
             window._createdOrderHash = data.result.hash;
             window._createdOrderPrice = parseFloat(data.result.amount_full) || price;
 
+            // ТЗ §8.3 — remember it so a refresh can bring the user straight back.
+            if (window.savePendingOrder) {
+                window.savePendingOrder({
+                    id: data.result.id,
+                    hash: data.result.hash,
+                    price: window._createdOrderPrice,
+                    productId: product_id,
+                    productName: $.trim($('#buy #modal_title').text()),
+                    period: periodDays,
+                    amount: data.result.amount
+                });
+            }
+
             // Fill the "Информация о заказе" sub-screen.
             $('#buy #buy-product-name').text($.trim($('#buy #modal_title').text()) || '—');
             $('#buy #buy-order-id').text(data.result.hash);
@@ -1346,6 +1359,7 @@ function checkOrder(id, method_pay_id) {
         async: true,
         success: function (data) {
             if (data.ok === true && data.action === 'done') {
+                if (window.clearPendingOrder) { window.clearPendingOrder(); }
                 let popup = $('[data-popup-step="1"]').closest(".popup");
                 popup.find("[data-popup-step]._active").removeClass("_active");
                 $('[data-popup-step="3"]').addClass("_active");
@@ -1354,10 +1368,17 @@ function checkOrder(id, method_pay_id) {
                     $('#buy #material_link').attr("href", data.result.material_link);
                 }
             } else if (data.ok === false) {
+                if (window.clearPendingOrder) { window.clearPendingOrder(); }
                 showNotification(data.description, 'fail');
                 let popup = $('[data-popup-step="3"]').closest(".popup");
                 popup.find("[data-popup-step]._active").removeClass("_active");
-                $('[data-popup-step="4"]').addClass("_active");
+                // A cancelled order is not an expired one — send the user back to
+                // the start instead of the "время оплаты истекло" screen.
+                if (data.action === 'cancelled') {
+                    $('[data-popup-step="1"]').addClass("_active");
+                } else {
+                    $('[data-popup-step="4"]').addClass("_active");
+                }
             } else {
                 $('#timer').text(data.expired_sec);
                 timerInterval = setTimeout(function () {
@@ -1861,3 +1882,71 @@ jQuery(function ($) {
         checkOrder(window._createdOrderHash, 0);
     });
 });
+
+
+/* ============================================================
+ * ТЗ §8.3 — a created order must survive a page refresh.
+ * The order lives in the DB with status=1, stock decremented and keys
+ * reserved, but nothing was persisted client-side, so F5 dropped the user
+ * back to step 1 with no way to reach the order again.
+ * ============================================================ */
+(function () {
+    var KEY = 'pending_order_v1';
+
+    window.savePendingOrder = function (data) {
+        try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (_) {}
+    };
+    window.clearPendingOrder = function () {
+        try { localStorage.removeItem(KEY); } catch (_) {}
+    };
+    window.readPendingOrder = function () {
+        try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { return null; }
+    };
+
+    jQuery(function ($) {
+        var saved = window.readPendingOrder();
+        if (!saved || !saved.hash) { return; }
+
+        // Only restore on the product the order belongs to.
+        var modal = document.getElementById('buy');
+        if (!modal || !saved.productId || String(saved.productId) !== String(window.__productId || '')) { return; }
+
+        // Ask the server whether it is still open before showing anything.
+        $.ajax({
+            type: 'GET',
+            url: api_url + '/orders/' + saved.hash + '/check',
+            dataType: 'json',
+            beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + getCookie('session_token')); },
+            success: function (data) {
+                if (data.ok === false) { window.clearPendingOrder(); return; }
+
+                window._createdOrderId = saved.id;
+                window._createdOrderHash = saved.hash;
+                window._createdOrderPrice = saved.price;
+
+                $('#buy #buy-product-name').text(saved.productName || '—');
+                $('#buy #buy-order-id').text(saved.hash);
+                $('#buy #buy-period').text(saved.period || '—');
+                $('#buy #buy-sum').text(saved.amount || '—');
+
+                openPopup('buy');
+                var popup = $('[data-popup-step="1"]').closest('.popup');
+                popup.find('[data-popup-step]._active').removeClass('_active');
+                $('[data-popup-step="2"]').addClass('_active');
+                if (window._buyShowSubstep) { window._buyShowSubstep('order'); }
+
+                $('#buy #btn-pay').off('click').on('click', function () {
+                    if (!$('input[name="payment_method"]:checked').length) {
+                        if (window._buyShowSubstep) { window._buyShowSubstep('method'); }
+                        showNotification(window.lang.choose_payment_method, 'fail');
+                        return;
+                    }
+                    getOrdersPaymentLink(window._createdOrderId, 0, 'product');
+                });
+
+                paymentMethodsProduct(saved.price || 0);
+                checkOrder(saved.hash, 0);
+            }
+        });
+    });
+})();

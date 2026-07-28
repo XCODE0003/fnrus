@@ -469,16 +469,18 @@ class OrderController extends Controller
                 return response()->json(['ok' => true, 'action' => 'done']);
             }
 
+            // ТЗ §8.4 — cancelled and expired used to be indistinguishable to
+            // the client, so a cancelled order showed "срок оплаты истёк".
             if ($order->status == 3){
-                throw new Exception('Заказ был отменен.', 1);
+                return response()->json(['ok' => false, 'action' => 'cancelled', 'description' => 'Заказ был отменен.'], 200);
             }
 
             if ($order->status == 4){
-                throw new Exception('Истек срок оплаты заказа.', 1);
+                return response()->json(['ok' => false, 'action' => 'expired', 'description' => 'Истек срок оплаты заказа.'], 200);
             }
 
         } catch (Exception $e) {
-            return response()->json(['ok' => false, 'description' => $e->getMessage()], 200);
+            return response()->json(['ok' => false, 'action' => 'error', 'description' => $e->getMessage()], 200);
         }
     }
     public function create_site(Request $request){

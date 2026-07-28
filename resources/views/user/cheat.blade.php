@@ -1,5 +1,7 @@
 @extends('user.layouts.main')
 @section('content')
+    {{-- ТЗ §8.3 — the restore check needs to know which product this page is --}}
+    <script>window.__productId = {{ (int) $product->id }};</script>
     <main class="cheat-page">
         <section class="cheat">
             <div class="content cheat__container">
@@ -390,12 +392,15 @@
         no.addEventListener('click', close);
 
         yes.addEventListener('click', function(){
-            var orderId = window._createdOrderId;
-            if (!orderId) { close(); return; }
+            // ТЗ §8.4 — /orders/{hash}/cancel looks the order up by hash;
+            // sending the numeric id made every in-modal cancel fail with
+            // "Заказ не найден" and left stock and keys locked until the cron.
+            var orderHash = window._createdOrderHash;
+            if (!orderHash) { close(); return; }
             yes.disabled = true;
             $.ajax({
                 type: 'POST',
-                url: (window.api_url || (location.origin + '/api')) + '/orders/' + orderId + '/cancel',
+                url: (window.api_url || (location.origin + '/api')) + '/orders/' + orderHash + '/cancel',
                 dataType: 'json',
                 contentType: 'application/json',
                 beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + getCookie('session_token')); },
@@ -404,6 +409,7 @@
                     close();
                     if (data && data.ok === true) {
                         try { clearInterval(window.timerInterval); } catch(e) {}
+                        if (window.clearPendingOrder) { window.clearPendingOrder(); }
                         var popup = document.querySelector('#buy');
                         popup.querySelectorAll('[data-popup-step]._active').forEach(function(s){ s.classList.remove('_active'); });
                         popup.querySelector('[data-popup-step="1"]').classList.add('_active');
