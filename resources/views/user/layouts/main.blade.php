@@ -1080,7 +1080,9 @@
             nothing_found: @json(__('site.js_nothing_found')),
             server_connection_error: @json(__('site.js_server_connection_error')),
             order_paid: @json(__('site.cheat_order_paid')),
-            order_pending: @json(__('site.order_pending'))
+            order_pending: @json(__('site.order_pending')),
+            unsaved_changes: @json(__('site.unsaved_changes')),
+            unsaved_changes_confirm: @json(__('site.unsaved_changes_confirm'))
         };
 
         function changeLanguage(locale) {
@@ -1141,7 +1143,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.3"></script>
+    <script src="/assets/js/app.js?v=6.5"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

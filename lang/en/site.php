@@ -173,6 +173,8 @@ return [
 
 
     "item_home" => "Home",
+    "unsaved_changes" => "You have unsaved changes.",
+    "unsaved_changes_confirm" => "You have unsaved changes. Leave the page?",
     "order_pending" => "Awaiting payment",
     "btn_close" => "Close",
     // ТЗ §3 — footer

@@ -173,6 +173,8 @@ return [
 
 
     "item_home" => "Главная",
+    "unsaved_changes" => "Изменения не сохранены.",
+    "unsaved_changes_confirm" => "Изменения не сохранены. Уйти со страницы?",
     "order_pending" => "Ожидает оплаты",
     "btn_close" => "Закрыть",
     // ТЗ §3 — footer

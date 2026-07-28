@@ -2001,3 +2001,81 @@ jQuery(function ($) {
         try { history.replaceState(null, '', location.pathname + '#tab-' + tab); } catch (e) {}
     });
 });
+
+
+/* ============================================================
+ * ТЗ §2 — "навигация между разделами профиля без потери данных".
+ * The profile sections are separate pages, so leaving one mid-edit used to
+ * discard a half-typed login/email silently. Warn before that happens, and
+ * carry the open inner tab across sections so returning lands where you left.
+ * ============================================================ */
+jQuery(function ($) {
+    if (typeof path_a === 'undefined' || path_a !== 'my') { return; }
+
+    var GUARDED = '#edit-login, #edit-email';
+
+    function isDirty() {
+        var dirty = false;
+        $(GUARDED).each(function () {
+            // the fields are readonly until the user presses "Изменить"
+            if (!this.readOnly && $(this).val() !== ($(this).data('original') || '')) { dirty = true; }
+        });
+        return dirty;
+    }
+
+    // remember the server-rendered value so we can tell a real edit apart
+    $(document).on('focus', GUARDED, function () {
+        if ($(this).data('original') === undefined) { $(this).data('original', $(this).val()); }
+    });
+
+    $(window).on('beforeunload', function () {
+        if (isDirty()) { return window.lang.unsaved_changes || 'Изменения не сохранены.'; }
+    });
+
+    // Leaving via the profile nav: confirm, and keep the current inner tab.
+    $(document).on('click', '.profile__menu__item a', function (e) {
+        var href = $(this).attr('href') || '';
+        if (!href || href.charAt(0) !== '/') { return; }
+        if (isDirty() && !window.confirm(window.lang.unsaved_changes_confirm || 'Изменения не сохранены. Уйти со страницы?')) {
+            e.preventDefault();
+            return;
+        }
+        $(window).off('beforeunload');
+        try {
+            var tab = $('.profile__tabs__choose__btn._active').attr('data-tab');
+            if (tab) { sessionStorage.setItem('profile_tab', tab); }
+        } catch (err) {}
+    });
+
+    // Restore the tab the user was on when they come back to /my/profile.
+    try {
+        var saved = sessionStorage.getItem('profile_tab');
+        if (saved && !location.hash && $('.profile__tabs__choose__btn[data-tab="' + saved + '"]').length) {
+            $('.profile__tabs__choose__btn[data-tab="' + saved + '"]').trigger('click');
+        }
+    } catch (err) {}
+});
+
+
+/* ТЗ §5 — arriving at /#support (or any hash) from another page used to be a
+ * hard native jump. Smooth-scroll to the target on load instead, with the
+ * fixed header accounted for. */
+jQuery(function ($) {
+    var hash = window.location.hash;
+    if (!hash || hash.length < 2) { return; }
+    var $target = $(hash);
+    if (!$target.length) { return; }
+
+    function go(duration) {
+        var $t = $(hash);
+        if (!$t.length) { return; }
+        $('html, body').stop(true).animate({ scrollTop: $t.offset().top - 100 }, duration);
+    }
+
+    // cancel the browser's own instant jump, then animate
+    window.scrollTo(0, 0);
+    setTimeout(function () { go(500); }, 60);
+
+    // images above the target settle after load and shift it — re-align once.
+    $(window).on('load', function () { setTimeout(function () { go(200); }, 120); });
+});
