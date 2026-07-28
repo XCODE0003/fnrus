@@ -427,24 +427,43 @@
     </script>
 
     @if($product->link_video != '#' and $product->link_video != '' and (Str::startsWith($product->link_video, 'http') or Str::startsWith($product->link_video, '/uploads/')))
-    <div class="popup" id="cheat-video">
-        <div class="popup__video-wrap">
-            <button class="popup__close" onclick="closePopup()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-            @php
-                $videoUrl = $product->link_video;
-                $ytId = null;
-                if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/', $videoUrl, $ytMatch)) {
-                    $ytId = $ytMatch[1];
-                }
-            @endphp
-            <div class="popup__inner">
-                <div class="popup__video-container" id="video-player-container"
+    @php
+        // ТЗ §9 — work out the player kind server-side so the JS does not have
+        // to re-sniff the URL. Covers watch?v=, youtu.be, /embed/, /shorts/,
+        // /live/, /v/ and m.youtube; a /uploads/ path with no extension is a
+        // file too (that case used to match no branch and rendered a black box).
+        $videoUrl  = $product->link_video;
+        $videoKind = 'iframe';
+        $embedSrc  = $videoUrl;
+
+        if (preg_match('~(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/|v/)|youtu\.be/)([A-Za-z0-9_-]{6,})~i', $videoUrl, $m)) {
+            $videoKind = 'youtube';
+            $embedSrc  = 'https://www.youtube-nocookie.com/embed/' . $m[1]
+                . '?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1';
+        } elseif (preg_match('~(?:vimeo\.com/|player\.vimeo\.com/video/)(\d+)~i', $videoUrl, $m)) {
+            $videoKind = 'vimeo';
+            $embedSrc  = 'https://player.vimeo.com/video/' . $m[1] . '?autoplay=1&playsinline=1';
+        } elseif (preg_match('~\.(mp4|webm|mov|ogg|m4v)(\?|$)~i', $videoUrl) || Str::startsWith($videoUrl, '/uploads/')) {
+            $videoKind = 'file';
+            $embedSrc  = $videoUrl;
+        }
+    @endphp
+    <div class="popup video-modal" id="cheat-video" role="dialog" aria-modal="true" aria-label="{{ __('site.cheat_video_review') }}">
+        <div class="popup__video-wrap video-modal__panel">
+            <div class="video-modal__head">
+                <p class="video-modal__title">{{ __('site.cheat_video_review') }}</p>
+                <button type="button" class="popup__close video-modal__close" aria-label="{{ __('site.btn_close') ?? 'Закрыть' }}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup__inner video-modal__body">
+                <div class="popup__video-container video-modal__frame" id="video-player-container"
                      data-video-url="{{ $videoUrl }}"
-                     @if($ytId) data-youtube-id="{{ $ytId }}" @endif>
+                     data-video-kind="{{ $videoKind }}"
+                     data-embed-src="{{ $embedSrc }}">
+                    <span class="video-modal__spinner" aria-hidden="true"></span>
                 </div>
             </div>
         </div>

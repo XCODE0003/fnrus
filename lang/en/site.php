@@ -173,6 +173,7 @@ return [
 
 
     "item_home" => "Home",
+    "btn_close" => "Close",
     // ТЗ §3 — footer
     "footer_desc" => "Private cheats for mobile and PC games: instant delivery, vetted products, updates after patches and daily support.",
     "footer_col_catalog" => "Catalog",
