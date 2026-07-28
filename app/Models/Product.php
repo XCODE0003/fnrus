@@ -154,6 +154,7 @@ class Product extends Model
                     'hack_status' => $c->hack_status,
                     'status_title' => $status_title,
                     'status_class' => $status_class,
+                    'status_icon' => $status_icon,
                 ];
             }
 
@@ -264,6 +265,7 @@ class Product extends Model
                     'hack_status' => $c->hack_status,
                     'status_title' => $status_title,
                     'status_class' => $status_class,
+                    'status_icon' => $status_icon,
                 ];
             }
 

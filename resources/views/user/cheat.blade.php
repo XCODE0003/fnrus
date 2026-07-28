@@ -45,9 +45,7 @@
                             <div class="types">{{ $status }}</div>
                         @endif
                         <span style="margin:6px 0px" class="cheat-status cheat-status_{{ $status_class }}">
-                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M25.5865 11.2411C25.5009 11.0228 25.3516 10.8354 25.1579 10.7033C24.9642 10.5712 24.7352 10.5005 24.5008 10.5004H16.6219L18.6396 1.42022C18.7797 0.791267 18.3834 0.167907 17.7544 0.027892C17.5551 -0.0165117 17.3475 -0.00777573 17.1525 0.0532257C16.9576 0.114227 16.7821 0.225355 16.6436 0.37549L2.64382 15.5419C2.2065 16.0151 2.23567 16.7531 2.70885 17.1905C2.92454 17.3898 3.20749 17.5004 3.50118 17.5003H10.0494L7.06099 26.4643C6.85717 27.0755 7.18749 27.7362 7.79876 27.94C7.99742 28.0062 8.21024 28.0178 8.41489 27.9734C8.61955 27.929 8.80848 27.8304 8.96186 27.6878L25.2949 12.5214C25.4667 12.3621 25.5864 12.1547 25.6384 11.9263C25.6904 11.6978 25.6723 11.459 25.5865 11.2411Z" fill="white"/>
-                                </svg>
+                                @include('user.partials.status-icon', ['icon' => $status_icon ?? 'question', 'size' => 20])
                                 {{ $status_title }}
                         </span>
 
@@ -165,7 +163,7 @@
                                             <img src="/i{{ $card->image_site }}" alt="" onerror="this.style.visibility='hidden'">
                                         </div>
                                         <span class="game-card__status cheat-status_{{ $card->status_class }}">
-                                            <svg width="11" height="13" viewBox="0 0 10.0001 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.96538 4.8176C9.92869 4.72405 9.86468 4.64374 9.78167 4.58712C9.69866 4.5305 9.60052 4.50021 9.50004 4.50019H6.1234L6.98814 0.608664C7.04814 0.339114 6.87832 0.07196 6.60877 0.0119537C6.52331 -0.00707642 6.43436 -0.00333246 6.35081 0.022811C6.26726 0.0489544 6.19204 0.0965806 6.13268 0.160924L0.132787 6.66081C-0.0546344 6.8636 -0.0421368 7.17992 0.160657 7.36734C0.253094 7.45277 0.374358 7.50019 0.500228 7.50011H3.30659L2.02586 11.3418C1.93851 11.6038 2.08008 11.8869 2.34205 11.9743C2.42719 12.0027 2.5184 12.0076 2.6061 11.9886C2.69381 11.9696 2.77478 11.9273 2.84052 11.8662L9.8404 5.36632C9.914 5.29804 9.9653 5.20914 9.9876 5.11125C10.0099 5.01336 10.0021 4.91102 9.96538 4.8176Z" fill="currentColor"/></svg>
+                                            @include('user.partials.status-icon', ['icon' => $card->status_icon ?? 'question', 'size' => 12])
                                             {{ $card->status_title }}
                                         </span>
                                     </div>
@@ -243,6 +241,8 @@
                         </div>
                     </div>
 
+                    {{-- ТЗ §4 — the legal pages must be linked at checkout --}}
+                    <p class="legal-consent">{!! __('site.legal_consent_pay') !!}</p>
                     <button class="pay-btn pay-btn--primary popup__submit-btn" type="button" onclick="createOrderWeb({{ $product->id }});">
                         {{ __('site.modal_buy_btn_to_pay') }}
                     </button>
@@ -259,9 +259,16 @@
                             <button type="button" class="pay-btn pay-btn--primary" id="buy-method-continue">
                                 {{ __('site.invoice_continue') }}
                             </button>
-                            <button type="button" class="pay-btn pay-btn--secondary popup__back-btn" data-popup-switch-step="1" onclick="clearInterval(timerInterval);">
-                                {{ __('site.modal_buy_btn_back') }}
-                            </button>
+                            {{-- ТЗ §8.4 — «Назад» alone left the order pending with stock
+                                 and keys reserved, so cancelling is offered here too. --}}
+                            <div class="pay-actions__row">
+                                <button type="button" class="pay-btn pay-btn--secondary popup__back-btn" data-popup-switch-step="1" onclick="clearInterval(timerInterval);">
+                                    {{ __('site.modal_buy_btn_back') }}
+                                </button>
+                                <button type="button" class="pay-btn pay-btn--secondary pay-btn--danger" id="buy-cancel-trigger-method">
+                                    {{ __('site.invoice_cancel_order') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -379,7 +386,11 @@
 
     <script>
     (function(){
-        var trigger = document.getElementById('buy-cancel-trigger');
+        var triggers = [
+            document.getElementById('buy-cancel-trigger'),
+            document.getElementById('buy-cancel-trigger-method')
+        ].filter(Boolean);
+        var trigger = triggers[0];
         var overlay = document.getElementById('buy-cancel-confirm');
         var yes = document.getElementById('buy-cancel-confirm-yes');
         var no  = document.getElementById('buy-cancel-confirm-no');
@@ -388,7 +399,7 @@
         function open(){ overlay.hidden = false; requestAnimationFrame(function(){ overlay.classList.add('is-open'); }); }
         function close(){ overlay.classList.remove('is-open'); setTimeout(function(){ overlay.hidden = true; }, 220); }
 
-        trigger.addEventListener('click', open);
+        triggers.forEach(function(t){ t.addEventListener('click', open); });
         no.addEventListener('click', close);
 
         yes.addEventListener('click', function(){

@@ -691,6 +691,12 @@ class OrderController extends Controller
             if(!$order){
                 throw new Exception('Заказ не найден.', 1);
             }
+            // The route is public (a guest checkout only ever holds the hash),
+            // but an order that belongs to a registered buyer may only be
+            // cancelled by that buyer — the 7-char hash alone is not enough.
+            if((int) $order->bid !== 0 && (int) ($this->user->id ?? 0) !== (int) $order->bid){
+                throw new Exception('Заказ не найден.', 1);
+            }
             if($order->status != 1){
                 throw new Exception('Отменить можно только неоплаченный заказ.', 1);
             }

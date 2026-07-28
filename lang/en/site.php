@@ -173,6 +173,7 @@ return [
 
 
     "item_home" => "Home",
+    "order_pending" => "Awaiting payment",
     "btn_close" => "Close",
     // ТЗ §3 — footer
     "footer_desc" => "Private cheats for mobile and PC games: instant delivery, vetted products, updates after patches and daily support.",
@@ -206,6 +207,8 @@ return [
     "item_help" => "Help",
     "item_policy" => "Terms of service",
     "item_privacy" => "Privacy Policy",
+    "legal_consent_register" => 'By registering you agree to the <a href="/terms" target="_blank">Terms of Use</a> and the <a href="/privacy" target="_blank">Privacy Policy</a>.',
+    "legal_consent_pay" => 'By pressing "Proceed to payment" you agree to the <a href="/terms" target="_blank">Terms of Use</a> and the <a href="/privacy" target="_blank">Privacy Policy</a>.',
     "item_terms" => "Terms of Use",
 
     "label_without_root" => "Without Root rights",
@@ -228,7 +231,7 @@ return [
 
     // === about page ===
     "about_store_label" => "Fnrus - cheat store",
-    "about_heading" => "we offer <br> cheats for <span class=\"section-caption__accent\">mobile and PC</span> games",
+    "about_heading" => "We offer <br> cheats for <span class=\"section-caption__accent\">mobile and PC</span> games",
     "about_get_result" => "Get the result",
     "about_description" => "Fnrus is a leading company in the private cheat market, specializing in the most popular mobile and PC games. Having earned the respect of gamers, we stand out with our unique assortment and unmatched quality.",
     "about_purchases" => "Purchases",

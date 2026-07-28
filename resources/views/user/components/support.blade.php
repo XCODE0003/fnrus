@@ -48,9 +48,9 @@
     if (!count($__contacts) && !empty($__support->btn_tg_bot_url)) {
         $__contacts[] = [
             'url' => $__support->btn_tg_bot_url,
-            'label' => 'Telegram',
+            'label' => $__support->btn_tg_bot_text ?: 'Telegram',
             'handle' => '@' . trim((string) parse_url($__support->btn_tg_bot_url, PHP_URL_PATH), '/'),
-            'icon' => 'telegram',
+            'icon' => $__support->btn_tg_bot_icon ?: 'telegram',
         ];
     }
 

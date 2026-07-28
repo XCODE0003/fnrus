@@ -803,6 +803,7 @@ Route::get('/{alias}/{alias_two}/{alias_product}', function ($alias, $alias_two,
         'tariffs' => $tariffs,
         'status_title' => $status_title,
         'status_class' => $status_class,
+        'status_icon' => $status_icon,
         'recommendations' => $recommendations_json,
         'shop' => $shop
     ]);

@@ -27743,3 +27743,121 @@ html.imgfade .game-hero__image img{
     .profile__sidebar .profile__menu{ order:-1 !important; }
     .profile__sidebar .profile__identity{ order:0 !important; }
 }
+/* ТЗ §4 — inline legal consent line under the registration and checkout forms. */
+.legal-consent{
+    margin:14px 0 0;
+    font-size:12.5px !important;
+    line-height:1.5;
+    color:rgba(255,255,255,.45);
+    text-align:center;
+}
+.legal-consent a{ color:#b59aff; text-decoration:none; }
+.legal-consent a:hover{ text-decoration:underline; }
+/* ТЗ §1 — at 320px a one-line chip ("CheatNinja · Рекомендуем к использованию")
+   is wider than the screen and the status text gets cut off. Let the chip wrap
+   below 400px so both the name and the status stay readable. */
+@media (max-width:400px){
+    .game-status-block__cheats .status{
+        flex-wrap:wrap !important;
+        white-space:normal !important;
+        align-items:flex-start !important;
+    }
+    .game-status-block__cheats .status > span{ white-space:normal !important; }
+    .game-status-block__cheats .status .status__name{ flex:1 1 auto; min-width:0; }
+    .game-status-block__cheats .status .status__label{
+        flex:1 0 100%;
+        margin-left:22px;
+    }
+    .game-status-block__cheats .status .status__name + .status__label::before{ content:none; }
+    .cheat-statuses__header__all-statuses .status{
+        white-space:normal !important;
+        max-width:100%;
+    }
+}
+/* ТЗ §1 — a single long word ("конфиденциальности") at 34px is wider than a
+   320px screen and pushed the heading past the viewport. Let long words break,
+   and let the pill label wrap on very narrow screens. */
+.page-head__title{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+    hyphens:auto;
+}
+.page-head{ max-width:100%; }
+@media (max-width:400px){
+    .page-head__badge{ max-width:100%; flex-wrap:wrap; }
+    .page-head__badge-text{ white-space:normal !important; }
+}
+
+/* ===================================================================== */
+/*  ТЗ §5 — "Кнопка должна быть заметной": the support item is an accent  */
+/*  pill, not another plain nav link. Works on desktop and in the mobile  */
+/*  burger overlay.                                                       */
+/* ===================================================================== */
+.header__menu__item--support > a{
+    display:inline-flex !important;
+    align-items:center;
+    gap:7px;
+    padding:9px 16px !important;
+    border-radius:999px !important;
+    background:linear-gradient(180deg,rgba(132,86,255,.22),rgba(132,86,255,.1)) !important;
+    border:1px solid rgba(132,86,255,.5) !important;
+    color:#fff !important;
+    font-weight:600 !important;
+    transition:background .2s, border-color .2s, box-shadow .2s;
+}
+.header__menu__item--support > a::before{
+    content:"";
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#8af59b;
+    box-shadow:0 0 8px rgba(138,245,155,.9);
+    flex:0 0 auto;
+}
+.header__menu__item--support > a:hover{
+    background:linear-gradient(180deg,rgba(132,86,255,.34),rgba(132,86,255,.18)) !important;
+    border-color:rgba(132,86,255,.75) !important;
+    box-shadow:0 8px 20px -10px rgba(132,86,255,.7);
+}
+@media (max-width:1023px){
+    /* inside the burger overlay the items are full-width card rows */
+    .header__menu__item--support > a{
+        justify-content:flex-start;
+        width:100%;
+        border-radius:14px !important;
+    }
+}
+/* ТЗ §1 (320px) — the legend chips were flex:0 0 auto, so they could not
+   shrink and the longest one ("Рекомендуем к использованию") broke out of the
+   card. Allow shrinking and cap them to the container below 400px. */
+@media (max-width:400px){
+    .cheat-statuses__header__all-statuses{
+        width:100%;
+        min-width:0;
+    }
+    .cheat-statuses__header__all-statuses .status{
+        flex:0 1 auto !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        overflow:hidden !important;
+    }
+    .cheat-statuses__header__all-statuses .status .status__label{
+        min-width:0;
+        overflow-wrap:anywhere;
+    }
+}
+/* ТЗ §1 (320px) — the hero/section badges keep their label on one line, which
+   is wider than a 320px screen and clipped the pill. Let them wrap. */
+@media (max-width:400px){
+    .hero__badge,.catalog__badge,.section2__badge,.reviews__badge,.faq__badge,.support__chip{
+        max-width:100%;
+        flex-wrap:wrap;
+    }
+    .hero__badge-text,.catalog__badge-text,.section2__badge-text,
+    .reviews__badge-text,.faq__badge-text,
+    .reviews__badge > span:last-child,.faq__badge > span:last-child{
+        white-space:normal !important;
+        min-width:0;
+        overflow-wrap:anywhere;
+    }
+}

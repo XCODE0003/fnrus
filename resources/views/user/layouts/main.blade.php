@@ -54,7 +54,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.13.4">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.13.10">
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
@@ -500,7 +500,12 @@
                 $__fContacts[] = ['url' => $__u, 'text' => $__t, 'icon' => $__ic];
             }
             if (!count($__fContacts) && !empty($__f->btn_tg_bot_url)) {
-                $__fContacts[] = ['url' => $__f->btn_tg_bot_url, 'text' => 'Telegram', 'icon' => 'telegram'];
+                // Keep honouring the admin's Telegram-bot button settings.
+                $__fContacts[] = [
+                    'url' => $__f->btn_tg_bot_url,
+                    'text' => $__f->btn_tg_bot_text ?: __('site.footer_tg_bot'),
+                    'icon' => $__f->btn_tg_bot_icon ?: 'telegram',
+                ];
             }
         @endphp
         <footer class="footer">
@@ -527,6 +532,7 @@
                 <div class="footer__col">
                     <p class="footer__col-title">{{ __('site.footer_col_info') }}</p>
                     <ul class="footer__links">
+                        <li><a href="/">{{ __('site.item_home') }}</a></li>
                         <li><a href="/about">{{ __('site.item_about') }}</a></li>
                         <li><a href="/reviews">{{ __('site.item_reviews') }}</a></li>
                         <li><a href="/status">{{ __('site.item_statuses') }}</a></li>
@@ -812,6 +818,8 @@
             </div>
         </div>
         @if(env("CAPTCHA_ENABLED", false))<div class="h-captcha" data-sitekey="{{ env("HCAPTCHA_SITE_KEY") }}" data-theme="dark" style="margin: 0 auto;margin-top:20px;display:block;width:304px"></div>@endif
+        {{-- ТЗ §4 — the legal pages must be linked at registration --}}
+        <p class="legal-consent">{!! __('site.legal_consent_register') !!}</p>
         <button class="btn btn-accent popup__submit-btn" style="margin-bottom: 20px;margin-top:20px" onclick="signUp();">{{ __('site.btn_register_two') }}</button>
         <hr style="border: 1px solid #1d2533;" />
         <div>
@@ -1071,7 +1079,8 @@
             price: @json(__('site.section_user_orders_table_col_price')),
             nothing_found: @json(__('site.js_nothing_found')),
             server_connection_error: @json(__('site.js_server_connection_error')),
-            order_paid: @json(__('site.cheat_order_paid'))
+            order_paid: @json(__('site.cheat_order_paid')),
+            order_pending: @json(__('site.order_pending'))
         };
 
         function changeLanguage(locale) {

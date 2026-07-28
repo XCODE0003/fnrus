@@ -630,11 +630,19 @@ function memberOrders() {
                 var items_html = '';
 
                 $(data.result).each(function(index, e) {
-                    items_html += '<div class="profile__table__row">\n' +
+                    // ТЗ §8.3 — an unfinished order is listed too, marked and
+                    // linking to its invoice instead of to the delivery page.
+                    var pendingBadge = e.is_pending
+                        ? '<span class="status _on-update profile__order-pending">' + (window.lang.order_pending || 'Ожидает оплаты') + '</span>'
+                        : '';
+                    var lastLink = e.is_pending
+                        ? '<a href="' + e.pay_link + '" class="profile__table__link"></a>'
+                        : '<a href="/delivery/' + e.delivery_hash + '" class="profile__table__link"></a>';
+                    items_html += '<div class="profile__table__row' + (e.is_pending ? ' is-pending' : '') + '">\n' +
                         '                                <div class="profile__table__col">'+e.id+'</div>\n' +
                         '                                <div class="profile__table__col">\n' +
                         '                                    <div class="profile__orders-table__cheat-card">\n' +
-                        '                                        <span>' + e.title + '</span>\n' +
+                        '                                        <span>' + e.title + '</span>' + pendingBadge + '\n' +
                         '                                    </div>\n' +
                         '                                </div>\n' +
                         '                                <div class="profile__table__col">\n' +
@@ -645,7 +653,7 @@ function memberOrders() {
                         '                                <div class="profile__table__col">\n' +
                         '                                    <span class="profile__table__col__col-name">'+window.lang.price+'</span>\n' +
                         '                                    <span>' + e.amount + '</span>\n' +
-                        '                                    <a href="/delivery/' + e.delivery_hash + '" class="profile__table__link"></a>\n' +
+                        '                                    ' + lastLink + '\n' +
                         '                                </div>\n' +
                         '                            </div>';
                 });

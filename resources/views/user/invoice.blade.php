@@ -11,7 +11,7 @@
     <title>{{ __('site.invoice_title') }} #{{ $hash }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.9.79">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.13.10">
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </head>
 <body class="pay-page-body">
@@ -87,6 +87,10 @@
             </button>
             <div id="pay-methods-bt-list"></div>
         </div>
+
+        {{-- ТЗ §4 — this page is a standalone document with no site footer, so
+             the legal pages have to be linked here too. --}}
+        <p class="legal-consent">{!! __('site.legal_consent_pay') !!}</p>
 
         <div class="pay-actions">
             <button type="button" class="pay-btn pay-btn--primary" id="btn-pay" disabled>

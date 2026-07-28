@@ -173,6 +173,7 @@ return [
 
 
     "item_home" => "Главная",
+    "order_pending" => "Ожидает оплаты",
     "btn_close" => "Закрыть",
     // ТЗ §3 — footer
     "footer_desc" => "Приватные читы для мобильных и ПК игр: мгновенная выдача, проверенные продукты, обновления после патчей и ежедневная поддержка.",
@@ -206,6 +207,8 @@ return [
     "item_help" => "Помощь",
     "item_policy" => "Пользовательское соглашение",
     "item_privacy" => "Политика конфиденциальности",
+    "legal_consent_register" => 'Регистрируясь, вы соглашаетесь с <a href="/terms" target="_blank">Условиями пользования</a> и <a href="/privacy" target="_blank">Политикой конфиденциальности</a>.',
+    "legal_consent_pay" => 'Нажимая «Перейти к оплате», вы соглашаетесь с <a href="/terms" target="_blank">Условиями пользования</a> и <a href="/privacy" target="_blank">Политикой конфиденциальности</a>.',
     "item_terms" => "Условия пользования",
 
     "label_without_root" => "Без Root прав",
@@ -228,7 +231,7 @@ return [
 
     // === about page ===
     "about_store_label" => "Fnrus - магазин читов",
-    "about_heading" => "мы предлагаем <br> читы для <span class=\"section-caption__accent\">mobile и ПК</span> игр",
+    "about_heading" => "Мы предлагаем <br> читы для <span class=\"section-caption__accent\">mobile и ПК</span> игр",
     "about_get_result" => "Получите результат",
     "about_description" => "Fnrus – это ведущая компания на рынке продажи приватных читов, специализирующаяся на самых востребованных мобильных и ПК играх. Заслужив уважение среди геймеров, мы выделяемся уникальным ассортиментом и непревзойдённым качеством.",
     "about_purchases" => "Покупок",

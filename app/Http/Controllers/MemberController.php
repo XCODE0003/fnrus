@@ -385,9 +385,17 @@ class MemberController extends Controller
 
             $lists = [];
 
+            // ТЗ §8.3 — "при обновлении страницы пользователь должен видеть свой
+            // актуальный незавершённый заказ": paid orders plus any still-open
+            // one (status 1 within its booking window).
             $items = Order::where('bid', $this->user->id)
-                ->where('status', 2)
                 ->where('pid', '!=', 0)
+                ->where(function ($q) {
+                    $q->where('status', 2)
+                      ->orWhere(function ($q2) {
+                          $q2->where('status', 1)->where('expired_at', '>', time());
+                      });
+                })
                 ->orderBy('id', 'desc')
                 ->get();
 
@@ -410,7 +418,11 @@ class MemberController extends Controller
                     'amount' => Currency::convert($this->main_currency_code, $currency_code, $item->amount).$currency_symbol,
                     'status' => $item->status,
                     'delivery_hash' => $item->delivery_hash,
-                    'payment_at' => date('d.m.Y H:i', $item->payment_at)
+                    // an unpaid order has no payment_at yet — show when it expires
+                    'is_pending' => $item->status == 1,
+                    'expired_at' => $item->status == 1 ? date('d.m.Y H:i', $item->expired_at) : null,
+                    'pay_link' => $item->status == 1 ? '/invoice/' . $item->hash : null,
+                    'payment_at' => $item->payment_at ? date('d.m.Y H:i', $item->payment_at) : '—'
                 ];
             }
 
