@@ -50,7 +50,13 @@ class StatusCheat extends Model
             4 => ['key' => 'risk',          'icon' => 'warning', 'lang' => 'site.section_statuses_status_4'],
         ];
 
-        $meta = $map[(int) $status] ?? ['key' => 'unknown', 'icon' => 'question', 'lang' => 'site.section_statuses_status_0'];
+        // Unknown / 0 has no lang key of its own — section_statuses_status_0 is
+        // the filter dropdown's "Все статусы" label, not a status name.
+        if (!isset($map[(int) $status])) {
+            return ['key' => 'unknown', 'label' => self::statusLabel((int) $status), 'icon' => 'question'];
+        }
+
+        $meta = $map[(int) $status];
 
         $label = __($meta['lang']);
         if ($label === $meta['lang']) {            // missing translation — fall back

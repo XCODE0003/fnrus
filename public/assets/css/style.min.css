@@ -27197,8 +27197,9 @@ html.imgfade .game-hero__image img{
 .footer{
     margin-top:auto !important;
     padding:56px 0 22px !important;
-    border-top:1px solid rgba(255,255,255,.06);
-    background:linear-gradient(180deg,rgba(255,255,255,.012),transparent);
+    /* an earlier .footer rule sets these with !important, so these need it too */
+    border-top:1px solid rgba(255,255,255,.06) !important;
+    background:linear-gradient(180deg,rgba(255,255,255,.012),transparent) !important;
 }
 .footer__grid{
     display:grid;

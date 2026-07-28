@@ -1347,6 +1347,15 @@ function lastMessageScroll() {
 // });
 
 
+// checkOrder() is shared by product orders AND balance top-ups, so the saved
+// order may belong to a different flow than the one being polled — only clear
+// it when the poll is about that same order.
+function clearPendingIfSame(id) {
+    if (!window.readPendingOrder || !window.clearPendingOrder) { return; }
+    var s = window.readPendingOrder();
+    if (s && String(s.hash) === String(id)) { window.clearPendingOrder(); }
+}
+
 function checkOrder(id, method_pay_id) {
     $.ajax({
         type: "GET",
@@ -1359,7 +1368,7 @@ function checkOrder(id, method_pay_id) {
         async: true,
         success: function (data) {
             if (data.ok === true && data.action === 'done') {
-                if (window.clearPendingOrder) { window.clearPendingOrder(); }
+                clearPendingIfSame(id);
                 let popup = $('[data-popup-step="1"]').closest(".popup");
                 popup.find("[data-popup-step]._active").removeClass("_active");
                 $('[data-popup-step="3"]').addClass("_active");
@@ -1368,7 +1377,7 @@ function checkOrder(id, method_pay_id) {
                     $('#buy #material_link').attr("href", data.result.material_link);
                 }
             } else if (data.ok === false) {
-                if (window.clearPendingOrder) { window.clearPendingOrder(); }
+                clearPendingIfSame(id);
                 showNotification(data.description, 'fail');
                 let popup = $('[data-popup-step="3"]').closest(".popup");
                 popup.find("[data-popup-step]._active").removeClass("_active");
