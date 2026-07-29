@@ -44,6 +44,46 @@ class ProductResource extends Resource
         6 => 'Без обхода',
     ];
 
+    /**
+     * ТЗ §3.2 — category options grouped by their game, e.g.
+     *   Pubg Mobile ▸ [Android, iOS], Rust ▸ [ПК]
+     * so «Android» is never ambiguous. Filament renders the nested array as
+     * <optgroup>. Categories whose game is missing land under «Без игры».
+     */
+    public static function categoryOptionsByGame(): array
+    {
+        $rows = Category::orderBy('sort')->get(['id', 'cid', 'title']);
+        $games = $rows->where('cid', 0)->pluck('title', 'id')->all();
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            if ((int) $row->cid === 0) {
+                continue; // a game itself is not a product category
+            }
+            $game = $games[(int) $row->cid] ?? 'Без игры';
+            $grouped[$game][$row->id] = $row->title;
+        }
+        ksort($grouped);
+
+        return $grouped;
+    }
+
+    /** id => "Игра · Категория", for table columns. */
+    public static function categoryPathLabels(): array
+    {
+        $rows = Category::get(['id', 'cid', 'title']);
+        $games = $rows->where('cid', 0)->pluck('title', 'id')->all();
+
+        $labels = [];
+        foreach ($rows as $row) {
+            $labels[(int) $row->id] = (int) $row->cid === 0
+                ? $row->title
+                : (($games[(int) $row->cid] ?? 'Без игры') . ' · ' . $row->title);
+        }
+
+        return $labels;
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -79,10 +119,16 @@ class ProductResource extends Resource
                         ->maxLength(255)
                         ->placeholder('Напишите ключевые слова'),
 
+                    // ТЗ §3.2 — the picker used to be a flat list of bare titles,
+                    // so it showed a dozen identical «Android» / «iOS» entries.
+                    // Group them under their game instead. Only the presentation
+                    // changes: the saved value is still the category id.
                     Forms\Components\Select::make('cid')
                         ->label('Категория')
-                        ->options(fn () => Category::orderBy('sort')->pluck('title', 'id')->all())
+                        ->options(fn () => self::categoryOptionsByGame())
                         ->searchable()
+                        ->preload()
+                        ->native(false)
                         ->required(),
 
                     Forms\Components\RichEditor::make('description')
@@ -253,7 +299,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('title')->label('Название')->searchable()->sortable()->wrap(),
                 Tables\Columns\TextColumn::make('cid')
                     ->label('Категория')
-                    ->formatStateUsing(fn ($state) => Category::where('id', $state)->value('title') ?? '#' . $state)
+                    ->formatStateUsing(fn ($state) => self::categoryPathLabels()[(int) $state] ?? '#' . $state)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('count_sales')->label('Продаж')->sortable(),
                 Tables\Columns\TextColumn::make('materials_available')
@@ -275,7 +321,7 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('visibility')->options(self::VISIBILITY_OPTIONS),
                 Tables\Filters\SelectFilter::make('cid')
                     ->label('Категория')
-                    ->options(fn () => Category::orderBy('sort')->pluck('title', 'id')->all())
+                    ->options(fn () => self::categoryOptionsByGame())
                     ->searchable(),
             ])
             ->actions([

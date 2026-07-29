@@ -22,7 +22,13 @@ class AdminMiddleware
         $user = Auth::user();
         $min = (int) config('admin.min_role_id', env('ADMIN_MIN_ROLE_ID', 1));
 
-        if ($user && (int) ($user->role_id ?? 0) >= $min) {
+        // ТЗ §4 — a blocked (or banned) admin must lose the /api/admin/*
+        // surface too, otherwise the block is cosmetic: their 30-day JWT would
+        // still carry full write access.
+        if ($user
+            && (int) ($user->role_id ?? 0) >= $min
+            && (int) ($user->is_ban ?? 0) !== 1
+            && ($user->admin_blocked_at ?? null) === null) {
             return $next($request);
         }
 

@@ -53,6 +53,15 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
         };
 
         if (Auth::guard('web')->check()) {
+            // ТЗ §4 — a live session must not outlive a block or a
+            // "terminate session" action, so re-verify before trusting it.
+            $liveId = (int) Auth::guard('web')->id();
+            if (! $this->adminAccessStillValid($request, $liveId)) {
+                $log('access_revoked_on_fast_path', ['user_id' => $liveId]);
+                Auth::guard('web')->logout();
+                $request->session()->forget(['admin_session_user_id', 'admin_session_started_at', '2fa_passed_at']);
+                abort(404);
+            }
             $log('web_guard_already_authed');
             parent::authenticate($request, $guards);
             return;
@@ -74,12 +83,14 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
         // Match AdminWebGuard exactly: only is_ban + role_id, no is_active gate.
         $minRole = (int) config('admin.min_role_id', 1);
         $row = DB::table('users')
-            ->select('id', 'role_id', 'is_ban')
+            ->select('id', 'role_id', 'is_ban', 'admin_blocked_at', 'admin_sessions_revoked_at')
             ->where('id', $userId)
             ->first();
 
         if (! $row
             || (int) $row->is_ban === 1
+            // ТЗ §4 — blocked from the panel (storefront account stays usable)
+            || $row->admin_blocked_at !== null
             || (int) $row->role_id < $minRole) {
             $log('role_check_failed', [
                 'user_id' => $userId,
@@ -93,11 +104,96 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
             abort(404);
         }
 
+        // A session issued before the revocation epoch must not be resurrected
+        // from the long-lived JWT cookie either.
+        $revoked = (int) ($row->admin_sessions_revoked_at ?? 0);
+        if ($revoked > 0 && $sourceTried === 'jwt_cookie' && $this->jwtIssuedAt($request) < $revoked) {
+            $log('jwt_predates_revocation', ['user_id' => $userId, 'revoked_at' => $revoked]);
+            abort(404);
+        }
+
         $log('admitting_user', ['user_id' => $userId, 'source' => $sourceTried]);
         Auth::guard('web')->loginUsingId($userId);
         $request->session()->put('admin_session_user_id', $userId);
+        $request->session()->put('admin_session_started_at', time());
+        $this->recordAdminLogin($userId, $request);
 
         parent::authenticate($request, $guards);
+    }
+
+    /**
+     * ТЗ §4 — is this already-authenticated admin still allowed in?
+     * False when they were blocked, banned, demoted, or when their sessions
+     * were revoked after this session started.
+     */
+    private function adminAccessStillValid(Request $request, int $userId): bool
+    {
+        if ($userId <= 0) {
+            return false;
+        }
+
+        $row = DB::table('users')
+            ->select('role_id', 'is_ban', 'admin_blocked_at', 'admin_sessions_revoked_at')
+            ->where('id', $userId)
+            ->first();
+
+        if (! $row
+            || (int) $row->is_ban === 1
+            || $row->admin_blocked_at !== null
+            || (int) $row->role_id < (int) config('admin.min_role_id', 1)) {
+            return false;
+        }
+
+        $revoked = (int) ($row->admin_sessions_revoked_at ?? 0);
+        if ($revoked > 0) {
+            // Sessions started before the revocation epoch are dead. A session
+            // with no recorded start predates the feature — treat it as dead.
+            $startedAt = (int) $request->session()->get('admin_session_started_at', 0);
+            if ($startedAt < $revoked) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** Issue time of the session_token JWT, or 0 when unavailable. */
+    private function jwtIssuedAt(Request $request): int
+    {
+        $token = $request->cookie('session_token');
+        if (! $token) {
+            return 0;
+        }
+
+        try {
+            return (int) \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::setToken($token)->getPayload()->get('iat');
+        } catch (\Throwable $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Remember that this account entered the admin panel, so the
+     * «Администраторы» tab can list past panel users. Written with the query
+     * builder on purpose: the User model is audited, and an Eloquent save here
+     * would add a maintenance-log row on every panel session.
+     */
+    private function recordAdminLogin(int $userId, Request $request): void
+    {
+        try {
+            $last = (int) DB::table('users')->where('id', $userId)->value('last_admin_login_at');
+            if ($last > time() - 300) {
+                return; // already counted this session
+            }
+
+            DB::table('users')->where('id', $userId)->update([
+                'last_admin_login_at' => time(),
+                'last_admin_login_ip' => (string) $request->ip(),
+                'admin_login_count' => DB::raw('admin_login_count + 1'),
+            ]);
+        } catch (\Throwable $e) {
+            // never block panel entry on bookkeeping
+        }
     }
 
     private function resolveFromJwtCookie(Request $request): int

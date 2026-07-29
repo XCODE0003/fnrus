@@ -20,6 +20,8 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasName
         // (legacy admins kept access regardless of is_active).
         $minRole = (int) config('admin.min_role_id', 1);
         return !$this->is_ban
+            // ТЗ §4 — blocked from the panel, storefront account untouched
+            && $this->admin_blocked_at === null
             && (int) ($this->role_id ?? 0) >= $minRole;
     }
 
@@ -58,7 +60,15 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasName
         'email_notify_status_changed',
         'tstep',
         'tdata',
-        'created_at'
+        'created_at',
+        // ТЗ §4 — admin-panel access control
+        'admin_blocked_at',
+        'admin_blocked_by',
+        'admin_blocked_reason',
+        'admin_sessions_revoked_at',
+        'last_admin_login_at',
+        'last_admin_login_ip',
+        'admin_login_count',
     ];
 
     protected $hidden = [

@@ -23,6 +23,15 @@ return [
     'min_role_id' => (int) env('ADMIN_MIN_ROLE_ID', 1),
 
     /*
+     * Role level that counts as a full administrator (as opposed to a
+     * moderator, who also reaches the panel via min_role_id). Only these may
+     * manage the «Администраторы» tab, and the system refuses to block the
+     * last one. Was previously read as a raw env() in AdminAccessController,
+     * which returns null under config:cache.
+     */
+    'main_admin_role_id' => (int) env('MAIN_ADMIN_ROLE_ID', 2),
+
+    /*
     |--------------------------------------------------------------------------
     | IP allow-list for the admin panel
     |--------------------------------------------------------------------------

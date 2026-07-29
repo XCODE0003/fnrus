@@ -74,12 +74,42 @@ class CategoryResource extends Resource
                     ->maxLength(255)
                     ->placeholder('Напишите ключевые слова'),
 
-                Forms\Components\Select::make('cid')
-                    ->label('Категория')
-                    ->options(fn () => [0 => 'Без категории'] + Category::where('cid', 0)->orderBy('sort')->pluck('title', 'id')->all())
-                    ->default(0)
+                // ТЗ §3.3 — make it explicit whether this row is a GAME or a
+                // category inside a game. Previously the parent select defaulted
+                // to «Без категории», so a mis-click silently produced an
+                // orphan category that no storefront page could reach.
+                Forms\Components\Radio::make('entry_kind')
+                    ->label('Что создаём')
+                    ->options([
+                        'game' => 'Игру (верхний уровень)',
+                        'category' => 'Категорию внутри игры',
+                    ])
+                    ->default(fn (?Category $record) => $record && (int) $record->cid !== 0 ? 'category' : 'game')
+                    ->dehydrated(false)
                     ->live()
-                    ->required(),
+                    ->inline()
+                    ->inlineLabel(false)
+                    ->columnSpanFull(),
+
+                Forms\Components\Select::make('cid')
+                    ->label('Игра')
+                    ->helperText('Категория (Android, iOS, ПК …) всегда принадлежит игре.')
+                    ->options(fn () => Category::where('cid', 0)->orderBy('title')->pluck('title', 'id')->all())
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->live()
+                    ->visible(fn (Forms\Get $get) => $get('entry_kind') === 'category')
+                    ->required(fn (Forms\Get $get) => $get('entry_kind') === 'category')
+                    // a game keeps cid = 0; a category must name its game
+                    ->dehydrateStateUsing(fn ($state, Forms\Get $get) => $get('entry_kind') === 'category' ? (int) $state : 0)
+                    ->rules([
+                        fn (Forms\Get $get) => function (string $attr, $value, \Closure $fail) use ($get) {
+                            if ($get('entry_kind') === 'category' && (int) $value === 0) {
+                                $fail('Выберите игру, которой принадлежит категория.');
+                            }
+                        },
+                    ]),
 
                 // ТЗ §7 — platform of the game, drives the catalog filter
                 // ("Все игры / ПК игры / Мобильные игры"). Only meaningful for a
@@ -94,8 +124,8 @@ class CategoryResource extends Resource
                     ])
                     ->default('pc mobile')
                     ->native(false)
-                    ->visible(fn (Forms\Get $get) => (int) $get('cid') === 0)
-                    ->required(fn (Forms\Get $get) => (int) $get('cid') === 0),
+                    ->visible(fn (Forms\Get $get) => $get('entry_kind') === 'game')
+                    ->required(fn (Forms\Get $get) => $get('entry_kind') === 'game'),
 
                 Forms\Components\RichEditor::make('description')
                     ->label('Описание')
@@ -147,6 +177,16 @@ class CategoryResource extends Resource
         ]);
     }
 
+    /** id => title of every top-level game, memoised per request. */
+    protected static ?array $gameTitles = null;
+
+    protected static function gameTitles(): array
+    {
+        return self::$gameTitles ??= Category::where('cid', 0)
+            ->pluck('title', 'id')
+            ->all();
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -154,9 +194,16 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
                 Tables\Columns\TextColumn::make('title')->label('Название')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('alias')->label('Alias')->searchable(),
+                // ТЗ §3.1 — a category must read as "which game it belongs to".
+                // Titles are resolved once per render, not per row (was N+1).
                 Tables\Columns\TextColumn::make('cid')
-                    ->label('Родитель')
-                    ->formatStateUsing(fn ($state) => $state == 0 ? '—' : (Category::where('id', $state)->value('title') ?? '#' . $state)),
+                    ->label('Игра')
+                    ->badge()
+                    ->color(fn ($state) => (int) $state === 0 ? 'gray' : 'info')
+                    ->formatStateUsing(fn ($state) => (int) $state === 0
+                        ? 'Игра'
+                        : (self::gameTitles()[(int) $state] ?? '#' . $state))
+                    ->sortable(),
                 Tables\Columns\BadgeColumn::make('visibility')
                     ->label('Видим.')
                     ->formatStateUsing(fn ($state) => self::VISIBILITY_OPTIONS[$state] ?? $state)
@@ -188,7 +235,22 @@ class CategoryResource extends Resource
                         $data['updated_at'] = time();
                         return $data;
                     }),
-                Tables\Actions\DeleteAction::make(),
+                // ТЗ §3.3 — deleting a game used to orphan its categories.
+                Tables\Actions\DeleteAction::make()
+                    ->before(function (Category $record, Tables\Actions\DeleteAction $action): void {
+                        if ((int) $record->cid !== 0) {
+                            return;
+                        }
+                        $children = Category::where('cid', $record->id)->count();
+                        if ($children > 0) {
+                            \Filament\Notifications\Notification::make()
+                                ->danger()
+                                ->title('Сначала удалите категории игры')
+                                ->body("У игры «{$record->title}» ещё {$children} категор." . ' Удаление оставило бы их без игры.')
+                                ->send();
+                            $action->cancel();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
