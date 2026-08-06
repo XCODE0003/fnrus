@@ -1,4 +1,10 @@
 @extends('user.layouts.main')
+@push('head')
+    {{-- LCP image of the home page: start it with the stylesheet
+         instead of waiting for layout. --}}
+    <link rel="preload" as="image" href="/assets/img/spider-hero.webp" fetchpriority="high">
+@endpush
+
 @section('content')
 <main class="main">
     <section class="hero">
@@ -22,7 +28,7 @@
                 </div>
             </div>
             <div class="hero__image">
-                <img src="/assets/img/spider-hero.webp" alt="">
+                <img src="/assets/img/spider-hero.webp" alt="" fetchpriority="high" decoding="async" width="640" height="640">
             </div>
         </div>
     </section>

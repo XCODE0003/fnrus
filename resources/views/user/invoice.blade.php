@@ -11,7 +11,16 @@
     <title>{{ __('site.invoice_title') }} #{{ $hash }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.13.10">
+@php
+    // Prefer the minified build (php artisan assets:build) when it is present;
+    // fall back to the hand-edited source so local editing keeps working.
+    $__cssVer = '4.13.10';
+    $__cssFile = file_exists(public_path('assets/css/style.build.css'))
+        ? 'assets/css/style.build.css'
+        : 'assets/css/style.min.css';
+    $__cssHref = '/' . $__cssFile . '?v=' . $__cssVer;
+@endphp
+    <link rel="stylesheet" href="{{ $__cssHref }}">
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </head>
 <body class="pay-page-body">

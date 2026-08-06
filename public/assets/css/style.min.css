@@ -23005,12 +23005,10 @@ body, body *{
 /*  Все ~250 деклараций font-family:"Mazzard H"/"Mazzard M" автоматически */
 /*  рисуются Onest. Объявления в конце файла перекрывают оригинальные.   */
 /* ==================================================================== */
-/* Onest base faces */
-@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-400.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-500.ttf) format("truetype");font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-600.ttf) format("truetype");font-weight:600;font-style:normal;font-display:swap}
-@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-700.ttf) format("truetype");font-weight:700;font-style:normal;font-display:swap}
-@font-face{font-family:"Onest";src:url(../fonts/Onest/Onest-800.ttf) format("truetype");font-weight:800;font-style:normal;font-display:swap}
+/* Onest @font-face removed: --font-sans is redefined later to the system
+   stack, so no element ever rendered with Onest while the browser still
+   downloaded ~58 KB of TTF per weight. Re-add if the design switches back. */
+/* Onest base faces (declarations removed — see note above) */
 
 /* Remap legacy family slots → Onest using WEIGHT RANGES so EVERY original
    Mazzard weight (200/300/400/500/600/700/800/900 + italics) is shadowed

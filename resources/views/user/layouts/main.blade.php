@@ -54,7 +54,17 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
     <link rel="shortcut icon" href="/assets/img/favicon.ico?v=3">
 
-    <link rel="stylesheet" href="/assets/css/style.min.css?v=4.13.10">
+@php
+    // Prefer the minified build (php artisan assets:build) when it is present;
+    // fall back to the hand-edited source so local editing keeps working.
+    $__cssVer = '4.13.10';
+    $__cssFile = file_exists(public_path('assets/css/style.build.css'))
+        ? 'assets/css/style.build.css'
+        : 'assets/css/style.min.css';
+    $__cssHref = '/' . $__cssFile . '?v=' . $__cssVer;
+@endphp
+    <link rel="stylesheet" href="{{ $__cssHref }}">
+    @stack('head')
     <!-- Libs -->
     <link rel="stylesheet" href="/assets/libs/Swiper/swiper-bundle.min.css?v=1.1">
     <link rel="stylesheet" href="/assets/libs/simplebar/simplebar.css">
