@@ -45,6 +45,9 @@ class AuthController
 
             if ($user) {
                 $session_token = Auth::login($user);
+                // Recorded for «Контроль доступа» — magic-link sign-ins never
+                // pass through the LoginThrottle middleware.
+                \App\Services\LoginAudit::success($user, 'magic_link');
                 Member::changeTokenByID($user->id, $user->sid);
 //                return response()->json(['ok' => true, 'result' => ['token' => $session_token]]);
             } else {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\LoginAudit;
 use App\Models\Shop;
 use App\Models\ShopSettings;
 use App\Models\User;
@@ -84,6 +85,9 @@ class TelegramAuthController
         }
         Cache::forget('tglogin:' . (string) $token);
         $sessionToken = Auth::login($user);
+        // «Контроль доступа» reads login_attempts; without this a Telegram
+        // sign-in was never recorded there.
+        LoginAudit::success($user, 'telegram');
         return response()->json(['ok' => true, 'session_token' => $sessionToken]);
     }
 
@@ -143,6 +147,7 @@ class TelegramAuthController
             }
 
             $sessionToken = Auth::login($user);
+            LoginAudit::success($user, 'telegram_widget');
 
             return view('user.login', ['session_token' => $sessionToken]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\LoginAudit;
 use App\Models\Shop;
 use App\Models\ShopSettings;
 use App\Models\User;
@@ -91,6 +92,7 @@ class YandexAuthController
             }
 
             $sessionToken = Auth::login($user);
+            LoginAudit::success($user, 'yandex');
 
             return view('user.login', ['session_token' => $sessionToken]);
 
