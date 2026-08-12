@@ -83,7 +83,7 @@ return [
     "section_statuses_header_title" => "Статусы читов",
     "section_statuses_placeholder_search" => "Поиск..",
     "section_statuses_status_0" => "Все статусы",
-    "section_statuses_status_1" => "Рекомендуем к использованию",
+    "section_statuses_status_1" => "Рекомендуем",
     "section_statuses_status_2" => "Не рекомендуем",
     "section_statuses_status_3" => "На обновлении",
     "section_statuses_status_4" => "На свой страх и риск..",

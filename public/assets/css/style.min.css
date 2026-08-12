@@ -27772,6 +27772,103 @@ html.imgfade .game-hero__image img{
         max-width:100%;
     }
 }
+
+/* ===================================================================== */
+/*  v4.13.11 — screenshot QA: typography, header, footer, support/about  */
+/* ===================================================================== */
+/* Restore the exact pre-v3.6 typeface.  The Mazzard M family slot is
+   intentionally mapped to the locally hosted Onest faces above; using that
+   slot keeps the old appearance without downloading a duplicate font family. */
+:root{
+    --font-sans:"Mazzard M", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+html body,
+html body [class],
+html body [class] *{
+    font-family:var(--font-sans) !important;
+}
+
+/* Desktop navigation must remain a single, evenly spaced row. */
+@media (min-width:1024px){
+    .header__container{ gap:12px !important; }
+    .header__logo{
+        flex:0 0 126px !important;
+        width:126px !important;
+        margin-right:18px !important;
+    }
+    .header__menu{
+        flex:1 1 auto !important;
+        min-width:0 !important;
+        justify-content:space-between !important;
+        gap:3px !important;
+        margin-right:0 !important;
+    }
+    .header__menu__item,
+    .header__menu__item > a,
+    .header__menu__pill{
+        white-space:nowrap !important;
+    }
+    .header__menu__item > a{ padding:9px 9px !important; }
+    .header__menu__pill{ padding:9px 13px !important; }
+    .header__lang{
+        flex:0 0 auto !important;
+        margin:0 2px 0 0 !important;
+    }
+    .header__search{ flex:0 1 190px !important; min-width:150px !important; }
+    .header__login{ flex:0 0 auto !important; }
+}
+@media (min-width:1024px) and (max-width:1280px){
+    .header__logo{ flex-basis:108px !important; width:108px !important; margin-right:8px !important; }
+    .header__menu__item > a{ padding-inline:6px !important; font-size:12px !important; }
+    .header__menu__pill{ padding-inline:10px !important; font-size:12px !important; }
+    .header__search{ flex-basis:150px !important; }
+}
+
+/* The source logo is a square transparent canvas. Give it enough rendered
+   size for the visible FN RUS mark to match the other footer elements. */
+.footer .footer__logo{
+    width:160px !important;
+    height:68px !important;
+    display:flex !important;
+    align-items:center !important;
+    overflow:visible !important;
+}
+.footer .footer__brand .footer__logo img{
+    width:160px !important;
+    height:160px !important;
+    max-width:none !important;
+    object-fit:contain !important;
+}
+
+/* Keep both support columns visually connected instead of leaving a large
+   dead strip in the centre on wide screens. */
+@media (min-width:1024px){
+    .support__grid{
+        grid-template-columns:minmax(0,520px) minmax(0,520px) !important;
+        justify-content:center !important;
+        gap:56px !important;
+    }
+}
+
+/* About heading follows the same left edge and width as the content blocks.
+   The crossed-out duplicate CTA from the screenshot is intentionally removed. */
+.about-page .about-heading-section__container{
+    max-width:1180px !important;
+}
+.about-page .page-head{ max-width:760px !important; }
+.about-page .about-heading-section__btn{ display:none !important; }
+
+/* Long status wording no longer escapes compact product cards. */
+.game-card__status,
+.status{
+    max-width:100% !important;
+    min-width:0 !important;
+}
+.game-card__status{
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+}
 /* ТЗ §1 — a single long word ("конфиденциальности") at 34px is wider than a
    320px screen and pushed the heading past the viewport. Let long words break,
    and let the pill label wrap on very narrow screens. */

@@ -83,7 +83,7 @@ return [
     "section_statuses_header_title" => "Cheat statuses",
     "section_statuses_placeholder_search" => "Search..",
     "section_statuses_status_0" => "All statuses",
-    "section_statuses_status_1" => "Recommended for use",
+    "section_statuses_status_1" => "Recommended",
     "section_statuses_status_2" => "Not recommended",
     "section_statuses_status_3" => "Updating",
     "section_statuses_status_4" => "At your own risk..",
