@@ -27774,6 +27774,179 @@ html.imgfade .game-hero__image img{
 }
 
 /* ===================================================================== */
+/*  v4.13.13 — stable portrait-tablet layout (600–1023px)                 */
+/*  One final tablet layer resolves old phone + full-bleed rule conflicts. */
+/* ===================================================================== */
+@media (min-width:600px) and (max-width:1023px){
+    html{ scroll-padding-top:90px; }
+    section[id]{ scroll-margin-top:90px; }
+
+    /* Header uses the compact controls, but keeps predictable gutters. */
+    .header{ height:104px !important; }
+    .header__container{
+        height:104px !important;
+        padding-left:40px !important;
+        padding-right:40px !important;
+    }
+    .header__logo{ width:124px !important; margin-right:auto !important; }
+
+    /* Hero artwork is hidden on tablet; remove every leftover image reserve. */
+    main.main .hero{
+        min-height:0 !important;
+        height:auto !important;
+        padding:118px 0 20px !important;
+        margin:0 !important;
+    }
+    main.main .hero__content{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+        display:block !important;
+    }
+    main.main .hero__col{
+        width:100% !important;
+        max-width:620px !important;
+        min-height:0 !important;
+        height:auto !important;
+        padding:0 !important;
+    }
+    main.main .hero__image{ display:none !important; }
+    main.main .catalog{
+        margin:28px 0 0 !important;
+        padding:18px 0 36px !important;
+    }
+
+    /* Two readable cards per view.  The previous three-column formula made
+       labels truncate and let cards disappear behind the viewport edge. */
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider{
+        width:100% !important;
+        max-width:100% !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        padding-left:0 !important;
+        padding-right:0 !important;
+        scroll-padding-left:0 !important;
+        scroll-padding-right:0 !important;
+        -webkit-mask-image:none !important;
+        mask-image:none !important;
+    }
+    .game-list .game-cheats-slider .swiper-wrapper,
+    .game-cheats-slider .swiper-wrapper{
+        gap:14px !important;
+    }
+    .game-list .game-cheats-slider .swiper-slide,
+    .game-list .game-cheats-slider .game-card,
+    .game-cheats-slider .swiper-slide,
+    .game-cheats-slider .game-card,
+    .game-cards-slider .swiper-slide,
+    .game-cards-slider .game-card{
+        flex:0 0 calc((100% - 14px) / 2) !important;
+        width:calc((100% - 14px) / 2) !important;
+        max-width:calc((100% - 14px) / 2) !important;
+        min-width:0 !important;
+    }
+    .game-card__status{
+        max-width:calc(100% - 56px) !important;
+        font-size:11px !important;
+    }
+
+    /* Profile navigation: all four destinations remain visible without an
+       unexplained horizontal scroll or a half-cut «Техподдержка» tab. */
+    .profile{ padding-top:118px !important; }
+    .profile__sidebar .profile__menu{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:10px !important;
+        width:100% !important;
+        overflow:visible !important;
+        margin:0 0 14px !important;
+        padding:10px !important;
+        -webkit-mask-image:none !important;
+        mask-image:none !important;
+    }
+    .profile__sidebar .profile__menu__item{ min-width:0 !important; width:100% !important; }
+    .profile__sidebar .profile__menu__item > a{
+        width:100% !important;
+        min-height:48px !important;
+        justify-content:center !important;
+        padding:11px 14px !important;
+        border-radius:12px !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+    }
+
+    /* About/status headings no longer float halfway down an empty hero. */
+    main.about-page,
+    main.status-page,
+    main.reviews-page{ padding-top:104px !important; }
+    main.about-page > section.about-heading-section,
+    main.status-page > section.status-heading-section{
+        min-height:0 !important;
+        height:auto !important;
+        padding:28px 0 22px !important;
+    }
+    .about-page .about-heading-section__container,
+    .status-page .status-heading-section__container{
+        min-height:0 !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+    }
+    .about-page .page-head,
+    .status-page .page-head{ margin-bottom:18px !important; }
+
+    /* Four dates in a dependable 2×2 layout instead of a clipped Swiper row. */
+    .about-section__history__slider{
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:10px 0 0 !important;
+        overflow:visible !important;
+    }
+    .about-section__history__slider::before,
+    .about-section__history__slide::before{
+        display:none !important;
+    }
+    .about-section__history__slider .swiper-wrapper{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:24px 28px !important;
+        width:100% !important;
+        transform:none !important;
+    }
+    .about-section__history__slide,
+    .about-section__history__slide.swiper-slide{
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:112px !important;
+        margin:0 !important;
+        padding:18px 0 0 !important;
+    }
+    .about-section__history__slider-btn{ display:none !important; }
+
+    /* The full-screen burger stays a backdrop, while its useful controls form
+       a compact centred panel rather than looking shifted to one side. */
+    .header__menu._active{
+        padding-left:40px !important;
+        padding-right:40px !important;
+        gap:10px !important;
+    }
+    .header__menu._active .header__menu__item,
+    .header__menu._active .header__menu__pill,
+    .header__menu._active .header__menu__item > a{
+        width:100% !important;
+        max-width:688px !important;
+        margin-left:auto !important;
+        margin-right:auto !important;
+    }
+}
+
+/* ===================================================================== */
 /*  v4.13.11 — screenshot QA: typography, header, footer, support/about  */
 /* ===================================================================== */
 /* Restore the exact pre-v3.6 typeface.  The Mazzard M family slot is
