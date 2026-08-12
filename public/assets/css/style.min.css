@@ -28211,3 +28211,182 @@ html body [class] *{ font-family:var(--font-sans) !important; }
         overflow-wrap:anywhere;
     }
 }
+
+/* ===================================================================== */
+/* v4.14.0 — unified responsive foundation                                */
+/* ===================================================================== */
+html{ overflow-x:clip; }
+body{ min-width:0; overflow-x:clip; }
+img,svg,video,canvas{ max-width:100%; }
+button,a,input,select,textarea{ touch-action:manipulation; }
+
+@media (max-width:1400px){
+    :root{ --mobile-header-height:104px; }
+
+    html.menu-open,
+    body.menu-open{
+        overflow:hidden !important;
+        overscroll-behavior:none;
+    }
+    body.menu-open{ touch-action:none; }
+
+    .header:has(.header__menu._active){
+        position:fixed !important;
+        inset:0 0 auto 0 !important;
+        height:var(--mobile-header-height) !important;
+        z-index:1001 !important;
+        background:#0c1018 !important;
+        border-bottom:1px solid rgba(255,255,255,.055) !important;
+        box-shadow:none !important;
+    }
+    .header:has(.header__menu._active) .header__container{
+        height:var(--mobile-header-height) !important;
+    }
+    html body .header .header__menu,
+    html body .header .header__menu._active{
+        position:fixed !important;
+        inset:var(--mobile-header-height) 0 auto !important;
+        width:100% !important;
+        height:calc(100dvh - var(--mobile-header-height)) !important;
+        max-height:none !important;
+        margin:0 !important;
+        padding:clamp(16px,3vh,28px) max(clamp(18px,5.2vw,40px),calc((100vw - 840px)/2)) calc(28px + env(safe-area-inset-bottom)) !important;
+        background:#090e15 !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+        overscroll-behavior:contain !important;
+        -webkit-overflow-scrolling:touch;
+        scroll-padding-bottom:32px;
+        z-index:1000 !important;
+    }
+    html body .header .header__menu:not(._active){ pointer-events:none !important; }
+    html body .header .header__menu._active{
+        display:flex !important;
+        align-items:stretch !important;
+        justify-content:flex-start !important;
+        gap:10px !important;
+        opacity:1 !important;
+        visibility:visible !important;
+        transform:none !important;
+    }
+    .header__menu._active .header__menu__item{
+        width:calc(100% - clamp(36px,10.4vw,80px)) !important;
+        max-width:760px !important;
+        min-width:0 !important;
+        margin-inline:auto !important;
+    }
+    .header__menu._active .header__menu__pill,
+    .header__menu._active .header__menu__item > a{
+        width:100% !important;
+        max-width:none !important;
+        min-width:0 !important;
+        margin-inline:0 !important;
+    }
+    .header__menu._active > .header__menu__item:first-child{
+        margin-top:clamp(16px,3vh,28px) !important;
+    }
+    .header__menu._active > .header__menu__item:last-child{
+        margin-bottom:calc(24px + env(safe-area-inset-bottom)) !important;
+    }
+    .header__menu._active .header__menu__item > a,
+    .header__menu._active .header__menu__pill{
+        min-height:56px !important;
+        padding:14px 16px !important;
+        border-radius:14px !important;
+        font-size:15px !important;
+        line-height:1.25 !important;
+    }
+    .header__menu._active .header__menu__item--dropdown .header__menu__pill{
+        min-height:64px !important;
+    }
+    .header__hamburger,
+    .header__login,
+    .header__search-btn{
+        min-width:44px !important;
+        min-height:44px !important;
+    }
+}
+
+@media (max-width:599px){
+    :root{ --mobile-header-height:78px; }
+    .header:has(.header__menu._active),
+    .header:has(.header__menu._active) .header__container{
+        height:var(--mobile-header-height) !important;
+    }
+    html body .header .header__menu,
+    html body .header .header__menu._active{
+        inset:var(--mobile-header-height) 0 auto !important;
+        height:calc(100dvh - var(--mobile-header-height)) !important;
+        padding:14px 14px calc(22px + env(safe-area-inset-bottom)) !important;
+    }
+    .header__menu._active{ gap:8px !important; }
+    .header__menu._active .header__menu__item{
+        width:calc(100% - 28px) !important;
+    }
+    .header__menu._active .header__menu__item > a,
+    .header__menu._active .header__menu__pill{
+        min-height:52px !important;
+        padding:12px 14px !important;
+        border-radius:13px !important;
+        font-size:14px !important;
+    }
+    .header__menu._active .header__menu__item--dropdown .header__menu__pill{
+        min-height:58px !important;
+    }
+}
+
+/* Chromium applies fixed positioning inside a zoomed body in zoomed CSS
+   coordinates. Give the 1024–1400 overlay the corresponding unscaled height. */
+@media (min-width:1024px) and (max-width:1400px){
+    html body .header .header__menu,
+    html body .header .header__menu._active{
+        height:calc(100dvh / .9 - var(--mobile-header-height)) !important;
+    }
+}
+
+/* Consistent gutters and type scale between narrow phones and tablets. */
+@media (max-width:1023px){
+    .content,
+    .header__container,
+    .footer__container{
+        width:100% !important;
+        max-width:none !important;
+        padding-left:clamp(16px,5.2vw,40px) !important;
+        padding-right:clamp(16px,5.2vw,40px) !important;
+    }
+    .page-head__title,.hero__title,.game-hero__title,.reviews-page__title{
+        font-size:clamp(32px,6vw,48px) !important;
+        line-height:1.08 !important;
+    }
+    .catalog__title,.section2__title,.reviews__title,.faq__title,
+    .games-catalog__title,.section-caption,.cheat-functions__caption,.support__title{
+        font-size:clamp(27px,4.7vw,38px) !important;
+        line-height:1.12 !important;
+    }
+    .page-head__subtitle,.hero__subtitle,.catalog__subtitle,.section2__subtitle,
+    .reviews__subtitle,.faq__subtitle,.games-catalog__subtitle{
+        max-width:68ch !important;
+        font-size:clamp(15px,2vw,17px) !important;
+        line-height:1.55 !important;
+    }
+}
+
+@media (max-width:374px){
+    .content,.header__container,.footer__container{
+        padding-left:14px !important;
+        padding-right:14px !important;
+    }
+    .header__logo{ width:94px !important; }
+    .header__lang{ margin-left:auto !important; }
+    .header__search-btn{ display:none !important; }
+    .page-head__title,.hero__title,.game-hero__title,.reviews-page__title{
+        font-size:30px !important;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .header__menu,.header__menu__item{
+        transition-duration:.01ms !important;
+        animation-duration:.01ms !important;
+    }
+}

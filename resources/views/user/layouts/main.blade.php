@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.13.13';
+    $__cssVer = '4.14.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1066,7 +1066,7 @@
         <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
     </div>
 
-    <script src="/assets/js/scripts.min.js?67"></script>
+    <script src="/assets/js/scripts.min.js?68"></script>
     <script src="/assets/js/animations.js?v=29"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=2" defer></script>
