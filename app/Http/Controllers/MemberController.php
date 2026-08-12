@@ -385,6 +385,10 @@ class MemberController extends Controller
 
             $lists = [];
 
+            // Do not depend solely on server cron: opening «Мои покупки» also
+            // closes overdue orders and releases their reserved stock.
+            Order::expirePending((int) $this->user->id);
+
             // ТЗ §8.3 — "при обновлении страницы пользователь должен видеть свой
             // актуальный незавершённый заказ": paid orders plus any still-open
             // one (status 1 within its booking window).

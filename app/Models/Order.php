@@ -7,6 +7,8 @@ use App\Models\Material;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 
 class Order extends Model
@@ -49,46 +51,85 @@ class Order extends Model
     }
 
     public static function changeStatusByExpiredAt(){
+        $expired = self::expirePending();
+
+        // Telegram is only a notification channel. A broken/missing token or
+        // Telegram outage must never keep an order and its stock reserved.
+        if ($expired->isEmpty()) return;
 
         try {
-
             $shop = Shop::getDefault();
-            $shop_token = Crypt::decryptString($shop->token);
+            if (!$shop || !$shop->token) return;
 
-            $tg = new Api($shop_token);
+            $tg = new Api(Crypt::decryptString($shop->token));
 
-            $expired_at = strtotime(date('Y-m-d H:i'));
+            foreach ($expired as $result) {
+                try {
+                    $member = Member::getByID($result->bid, $result->sid);
+                    if (!$member || !$member->tid) continue;
 
-            $results = Order::where('expired_at', '<=', $expired_at)->where('expired_at', '>', 0)->where('status', 1)->get();
-
-            foreach($results as $result){
-
-                $member = Member::getByID($result->bid, $shop->id);
-
-                if($member && $member->tid != 0) {
-
-                    $ki[$result->id][] = ["text" => __('bot.btn_back_to_product'), "callback_data" => "products/" . $result->pid . "/1"];
-                    $kp = json_encode(["inline_keyboard" => array_chunk($ki[$result->id], 1)]);
-
-                    $message_text = str_replace(':order_hash', $result->hash, __('bot.alert_order_time_canceled'));
-                    $res = $tg->sendMessage(['chat_id' => $member->tid, 'text' => $message_text, "parse_mode" => "HTML", "reply_markup" => $kp]);
-
-                    if($result->msg_id != 0) {
-                        $tg->deleteMessage(['chat_id' => $member->tid, 'message_id' => $res->message_id - 1]);
-                    }
+                    $keyboard = json_encode(['inline_keyboard' => [[
+                        ['text' => __('bot.btn_back_to_product'), 'callback_data' => 'products/' . $result->pid . '/1'],
+                    ]]]);
+                    $message = str_replace(':order_hash', $result->hash, __('bot.alert_order_time_canceled'));
+                    $tg->sendMessage([
+                        'chat_id' => $member->tid,
+                        'text' => $message,
+                        'parse_mode' => 'HTML',
+                        'reply_markup' => $keyboard,
+                    ]);
+                } catch (\Throwable $e) {
+                    Log::warning('Expired-order Telegram notification failed', [
+                        'order_id' => $result->id,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
-
-                Order::where('id', $result->id)->update(['status' => 4]);
-                if($result->pid > 0) {
-                    Product::where('id', $result->pid)->increment('count_all', $result->count_all);
-                }
-                Material::releaseFromOrder($result->id);
             }
-
-
-        } catch (Exception $e) {
-            return response()->json(['ok' => false, 'description' => $e->getMessage()], 200);
+        } catch (\Throwable $e) {
+            Log::warning('Expired-order Telegram setup failed', ['error' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * Expire all overdue unpaid orders atomically and return their stock.
+     * Safe to call from cron and from ordinary requests; the conditional
+     * update guarantees that stock is restored exactly once.
+     */
+    public static function expirePending(?int $buyerId = null)
+    {
+        $query = self::query()
+            ->where('expired_at', '>', 0)
+            ->where('expired_at', '<=', time())
+            ->where('status', 1);
+
+        if ($buyerId !== null) $query->where('bid', $buyerId);
+
+        $ids = $query->orderBy('id')->pluck('id');
+        $expired = collect();
+
+        foreach ($ids as $id) {
+            $order = DB::transaction(function () use ($id) {
+                $order = self::whereKey($id)->lockForUpdate()->first();
+                if (!$order || (int) $order->status !== 1 || (int) $order->expired_at > time()) {
+                    return null;
+                }
+
+                $changed = self::whereKey($id)->where('status', 1)->update(['status' => 4]);
+                if (!$changed) return null;
+
+                if ((int) $order->pid > 0) {
+                    Product::whereKey($order->pid)->increment('count_all', (int) $order->count_all);
+                }
+                Material::releaseFromOrder((int) $order->id);
+
+                $order->status = 4;
+                return $order;
+            });
+
+            if ($order) $expired->push($order);
+        }
+
+        return $expired;
     }
     public static function getByHash($sid, $hash){
         return Order::where('sid', $sid)->where('hash', $hash)->first();
@@ -155,4 +196,3 @@ class Order extends Model
         return $allItems;
     }
 }
-

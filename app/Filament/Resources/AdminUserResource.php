@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * ТЗ §4 — «Администраторы»: everyone who can reach the admin panel
@@ -60,6 +61,15 @@ class AdminUserResource extends Resource
         $user = Auth::guard('web')->user();
 
         return $user
+            // A deploy may briefly have new PHP code before migrations finish.
+            // Hide this resource during that window instead of issuing queries
+            // for missing columns and taking the whole panel down with a 500.
+            && Schema::hasColumns('users', [
+                'admin_blocked_at',
+                'admin_sessions_revoked_at',
+                'last_admin_login_at',
+                'admin_login_count',
+            ])
             && (int) ($user->role_id ?? 0) >= (int) config('admin.min_role_id', 1);
     }
 
