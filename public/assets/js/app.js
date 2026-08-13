@@ -554,7 +554,13 @@ function userInfo(callback) {
             if (data.ok === true) {
                 $('#block-user').attr('href', '/my/profile');
                 $('#block-user').removeAttr('data-popup');
-                $('#block-user').html('<span class="btn__icon"><img src="/assets/img/icon_user.svg" alt=""></span><span>'+data.result.username+'</span>');
+                // Keep the server-rendered button structure intact. Replacing the
+                // whole HTML removed the chevron after the first API response,
+                // changed the flex width and made the entire header jump sideways.
+                var $userLabel = $('#block-user .header__login__label');
+                if ($userLabel.length) {
+                    $userLabel.text(data.result.username);
+                }
                 $('#block-user').css('visibility','');
                 if (window.loginTimeline && window.loginTimeline.paused()) { window.loginTimeline.resume(); }
                 $('#tg-unlink').hide();

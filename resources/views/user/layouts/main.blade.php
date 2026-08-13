@@ -470,11 +470,6 @@
                         <img src="/assets/img/icon_user.svg" alt="">
                     </span>
                     <span class="header__login__label">{{ $_authUser->username }}</span>
-                    <span class="header__login__chev" aria-hidden="true">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </span>
                 </a>
                 @else
                 <a id="block-user" class="btn header__login" data-popup="auth">
@@ -482,11 +477,6 @@
                         <img src="/assets/img/icon_user.svg" alt="">
                     </span>
                     <span class="header__login__label">{{ __('site.btn_login_register') }}</span>
-                    <span class="header__login__chev" aria-hidden="true">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </span>
                 </a>
                 @endif
                 <button class="header__hamburger"><span></span></button>
@@ -1153,7 +1143,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.5"></script>
+    <script src="/assets/js/app.js?v=6.6"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {
