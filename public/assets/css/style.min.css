@@ -28574,3 +28574,56 @@ button,a,input,select,textarea{ touch-action:manipulation; }
         font-size:11.5px !important;
     }
 }
+
+/* ===================================================================== */
+/* v4.15.0 — complete HackExe typography system                           */
+/* ===================================================================== */
+:root{
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,
+        Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+html body,html body [class],html body [class] *{ font-family:var(--font-sans) !important; }
+
+.page-head__crumbs{font-size:14px!important;line-height:20px!important;font-weight:400!important;letter-spacing:0!important}
+.page-head__badge-text{font-size:11px!important;line-height:16px!important;font-weight:600!important;letter-spacing:.18em!important}
+.page-head__title{font-family:var(--font-sans)!important;font-weight:750!important}
+.page-head__subtitle{max-width:680px!important;font-size:16px!important;line-height:24px!important;font-weight:400!important;letter-spacing:0!important}
+
+.reviews-stats__value{font-size:40px!important;line-height:1!important;font-weight:600!important;letter-spacing:-.025em!important}
+.reviews-stats__count,.reviews-form__label,.reviews-form__counter{font-size:14px!important;line-height:20px!important;font-weight:400!important}
+.reviews-form__title{font-size:20px!important;line-height:28px!important;font-weight:600!important;letter-spacing:-.01em!important}
+.reviews-form__input,.reviews-form__textarea,.rv-select__trigger,.rv-select__opt{font-size:15px!important;line-height:22px!important;font-weight:400!important}
+.rev-card__name{font-size:14px!important;line-height:20px!important;font-weight:600!important}
+.rev-card__sub,.rev-card__date{font-size:12px!important;line-height:18px!important;font-weight:400!important}
+.rev-card__text{font-size:14px!important;line-height:1.625!important;font-weight:400!important}
+
+.about-section__stat p{font-size:36px!important;line-height:1.1!important;font-weight:700!important;letter-spacing:-.025em!important}
+.about-section__stat span{font-size:13px!important;line-height:18px!important;font-weight:400!important}
+.about-contact__label{font-size:15px!important;line-height:20px!important;font-weight:600!important}
+.about-contact__value{font-size:12px!important;line-height:18px!important;font-weight:400!important}
+.about-section__history__caption{font-size:22px!important;line-height:30px!important;font-weight:600!important;letter-spacing:-.015em!important}
+.about-section__history__slide .years{font-size:18px!important;line-height:24px!important;font-weight:600!important}
+.about-section__history__slide .record{font-size:13px!important;line-height:18px!important;font-weight:500!important}
+.about-section__history__slide .small-text{font-size:12px!important;line-height:18px!important;font-weight:400!important}
+.about-section__text{font-size:14px!important;line-height:2!important;font-weight:400!important}
+
+.status-heading-section__attention{font-size:14px!important;line-height:20px!important;font-weight:400!important}
+.status-heading-section__filter input,.st-select__trigger,.st-select__opt{font-size:15px!important;line-height:22px!important;font-weight:400!important}
+.cheat-statuses__header>p{font-size:11px!important;line-height:16px!important;font-weight:600!important;letter-spacing:.18em!important}
+.cheat-statuses__header__all-statuses .status,.cheat-statuses__header__all-statuses .status .status__label,
+.game-status-block__cheats .status,.game-status-block__cheats .status .status__name,
+.game-status-block__cheats .status .status__label{font-size:12px!important;line-height:18px!important;font-weight:500!important}
+.game-status-block__name{font-size:16px!important;line-height:22px!important;font-weight:600!important}
+
+@media (max-width:599px){
+    .page-head__crumbs{font-size:13px!important;line-height:18px!important}
+    .page-head__badge-text{font-size:10px!important;line-height:15px!important;letter-spacing:.14em!important}
+    .page-head__subtitle{font-size:15px!important;line-height:23px!important}
+    .reviews-form__title{font-size:18px!important;line-height:26px!important}
+    .reviews-form__input,.reviews-form__textarea,.rv-select__trigger,.rv-select__opt,
+    .status-heading-section__filter input,.st-select__trigger,.st-select__opt{font-size:16px!important}
+    .about-section__stat p{font-size:32px!important}
+    .about-section__history__caption{font-size:20px!important;line-height:28px!important}
+    .about-section__text{font-size:14px!important;line-height:1.75!important}
+    .status-heading-section__attention{font-size:14px!important;line-height:21px!important}
+}
