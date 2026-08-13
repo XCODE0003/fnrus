@@ -28443,3 +28443,134 @@ button,a,input,select,textarea{ touch-action:manipulation; }
         width:180px !important;
     }
 }
+
+/* Keep the magnifier optically sized inside its 44–50px touch target. */
+@media (max-width:1400px){
+    html body .header .header__search-btn{
+        background-size:20px 20px !important;
+        background-position:center !important;
+        background-repeat:no-repeat !important;
+    }
+}
+@media (min-width:1024px) and (max-width:1400px){
+    html body .header .header__container{ gap:16px !important; }
+}
+@media (min-width:1024px) and (max-width:1120px){
+    html body .header .header__container{ gap:14px !important; }
+    html body .header .header__login{
+        min-width:190px !important;
+        max-width:200px !important;
+    }
+    html body .header .header__login .header__login__label{
+        max-width:140px !important;
+        font-size:11.5px !important;
+    }
+}
+
+/* Compact tablet controls: search is an icon-triggered overlay and login is
+   always a labelled action. This prevents the search input covering login. */
+@media (min-width:1024px) and (max-width:1400px){
+    html body .header .header__search-btn{
+        display:flex !important;
+        flex:0 0 50px !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:50px !important;
+        height:50px !important;
+        min-width:50px !important;
+        margin:0 !important;
+        position:relative !important;
+        z-index:1002 !important;
+        border-radius:50% !important;
+    }
+    html body .header .header__login{
+        flex:0 1 auto !important;
+        width:auto !important;
+        min-width:154px !important;
+        max-width:220px !important;
+        padding:7px 16px 7px 8px !important;
+        gap:9px !important;
+        border-radius:999px !important;
+        justify-content:flex-start !important;
+    }
+    html body .header .header__login .header__login__label{
+        display:block !important;
+        min-width:0 !important;
+        max-width:150px !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+        white-space:nowrap !important;
+        font-size:12px !important;
+        letter-spacing:.035em !important;
+    }
+    html body .header .header__login .header__login__chev{
+        display:block !important;
+        flex:0 0 14px !important;
+        margin-left:auto !important;
+    }
+    html body .header .header__search{
+        position:fixed !important;
+        inset:var(--mobile-header-height) 0 auto !important;
+        width:100% !important;
+        height:calc(100dvh / .9 - var(--mobile-header-height)) !important;
+        min-width:0 !important;
+        max-width:none !important;
+        margin:0 !important;
+        padding:24px max(40px,calc((100vw - 840px)/2)) 32px !important;
+        background:#090e15 !important;
+        z-index:1000 !important;
+        opacity:0 !important;
+        visibility:hidden !important;
+        pointer-events:none !important;
+        transform:translateY(-10px) !important;
+        overflow-y:auto !important;
+    }
+    html body .header .header__search._visible{
+        opacity:1 !important;
+        visibility:visible !important;
+        pointer-events:auto !important;
+        transform:none !important;
+    }
+    html body .header .header__search__input{
+        display:block !important;
+        width:min(760px,100%) !important;
+        height:56px !important;
+        margin:0 auto !important;
+        padding:0 58px 0 20px !important;
+        border:1px solid rgba(255,255,255,.08) !important;
+        border-radius:14px !important;
+        background:#151b26 !important;
+        color:#fff !important;
+        font-size:16px !important;
+    }
+    html body .header .header__search-reset-btn{
+        display:block !important;
+        position:absolute !important;
+        top:34px !important;
+        right:max(50px,calc((100vw - 740px)/2)) !important;
+        width:36px !important;
+        height:36px !important;
+        z-index:2 !important;
+    }
+    html body .header .header__search__inner{
+        position:relative !important;
+        inset:auto !important;
+        width:min(760px,100%) !important;
+        max-height:calc(100% - 80px) !important;
+        margin:12px auto 0 !important;
+        overflow-y:auto !important;
+    }
+    html body .header .header__search__overlay{ display:none !important; }
+}
+
+@media (min-width:1024px) and (max-width:1120px){
+    html body .header .header__login{
+        min-width:144px !important;
+        max-width:190px !important;
+        padding-right:12px !important;
+    }
+    html body .header .header__login .header__login__label{
+        max-width:118px !important;
+        font-size:11.5px !important;
+    }
+}
