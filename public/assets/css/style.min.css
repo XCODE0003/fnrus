@@ -28679,3 +28679,73 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
     main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
     main.main .faq__title,main.main .support__title{font-size:24px!important;line-height:32px!important;font-weight:600!important;letter-spacing:0!important}
 }
+
+/* ===================================================================== */
+/* v4.15.2 — one heading system across every storefront page              */
+/* The approved home heading is the source of truth for all page titles.  */
+/* ===================================================================== */
+.hero__title,.page-head__title,.game-hero__title,.games-catalog__title,
+.games-page .games-catalog__title,
+.reviews-page__title,.not-found__caption{
+    font-family:var(--font-sans) !important;
+    font-weight:700 !important;
+    text-transform:none !important;
+}
+.catalog__title,.section2__title,.reviews__title,.faq__title,.support__title,
+.section-caption,.cheat-functions__caption,.about-section__history__caption,
+.instruction__section-caption,.key__section-caption{
+    font-family:var(--font-sans) !important;
+    font-weight:600 !important;
+    text-transform:none !important;
+}
+
+@media (min-width:1024px){
+    .hero__title,.page-head__title,.game-hero__title,.games-catalog__title,
+    .games-page .games-catalog__title,
+    .reviews-page__title,.not-found__caption{
+        font-size:53.333px !important;
+        line-height:53.333px !important;
+        letter-spacing:-1.2px !important;
+    }
+    .catalog__title,.section2__title,.reviews__title,.faq__title,.support__title,
+    .section-caption,.cheat-functions__caption,.about-section__history__caption,
+    .instruction__section-caption,.key__section-caption{
+        font-size:26.666px !important;
+        line-height:35.555px !important;
+        letter-spacing:0 !important;
+    }
+}
+
+@media (min-width:600px) and (max-width:1023px){
+    .hero__title,.page-head__title,.game-hero__title,.games-catalog__title,
+    .games-page .games-catalog__title,
+    .reviews-page__title,.not-found__caption{
+        font-size:40px !important;
+        line-height:42px !important;
+        letter-spacing:-1px !important;
+    }
+    .catalog__title,.section2__title,.reviews__title,.faq__title,.support__title,
+    .section-caption,.cheat-functions__caption,.about-section__history__caption,
+    .instruction__section-caption,.key__section-caption{
+        font-size:26px !important;
+        line-height:34px !important;
+        letter-spacing:0 !important;
+    }
+}
+
+@media (max-width:599px){
+    .hero__title,.page-head__title,.game-hero__title,.games-catalog__title,
+    .games-page .games-catalog__title,
+    .reviews-page__title,.not-found__caption{
+        font-size:32px !important;
+        line-height:34px !important;
+        letter-spacing:-.7px !important;
+    }
+    .catalog__title,.section2__title,.reviews__title,.faq__title,.support__title,
+    .section-caption,.cheat-functions__caption,.about-section__history__caption,
+    .instruction__section-caption,.key__section-caption{
+        font-size:24px !important;
+        line-height:32px !important;
+        letter-spacing:0 !important;
+    }
+}
