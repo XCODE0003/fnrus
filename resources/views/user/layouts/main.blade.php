@@ -531,7 +531,7 @@
 
                 <div class="footer__col">
                     <p class="footer__col-title">{{ __('site.footer_col_catalog') }}</p>
-                    <ul class="footer__links">
+                    <ul class="footer__links 1">
                         <li><a href="/games">{{ __('site.item_catalog') }}</a></li>
                         @foreach(($__headerCategories ?? collect())->take(4) as $__cat)
                             <li><a href="/{{ $__cat->alias }}">{{ $__cat->title }}</a></li>
