@@ -28627,3 +28627,55 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
     .about-section__text{font-size:14px!important;line-height:1.75!important}
     .status-heading-section__attention{font-size:14px!important;line-height:21px!important}
 }
+
+/* ===================================================================== */
+/* v4.15.1 — home typography measured against HackExe at desktop scale    */
+/* The storefront uses body zoom:.9 on desktop, therefore source values   */
+/* are compensated here so their rendered pixels match 48/24/16.8px.     */
+/* ===================================================================== */
+@media (min-width:1024px){
+    main.main .hero__title{
+        font-size:53.333px !important;
+        line-height:53.333px !important;
+        font-weight:700 !important;
+        letter-spacing:-1.2px !important;
+    }
+    main.main .hero__subtitle{
+        max-width:448px !important;
+        font-size:18.666px !important;
+        line-height:26.666px !important;
+        font-weight:300 !important;
+        letter-spacing:0 !important;
+    }
+    main.main .catalog__title,
+    main.main .section2__title,
+    main.main .reviews__title,
+    main.main .faq__title,
+    main.main .support__title{
+        font-size:26.666px !important;
+        line-height:35.555px !important;
+        font-weight:600 !important;
+        letter-spacing:0 !important;
+    }
+    main.main .catalog__subtitle,
+    main.main .section2__subtitle,
+    main.main .reviews__subtitle,
+    main.main .faq__subtitle{
+        font-size:16px !important;
+        line-height:24px !important;
+        font-weight:400 !important;
+    }
+}
+
+@media (min-width:600px) and (max-width:1023px){
+    main.main .hero__title{font-size:40px!important;line-height:42px!important;font-weight:700!important;letter-spacing:-1px!important}
+    main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
+    main.main .faq__title,main.main .support__title{font-size:26px!important;line-height:34px!important;font-weight:600!important;letter-spacing:0!important}
+}
+
+@media (max-width:599px){
+    main.main .hero__title{font-size:32px!important;line-height:34px!important;font-weight:700!important;letter-spacing:-.7px!important}
+    main.main .hero__subtitle{font-size:15px!important;line-height:23px!important;font-weight:300!important}
+    main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
+    main.main .faq__title,main.main .support__title{font-size:24px!important;line-height:32px!important;font-weight:600!important;letter-spacing:0!important}
+}
