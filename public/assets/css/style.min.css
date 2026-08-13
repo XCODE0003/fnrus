@@ -24434,6 +24434,7 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
                 mask-composite:intersect !important;
     }
 }
+
 @media (min-width:1280px){
     .hero__image img{ max-height:710px !important; }
 }
@@ -28748,4 +28749,24 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
         line-height:32px !important;
         letter-spacing:0 !important;
     }
+}
+
+/* ===================================================================== */
+/* v4.15.3 — homepage keeps its original large presentation scale        */
+/* Internal pages retain the compact unified v4.15.2 heading system.      */
+/* ===================================================================== */
+@media (min-width:1024px){
+    main.main .hero__title{font-size:clamp(40px,4.5vw,72px)!important;line-height:1.04!important;font-weight:800!important;letter-spacing:-.035em!important}
+    main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
+    main.main .faq__title,main.main .support__title{font-size:clamp(32px,3.5vw,56px)!important;line-height:1.08!important;font-weight:750!important;letter-spacing:-.025em!important}
+}
+@media (min-width:600px) and (max-width:1023px){
+    main.main .hero__title{font-size:clamp(32px,6vw,48px)!important;line-height:1.08!important;font-weight:800!important;letter-spacing:-.035em!important}
+    main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
+    main.main .faq__title,main.main .support__title{font-size:clamp(27px,4.7vw,38px)!important;line-height:1.12!important;font-weight:750!important;letter-spacing:-.025em!important}
+}
+@media (max-width:599px){
+    main.main .hero__title{font-size:34px!important;line-height:1.08!important;font-weight:800!important;letter-spacing:-.035em!important}
+    main.main .catalog__title,main.main .section2__title,main.main .reviews__title,
+    main.main .faq__title,main.main .support__title{font-size:28px!important;line-height:1.12!important;font-weight:750!important;letter-spacing:-.025em!important}
 }
