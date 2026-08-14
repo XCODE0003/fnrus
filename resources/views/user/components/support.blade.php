@@ -17,6 +17,8 @@
         $__url = trim((string) ($__support->{'support_btn' . $__i . '_url'} ?? ''));
         if ($__url === '') { continue; }
         $__text = trim((string) ($__support->{'support_btn' . $__i . '_text'} ?? '')) ?: parse_url($__url, PHP_URL_HOST);
+        // Old admin values may contain a stray trailing "1" (Telegram1, etc.).
+        $__text = preg_replace('/(?<=\p{L})1$/u', '', $__text);
         $__host = strtolower((string) parse_url($__url, PHP_URL_HOST));
         $__path = trim((string) parse_url($__url, PHP_URL_PATH), '/');
 
@@ -55,6 +57,7 @@
     }
 
     $__desc = $__support->support_text ?: __('site.support_desc');
+    $__desc = preg_replace('/(?:\s*:1|(?<=[\p{L}!?.,])1)$/u', '', trim((string) $__desc));
 @endphp
 <section class="support" id="support">
     <div class="content support__grid">

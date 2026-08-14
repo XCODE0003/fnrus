@@ -28753,13 +28753,13 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
 
 /* v4.15.3 — homepage hero only, matched to the supplied reference. */
 @media (min-width:1024px){
-    main.main .hero__title{font-size:58px!important;line-height:1!important;font-weight:700!important;letter-spacing:-1.3px!important;text-transform:uppercase!important}
+    main.main .hero__title{font-size:56px!important;line-height:1!important;font-weight:700!important;letter-spacing:-1.25px!important;text-transform:uppercase!important}
 }
 @media (min-width:600px) and (max-width:1023px){
-    main.main .hero__title{font-size:44px!important;line-height:1.04!important;font-weight:700!important;letter-spacing:-1px!important;text-transform:uppercase!important}
+    main.main .hero__title{font-size:43px!important;line-height:1.04!important;font-weight:700!important;letter-spacing:-.95px!important;text-transform:uppercase!important}
 }
 @media (max-width:599px){
-    main.main .hero__title{font-size:34px!important;line-height:1.06!important;font-weight:700!important;letter-spacing:-.75px!important;text-transform:uppercase!important}
+    main.main .hero__title{font-size:33px!important;line-height:1.06!important;font-weight:700!important;letter-spacing:-.7px!important;text-transform:uppercase!important}
 }
 
 /* v4.15.5 — HackExe typography for internal page H1s; homepage stays intact. */
