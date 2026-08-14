@@ -28805,3 +28805,16 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
     .reviews-page__title,.reviews-page__title *,
     .not-found__caption,.not-found__caption *{font-size:36px!important}
 }
+
+/* v4.15.7 — one consistent content-to-footer gap on internal pages. */
+.wrapper > main:not(.main){
+    flex:1 0 auto!important;
+    padding-bottom:64px!important;
+}
+.wrapper > main:not(.main) > :last-child{
+    margin-bottom:0!important;
+    padding-bottom:0!important;
+}
+@media (max-width:599px){
+    .wrapper > main:not(.main){padding-bottom:44px!important}
+}
