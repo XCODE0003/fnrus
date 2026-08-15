@@ -15,7 +15,7 @@
                     <span class="hero__badge-text">{{ __('site.hero_badge') }}</span>
                 </div>
                 <h1 class="hero__title">{{ __('site.hero_title_1') }}{!! __('site.hero_title_2') !!}</h1>
-                <p class="hero__subtitle">{{ __('site.hero_subtitle') }}</p>
+                <p class="hero__subtitle">{!! __('site.hero_subtitle') !!}</p>
                 <div class="hero__actions">
                     <a href="/games" class="hero__btn-catalog">
                         <span class="hero__btn-catalog__tab"><img src="/assets/img/hero-catalog.svg" alt=""></span>

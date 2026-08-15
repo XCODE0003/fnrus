@@ -7,7 +7,7 @@ return [
     "hero_badge" => "Get the edge over your rivals!",
     "hero_title_1" => "Private cheats",
     "hero_title_2" => "<br><span class=\"hero__title-accent\">for online games</span>",
-    "hero_subtitle" => "We take pride in offering high-quality and reliable cheats for your devices.",
+    "hero_subtitle" => "We take pride in offering high-quality and<br class=\"hero__subtitle-break\">reliable cheats for your devices.",
     "hero_btn_catalog" => "Games catalog",
     "hero_btn_register" => "Register",
     "text_all_rights_reserved" => "All rights reserved",

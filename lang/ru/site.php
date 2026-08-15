@@ -7,7 +7,7 @@ return [
     "hero_badge" => "Получите превосходство над соперниками!",
     "hero_title_1" => "Приватные читы",
     "hero_title_2" => "<br><span class=\"hero__title-accent\">для онлайн-игр</span>",
-    "hero_subtitle" => "Мы гордимся тем, что предлагаем высококачественные и надежные читы для ваших устройств.",
+    "hero_subtitle" => "Мы гордимся тем, что предлагаем высококачественные и<br class=\"hero__subtitle-break\">надежные читы для ваших устройств.",
     "hero_btn_catalog" => "Каталог игр",
     "hero_btn_register" => "Регистрация",
     "text_all_rights_reserved" => "Все права защищены",

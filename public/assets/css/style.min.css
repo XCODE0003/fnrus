@@ -28756,6 +28756,8 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
     main.main .hero__title{font-size:52px!important;line-height:1!important;font-weight:700!important;letter-spacing:-1.15px!important;text-transform:uppercase!important}
     main.main .hero__subtitle{width:560px!important;max-width:560px!important}
 }
+.hero__subtitle-break{display:none}
+@media (min-width:1024px){.hero__subtitle-break{display:inline}}
 @media (min-width:600px) and (max-width:1023px){
     main.main .hero__title{font-size:43px!important;line-height:1.04!important;font-weight:700!important;letter-spacing:-.95px!important;text-transform:uppercase!important}
 }
