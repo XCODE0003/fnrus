@@ -25221,7 +25221,7 @@ html::after{
 /*  v4.4.6 — mobile: darker page bg so translucent cards stop blending   */
 /* ==================================================================== */
 @media (max-width:900px){
-    html{ background-color:#080b12 !important; }
+    html{ background-color:rgb(17 23 32) !important; }
 }
 
 /* ==================================================================== */
