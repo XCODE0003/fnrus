@@ -28823,7 +28823,7 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
 main.main .support .support__title{
     font-size:42px!important;
     line-height:1.08!important;
-    font-weight:700!important;
+    font-weight:500!important;
     letter-spacing:-.02em!important;
 }
 main.main .support .support__title-accent{font-size:inherit!important;line-height:inherit!important}
