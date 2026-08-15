@@ -28786,24 +28786,26 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
 .not-found__caption,.not-found__caption *{
     font-family:"Inter Internal",Inter,ui-sans-serif,system-ui,sans-serif!important;
     font-size:24px!important;
-    line-height:1.2!important;
+    line-height:32px!important;
     font-weight:600!important;
-    letter-spacing:-.025em!important;
+    letter-spacing:0!important;
     text-transform:none!important;
 }
+.page-head__title,.game-hero__title,.games-catalog__title,
+.reviews-page__title,.not-found__caption{margin-bottom:12px!important}
 @media (min-width:640px){
     .page-head__title,.page-head__title *,
     .game-hero__title,.game-hero__title *,
     .games-catalog__title,.games-catalog__title *,
     .reviews-page__title,.reviews-page__title *,
-    .not-found__caption,.not-found__caption *{font-size:30px!important}
+    .not-found__caption,.not-found__caption *{font-size:30px!important;line-height:36px!important}
 }
 @media (min-width:1024px){
     .page-head__title,.page-head__title *,
     .game-hero__title,.game-hero__title *,
     .games-catalog__title,.games-catalog__title *,
     .reviews-page__title,.reviews-page__title *,
-    .not-found__caption,.not-found__caption *{font-size:36px!important}
+    .not-found__caption,.not-found__caption *{font-size:36px!important;line-height:40px!important}
 }
 
 /* v4.15.7 — one consistent content-to-footer gap on internal pages. */
