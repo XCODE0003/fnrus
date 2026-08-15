@@ -28753,7 +28753,8 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
 
 /* v4.15.3 — homepage hero only, matched to the supplied reference. */
 @media (min-width:1024px){
-    main.main .hero__title{font-size:56px!important;line-height:1!important;font-weight:700!important;letter-spacing:-1.25px!important;text-transform:uppercase!important}
+    main.main .hero__title{font-size:52px!important;line-height:1!important;font-weight:700!important;letter-spacing:-1.15px!important;text-transform:uppercase!important}
+    main.main .hero__subtitle{width:560px!important;max-width:560px!important}
 }
 @media (min-width:600px) and (max-width:1023px){
     main.main .hero__title{font-size:43px!important;line-height:1.04!important;font-weight:700!important;letter-spacing:-.95px!important;text-transform:uppercase!important}
@@ -28805,7 +28806,7 @@ html body,html body [class],html body [class] *{ font-family:var(--font-sans) !i
     .game-hero__title,.game-hero__title *,
     .games-catalog__title,.games-catalog__title *,
     .reviews-page__title,.reviews-page__title *,
-    .not-found__caption,.not-found__caption *{font-size:36px!important;line-height:40px!important}
+    .not-found__caption,.not-found__caption *{font-size:40px!important;line-height:44px!important}
 }
 
 /* v4.15.7 — one consistent content-to-footer gap on internal pages. */
