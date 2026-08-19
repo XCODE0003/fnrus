@@ -29079,3 +29079,20 @@ button,.btn{white-space:normal}
         padding-top:128px !important;
     }
 }
+
+
+/* v4.16.5: internal pages use the same desktop container as the header. */
+@media (min-width:1024px) {
+    .about-page .content,
+    .status-page .content,
+    .reviews-page .content {
+        width: 1520px !important;
+        max-width: calc(100% - 160px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .about-page .page-head {
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
