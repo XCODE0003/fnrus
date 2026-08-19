@@ -29039,3 +29039,7 @@ button,.btn{white-space:normal}
 .cheat-block__text table,
 .cheat-block__text pre { display: block; max-width: 100%; overflow: auto; }
 @media (max-width:1023px) { .cheat-block__slider { height: auto; } }
+@media (max-width:599px){
+    .hero__title{ line-height:1.14 !important; }
+    .hero__title-accent{ display:inline-block; padding-top:1px; }
+}
