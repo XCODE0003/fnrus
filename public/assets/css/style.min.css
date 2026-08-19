@@ -29043,3 +29043,14 @@ button,.btn{white-space:normal}
     .hero__title{ line-height:1.14 !important; }
     .hero__title-accent{ display:inline-block; padding-top:1px; }
 }
+
+@media (max-width:1023px) {
+    .about-page .about-heading-section__container,
+    .status-page .status-heading-section__container {
+        padding-left:clamp(16px,5.2vw,40px) !important;
+        padding-right:clamp(16px,5.2vw,40px) !important;
+        width:100%;
+        max-width:none;
+        box-sizing:border-box;
+    }
+}
