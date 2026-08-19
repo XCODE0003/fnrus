@@ -29054,3 +29054,19 @@ button,.btn{white-space:normal}
         box-sizing:border-box;
     }
 }
+
+
+/* v4.16.3: no-hero pages previously stacked main padding with the generic
+   first-section header clearance. Keep one zoom-compensated desktop offset. */
+@media (min-width:1024px) {
+    main.about-page,
+    main.status-page,
+    main.reviews-page {
+        padding-top:0 !important;
+    }
+    main.about-page > section:first-of-type,
+    main.status-page > section:first-of-type,
+    main.reviews-page > section:first-of-type {
+        padding-top:128px !important;
+    }
+}
