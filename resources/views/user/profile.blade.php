@@ -37,7 +37,7 @@
                                         <p class="profile__settings-block__descr">{{ __('site.profile_login_hint') }}</p>
                                     </div>
                                     <input type="text" class="profile__settings-block__input" id="edit-login" readonly>
-                                    <button class="profile__settings-block__cancel-btn"></button>
+                                    <button type="button" class="profile__settings-block__cancel-btn" aria-label="{{ __('site.a11y_cancel') }}"></button>
                                     <button class="profile__settings-block__edit-btn"><span class="edit">{{ __('site.profile_edit') }}</span><span class="submit">{{ __('site.profile_apply') }}</span></button>
                                 </div>
                                 <div class="profile__settings-block profile__settings-block_input edit-email">
@@ -46,7 +46,7 @@
                                         <p class="profile__settings-block__descr">{{ __('site.profile_email_hint') }}</p>
                                     </div>
                                     <input type="text" class="profile__settings-block__input" id="edit-email" readonly>
-                                    <button class="profile__settings-block__cancel-btn"></button>
+                                    <button type="button" class="profile__settings-block__cancel-btn" aria-label="{{ __('site.a11y_cancel') }}"></button>
                                     <button class="profile__settings-block__edit-btn"><span class="edit">{{ __('site.profile_edit') }}</span><span class="submit">{{ __('site.profile_apply') }}</span></button>
                                 </div>
                             </div>

@@ -25,14 +25,14 @@
                                     <div class="label">{{ __('site.referral_your_code') }}</div>
                                     <div class="value">
                                         <span id="profile-ref-code">...</span>
-                                        <button class="copy"></button>
+                                        <button type="button" class="copy" aria-label="{{ __('site.a11y_copy') }}"></button>
                                     </div>
                                 </div>
                                 <div class="profile__referral__info-block">
                                     <div class="label">{{ __('site.referral_link') }}</div>
                                     <div class="value">
                                         <span id="profile-ref-link">...</span>
-                                        <button class="copy"></button>
+                                        <button type="button" class="copy" aria-label="{{ __('site.a11y_copy') }}"></button>
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                     </div>
                     <div class="profile__block" data-profile-tab="withdraw-requests">
                         <div class="profile__main__header">
-                            <button class="profile__main__btn-back" data-profile-switch-tab="main"></button>
+                            <button type="button" class="profile__main__btn-back" data-profile-switch-tab="main" aria-label="{{ __('site.a11y_back') }}"></button>
                             <p class="profile__caption">{{ __('site.referral_withdraw_requests') }}</p>
                         </div>
                         <div class="profile__empty-block" id="withdraw_empty">

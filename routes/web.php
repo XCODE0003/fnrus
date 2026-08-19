@@ -167,18 +167,14 @@ Route::get('/create-order', [InvoiceController::class, 'createOrder']);
 
 Route::get('/instruction/{alias}', function ($alias) {
     $instruction = Instruction::getByAilas($alias);
-    $instruction_buttons = [];
-
-    if ($instruction && $instruction->buttons != "null") {
-        $instruction_buttons = json_decode($instruction->buttons, true);
+    if (!$instruction) {
+        abort(404);
     }
 
+    $instruction_buttons = json_decode((string) $instruction->buttons, true);
+    $instruction_buttons = is_array($instruction_buttons) ? $instruction_buttons : [];
     $instruction_title = $instruction->title;
-
-    $instruction_body = '';
-    if ($instruction) {
-        $instruction_body = $instruction->body;
-    }
+    $instruction_body = $instruction->body ?? '';
 
     $instruction->views += 1;
     $instruction->save();
@@ -191,7 +187,7 @@ Route::get('/instruction/{alias}', function ($alias) {
         'instruction' => $instruction_body,
         'faq' => $faq,
     ]);
-})->where('hash', '[a-zA-Z0-9-]+');
+})->where('alias', '[a-zA-Z0-9-]+');
 
 Route::get('/delivery/{hash}', function ($hash) {
     $order = Order::getByHashNoAuth($hash);
@@ -676,6 +672,7 @@ Route::get('/{alias}/{alias_two}', function ($alias, $alias_two) {
     $product = [];
     $recommendations_json = [];
     $products_json = [];
+    $categories_json = [];
 
     $cat_alias_two = Category::getByAliasWeb($sid, $cat_alias->id, $alias_two);
     $product = Product::getByAliasWeb($sid, $alias_two);
@@ -689,7 +686,7 @@ Route::get('/{alias}/{alias_two}', function ($alias, $alias_two) {
 
     if ($cat_alias_two and $cat_alias_two->cid == $cat_alias->id) {
         $id = $cat_alias_two->id;
-        $title = $cat_alias_two->title;
+        $title = $cat_alias_two->localized_title;
         $alias_two = $cat_alias_two->alias;
         $page_route = 'game';
         $tariffs = [];
@@ -697,7 +694,27 @@ Route::get('/{alias}/{alias_two}', function ($alias, $alias_two) {
 
         $products = Product::list_web_by_cid($cat_alias_two->id);
         if ($products) {
-            $products_json = $products->getData()->result;
+            $result = $products->getData()->result ?? [];
+            foreach (is_iterable($result) ? $result : [] as $listed_product) {
+                $products_json[] = [
+                    'title' => $listed_product->title,
+                    'image' => $listed_product->image,
+                    'image_site' => $listed_product->image_site,
+                    'status_class' => $listed_product->status_class,
+                    'status_title' => $listed_product->status_title,
+                    'status_icon' => $listed_product->status_icon,
+                    'advantages' => $listed_product->advantages,
+                    'hack_status' => $listed_product->hack_status,
+                    'price' => Tariff::where('pid', $listed_product->id)->min('price'),
+                    'alias' => $cat_alias_two->alias . '/' . $listed_product->alias,
+                ];
+            }
+        }
+        if (count($products_json) > 0) {
+            $categories_json[] = [
+                'title' => $cat_alias_two->localized_title,
+                'products' => $products_json,
+            ];
         }
 
         $recommendations = Category::list_web_recommendations($id);
@@ -732,7 +749,7 @@ Route::get('/{alias}/{alias_two}', function ($alias, $alias_two) {
         'cat_two' => $cat_alias_two,
         'alias' => $cat_alias->alias,
         'alias_two' => $alias_two,
-        'categories' => [],
+        'categories' => $categories_json,
         'products' => $products_json,
         'tariffs' => $tariffs,
         'recommendations' => $recommendations_json,

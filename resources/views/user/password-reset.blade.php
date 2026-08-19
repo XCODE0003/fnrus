@@ -2,23 +2,31 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>{{ __('site.pwreset_title') }}</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        body { background:#0e141d; color:#eaeaea; font-family: sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; margin:0; padding:20px; }
-        .card { background:#1a2230; padding:32px; border-radius:12px; max-width:420px; width:100%; box-shadow:0 8px 32px rgba(0,0,0,.4); }
+        * { box-sizing:border-box; }
+        html, body { min-width:0; }
+        body { background:#0e141d; color:#eaeaea; font-family: sans-serif; min-height:100dvh; display:flex; align-items:center; justify-content:center; margin:0; padding:max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); overflow-x:hidden; overflow-y:auto; }
+        .card { background:#1a2230; padding:32px; border-radius:12px; max-width:min(420px, calc(100vw - 40px - env(safe-area-inset-left) - env(safe-area-inset-right))); width:100%; box-shadow:0 8px 32px rgba(0,0,0,.4); min-width:0; }
         h1 { margin:0 0 16px; font-size:22px; }
         .field { margin:16px 0; }
         label { display:block; font-size:13px; margin-bottom:6px; color:#9aafd1; }
-        input { width:100%; box-sizing:border-box; padding:10px 12px; border-radius:6px; border:1px solid #2c3a52; background:#0f1825; color:#eaeaea; font-size:15px; }
+        input { width:100%; box-sizing:border-box; padding:10px 12px; border-radius:6px; border:1px solid #2c3a52; background:#0f1825; color:#eaeaea; font-size:16px; }
         input:focus { outline:none; border-color:#dcac01; }
-        button { width:100%; background:#dcac01; color:#000; border:0; padding:12px; border-radius:6px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:16px; }
+        button { width:100%; min-height:48px; background:#dcac01; color:#000; border:0; padding:12px; border-radius:6px; font-size:15px; font-weight:bold; cursor:pointer; margin-top:16px; white-space:normal; overflow-wrap:anywhere; }
         button:disabled { opacity:.5; cursor:not-allowed; }
-        .msg { margin-top:16px; padding:10px 14px; border-radius:6px; font-size:14px; display:none; }
+        .msg { margin-top:16px; padding:10px 14px; border-radius:6px; font-size:14px; display:none; white-space:normal; overflow-wrap:anywhere; word-break:break-word; }
         .msg.ok { background:#1d3a2a; color:#a8e6c1; display:block; }
         .msg.err { background:#3a1d22; color:#ff9aa6; display:block; }
         .hint { font-size:12px; color:#6a7894; margin-top:8px; }
+        @media (max-width: 479px) {
+            .card { padding:24px 20px; }
+        }
+        @media (max-height: 560px) {
+            body { align-items:flex-start; }
+        }
     </style>
 </head>
 <body>

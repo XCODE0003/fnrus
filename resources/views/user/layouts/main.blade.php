@@ -47,7 +47,7 @@
     <meta name="robots" content="noimageindex">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=3">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=3">
@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.15.17';
+    $__cssVer = '4.16.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';

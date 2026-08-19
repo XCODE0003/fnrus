@@ -559,4 +559,10 @@ return [
     "profile_method_yandex" => "Yandex",
     "profile_method_connected" => "Connected",
     "profile_method_not_connected" => "Not connected",
+
+    // === accessibility labels ===
+    "a11y_logout" => "Log out",
+    "a11y_cancel" => "Cancel",
+    "a11y_copy" => "Copy",
+    "a11y_back" => "Back",
 ];

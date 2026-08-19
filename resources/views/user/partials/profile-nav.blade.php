@@ -69,7 +69,7 @@
                                 <p class="profile__identity__nickname" id="profile-username">...</p>
                                 <p class="profile__identity__balance"><span id="profile-balance">0</span></p>
                             </div>
-                            <a href="javascript:;" onclick="logout();" class="profile__identity__exit"></a>
+                            <button type="button" onclick="logout();" class="profile__identity__exit" aria-label="{{ __('site.a11y_logout') }}"></button>
                         </div>
                         <button class="btn btn-accent profile__identity__replenishment-btn" data-popup="replenishment">{{ __('site.section_user_menu_topup_balance') }}</button>
                     </div>

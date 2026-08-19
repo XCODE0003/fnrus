@@ -1,5 +1,13 @@
 @extends('user.layouts.main')
 @section('content')
+    @php
+        $gallery = json_decode((string) $product->gallery, true);
+        $gallery = is_array($gallery) ? array_values(array_filter($gallery, 'is_scalar')) : [];
+        $recommendationItems = is_array($recommendations ?? null)
+            ? $recommendations
+            : (($recommendations ?? null) instanceof \Traversable ? iterator_to_array($recommendations) : []);
+        $recommendationItems = array_values(array_filter($recommendationItems, 'is_object'));
+    @endphp
     {{-- ТЗ §8.3 — the restore check needs to know which product this page is --}}
     <script>window.__productId = {{ (int) $product->id }};</script>
     <main class="cheat-page">
@@ -12,8 +20,7 @@
                     <div class="cheat-block__slider">
                         <div class="swiper">
                             <div class="swiper-wrapper">
-                                @if($product->gallery != 'null')
-                                @foreach(json_decode($product->gallery, true) as $image)
+                                @foreach($gallery as $image)
                                     @php
                                         // Normalise to the resizer URL /i{attachmentId}. New uploads store the
                                         // bare 40-char hash; legacy values were stored as "i"+hash (41 chars).
@@ -26,7 +33,6 @@
                                         <img src="/i{{ $gid }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('is-empty');this.remove();">
                                     </div>
                                 @endforeach
-                                @endif
                             </div>
                             <button class="cheat-block__slider__arrow cheat-block__slider__prev"></button>
                             <button class="cheat-block__slider__arrow cheat-block__slider__next"></button>
@@ -37,7 +43,7 @@
                         @php
                             $hack_status = \App\Models\HackStatus::getByID($product->hack_status);
                             $status = '';
-                            if ($hack_status->title_pub != '') {
+                            if ($hack_status && $hack_status->title_pub != '') {
                                 $status = $hack_status->title_pub;
                             }
                         @endphp
@@ -136,6 +142,7 @@
                 @endif
             </div>
         </section>
+        @if(count($recommendationItems) > 0)
         <section class="game-cheats">
             <div class="content game-cheats__slider-container">
                 <div class="section-caption-container">
@@ -149,12 +156,13 @@
                 </div>
                 <div class="swiper game-cheats-slider">
                     <div class="swiper-wrapper">
-                        @foreach($recommendations as $card)
+                        @foreach($recommendationItems as $card)
                             @php
                                 $rHack = \App\Models\HackStatus::getByID($card->hack_status);
                                 $rRoot = ($rHack && $rHack->title_pub != '') ? $rHack->title_pub : '';
                                 $rGreen = $rRoot !== '' && mb_stripos($rRoot, 'без') !== false;
-                                $rAdv = json_decode($card->advantages, true) ?: [];
+                                $rAdv = json_decode((string) $card->advantages, true);
+                                $rAdv = is_array($rAdv) ? array_values(array_filter($rAdv, 'is_scalar')) : [];
                             @endphp
                             <a href="{{ $card->alias }}" class="swiper-slide game-card">
                                 <div>
@@ -190,6 +198,7 @@
                 </div>
             </div>
         </section>
+        @endif
     </main>
 
     <div class="popup popup--pay" id="buy">

@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="MobileOptimized" content="176" />
@@ -20,7 +19,9 @@
             color: var(--tg-theme-text-color, #222);
             font-size: 15px;
             margin: 0;
-            padding: 0;
+            min-height: 100dvh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            overflow-wrap: anywhere;
             color-scheme: var(--tg-color-scheme);
         }
 
@@ -30,6 +31,9 @@
         .btn {
             font-size: 15px;
             padding: 10px 24px;
+            min-height: 44px;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         /*.btn:hover {*/
@@ -52,6 +56,9 @@
             background-color: var(--tg-theme-button-color, #50a8eb);
             color: var(--tg-theme-button-text-color, #ffffff);
             cursor: pointer;
+            min-height: 44px;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
         .main-container {
             padding: 15px;
@@ -138,9 +145,17 @@
             z-index: -1;
         }
         section {
-            padding: 25px;
+            width: 100%;
+            padding: clamp(16px, 5vw, 25px);
             max-width: 720px;
             margin: 0 auto;
+        }
+        .status-wrapper {
+            width: min(100%, 360px);
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            overflow-wrap: anywhere;
         }
         section#top_sect {
             background-color: var(--tg-theme-bg-color, #ffffff);
@@ -296,6 +311,14 @@
             border: 1px solid #FB8C2C;
         }
 
+        @media (max-width: 767px) {
+            input[type="text"],
+            .input[contenteditable],
+            textarea {
+                font-size: 16px;
+            }
+        }
+
     </style>
     <script>
         function setThemeClass() {
@@ -310,7 +333,7 @@
 <body>
 
 <section>
-    <div class="my-5 text-center" style="width: 200px;margin:0 auto">
+    <div class="my-5 text-center status-wrapper">
         @if($status == 2)
             <div class="d-block" style="margin-bottom: 13px"><svg style="width: 50px;fill:#4ABD5C" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M243.8 339.8C232.9 350.7 215.1 350.7 204.2 339.8L140.2 275.8C129.3 264.9 129.3 247.1 140.2 236.2C151.1 225.3 168.9 225.3 179.8 236.2L224 280.4L332.2 172.2C343.1 161.3 360.9 161.3 371.8 172.2C382.7 183.1 382.7 200.9 371.8 211.8L243.8 339.8zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/></svg></div>
             <div class="d-block mb-0" style="font-weight: 500;font-size: 18px">{{ __('site.check_order_paid') }}</div>

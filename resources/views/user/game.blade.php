@@ -1,11 +1,15 @@
 @extends('user.layouts.main')
 @section('content')
+@php
+    $categoryItems = is_iterable($categories ?? null) ? $categories : [];
+    $pageTitle = is_scalar($title ?? null) ? (string) $title : '';
+@endphp
 <main class="game">
     <section class="game-hero">
         <div class="content game-hero__inner">
             <div class="game-hero__text">
                 {{-- Breadcrumb --}}
-                @php $tp = preg_split('/(?=\()/u', trim($title), 2); @endphp
+                @php $tp = preg_split('/(?=\()/u', trim($pageTitle), 2); @endphp
                 <nav class="game-hero__crumbs" aria-label="breadcrumb">
                     <a href="/">{{ __('site.item_home') }}</a>
                     <span class="game-hero__crumbs-sep">/</span>
@@ -32,7 +36,13 @@
                 @endif
 
                 {{-- Stats row: count · undetected · delivery · support --}}
-                @php $cnt = 0; foreach(($categories ?: []) as $c) { $cnt += count($c['products']); } @endphp
+                @php
+                    $cnt = 0;
+                    foreach ($categoryItems as $categoryItem) {
+                        $categoryProducts = is_array($categoryItem) ? ($categoryItem['products'] ?? []) : [];
+                        $cnt += is_countable($categoryProducts) ? count($categoryProducts) : 0;
+                    }
+                @endphp
                 <ul class="game-hero__stats">
                     <li class="game-hero__stat">
                         <span>@plural($cnt, __('site.game_product_one'), __('site.game_product_few'), __('site.game_product_many'))</span>
@@ -72,27 +82,31 @@
         </div>
     </section>
 
-    @if (!$categories)
+    @if (count($categoryItems) === 0)
     <div class="content">
         <div class="profile__empty-block" style="padding: 50px 0">
             <p class="profile__empty-block__caption">{{ __('site.section_category_not_found') }}</p>
         </div>
     </div>
     @else
-    @foreach($categories as $card)
+    @foreach($categoryItems as $card)
+    @php
+        $cardTitle = is_array($card) && is_scalar($card['title'] ?? null) ? (string) $card['title'] : '';
+        $cardProducts = is_array($card) && is_iterable($card['products'] ?? null) ? $card['products'] : [];
+    @endphp
     <section class="game-list">
         <div class="content game-list__head">
             <div class="game-list__platform">
-                @if($card['title'] == 'iOS')
+                @if($cardTitle == 'iOS')
                 <img class="game-list__platform-icon" src="/assets/img/icon_apple.svg" alt="">
-                @elseif($card['title'] == 'Android')
+                @elseif($cardTitle == 'Android')
                 <img class="game-list__platform-icon" src="/assets/img/icon_android.svg" alt="">
-                @elseif(in_array($card['title'], ['Пк', 'Gameloop']))
+                @elseif(in_array($cardTitle, ['Пк', 'Gameloop']))
                 <img class="game-list__platform-icon" src="/assets/img/icon_windows.svg" alt="">
-                @elseif($card['title'] == 'Эмуляторы')
+                @elseif($cardTitle == 'Эмуляторы')
                 <img class="game-list__platform-icon" src="/assets/img/icon_idk.svg" alt="">
                 @endif
-                <span>{{ $card['title'] }}</span>
+                <span>{{ $cardTitle }}</span>
             </div>
             <div class="slider-arrows game-list__arrows">
                 <button class="slider-arrows__arrow slider-arrows__prev"></button>
@@ -102,29 +116,32 @@
         <div class="content">
             <div class="swiper game-cheats-slider js-carousel" data-carousel="game-cheats">
                 <div class="swiper-wrapper">
-                    @foreach($card['products'] as $p)
+                    @foreach($cardProducts as $p)
                     @php
-                    $hack_status = \App\Models\HackStatus::getByID($p['hack_status']);
+                    if (!is_array($p)) continue;
+                    $hack_status = \App\Models\HackStatus::getByID($p['hack_status'] ?? null);
                     $rootText = ($hack_status && $hack_status->title_pub != '') ? $hack_status->title_pub : '';
                     $rootGreen = $rootText !== '' && mb_stripos($rootText, 'без') !== false;
+                    $advantages = json_decode((string) ($p['advantages'] ?? ''), true);
+                    $advantages = is_array($advantages) ? array_values(array_filter($advantages, 'is_scalar')) : [];
                     @endphp
-                    <a href="/{{ $alias }}/{{ $p['alias'] }}" class="swiper-slide game-card">
+                    <a href="/{{ $alias }}/{{ $p['alias'] ?? '' }}" class="swiper-slide game-card">
                         <div>
                             <div class="game-card__top">
-                                <div class="game-card__logo {{ trim($p['image_site']) === '' ? 'game-card__logo--empty' : '' }}" data-letter="{{ mb_strtoupper(mb_substr(trim($p['title']), 0, 1)) }}">
+                                <div class="game-card__logo {{ trim((string) ($p['image_site'] ?? '')) === '' ? 'game-card__logo--empty' : '' }}" data-letter="{{ mb_strtoupper(mb_substr(trim((string) ($p['title'] ?? '')), 0, 1)) }}">
                                     @if(trim($p['image_site']) !== '')
-                                    <img src="/i{{ $p['image_site'] }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('game-card__logo--empty');this.remove();">
+                                    <img src="/i{{ $p['image_site'] ?? '' }}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add('game-card__logo--empty');this.remove();">
                                     @endif
                                 </div>
-                                <span class="game-card__status cheat-status_{{ $p['status_class'] }}">
+                                <span class="game-card__status cheat-status_{{ $p['status_class'] ?? '' }}">
                                     @include('user.partials.status-icon', ['icon' => $p['status_icon'] ?? 'question', 'size' => 12])
 
-                                    {{ $p['status_title'] }}
+                                    {{ $p['status_title'] ?? '' }}
                                 </span>
                             </div>
-                            <p class="game-card__name">{{ $p['title'] }}</p>
+                            <p class="game-card__name">{{ $p['title'] ?? '' }}</p>
                             <ul class="game-card__list">
-                                @foreach(json_decode($p['advantages'], true) ?? [] as $a)
+                                @foreach($advantages as $a)
                                 <li>{{ $a }}</li>
                                 @endforeach
                             </ul>

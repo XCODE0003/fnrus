@@ -13,7 +13,7 @@
                         value="{{ $material }}"
                         readonly
                     >
-                    <button class="input-block__copy-btn"></button>
+                    <button type="button" class="input-block__copy-btn" aria-label="{{ __('site.a11y_copy') }}"></button>
                 </div>
             </div>
             <div class="attention">
@@ -46,7 +46,7 @@
                     <a href="{{ $button['url'] }}" class="instruction__link"><span>{{ $button['text'] }}</span></a>
                 @endforeach
             </div>
-            <div style="color: #b5b5b5;">
+            <div class="instruction__rich-content" style="color: #b5b5b5;">
                 @richHtml($instruction_body)
             </div>
         </div>

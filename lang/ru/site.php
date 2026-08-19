@@ -559,4 +559,10 @@ return [
     "profile_method_yandex" => "Яндекс",
     "profile_method_connected" => "Подключён",
     "profile_method_not_connected" => "Не подключён",
+
+    // === accessibility labels ===
+    "a11y_logout" => "Выйти",
+    "a11y_cancel" => "Отменить",
+    "a11y_copy" => "Копировать",
+    "a11y_back" => "Назад",
 ];

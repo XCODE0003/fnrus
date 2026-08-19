@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="MobileOptimized" content="176" />
@@ -14,7 +14,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.15.17';
+    $__cssVer = '4.16.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
