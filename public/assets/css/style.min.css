@@ -29059,6 +29059,15 @@ button,.btn{white-space:normal}
 /* v4.16.3: no-hero pages previously stacked main padding with the generic
    first-section header clearance. Keep one zoom-compensated desktop offset. */
 @media (min-width:1024px) {
+    /* Keep no-hero headings on the same content grid as their cards. */
+    .about-page .about-heading-section__container {
+        width: 1200px !important;
+        max-width: calc(100% - 160px) !important;
+    }
+    .status-page .status-heading-section__container {
+        width: var(--content-width) !important;
+        max-width: calc(100% - 160px) !important;
+    }
     main.about-page,
     main.status-page,
     main.reviews-page {
