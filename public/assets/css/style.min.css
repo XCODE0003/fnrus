@@ -29096,3 +29096,91 @@ button,.btn{white-space:normal}
         max-width: none !important;
     }
 }
+
+
+/* ===================================================================== */
+/* v4.16.6: scoped responsive fixes from viewport regression review.     */
+/* ===================================================================== */
+@media (min-width:600px) and (max-width:1023px) {
+    /* The main and first section previously both reserved header space. */
+    main.reviews-page { padding-top:104px !important; }
+    main.reviews-page > .reviews-page__section:first-of-type { padding-top:20px !important; }
+
+    /* Keep the heading on-grid while the product rail reaches the right edge. */
+    .game-list > .content:not(.game-list__head) {
+        --game-list-gutter:30px;
+        width:calc(100vw - var(--game-list-gutter)) !important;
+        max-width:none !important;
+        margin-left:var(--game-list-gutter) !important;
+        margin-right:0 !important;
+        overflow:hidden;
+    }
+    .game-list > .content:not(.game-list__head) .game-cheats-slider {
+        width:100%; max-width:100%; overflow-x:auto !important; overflow-y:hidden !important;
+        overscroll-behavior-x:contain;
+    }
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .game-card {
+        width:47% !important; flex:0 0 47% !important; min-width:0;
+    }
+}
+
+@media (max-width:599px) {
+    /* Status entries are full-width rows instead of content-sized pills. */
+    .status-page .game-status-block,
+    .status-page .game-status-block__info,
+    .status-page .game-status-block__cheats {
+        width:100%; min-width:0; box-sizing:border-box;
+    }
+    .status-page .game-status-block__cheats { flex-direction:column; align-items:stretch; }
+    .status-page .game-status-block__cheats .status {
+        width:100%; max-width:100%; min-width:0; box-sizing:border-box; white-space:normal !important; flex-wrap:wrap !important;
+    }
+    .status-page .game-status-block__cheats .status__name,
+    .status-page .game-status-block__cheats .status__label {
+        min-width:0; overflow-wrap:anywhere;
+    }
+
+    /* Profile navigation scrolls inside its own width, never the page. */
+    .profile__sidebar,
+    .profile__sidebar .profile__menu {
+        width:100% !important; max-width:100% !important; min-width:0; box-sizing:border-box;
+    }
+    .profile__sidebar .profile__menu {
+        overflow-x:auto !important; overflow-y:hidden; overscroll-behavior-x:contain;
+    }
+    .profile__sidebar .profile__menu__item {
+        flex:0 0 calc(50% - 4px) !important; width:calc(50% - 4px) !important;
+        min-width:132px !important; max-width:180px;
+    }
+    .profile__sidebar .profile__menu__item > a {
+        width:100%; min-width:0; box-sizing:border-box; overflow:hidden; text-overflow:ellipsis;
+    }
+
+    /* Generated order cards keep the title, badge and action in bounds. */
+    .profile__orders-table,
+    .profile__orders-table .profile__table__body,
+    .profile__orders-table .simplebar-content-wrapper,
+    .profile__orders-table .simplebar-content,
+    .profile__orders-table .profile__table__row {
+        width:100% !important; max-width:100%; min-width:0; box-sizing:border-box;
+    }
+    .profile__orders-table .profile__table__row {
+        display:grid !important; grid-template-columns:minmax(0,1fr) !important; overflow:hidden;
+    }
+    .profile__orders-table .profile__table__col {
+        width:100%; min-width:0; max-width:100%; box-sizing:border-box;
+    }
+    .profile__orders-table .profile__table__col:nth-child(2) { padding-right:52px; }
+    .profile__orders-table__cheat-card {
+        display:flex; flex-wrap:wrap; gap:8px; width:100%; min-width:0;
+    }
+    .profile__orders-table__cheat-card > span:first-child {
+        flex:1 1 140px; min-width:0; overflow-wrap:anywhere;
+    }
+    .profile__orders-table .profile__order-pending {
+        flex:0 1 auto; min-width:0; max-width:100%; white-space:normal !important; overflow-wrap:anywhere;
+    }
+    .profile__orders-table .profile__table__link {
+        right:0; top:0; width:44px; height:44px; min-width:44px; min-height:44px; box-sizing:border-box;
+    }
+}
