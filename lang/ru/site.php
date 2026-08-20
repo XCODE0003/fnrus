@@ -62,9 +62,13 @@ return [
     "section_faq_subcaption" => "Ответы на самые распространённые вопросы о наших продуктах и сервисе.",
 
     "section_user_menu_profile" => "Профиль",
+    "section_user_menu_profile_mobile" => "Профиль",
     "section_user_menu_my_buys" => "Мои покупки",
+    "section_user_menu_my_buys_mobile" => "Покупки",
     "section_user_menu_tickets" => "Тикеты",
     "section_user_menu_ref_system" => "Реф. система",
+    "section_user_menu_ref_system_mobile" => "Рефералы",
+    "section_user_menu_support_mobile" => "Поддержка",
     "section_user_menu_topup_balance" => "Пополнить баланс",
 
     "section_user_orders_title" => "Мои покупки",

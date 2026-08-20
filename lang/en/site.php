@@ -62,9 +62,13 @@ return [
     "section_faq_subcaption" => "Answers to the most common questions about our products and service.",
 
     "section_user_menu_profile" => "Profile",
+    "section_user_menu_profile_mobile" => "Profile",
     "section_user_menu_my_buys" => "My purchases",
+    "section_user_menu_my_buys_mobile" => "Purchases",
     "section_user_menu_tickets" => "Tickets",
     "section_user_menu_ref_system" => "Referral system",
+    "section_user_menu_ref_system_mobile" => "Referrals",
+    "section_user_menu_support_mobile" => "Support",
     "section_user_menu_topup_balance" => "Top up balance",
 
     "section_user_orders_title" => "My purchases",

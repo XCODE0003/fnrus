@@ -29124,6 +29124,8 @@ button,.btn{white-space:normal}
     }
 }
 
+.profile__menu-label--mobile { display:none; }
+
 @media (max-width:599px) {
     /* Status entries are full-width rows instead of content-sized pills. */
     .status-page .game-status-block,
@@ -29140,28 +29142,44 @@ button,.btn{white-space:normal}
         min-width:0; overflow-wrap:anywhere;
     }
 
-    /* Profile navigation shows every destination in a stable phone grid. */
+    /* Profile navigation uses four equal compact tiles with short phone labels. */
     .profile__sidebar,
     .profile__sidebar .profile__menu {
         width:100% !important; max-width:100% !important; min-width:0; box-sizing:border-box;
     }
     .profile__sidebar .profile__menu {
-        display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;
+        display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px !important;
         width:100% !important; padding:8px !important; overflow:visible !important;
         overscroll-behavior:auto; scroll-snap-type:none; -webkit-mask-image:none; mask-image:none;
     }
     .profile__sidebar .profile__menu__item {
         flex:initial !important; width:100% !important; min-width:0 !important; max-width:none !important;
-        scroll-snap-align:none;
+        height:100%; margin:0 !important; padding:0 !important; opacity:1;
+        background:transparent !important; scroll-snap-align:none;
     }
     .profile__sidebar .profile__menu__item > a {
-        display:flex; justify-content:flex-start; align-items:center; gap:8px;
-        width:100%; min-width:0; min-height:52px; padding:10px 12px !important; box-sizing:border-box;
-        font-size:14px; line-height:1.2; white-space:normal; overflow:visible; text-overflow:clip;
-        overflow-wrap:anywhere;
+        display:flex !important; flex-direction:column; justify-content:center !important; align-items:center; gap:7px;
+        width:100% !important; min-width:0; min-height:84px !important; height:100%; padding:10px 8px !important;
+        box-sizing:border-box; border:1px solid rgba(255,255,255,.08); border-radius:12px !important;
+        background:rgba(255,255,255,.025); color:rgba(255,255,255,.72);
+        font-size:14px !important; line-height:1.15; text-align:center; white-space:normal;
+        overflow:hidden !important; text-overflow:clip !important; overflow-wrap:normal;
+        box-shadow:none; transition:border-color .2s,background .2s,color .2s,box-shadow .2s;
+    }
+    .profile__sidebar .profile__menu__item:hover { background:transparent !important; }
+    .profile__sidebar .profile__menu__item:hover > a {
+        border-color:rgba(132,86,255,.3); background:rgba(132,86,255,.07); color:#fff;
+    }
+    .profile__sidebar .profile__menu__item._active > a {
+        border-color:rgba(132,86,255,.46); background:rgba(132,86,255,.12);
+        color:#fff; box-shadow:0 6px 18px rgba(88,52,180,.12);
     }
     .profile__sidebar .profile__menu__item > a svg {
-        flex:0 0 18px; width:18px; height:18px;
+        flex:0 0 22px; width:22px; height:22px; margin:0 !important;
+    }
+    .profile__menu-label--desktop { display:none; }
+    .profile__menu-label--mobile {
+        display:-webkit-box; max-width:100%; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2;
     }
 
     /* Generated order cards keep the title, badge and action in bounds. */

@@ -5,23 +5,24 @@
 
   $active — 'profile' | 'orders' | 'referral'
 
-  On phones the same <ul> becomes a responsive two-column grid (see the
-  profile navigation block at the end of style.min.css), so all sections
-  remain visible without horizontal scrolling.
+  On phones the same <ul> becomes a compact two-column tile grid (see the
+  profile navigation block at the end of style.min.css). Short mobile labels
+  keep all four destinations readable without changing their accessible names.
 --}}
 @php $active = $active ?? 'profile'; @endphp
 <div class="profile__sidebar">
                     <ul class="profile__block profile__menu">
                         <li class="profile__menu__item @if($active === 'profile') _active @endif">
-                            <a href="/my/profile">
+                            <a href="/my/profile" aria-label="{{ __('site.section_user_menu_profile') }}">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.0157 9.27363C14.2954 8.34031 15.1288 6.82984 15.1288 5.1282C15.1288 2.30051 12.8283 0 10.0006 0C7.17289 0 4.87238 2.30051 4.87238 5.1282C4.87238 6.82984 5.7057 8.34031 6.98547 9.27363C3.80422 10.491 1.53906 13.5754 1.53906 17.1795C1.53906 18.7347 2.80434 20 4.35957 20H15.6416C17.1968 20 18.4621 18.7347 18.4621 17.1795C18.4621 13.5754 16.197 10.491 13.0157 9.27363ZM6.41086 5.1282C6.41086 3.14883 8.02121 1.53848 10.0006 1.53848C11.98 1.53848 13.5903 3.14883 13.5903 5.1282C13.5903 7.10758 11.98 8.71797 10.0006 8.71797C8.02121 8.71797 6.41086 7.10758 6.41086 5.1282ZM15.6416 18.4615H4.35957C3.65266 18.4615 3.07754 17.8864 3.07754 17.1795C3.07754 13.362 6.18316 10.2564 10.0006 10.2564C13.8181 10.2564 16.9237 13.362 16.9237 17.1795C16.9237 17.8864 16.3486 18.4615 15.6416 18.4615Z" fill="white"/>
                                 </svg>
-                                {{ __('site.section_user_menu_profile') }}
+                                <span class="profile__menu-label profile__menu-label--desktop">{{ __('site.section_user_menu_profile') }}</span>
+                                <span class="profile__menu-label profile__menu-label--mobile" aria-hidden="true">{{ __('site.section_user_menu_profile_mobile') }}</span>
                             </a>
                         </li>
                         <li class="profile__menu__item @if($active === 'orders') _active @endif">
-                            <a href="/my/orders">
+                            <a href="/my/orders" aria-label="{{ __('site.section_user_menu_my_buys') }}">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g opacity="0.5">
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M13.125 5.42534C13.125 3.59754 11.5546 2.13355 9.69368 2.31408L9.69141 2.3143C8.17354 2.45597 6.875 3.99404 6.875 5.58367V6.392C6.875 6.73718 6.59518 7.017 6.25 7.017C5.90482 7.017 5.625 6.73718 5.625 6.392V5.58367C5.625 3.42367 7.34255 1.27877 9.57412 1.06981C12.1794 0.817724 14.375 2.87017 14.375 5.42534V6.57534C14.375 6.92051 14.0952 7.20034 13.75 7.20034C13.4048 7.20034 13.125 6.92051 13.125 6.57534V5.42534Z" fill="white"/>
@@ -30,11 +31,12 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M6.24512 10.0013C6.24512 9.54106 6.61821 9.16797 7.07845 9.16797H7.08594C7.54617 9.16797 7.91927 9.54106 7.91927 10.0013C7.91927 10.4615 7.54617 10.8346 7.08594 10.8346H7.07845C6.61821 10.8346 6.24512 10.4615 6.24512 10.0013Z" fill="white"/>
                                     </g>
                                 </svg>
-                                {{ __('site.section_user_menu_my_buys') }}
+                                <span class="profile__menu-label profile__menu-label--desktop">{{ __('site.section_user_menu_my_buys') }}</span>
+                                <span class="profile__menu-label profile__menu-label--mobile" aria-hidden="true">{{ __('site.section_user_menu_my_buys_mobile') }}</span>
                             </a>
                         </li>
                         <li class="profile__menu__item @if($active === 'referral') _active @endif">
-                            <a href="/my/referral">
+                            <a href="/my/referral" aria-label="{{ __('site.section_user_menu_ref_system') }}">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g opacity="0.5" clip-path="url(#clip0_472_19524)">
                                         <path d="M14.3582 10.0355C13.9765 9.85392 13.5839 9.69631 13.1827 9.56359C14.475 8.59359 15.3125 7.04902 15.3125 5.3125C15.3125 2.3832 12.9293 0 9.99998 0C7.07065 0 4.68749 2.3832 4.68749 5.3125C4.68749 7.05094 5.52686 8.59703 6.82159 9.56684C5.63534 9.95738 4.52225 10.5651 3.54803 11.3664C1.76163 12.8358 0.519555 14.8854 0.0506881 17.1376C-0.096265 17.8433 0.0797896 18.5682 0.533618 19.1262C0.985219 19.6815 1.65487 20 2.37081 20H11.9922C12.4237 20 12.7734 19.6502 12.7734 19.2188C12.7734 18.7873 12.4237 18.4375 11.9922 18.4375H2.37081C2.03729 18.4375 1.83608 18.2513 1.74584 18.1404C1.59002 17.9488 1.52971 17.6994 1.58038 17.4561C2.39112 13.5617 5.82612 10.717 9.79288 10.621C9.93157 10.6264 10.0704 10.6264 10.2091 10.6209C11.4248 10.6495 12.5939 10.9269 13.6874 11.4467C14.0771 11.6319 14.5431 11.4662 14.7284 11.0765C14.9136 10.6868 14.7479 10.2207 14.3582 10.0355ZM10.1905 9.0577C10.064 9.05536 9.93745 9.05538 9.81092 9.05777C7.83065 8.95898 6.24999 7.31687 6.24999 5.3125C6.24999 3.24473 7.93221 1.5625 9.99998 1.5625C12.0678 1.5625 13.75 3.24473 13.75 5.3125C13.75 7.31637 12.1701 8.95816 10.1905 9.0577Z" fill="white"/>
@@ -46,17 +48,19 @@
                                         </clipPath>
                                     </defs>
                                 </svg>
-                                {{ __('site.section_user_menu_ref_system') }}
+                                <span class="profile__menu-label profile__menu-label--desktop">{{ __('site.section_user_menu_ref_system') }}</span>
+                                <span class="profile__menu-label profile__menu-label--mobile" aria-hidden="true">{{ __('site.section_user_menu_ref_system_mobile') }}</span>
                             </a>
                         </li>
                         <li class="profile__menu__item">
-                            <a href="javascript:;" data-popup="supportModal">
+                            <a href="javascript:;" data-popup="supportModal" aria-label="{{ __('site.support_title') }}">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g opacity="0.5">
                                         <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18ZM11 14H9V16H11V14ZM10.07 4C7.79 4 6 5.79 6 8.07H8C8 6.9 8.9 6 10.07 6C11.24 6 12.14 6.9 12.14 8.07C12.14 10 9.07 9.77 9.07 13H11.07C11.07 10.77 14.14 10.5 14.14 8.07C14.14 5.79 12.35 4 10.07 4Z" fill="white"/>
                                     </g>
                                 </svg>
-                                {{ __('site.support_title') }}
+                                <span class="profile__menu-label profile__menu-label--desktop">{{ __('site.support_title') }}</span>
+                                <span class="profile__menu-label profile__menu-label--mobile" aria-hidden="true">{{ __('site.section_user_menu_support_mobile') }}</span>
                             </a>
                         </li>
                     </ul>
