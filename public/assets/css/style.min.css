@@ -29550,3 +29550,18 @@ button,.btn{white-space:normal}
         backdrop-filter:none !important;
     }
 }
+
+/* v4.16.12: fixed-header clearance is owned by the game hero section. */
+@media (max-width:1023px){
+    html body main.game > section.game-hero{
+        box-sizing:border-box;
+        padding-top:calc(var(--header-height) + 12px) !important;
+        padding-bottom:20px !important;
+    }
+
+    html body main.game > section.game-hero > .game-hero__inner{
+        padding-top:0 !important;
+        margin-top:0 !important;
+        transform:none !important;
+    }
+}
