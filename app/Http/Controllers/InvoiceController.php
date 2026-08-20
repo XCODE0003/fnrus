@@ -359,7 +359,8 @@ class InvoiceController extends Controller
             return response()->json(['ok' => 'expired']);
         }
 
-        if($o->status == 1 && $o->expired_at > 0 && $o->expired_at <= strtotime(date('Y-m-d H:i'))){
+        if($o->status == 1 && $o->expired_at > 0 && $o->expired_at <= time()){
+            $o = Order::expirePendingById((int) $o->id) ?? $o->fresh();
             return response()->json(['ok' => 'expired']);
         }
 

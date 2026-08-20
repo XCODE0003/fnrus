@@ -229,9 +229,15 @@ class OrderController extends Controller
 
             $order = Order::where('sid', $shop->id)
                 ->where('hash', $hash)
-                ->where('status', 1)
                 ->first();
             if (!$order) {
+                throw new Exception('Заказ не найден.', 1);
+            }
+
+            if ((int) $order->status === 1 && (int) $order->expired_at > 0 && (int) $order->expired_at <= time()) {
+                $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
+            }
+            if ((int) $order->status !== 1) {
                 throw new Exception('Заказ не найден.', 1);
             }
 
@@ -303,9 +309,13 @@ class OrderController extends Controller
             $order = Order::where('sid', $shop->id)->where('id', $request->order_id)->first();
             if (!$order) {throw new Exception('Заказ не найден.', 1);}
 
+            if ((int) $order->status === 1 && (int) $order->expired_at > 0 && (int) $order->expired_at <= time()) {
+                $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
+            }
+
             $product = Product::getByID($shop->id, $order->pid);
 
-            if($order->pid > 0 && $order->expired_at < strtotime('NOW')){
+            if($order->pid > 0 && $order->expired_at <= time()){
                 throw new Exception('Срок оплаты заказа истек.', 1);
             }
 
@@ -445,7 +455,11 @@ class OrderController extends Controller
             $order = Order::where('sid', $shop->id)->where('bid', $this->user->id)->where('hash', $hash)->first();
             if (!$order) {throw new Exception('Заказ не найден.', 1);}
 
-            if($order->pid > 0 && $order->expired_at < strtotime('NOW')){
+            if ((int) $order->status === 1 && (int) $order->expired_at > 0 && (int) $order->expired_at <= time()) {
+                $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
+            }
+
+            if($order->pid > 0 && $order->expired_at <= time()){
                 throw new Exception('Срок оплаты заказа истек.', 1);
             }
 
@@ -1236,7 +1250,8 @@ class OrderController extends Controller
                 throw new Exception('Member not found!', 1);
             }
 
-            if($order->expired_at < $date_now){
+            if($order->expired_at <= $date_now){
+                Order::expirePendingById((int) $order->id);
                 throw new Exception('Payment time has expired!', 1);
             }
 

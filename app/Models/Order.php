@@ -108,29 +108,43 @@ class Order extends Model
         $expired = collect();
 
         foreach ($ids as $id) {
-            $order = DB::transaction(function () use ($id) {
-                $order = self::whereKey($id)->lockForUpdate()->first();
-                if (!$order || (int) $order->status !== 1 || (int) $order->expired_at > time()) {
-                    return null;
-                }
-
-                $changed = self::whereKey($id)->where('status', 1)->update(['status' => 4]);
-                if (!$changed) return null;
-
-                if ((int) $order->pid > 0) {
-                    Product::whereKey($order->pid)->increment('count_all', (int) $order->count_all);
-                }
-                Material::releaseFromOrder((int) $order->id);
-
-                $order->status = 4;
-                return $order;
-            });
+            $order = self::expirePendingById((int) $id);
 
             if ($order) $expired->push($order);
         }
 
         return $expired;
     }
+
+    /**
+     * Expire one overdue unpaid order and release its reservation exactly once.
+     */
+    public static function expirePendingById(int $id): ?self
+    {
+        return DB::transaction(function () use ($id) {
+            $order = self::whereKey($id)->lockForUpdate()->first();
+            if (!$order
+                || (int) $order->status !== 1
+                || (int) $order->expired_at <= 0
+                || (int) $order->expired_at > time()) {
+                return null;
+            }
+
+            $changed = self::whereKey($id)
+                ->where('status', 1)
+                ->update(['status' => 4]);
+            if (!$changed) return null;
+
+            if ((int) $order->pid > 0 && (int) $order->count_all > 0) {
+                Product::whereKey($order->pid)->increment('count_all', (int) $order->count_all);
+            }
+            Material::releaseFromOrder((int) $order->id);
+
+            $order->status = 4;
+            return $order;
+        });
+    }
+
     public static function getByHash($sid, $hash){
         return Order::where('sid', $sid)->where('hash', $hash)->first();
     }

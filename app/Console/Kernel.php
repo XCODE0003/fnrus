@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Http\Controllers\SenderController;
 use App\Http\Controllers\TicketController;
 use App\Models\Currency;
-use App\Models\Order;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,7 +18,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call([Order::class, 'changeStatusByExpiredAt'])->everyMinute();
+        $schedule->command('orders:expire')
+            ->name('orders_expire')
+            ->everyMinute()
+            ->withoutOverlapping();
         $schedule->call([Currency::class, 'cron_convert'])->everyTwoHours();
         // withoutOverlapping: рассылка на 40k подписчиков идёт ~20+ мин,
         // без этого cron каждую минуту запускал бы новые параллельные
