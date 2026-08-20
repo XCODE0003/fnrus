@@ -5,9 +5,9 @@
 
   $active — 'profile' | 'orders' | 'referral'
 
-  On mobile the same <ul> becomes a horizontal scrolling tab rail (see the
-  ТЗ §2 block at the end of style.min.css), so the sections stay one tap
-  away instead of pushing the content down the page.
+  On phones the same <ul> becomes a responsive two-column grid (see the
+  profile navigation block at the end of style.min.css), so all sections
+  remain visible without horizontal scrolling.
 --}}
 @php $active = $active ?? 'profile'; @endphp
 <div class="profile__sidebar">
