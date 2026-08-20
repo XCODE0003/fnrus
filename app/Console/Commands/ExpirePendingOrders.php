@@ -13,7 +13,7 @@ class ExpirePendingOrders extends Command
 
     public function handle(): int
     {
-        $expired = Order::expirePending();
+        $expired = Order::changeStatusByExpiredAt();
 
         $this->info(sprintf('Expired %d pending order(s).', $expired->count()));
 

@@ -42,7 +42,7 @@ class ExpirePendingOrdersTest extends TestCase
         });
     }
 
-    public function test_expiration_releases_stock_and_materials_only_once(): void
+    public function test_direct_expiration_helper_returns_orders_and_releases_stock_only_once(): void
     {
         Product::query()->insert(['id' => 10, 'count_all' => 3]);
         Order::query()->insert([
@@ -60,8 +60,12 @@ class ExpirePendingOrdersTest extends TestCase
             'status' => 4,
         ]);
 
-        $this->assertNotNull(Order::expirePendingById(20));
-        $this->assertNull(Order::expirePendingById(20));
+        $expired = Order::changeStatusByExpiredAt();
+        $alreadyExpired = Order::changeStatusByExpiredAt();
+
+        $this->assertCount(1, $expired);
+        $this->assertSame(20, (int) $expired->first()->id);
+        $this->assertTrue($alreadyExpired->isEmpty());
 
         $this->assertSame(4, (int) Order::findOrFail(20)->status);
         $this->assertSame(5, (int) Product::findOrFail(10)->count_all);

@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\BlockLegacyAdminPath::class,
         \App\Http\Middleware\SecurityHeaders::class,
+        \App\Http\Middleware\ExpirePendingOrders::class,
         \App\Http\Middleware\DebugLivewireUpload::class,
     ];
 

@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Material;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -50,16 +51,17 @@ class Order extends Model
         return Order::where('sid', $sid)->where('id', $id)->first();
     }
 
-    public static function changeStatusByExpiredAt(){
+    public static function changeStatusByExpiredAt(): Collection
+    {
         $expired = self::expirePending();
 
         // Telegram is only a notification channel. A broken/missing token or
         // Telegram outage must never keep an order and its stock reserved.
-        if ($expired->isEmpty()) return;
+        if ($expired->isEmpty()) return $expired;
 
         try {
             $shop = Shop::getDefault();
-            if (!$shop || !$shop->token) return;
+            if (!$shop || !$shop->token) return $expired;
 
             $tg = new Api(Crypt::decryptString($shop->token));
 
@@ -88,6 +90,8 @@ class Order extends Model
         } catch (\Throwable $e) {
             Log::warning('Expired-order Telegram setup failed', ['error' => $e->getMessage()]);
         }
+
+        return $expired;
     }
 
     /**
