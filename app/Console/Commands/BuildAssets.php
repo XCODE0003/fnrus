@@ -126,8 +126,10 @@ class BuildAssets extends Command
             $i++;
         }
 
-        // tidy the spaces around punctuation that CSS never needs
-        $out = preg_replace('/\s*([{};:,>~+])\s*/', '$1', $out);
+        // Tidy spaces around punctuation that never requires them. Keep spaces
+        // around + because CSS math functions require binary operators to be
+        // whitespace-delimited; this also preserves sibling combinators.
+        $out = preg_replace('/\s*([{};:,>~])\s*/', '$1', $out);
         // ...except the combinators inside :not()/:is() etc. keep working, and
         // a space is still required between simple selectors, which the regex
         // above preserves because it only touches the listed characters.
