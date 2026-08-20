@@ -29439,3 +29439,114 @@ button,.btn{white-space:normal}
         padding-bottom: 8px !important;
     }
 }
+
+/* v4.16.11 — storefront cards keep their desktop surfaces on mobile.
+   Restore each component's existing desktop background/border; layout stays responsive. */
+@media (max-width:900px){
+    .game-card{
+        background:linear-gradient(180deg, #1d2533 0%, #171d28 100%) !important;
+        border:1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .catalog-card{
+        background:#171d28 !important;
+        border:0 !important;
+    }
+
+    .rev-card,
+    .reviews-grid .rev-card,
+    .reviews-page .rev-card{
+        background:#171d28 !important;
+        border:1px solid #202834 !important;
+    }
+
+    .s2-card{
+        background:linear-gradient(180deg, #18202c 0%, #171d28 42.8%) !important;
+        border:0 !important;
+    }
+
+    .accordion{
+        background:#171d27 !important;
+        border:0 !important;
+    }
+
+    .faq .accordion{
+        background:linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.012)) !important;
+        border:1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+
+    .faq .accordion:hover{
+        background:linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.018)) !important;
+        border-color:rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .faq .accordion._active,
+    .faq .accordion.is-open,
+    .faq .accordion.active{
+        background:linear-gradient(180deg, rgba(132, 86, 255, 0.06), rgba(255, 255, 255, 0.015)) !important;
+        border-color:rgba(132, 86, 255, 0.45) !important;
+    }
+
+    .cheat-functions__block{
+        background:linear-gradient(180deg, #1d2533 0%, #171d28 100%) !important;
+        border:1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .cheat-block__requirements,
+    .cheat-block__info{
+        background:#171d28 !important;
+        border:0 !important;
+    }
+
+    .about-section__stat{
+        background:linear-gradient(180deg, #1d2533 0%, #171d28 100%) !important;
+        border:1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .about-contact{
+        background:linear-gradient(180deg, #1d2533 0%, #171d28 100%) !important;
+        border:1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .status-heading-section__attention{
+        background:linear-gradient(180deg, rgba(245, 196, 138, 0.1), rgba(245, 196, 138, 0.03)) !important;
+        border:1px solid rgba(245, 196, 138, 0.25) !important;
+    }
+
+    .game-card:hover{
+        background:#1b2230 !important;
+    }
+
+    .rev-card:hover{
+        border-color:#2c3647 !important;
+    }
+
+    .cheat-functions__block:hover{
+        border-color:rgba(132, 86, 255, 0.35) !important;
+    }
+
+    .about-section__stat:hover{
+        border-color:rgba(132, 86, 255, 0.3) !important;
+    }
+
+    .about-contact:hover{
+        background:#1b2230 !important;
+        border-color:#2f3a4d !important;
+    }
+
+    .game-card,
+    .catalog-card,
+    .rev-card,
+    .s2-card,
+    .faq .accordion,
+    .accordion,
+    .cheat-functions__block,
+    .cheat-block__requirements,
+    .cheat-block__info,
+    .about-section__stat,
+    .about-contact,
+    .status-heading-section__attention{
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+    }
+}
