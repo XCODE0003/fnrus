@@ -41,6 +41,8 @@ return [
     "catalog_more" => "Подробнее",
     "game_cheats_for" => "Читы для",
     "game_back" => "Назад",
+    "game_previous_products" => "Предыдущие товары",
+    "game_next_products" => "Следующие товары",
     "game_product_one" => "товар",
     "game_product_few" => "товара",
     "game_product_many" => "товаров",

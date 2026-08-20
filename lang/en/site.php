@@ -41,6 +41,8 @@ return [
     "catalog_more" => "More",
     "game_cheats_for" => "Cheats for",
     "game_back" => "Back",
+    "game_previous_products" => "Previous products",
+    "game_next_products" => "Next products",
     "game_product_one" => "product",
     "game_product_few" => "products",
     "game_product_many" => "products",

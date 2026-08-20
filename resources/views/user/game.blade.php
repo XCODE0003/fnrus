@@ -109,8 +109,8 @@
                 <span>{{ $cardTitle }}</span>
             </div>
             <div class="slider-arrows game-list__arrows">
-                <button class="slider-arrows__arrow slider-arrows__prev"></button>
-                <button class="slider-arrows__arrow slider-arrows__next"></button>
+                <button class="slider-arrows__arrow slider-arrows__prev" type="button" aria-label="{{ __('site.game_previous_products') }}"></button>
+                <button class="slider-arrows__arrow slider-arrows__next" type="button" aria-label="{{ __('site.game_next_products') }}"></button>
             </div>
         </div>
         <div class="content">

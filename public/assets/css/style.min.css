@@ -29252,3 +29252,190 @@ button,.btn{white-space:normal}
         grid-column:2; text-align:left; -webkit-line-clamp:1;
     }
 }
+
+/* ===================================================================== */
+/* v4.16.10: final /{game} responsive rail and fixed-header correction.   */
+/* This block intentionally comes last: it owns only game-page layout at  */
+/* phone/tablet widths and supersedes the older carousel experiments.      */
+/* ===================================================================== */
+@media (max-width: 1023px) {
+    /* .header is fixed/absolute on these widths and is 98px high. Reserve
+       only that real clearance; do not compound it with a second large gap. */
+    .game > .game-hero:first-child {
+        padding-top: calc(var(--header-height) + 12px) !important;
+    }
+
+    .game .game-hero__crumbs {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+@media (max-width: 599px) {
+    .game {
+        --game-gutter: clamp(16px, 5.2vw, 40px);
+    }
+
+    /* The rail starts on the same gutter as its platform heading and owns
+       the viewport bleed/overflow. The page itself remains non-horizontal. */
+    .game-list > .content:not(.game-list__head) {
+        width: calc(100vw - var(--game-gutter)) !important;
+        max-width: none !important;
+        margin-left: var(--game-gutter) !important;
+        margin-right: 0 !important;
+        overflow: visible !important;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        overscroll-behavior-x: contain;
+        scroll-padding-left: 0 !important;
+        scroll-padding-right: 24px !important;
+        scroll-snap-type: x mandatory !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider::-webkit-scrollbar {
+        display: none !important;
+        width: 0;
+        height: 0;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .swiper-wrapper {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+        min-width: max-content !important;
+        transform: none !important;
+        gap: 14px !important;
+        align-items: stretch !important;
+    }
+
+    /* After the 14px gap, 30px of the next card remains as a narrow visual
+       cue, while all of its content stays clipped inside that card. */
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .swiper-slide,
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .game-card {
+        box-sizing: border-box !important;
+        flex: 0 0 calc(100vw - var(--game-gutter) - 44px) !important;
+        width: calc(100vw - var(--game-gutter) - 44px) !important;
+        max-width: calc(100vw - var(--game-gutter) - 44px) !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        align-self: stretch !important;
+        scroll-snap-align: start !important;
+        scroll-snap-stop: always;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .game-card__list {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .game-list {
+        margin-top: 24px !important;
+        margin-bottom: 24px !important;
+        padding-top: 0 !important;
+    }
+
+    .game-list:first-of-type {
+        margin-top: 12px !important;
+    }
+
+    .game-list__head {
+        margin-bottom: 12px !important;
+        padding-top: 0 !important;
+        padding-bottom: 8px !important;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+    .game {
+        --game-gutter: 30px;
+    }
+
+    .game > .game-hero:first-child {
+        padding-top: calc(var(--header-height) + 12px) !important;
+    }
+
+    .game-list > .content:not(.game-list__head) {
+        width: calc(100vw - var(--game-gutter)) !important;
+        max-width: none !important;
+        margin-left: var(--game-gutter) !important;
+        margin-right: 0 !important;
+        overflow: visible !important;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        overscroll-behavior-x: contain;
+        scroll-padding-left: 0 !important;
+        scroll-padding-right: 30px !important;
+        scroll-snap-type: x mandatory !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider::-webkit-scrollbar {
+        display: none !important;
+        width: 0;
+        height: 0;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .swiper-wrapper {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+        min-width: max-content !important;
+        transform: none !important;
+        gap: 16px !important;
+        align-items: stretch !important;
+    }
+
+    /* Tablet composition: one readable card plus a purposeful 40% preview. */
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .swiper-slide,
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .game-card {
+        box-sizing: border-box !important;
+        flex: 0 0 calc(60vw - 18px) !important;
+        width: calc(60vw - 18px) !important;
+        max-width: calc(60vw - 18px) !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        align-self: stretch !important;
+        scroll-snap-align: start !important;
+        scroll-snap-stop: always;
+    }
+
+    .game-list > .content:not(.game-list__head) .game-cheats-slider .game-card__list {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .game-list {
+        margin-top: 28px !important;
+        margin-bottom: 28px !important;
+        padding-top: 0 !important;
+    }
+
+    .game-list:first-of-type {
+        margin-top: 16px !important;
+    }
+
+    .game-list__head {
+        margin-bottom: 14px !important;
+        padding-top: 0 !important;
+        padding-bottom: 8px !important;
+    }
+}
