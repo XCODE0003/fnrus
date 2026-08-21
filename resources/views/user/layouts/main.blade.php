@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.16.13';
+    $__cssVer = '4.17.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1057,7 +1057,7 @@
     </div>
 
     <script src="/assets/js/scripts.min.js?68"></script>
-    <script src="/assets/js/animations.js?v=29"></script>
+    <script src="/assets/js/animations.js?v=30"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=2" defer></script>
     <script>
