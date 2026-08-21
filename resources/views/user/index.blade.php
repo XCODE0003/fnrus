@@ -30,9 +30,6 @@
                     </button>
                 </div>
             </div>
-            <div class="hero__image">
-                <img src="/assets/img/spider-hero.webp" alt="" fetchpriority="high" decoding="async" width="640" height="640">
-            </div>
         </div>
     </section>
     <section class="catalog" id="catalog">

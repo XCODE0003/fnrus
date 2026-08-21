@@ -159,9 +159,9 @@
         /* ============================ HOME HERO ======================== */
         /* Keep the image visible without JS; GSAP only settles opacity/transform. */
         function initHomeHero() {
-            var image = q("[data-hero-image]");
-            if (!image || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-            gsap.fromTo(image, { opacity: 0.96, y: 8 }, {
+            var media = q(".hero__media");
+            if (!media || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            gsap.fromTo(media, { opacity: 0.96, y: 8 }, {
                 opacity: 1, y: 0, duration: 0.65, ease: SOFT,
                 clearProps: "transform,opacity"
             });
