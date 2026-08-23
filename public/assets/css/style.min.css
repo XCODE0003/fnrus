@@ -29637,7 +29637,7 @@ button,.btn{white-space:normal}
         min-height: 0 !important;
         height: auto !important;
         padding: 12px !important;
-        gap: 10px !important;
+        gap: 0 !important;
         border: 1px solid rgba(149, 104, 255, .10) !important;
         border-radius: 16px !important;
         background: linear-gradient(145deg, rgba(27, 35, 49, .96), rgba(19, 26, 38, .98)) !important;
@@ -31365,5 +31365,60 @@ body:has(.consent.is-visible) .support-bubble {
     html body .header.is-scrolled .header__search,
     html body .header.is-scrolled .header__login {
         margin-top: 21px !important;
+    }
+}
+
+/* v4.23.6 — login capsule: edge-pinned avatar, optically centred label. */
+@media (min-width: 1024px) {
+    html body .header .header__login {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-right: 12px !important;
+        padding-left: 48px !important;
+        overflow: hidden !important;
+        isolation: isolate;
+    }
+
+    html body .header .header__login .btn__icon {
+        position: absolute !important;
+        z-index: 2 !important;
+        top: 50% !important;
+        left: 5px !important;
+        width: 34px !important;
+        min-width: 34px !important;
+        height: 34px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: translateY(-50%) !important;
+        border: 1px solid rgba(255, 255, 255, .12) !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, .16) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14) !important;
+        transition: background-color .22s ease, border-color .22s ease !important;
+    }
+
+    html body .header .header__login:hover .btn__icon {
+        border-color: rgba(255, 255, 255, .2) !important;
+        background: rgba(255, 255, 255, .22) !important;
+    }
+
+    html body .header .header__login .btn__icon img {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    html body .header .header__login__label {
+        position: relative !important;
+        z-index: 2 !important;
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        text-align: center !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
 }
