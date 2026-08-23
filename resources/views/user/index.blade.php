@@ -2,14 +2,14 @@
 @push('head')
     {{-- LCP image of the home page: start it with the stylesheet
          instead of waiting for layout. --}}
-    <link rel="preload" as="image" href="/assets/img/hero-new.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/img/hero-scene-v4.webp" type="image/webp" fetchpriority="high">
 @endpush
 
 @section('content')
 <main class="main">
     <section class="hero">
         <div class="hero__media" aria-hidden="true">
-            <img data-hero-image src="/assets/img/hero-new.png" alt="" fetchpriority="high" decoding="async" width="1280" height="816">
+            <img data-hero-image src="/assets/img/hero-scene-v4.webp" alt="" fetchpriority="high" decoding="async" width="1280" height="816">
         </div>
         <div class="content hero__content">
             <div class="hero__col">

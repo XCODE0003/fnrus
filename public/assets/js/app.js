@@ -248,12 +248,12 @@ function pmIconHtml(name, src){
     // Per-gateway icons — one distinct mark per payment system. The checkout
     // now passes the system title (Pally, CryptoBot, …) as `name`, so match it
     // first. Real brand logos where publicly available; clean monogram badges
-    // for Pally/BTKassa (no public logo online). Keep these BEFORE the generic
+    // for Pally/BTKassa. Keep these BEFORE the generic
     // asset-name rules below.
     if (/free ?kassa|фрикасса/.test(n))              return full(L + 'payson-freekassa.svg');
     if (/crystal ?pay|crystal|кристал/.test(n))      return full(L + 'payson-crystalpay.png');
     if (/stream ?pay|стримпей|стрим/.test(n))        return full(L + 'payson-streampay.svg');
-    if (/pally|paypalych|palych/.test(n))            return card(); // фиолетовая карта — переводы/карты
+    if (/pally|polly|paypalych|palych/.test(n))      return full(L + 'payson-pally.svg');
     if (/btkassa|бткасса/.test(n))                   return full(L + 'payson-btkassa.svg');
 
     if (/сбп|sbp/.test(n))                                   return white(L + 'payment_sbp.svg');

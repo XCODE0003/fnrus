@@ -114,6 +114,7 @@
             </div>
         </div>
         <div class="content">
+            <div class="carousel-rail game-list__rail">
             <div class="swiper game-cheats-slider js-carousel" data-carousel="game-cheats">
                 <div class="swiper-wrapper">
                     @foreach($cardProducts as $p)
@@ -169,6 +170,7 @@
                     </a>
                     @endforeach
                 </div>
+            </div>
             </div>
         </div>
     </section>

@@ -154,6 +154,7 @@
                         <button class="slider-arrows__arrow slider-arrows__next game-cheats__slider-arrow"></button>
                     </div>
                 </div>
+                <div class="carousel-rail game-cheats__rail">
                 <div class="swiper game-cheats-slider">
                     <div class="swiper-wrapper">
                         @foreach($recommendationItems as $card)
@@ -195,6 +196,7 @@
                             </a>
                         @endforeach
                     </div>
+                </div>
                 </div>
             </div>
         </section>
