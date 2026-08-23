@@ -31422,3 +31422,140 @@ body:has(.consent.is-visible) .support-bubble {
         white-space: nowrap !important;
     }
 }
+
+/* v4.23.8 — desktop composition: restore statuses, improve legibility and
+   return the hero artwork to the tighter proportions of the reference. */
+@media (min-width: 1180px) {
+    html body .header .header__container {
+        width: 1224px !important;
+        max-width: calc(100% - 32px) !important;
+        padding-right: 0 !important;
+    }
+
+    html body .header .header__container::before {
+        left: 160px !important;
+        border-radius: 999px !important;
+    }
+
+    html body .header .header__logo {
+        flex: 0 0 140px !important;
+        width: 140px !important;
+        margin-right: 20px !important;
+    }
+
+    html body .header .header__menu,
+    html body .header .header__menu._active {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        min-width: 0 !important;
+        padding-left: 6px !important;
+        gap: 0 !important;
+    }
+
+    html body .header .header__menu__item--statuses {
+        display: block !important;
+    }
+
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__pill {
+        min-height: 42px !important;
+        padding: 10px 6px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        letter-spacing: .035em !important;
+        white-space: nowrap !important;
+    }
+
+    html body .header .header__menu__pill {
+        gap: 5px !important;
+        padding: 0 8px !important;
+        border: 1px solid rgba(158, 103, 255, .44) !important;
+        border-radius: 999px !important;
+        background: linear-gradient(180deg, rgba(37, 29, 69, .72), rgba(19, 19, 43, .58)) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045), 0 10px 24px -19px rgba(134, 67, 255, .9) !important;
+    }
+
+    html body .header .header__menu__pill:hover,
+    html body .header .header__menu__item.is-current > .header__menu__pill {
+        border-color: rgba(178, 127, 255, .7) !important;
+        background: linear-gradient(180deg, rgba(48, 34, 87, .82), rgba(26, 22, 55, .7)) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .065), 0 0 20px -9px rgba(150, 82, 255, .88) !important;
+    }
+
+    html body .header .header__menu__pill-icon,
+    html body .header .header__menu__pill-chev {
+        display: inline-flex !important;
+        flex: 0 0 auto !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    html body .header .header__menu__pill-icon,
+    html body .header .header__menu__pill-icon svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    html body .header .header__menu__pill-chev,
+    html body .header .header__menu__pill-chev svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    html body .header .header__lang {
+        flex: 0 0 48px !important;
+        width: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+    }
+
+    html body .header .header__search {
+        flex: 0 0 180px !important;
+        width: 180px !important;
+        min-width: 180px !important;
+        max-width: 180px !important;
+        margin-right: 12px !important;
+    }
+
+    html body .header .header__search__input {
+        font-size: 12px !important;
+    }
+
+    html body .header .header__login {
+        flex: 0 0 148px !important;
+        width: 148px !important;
+        min-width: 148px !important;
+        max-width: 148px !important;
+    }
+
+    html body .header .header__login__label {
+        font-size: 12px !important;
+    }
+
+    html body main.main > .hero:has(.hero__media) .hero__media {
+        width: 74% !important;
+    }
+
+    html body main.main > .hero:has(.hero__media) .hero__title {
+        font-size: 50px !important;
+        line-height: 1.01 !important;
+    }
+}
+
+@media (min-width: 1440px) {
+    html body .header .header__container {
+        width: 1280px !important;
+    }
+
+    html body main.main > .hero:has(.hero__media) .hero__title {
+        font-size: 52px !important;
+    }
+}
+
+@media (min-width: 1180px) and (max-width: 1239px) {
+    html body .header .header__menu__item--support > a {
+        padding-right: 3px !important;
+        padding-left: 3px !important;
+        font-size: 11.5px !important;
+    }
+}
