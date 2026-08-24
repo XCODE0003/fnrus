@@ -31423,24 +31423,30 @@ body:has(.consent.is-visible) .support-bubble {
     }
 }
 
-/* v4.23.8 — desktop composition: restore statuses, improve legibility and
-   return the hero artwork to the tighter proportions of the reference. */
+/* v4.23.9 — align the header with the page grid, remove the nested active
+   rectangle and match the account icon to its pill. */
 @media (min-width: 1180px) {
     html body .header .header__container {
-        width: 1224px !important;
-        max-width: calc(100% - 32px) !important;
+        width: var(--content-width) !important;
+        max-width: calc(100% - 160px) !important;
+        padding-left: 0 !important;
         padding-right: 0 !important;
     }
 
     html body .header .header__container::before {
-        left: 160px !important;
+        left: 174px !important;
         border-radius: 999px !important;
     }
 
     html body .header .header__logo {
-        flex: 0 0 140px !important;
-        width: 140px !important;
-        margin-right: 20px !important;
+        flex: 0 0 150px !important;
+        width: 150px !important;
+        margin-right: 24px !important;
+    }
+
+    html body .header .header__logo img {
+        left: -8px !important;
+        width: 168px !important;
     }
 
     html body .header .header__menu,
@@ -31448,8 +31454,9 @@ body:has(.consent.is-visible) .support-bubble {
         flex: 1 1 auto !important;
         width: auto !important;
         min-width: 0 !important;
-        padding-left: 6px !important;
-        gap: 0 !important;
+        padding-right: 8px !important;
+        padding-left: 18px !important;
+        gap: clamp(3px, .35vw, 8px) !important;
     }
 
     html body .header .header__menu__item--statuses {
@@ -31469,17 +31476,27 @@ body:has(.consent.is-visible) .support-bubble {
     html body .header .header__menu__pill {
         gap: 5px !important;
         padding: 0 8px !important;
-        border: 1px solid rgba(158, 103, 255, .44) !important;
-        border-radius: 999px !important;
-        background: linear-gradient(180deg, rgba(37, 29, 69, .72), rgba(19, 19, 43, .58)) !important;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045), 0 10px 24px -19px rgba(134, 67, 255, .9) !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
 
     html body .header .header__menu__pill:hover,
-    html body .header .header__menu__item.is-current > .header__menu__pill {
-        border-color: rgba(178, 127, 255, .7) !important;
-        background: linear-gradient(180deg, rgba(48, 34, 87, .82), rgba(26, 22, 55, .7)) !important;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .065), 0 0 20px -9px rgba(150, 82, 255, .88) !important;
+    html body .header .header__menu__item.is-current > .header__menu__pill,
+    html body .header .header__menu__item.is-open > .header__menu__pill {
+        border-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    html body .header .header__menu__item,
+    html body .header .header__menu__item:hover,
+    html body .header .header__menu__item.is-current,
+    html body .header .header__menu__item.is-open {
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
 
     html body .header .header__menu__pill-icon,
@@ -31522,10 +31539,23 @@ body:has(.consent.is-visible) .support-bubble {
     }
 
     html body .header .header__login {
-        flex: 0 0 148px !important;
-        width: 148px !important;
-        min-width: 148px !important;
-        max-width: 148px !important;
+        flex: 0 0 164px !important;
+        width: 164px !important;
+        min-width: 164px !important;
+        max-width: 164px !important;
+        padding-left: 50px !important;
+    }
+
+    html body .header .header__login .btn__icon {
+        left: 1px !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+    }
+
+    html body .header .header__login .btn__icon img {
+        width: 18px !important;
+        height: 18px !important;
     }
 
     html body .header .header__login__label {
@@ -31543,12 +31573,50 @@ body:has(.consent.is-visible) .support-bubble {
 }
 
 @media (min-width: 1440px) {
-    html body .header .header__container {
-        width: 1280px !important;
-    }
-
     html body main.main > .hero:has(.hero__media) .hero__title {
         font-size: 52px !important;
+    }
+}
+
+@media (min-width: 1180px) and (max-width: 1400px) {
+    html body .header .header__container {
+        max-width: calc(100% - 80px) !important;
+    }
+
+    html body .header .header__container::before {
+        left: 160px !important;
+    }
+
+    html body .header .header__logo {
+        flex-basis: 138px !important;
+        width: 138px !important;
+        margin-right: 22px !important;
+    }
+
+    html body .header .header__logo img {
+        left: -7px !important;
+        width: 154px !important;
+    }
+
+    html body .header .header__menu,
+    html body .header .header__menu._active {
+        gap: 0 !important;
+        padding-right: 2px !important;
+        padding-left: 6px !important;
+    }
+
+    html body .header .header__search {
+        flex-basis: 168px !important;
+        width: 168px !important;
+        min-width: 168px !important;
+        max-width: 168px !important;
+    }
+
+    html body .header .header__login {
+        flex-basis: 144px !important;
+        width: 144px !important;
+        min-width: 144px !important;
+        max-width: 144px !important;
     }
 }
 
@@ -31557,5 +31625,29 @@ body:has(.consent.is-visible) .support-bubble {
         padding-right: 3px !important;
         padding-left: 3px !important;
         font-size: 11.5px !important;
+    }
+}
+
+/* v4.24.0 — one fixed-header clearance owner for every inner page.
+   Legacy layers assigned both main and its first section competing offsets,
+   which left headings inside the header footprint at several breakpoints. */
+html body main:not(.main) {
+    padding-top: 0 !important;
+}
+
+html body main:not(.main) > section:first-child {
+    box-sizing: border-box;
+    padding-top: calc(var(--header-height) + 16px) !important;
+}
+
+@media (min-width: 600px) {
+    html body main:not(.main) > section:first-child {
+        padding-top: calc(var(--header-height) + 20px) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    html body main:not(.main) > section:first-child {
+        padding-top: calc(var(--header-height) + 32px) !important;
     }
 }
