@@ -31578,22 +31578,6 @@ body:has(.consent.is-visible) .support-bubble {
     }
 }
 
-@media (min-width: 1401px) {
-    html body .header .header__container {
-        width: calc(100% - 160px) !important;
-        max-width: none !important;
-    }
-
-    html body .header .header__container::before {
-        left: 208px !important;
-    }
-
-    html body .header .header__logo {
-        margin-right: 58px !important;
-    }
-
-}
-
 @media (min-width: 1180px) and (max-width: 1400px) {
     html body .header .header__container {
         max-width: calc(100% - 80px) !important;
@@ -31668,83 +31652,16 @@ html body main:not(.main) > section:first-child {
     }
 }
 
-/* v4.24.1 — final desktop header reference pass.
-   The active section is represented only by the violet light-bar; the account
-   control is deliberately quieter and the search regains the reference width. */
+/* v4.24.2 — keep the established header width and spacing. Only the two
+   requested desktop corrections own the cascade here: active-link surface and
+   the account capsule. */
 @media (min-width: 1180px) {
-    html body .header .header__menu,
-    html body .header .header__menu._active {
-        justify-content: space-between !important;
-        gap: 0 !important;
-    }
-
-    html body .header .header__menu__item,
-    html body .header .header__menu__item:hover,
     html body .header .header__menu__item.is-current,
-    html body .header .header__menu__item.is-open,
-    html body .header .header__menu__item > a,
-    html body .header .header__menu__item > a:hover,
     html body .header .header__menu__item.is-current > a,
-    html body .header .header__menu__item.is-open > a,
-    html body .header .header__menu__pill,
-    html body .header .header__menu__pill:hover,
-    html body .header .header__menu__item.is-current > .header__menu__pill,
-    html body .header .header__menu__item.is-open > .header__menu__pill {
+    html body .header .header__menu__item.is-current > .header__menu__pill {
         border-color: transparent !important;
         background: transparent !important;
         box-shadow: none !important;
-    }
-
-    html body .header .header__menu__item > a,
-    html body .header .header__menu__pill {
-        border-radius: 0 !important;
-    }
-
-    html body .header .header__menu__pill::before {
-        display: none !important;
-        content: none !important;
-    }
-
-    html body .header .header__menu__pill-icon,
-    html body .header .header__menu__pill-chev {
-        display: none !important;
-    }
-
-    html body .header .header__search {
-        flex-basis: 210px !important;
-        width: 210px !important;
-        min-width: 210px !important;
-        max-width: 210px !important;
-        height: 44px !important;
-        margin-right: 14px !important;
-        border-color: rgba(158, 101, 255, .64) !important;
-        border-radius: 999px !important;
-        background: rgba(5, 10, 22, .82) !important;
-        box-shadow: 0 0 18px -8px rgba(145, 77, 255, .78), inset 0 1px 0 rgba(255, 255, 255, .045) !important;
-    }
-
-    html body .header .header__search::after {
-        position: absolute;
-        z-index: 4;
-        top: 50%;
-        right: 15px;
-        width: 16px;
-        height: 16px;
-        content: "";
-        pointer-events: none;
-        opacity: .78;
-        background: url(../img/icon_search.svg) no-repeat center / contain;
-        transform: translateY(-50%);
-        transition: opacity .2s ease;
-    }
-
-    html body .header .header__search:has(.header__search__input:not(:placeholder-shown))::after {
-        opacity: 0;
-    }
-
-    html body .header .header__search__input {
-        padding-right: 42px !important;
-        font-size: 11.5px !important;
     }
 
     html body .header .header__login {
@@ -31781,26 +31698,10 @@ html body main:not(.main) > section:first-child {
 }
 
 @media (min-width: 1180px) and (max-width: 1400px) {
-    html body .header .header__search {
-        flex-basis: 190px !important;
-        width: 190px !important;
-        min-width: 190px !important;
-        max-width: 190px !important;
-    }
-
     html body .header .header__login {
         flex-basis: 140px !important;
         width: 140px !important;
         min-width: 140px !important;
         max-width: 140px !important;
-    }
-}
-
-@media (min-width: 1401px) {
-    html body .header .header__menu,
-    html body .header .header__menu._active {
-        justify-content: flex-start !important;
-        gap: clamp(24px, 3vw, 60px) !important;
-        padding-left: 0 !important;
     }
 }
