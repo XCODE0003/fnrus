@@ -31620,6 +31620,16 @@ body:has(.consent.is-visible) .support-bubble {
     }
 }
 
+/* v4.24.3 — the game/product hero keeps its established desktop composition,
+   but short landscape viewports must not inherit the oversized generic inner-
+   page clearance. Moving the section as one unit preserves the artwork width
+   and the text/image relationship while bringing the next content into view. */
+@media (min-width: 1024px) and (max-height: 860px) {
+    html body main.game > section.game-hero:first-child {
+        padding-top: max(56px, calc(var(--header-height) - 82px)) !important;
+    }
+}
+
 @media (min-width: 1180px) and (max-width: 1239px) {
     html body .header .header__menu__item--support > a {
         padding-right: 3px !important;
