@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Filament-аналог старой страницы /access:
@@ -44,6 +45,10 @@ class AccessControl extends Page
 
     public int $now = 0;
 
+    public bool $ipStorageAvailable = true;
+
+    public bool $attemptStorageAvailable = true;
+
     public static function canAccess(): bool
     {
         // Явно берём web-guard: дефолтный auth-гард в этом приложении — `api`
@@ -70,63 +75,96 @@ class AccessControl extends Page
     public function refreshIps(): void
     {
         $this->staticEnv = array_values((array) config('admin.allowed_ips', []));
-        $this->dynamicIps = DB::table('admin_allowed_ips')
-            ->orderBy('id', 'desc')
-            ->get()
-            ->map(fn ($r) => [
-                'id' => (int) $r->id,
-                'cidr' => (string) $r->cidr,
-                'note' => (string) ($r->note ?? ''),
-                'expires_at' => $r->expires_at !== null ? (int) $r->expires_at : null,
-                'created_at' => (int) $r->created_at,
-            ])
-            ->all();
+        $this->dynamicIps = [];
+
+        try {
+            $this->ipStorageAvailable = Schema::hasTable('admin_allowed_ips');
+            if ($this->ipStorageAvailable) {
+                $this->dynamicIps = DB::table('admin_allowed_ips')
+                    ->orderBy('id', 'desc')
+                    ->get()
+                    ->map(fn ($r) => [
+                        'id' => (int) $r->id,
+                        'cidr' => (string) $r->cidr,
+                        'note' => (string) ($r->note ?? ''),
+                        'expires_at' => $r->expires_at !== null ? (int) $r->expires_at : null,
+                        'created_at' => (int) $r->created_at,
+                    ])
+                    ->all();
+            }
+        } catch (\Throwable $e) {
+            $this->ipStorageAvailable = false;
+            Log::error('admin.access_control.ip_storage_unavailable', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         $this->now = time();
     }
 
     public function refreshAttempts(): void
     {
-        // "Контроль доступа" is about ADMIN access — show only login attempts
-        // aimed at an admin account (matched by the admin's email/username),
-        // not every regular site-user login. Otherwise a normal registration
-        // + login would show up here with status "ок", which is confusing
-        // (that account has no panel access). MySQL collation is
-        // case-insensitive, so whereIn matches regardless of typed case.
-        $min = (int) config('admin.min_role_id', 1);
-        $adminIdentifiers = DB::table('users')
-            ->where('role_id', '>=', $min)
-            ->get(['email', 'username'])
-            ->flatMap(fn ($u) => [(string) $u->email, (string) $u->username])
-            ->filter(fn ($v) => $v !== '')
-            ->unique()
-            ->values()
-            ->all();
+        $this->attempts = [];
 
-        $query = DB::table('login_attempts')->orderBy('id', 'desc');
-        if ($adminIdentifiers === []) {
-            $query->whereRaw('1 = 0'); // no admins configured — show nothing
-        } else {
-            $query->whereIn('username', $adminIdentifiers);
+        try {
+            $this->attemptStorageAvailable = Schema::hasTable('login_attempts')
+                && Schema::hasTable('users');
+
+            if (! $this->attemptStorageAvailable) {
+                return;
+            }
+
+            // "Контроль доступа" is about ADMIN access — show only login attempts
+            // aimed at an admin account (matched by the admin's email/username),
+            // not every regular site-user login. Otherwise a normal registration
+            // + login would show up here with status "ок", which is confusing
+            // (that account has no panel access). MySQL collation is
+            // case-insensitive, so whereIn matches regardless of typed case.
+            $min = (int) config('admin.min_role_id', 1);
+            $adminIdentifiers = DB::table('users')
+                ->where('role_id', '>=', $min)
+                ->get(['email', 'username'])
+                ->flatMap(fn ($u) => [(string) $u->email, (string) $u->username])
+                ->filter(fn ($v) => $v !== '')
+                ->unique()
+                ->values()
+                ->all();
+
+            $query = DB::table('login_attempts')->orderBy('id', 'desc');
+            if ($adminIdentifiers === []) {
+                $query->whereRaw('1 = 0'); // no admins configured — show nothing
+            } else {
+                $query->whereIn('username', $adminIdentifiers);
+            }
+
+            $this->attempts = $query
+                ->limit(50)
+                ->get()
+                ->map(fn ($r) => [
+                    'id' => (int) $r->id,
+                    'ip' => (string) $r->ip,
+                    'username' => (string) $r->username,
+                    'successful' => (int) $r->successful,
+                    'reason' => (string) ($r->reason ?? ''),
+                    'created_at' => (string) $r->created_at,
+                ])
+                ->all();
+        } catch (\Throwable $e) {
+            $this->attemptStorageAvailable = false;
+            Log::error('admin.access_control.attempt_storage_unavailable', [
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        $this->attempts = $query
-            ->limit(50)
-            ->get()
-            ->map(fn ($r) => [
-                'id' => (int) $r->id,
-                'ip' => (string) $r->ip,
-                'username' => (string) $r->username,
-                'successful' => (int) $r->successful,
-                'reason' => (string) ($r->reason ?? ''),
-                'created_at' => (string) $r->created_at,
-            ])
-            ->all();
     }
 
     public function deleteIp(int $id): void
     {
         if (! self::canAccess()) {
             Notification::make()->danger()->title('Нет прав')->send();
+            return;
+        }
+        if (! $this->ipStorageAvailable) {
+            Notification::make()->danger()->title('Таблица IP allow-list не подготовлена')->send();
             return;
         }
         $row = DB::table('admin_allowed_ips')->where('id', $id)->first();
@@ -150,6 +188,7 @@ class AccessControl extends Page
                 ->label('Добавить IP / CIDR')
                 ->color('primary')
                 ->icon('heroicon-o-plus')
+                ->disabled(fn (): bool => ! $this->ipStorageAvailable)
                 ->form([
                     Forms\Components\TextInput::make('cidr')
                         ->label('CIDR')
@@ -170,6 +209,10 @@ class AccessControl extends Page
                 ->action(function (array $data): void {
                     if (! self::canAccess()) {
                         Notification::make()->danger()->title('Нет прав')->send();
+                        return;
+                    }
+                    if (! $this->ipStorageAvailable) {
+                        Notification::make()->danger()->title('Сначала выполните миграции')->send();
                         return;
                     }
                     $cidr = trim((string) ($data['cidr'] ?? ''));

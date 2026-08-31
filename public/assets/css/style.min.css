@@ -31620,16 +31620,6 @@ body:has(.consent.is-visible) .support-bubble {
     }
 }
 
-/* v4.24.3 — the game/product hero keeps its established desktop composition,
-   but short landscape viewports must not inherit the oversized generic inner-
-   page clearance. Moving the section as one unit preserves the artwork width
-   and the text/image relationship while bringing the next content into view. */
-@media (min-width: 1024px) and (max-height: 860px) {
-    html body main.game > section.game-hero:first-child {
-        padding-top: max(56px, calc(var(--header-height) - 82px)) !important;
-    }
-}
-
 @media (min-width: 1180px) and (max-width: 1239px) {
     html body .header .header__menu__item--support > a {
         padding-right: 3px !important;
@@ -31713,5 +31703,83 @@ html body main:not(.main) > section:first-child {
         width: 140px !important;
         min-width: 140px !important;
         max-width: 140px !important;
+    }
+}
+
+/* v4.24.4 — product pages use the fixed header itself as their spacing
+   reference. This removes the artificial desktop gap even when browser zoom
+   changes the CSS viewport height, while preserving the hero composition. */
+@media (min-width: 1024px) {
+    html body main.game > section.game-hero:first-child {
+        padding-top: max(72px, calc(var(--header-height) - 32px)) !important;
+    }
+}
+
+@media (min-width: 1024px) and (max-height: 860px) {
+    html body main.game > section.game-hero:first-child {
+        padding-top: max(56px, calc(var(--header-height) - 82px)) !important;
+    }
+}
+
+/* v4.24.5 — desktop header geometry owner.
+   Keep the established width, but place the glass rail, logo, navigation and
+   controls on one optical axis at every desktop breakpoint. */
+@media (min-width: 1180px) {
+    html body .header .header__container::before {
+        top: 30px !important;
+        height: 58px !important;
+        border-radius: 999px !important;
+    }
+
+    html body .header .header__logo {
+        height: 58px !important;
+        margin-top: 30px !important;
+    }
+
+    html body .header .header__menu,
+    html body .header .header__menu._active {
+        height: 58px !important;
+        margin-top: 30px !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    html body .header .header__lang,
+    html body .header .header__search,
+    html body .header .header__login {
+        height: 44px !important;
+        min-height: 44px !important;
+        max-height: 44px !important;
+        margin-top: 37px !important;
+    }
+
+    html body .header .header__lang .select__selected,
+    html body .header .header__search__input {
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+
+    html body .header .header__menu__item,
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__pill {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    html body .header.is-scrolled .header__container::before {
+        top: 14px !important;
+        height: 58px !important;
+    }
+
+    html body .header.is-scrolled .header__logo,
+    html body .header.is-scrolled .header__menu,
+    html body .header.is-scrolled .header__menu._active {
+        margin-top: 14px !important;
+    }
+
+    html body .header.is-scrolled .header__lang,
+    html body .header.is-scrolled .header__search,
+    html body .header.is-scrolled .header__login {
+        margin-top: 21px !important;
     }
 }

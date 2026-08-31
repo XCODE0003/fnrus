@@ -1,6 +1,16 @@
 <x-filament-panels::page>
     <div class="space-y-4">
 
+        @if (! $ipStorageAvailable || ! $attemptStorageAvailable)
+            <div class="rounded-xl border border-warning-500/40 bg-warning-50 px-4 py-3 text-sm text-warning-800 dark:bg-warning-950/40 dark:text-warning-200">
+                <div class="font-semibold">Хранилище контроля доступа не подготовлено</div>
+                <div class="mt-1">
+                    Страница больше не прерывается ошибкой 500. Чтобы включить недоступные функции,
+                    выполните на сервере <code class="rounded bg-black/5 px-1 py-0.5 dark:bg-white/10">php artisan migrate --force</code>.
+                </div>
+            </div>
+        @endif
+
         {{-- IP allow-list --}}
         <x-filament::section>
             <x-slot name="heading">IP allow-list</x-slot>
