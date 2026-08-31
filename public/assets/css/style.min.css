@@ -31835,3 +31835,62 @@ html body .header .header__search-reset-btn {
     border-radius: 999px !important;
     cursor: pointer !important;
 }
+
+/* v4.24.9 — one motion owner for the desktop header. Previously the rail,
+   logo, menu and controls changed their vertical geometry independently,
+   which caused visible jumps while entering and leaving the compact state. */
+@media (min-width: 1180px) {
+    html body .header,
+    html body .header.is-scrolled,
+    html body .header .header__container,
+    html body .header.is-scrolled .header__container {
+        height: var(--header-height) !important;
+    }
+
+    html body .header .header__container {
+        transform: translate3d(0, 0, 0) !important;
+        transition: transform .3s cubic-bezier(.2, .75, .2, 1) !important;
+        will-change: transform;
+    }
+
+    html body .header.is-scrolled .header__container {
+        transform: translate3d(0, -16px, 0) !important;
+    }
+
+    html body .header .header__container::before,
+    html body .header.is-scrolled .header__container::before {
+        top: 30px !important;
+        height: 58px !important;
+        transition: border-color .24s ease, background .24s ease, box-shadow .24s ease !important;
+    }
+
+    html body .header .header__logo,
+    html body .header.is-scrolled .header__logo,
+    html body .header .header__menu,
+    html body .header .header__menu._active,
+    html body .header.is-scrolled .header__menu,
+    html body .header.is-scrolled .header__menu._active {
+        margin-top: 30px !important;
+    }
+
+    html body .header .header__lang,
+    html body .header .header__search,
+    html body .header .header__login,
+    html body .header.is-scrolled .header__lang,
+    html body .header.is-scrolled .header__search,
+    html body .header.is-scrolled .header__login {
+        margin-top: 37px !important;
+    }
+
+    html body .header .header__logo img,
+    html body .header.is-scrolled .header__logo img {
+        transform: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body .header .header__container,
+    html body .header .header__container::before {
+        transition: none !important;
+    }
+}

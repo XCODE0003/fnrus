@@ -1,19 +1,26 @@
 /* =====================================================================
-   sticky-header — toggle .is-scrolled on .header after small scroll
-   - rAF-throttled, passive listener
-   - keeps header always visible (it's position:fixed in CSS)
+   sticky-header — stable scroll state with hysteresis
+   - enters compact state after 40px, leaves it below 12px
+   - rAF-throttled and passive, so the transition cannot chatter
    ===================================================================== */
 (function(){
     var header = document.querySelector('.header');
     if (!header) return;
 
-    var TH = 32;
+    var ENTER_AT = 40;
+    var EXIT_AT = 12;
     var ticking = false;
+    var compact = false;
 
     function update(){
         var y = window.pageYOffset || document.documentElement.scrollTop;
-        if (y > TH) header.classList.add('is-scrolled');
-        else header.classList.remove('is-scrolled');
+        var nextCompact = compact ? y > EXIT_AT : y > ENTER_AT;
+
+        if (nextCompact !== compact) {
+            compact = nextCompact;
+            header.classList.toggle('is-scrolled', compact);
+        }
+
         ticking = false;
     }
 
