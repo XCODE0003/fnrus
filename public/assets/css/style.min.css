@@ -31783,3 +31783,26 @@ html body main:not(.main) > section:first-child {
         margin-top: 21px !important;
     }
 }
+
+/* v4.24.6 — equal inset around the desktop rail's right edge and a genuinely
+   centred search reset control. The 58px rail around 44px controls leaves a
+   7px optical gutter on every side. */
+@media (min-width: 1180px) {
+    html body .header .header__login {
+        margin-right: 7px !important;
+    }
+
+    html body .header .header__search-reset-btn {
+        top: 50% !important;
+        right: 5px !important;
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 11px !important;
+        background-size: 13px 13px !important;
+        transform: translateY(-50%) !important;
+    }
+
+    html body .header .header__search__input {
+        padding-right: 44px !important;
+    }
+}
