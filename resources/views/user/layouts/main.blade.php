@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.24.6';
+    $__cssVer = '4.24.8';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -449,7 +449,7 @@
                     <input type="text" name="prevent_autofill_username" style="display:none" tabindex="-1" aria-hidden="true">
                     <input type="password" name="prevent_autofill_password" style="display:none" tabindex="-1" aria-hidden="true">
                     <input id="search_query" name="site_search" autocomplete="new-password" class="header__search__input" placeholder="{{ __('site.input_search') }}">
-                    <button class="header__search-reset-btn"></button>
+                    <button class="header__search-reset-btn" type="button" aria-label="{{ __('site.search_clear') }}"></button>
                     <div class="header__search__inner">
                         <div class="header__search__scroll-container" id="results_search" data-simplebar></div>
                     </div>
@@ -1057,7 +1057,7 @@
     </div>
 
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?68"></script>
+    <script src="/assets/js/scripts.min.js?69"></script>
     <script src="/assets/js/animations.js?v=30"></script>
     <script src="/assets/js/header-motion.js?v=4"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
@@ -1145,7 +1145,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.7"></script>
+    <script src="/assets/js/app.js?v=6.8"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

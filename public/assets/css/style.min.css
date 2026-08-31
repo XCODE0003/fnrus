@@ -31797,12 +31797,41 @@ html body main:not(.main) > section:first-child {
         right: 5px !important;
         width: 34px !important;
         height: 34px !important;
-        border-radius: 11px !important;
+        z-index: 4 !important;
+        border-radius: 999px !important;
         background-size: 13px 13px !important;
         transform: translateY(-50%) !important;
+        cursor: pointer !important;
     }
 
     html body .header .header__search__input {
         padding-right: 44px !important;
     }
+}
+
+/* v4.24.7 — keep desktop navigation as a compact left-aligned group instead
+   of stretching every link across the rail. Reserve reset-button space only
+   while a real search query is present, so the placeholder stays intact. */
+@media (min-width: 1180px) {
+    html body .header .header__menu,
+    html body .header .header__menu._active {
+        justify-content: flex-start !important;
+        gap: clamp(10px, 1vw, 20px) !important;
+    }
+
+    html body .header .header__search__input {
+        padding-right: 14px !important;
+    }
+
+    html body .header .header__search:has(.header__search__input:not(:placeholder-shown)) .header__search__input {
+        padding-right: 44px !important;
+    }
+}
+
+/* v4.24.8 — the clear-search control stays a true circle and above the input
+   at every breakpoint, including the tablet search overlay. */
+html body .header .header__search-reset-btn {
+    z-index: 4 !important;
+    border-radius: 999px !important;
+    cursor: pointer !important;
 }

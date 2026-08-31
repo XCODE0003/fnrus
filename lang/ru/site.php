@@ -225,6 +225,7 @@ return [
     "label_with_jailbreak" => "Jailbreak",
 
     "input_search" => "Поиск по сайту...",
+    "search_clear" => "Очистить поиск",
 
     "btn_catalog_cheats" => "Купить читы",
     "btn_register" => "Регистрация",

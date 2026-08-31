@@ -225,6 +225,7 @@ return [
     "label_with_jailbreak" => "Jailbreak",
 
     "input_search" => "Search the site...",
+    "search_clear" => "Clear search",
 
     "btn_catalog_cheats" => "Buy cheats",
     "btn_register" => "Register",

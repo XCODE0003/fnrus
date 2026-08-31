@@ -980,6 +980,20 @@ function createOrderTopup() {
 
 
 const inputField = document.getElementById('search_query');
+const searchResetButton = document.querySelector('.header__search-reset-btn');
+let activeSearchRequest = null;
+
+function clearHeaderSearchResults() {
+    const results = document.getElementById('results_search');
+    const resultsContent = results ? results.querySelector('.simplebar-content') : null;
+
+    if (resultsContent) {
+        resultsContent.replaceChildren();
+    } else if (results) {
+        results.replaceChildren();
+    }
+}
+
 // Anti-autofill: clear any browser-injected value on page load
 if (inputField) {
     setTimeout(function() { inputField.value = ''; }, 50);
@@ -988,10 +1002,31 @@ if (inputField) {
         inputField.value = '';
     });
 }
-inputField.addEventListener('keyup', function(event) {
+
+if (searchResetButton && inputField) {
+    searchResetButton.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        if (activeSearchRequest) {
+            activeSearchRequest.abort();
+            activeSearchRequest = null;
+        }
+
+        inputField.value = '';
+        inputField.dispatchEvent(new Event('input', { bubbles: true }));
+        searchResetButton.closest('.header__search')?.classList.remove('_active', '_visible');
+        clearHeaderSearchResults();
+
+        if (window.matchMedia('(min-width: 1180px)').matches) {
+            inputField.focus();
+        }
+    });
+}
+
+if (inputField) inputField.addEventListener('keyup', function(event) {
     const query = event.target.value;
 
-    $.ajax({
+    activeSearchRequest = $.ajax({
         type: "POST",
         url: api_url + '/search',
         dataType: 'json',
@@ -1001,6 +1036,10 @@ inputField.addEventListener('keyup', function(event) {
         }),
         async: true,
         success: function(data) {
+            if (inputField.value !== query) {
+                return;
+            }
+
             if (data.ok === true) {
                 $('#results_search .simplebar-content').html('');
                 let categories = data.result.categories;

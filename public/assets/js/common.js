@@ -405,7 +405,7 @@ $(document).ready(function(){
         $(".header__search").toggleClass("_active", query.length != 0);
     })
 
-    $(".header__search-btn, .header__search-reset-btn").click(function(e){
+    $(".header__search-btn").click(function(e){
         e.preventDefault();
         $(".header__search").toggleClass("_visible");
     })
