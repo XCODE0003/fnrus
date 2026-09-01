@@ -32016,7 +32016,8 @@ html body .header .header__search-reset-btn {
         left: -14px !important;
         display: block !important;
         height: 70px !important;
-        overflow: visible !important;
+        padding: 1px;
+        overflow: hidden !important;
         border-radius: 999px;
         opacity: .78;
         transition:
@@ -32026,39 +32027,48 @@ html body .header .header__search-reset-btn {
             height .34s cubic-bezier(.2, .78, .2, 1),
             opacity .24s ease;
         pointer-events: none;
-    }
-
-    html body .header .header__edge-light-track {
-        position: absolute;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        overflow: visible;
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
     }
 
     html body .header .header__edge-light-runner {
-        x: 1px;
-        y: 1px;
-        width: calc(100% - 2px);
-        height: calc(100% - 2px);
-        rx: 22px;
-        ry: 22px;
-        fill: none;
-        stroke: rgba(196, 148, 255, .98);
-        stroke-width: 1.55px;
-        stroke-linecap: round;
-        stroke-dasharray: 4.5 95.5;
-        stroke-dashoffset: 0;
-        vector-effect: non-scaling-stroke;
-        filter:
-            drop-shadow(0 0 2px rgba(239, 226, 255, .95))
-            drop-shadow(0 0 6px rgba(157, 91, 255, .82));
-        will-change: stroke-dashoffset;
+        position: absolute;
+        top: 50%;
+        left: -2%;
+        display: block;
+        width: 104%;
+        aspect-ratio: 1;
+        background: conic-gradient(from 0deg at 50% 50%,
+            transparent 0deg 349deg,
+            rgba(126, 67, 242, 0) 350deg,
+            rgba(148, 86, 255, .24) 352deg,
+            rgba(190, 139, 255, .86) 354.5deg,
+            rgba(246, 238, 255, 1) 356deg,
+            rgba(190, 132, 255, .82) 357.5deg,
+            rgba(135, 72, 247, .14) 359deg,
+            transparent 360deg);
+        filter: drop-shadow(0 0 5px rgba(157, 91, 255, .9));
+        transform: translate3d(0, -50%, 0) rotate(0deg);
+        transform-origin: 50% 50%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        will-change: transform;
     }
 
     html body .header.is-scrolled .header__edge-light {
         opacity: .86;
+    }
+
+    html body .header .header__logo img {
+        transform: scale(1) !important;
+        transform-origin: 0 50% !important;
+        transition: transform .34s cubic-bezier(.2, .78, .2, 1) !important;
+        will-change: transform;
+    }
+
+    html body .header.is-scrolled .header__logo img {
+        transform: scale(.92) !important;
     }
 }
 

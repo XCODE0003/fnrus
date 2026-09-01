@@ -95,10 +95,12 @@
 
         if (window.gsap) {
             var orbit = window.gsap.to(runner, {
-                strokeDashoffset: -100,
-                duration: 8,
+                rotation: 360,
+                duration: 9.5,
                 ease: 'none',
-                repeat: -1
+                repeat: -1,
+                force3D: true,
+                transformOrigin: '50% 50%'
             });
 
             document.addEventListener('visibilitychange', function () {
@@ -109,10 +111,10 @@
         }
 
         runner.animate([
-            { strokeDashoffset: '0' },
-            { strokeDashoffset: '-100' }
+            { transform: 'translate3d(0, -50%, 0) rotate(0deg)' },
+            { transform: 'translate3d(0, -50%, 0) rotate(360deg)' }
         ], {
-            duration: 8000,
+            duration: 9500,
             iterations: Infinity,
             easing: 'linear'
         });
