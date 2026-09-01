@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.25.0';
+    $__cssVer = '4.25.2';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -341,7 +341,9 @@
         <header class="header">
             <div class="content header__container">
                 <span class="header__edge-light" aria-hidden="true">
-                    <span class="header__edge-light-runner"></span>
+                    <svg class="header__edge-light-track" width="100%" height="100%" focusable="false">
+                        <rect class="header__edge-light-runner" pathLength="100"></rect>
+                    </svg>
                 </span>
                 <a href="/" class="header__logo">
                     <img src="/assets/img/logo.png" alt="">
@@ -1062,7 +1064,7 @@
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
     <script src="/assets/js/scripts.min.js?69"></script>
     <script src="/assets/js/animations.js?v=30"></script>
-    <script src="/assets/js/header-motion.js?v=6"></script>
+    <script src="/assets/js/header-motion.js?v=8"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=3" defer></script>
     <script>

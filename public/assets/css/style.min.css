@@ -32011,15 +32011,14 @@ html body .header .header__search-reset-btn {
     html body .header .header__edge-light {
         position: absolute !important;
         z-index: 4 !important;
-        top: 30px !important;
-        right: 0 !important;
-        left: 174px !important;
+        top: 24px !important;
+        right: -14px !important;
+        left: -14px !important;
         display: block !important;
-        height: 58px !important;
-        padding: 1px;
-        overflow: hidden !important;
+        height: 70px !important;
+        overflow: visible !important;
         border-radius: 999px;
-        opacity: .72;
+        opacity: .78;
         transition:
             top .34s cubic-bezier(.2, .78, .2, 1),
             right .34s cubic-bezier(.2, .78, .2, 1),
@@ -32027,41 +32026,39 @@ html body .header .header__search-reset-btn {
             height .34s cubic-bezier(.2, .78, .2, 1),
             opacity .24s ease;
         pointer-events: none;
-        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
+    }
+
+    html body .header .header__edge-light-track {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
     }
 
     html body .header .header__edge-light-runner {
-        position: absolute;
-        inset: -320% -24%;
-        display: block;
-        background: conic-gradient(from 0deg,
-            transparent 0deg 300deg,
-            rgba(116, 65, 232, 0) 304deg,
-            rgba(139, 80, 255, .22) 315deg,
-            rgba(183, 126, 255, .88) 327deg,
-            rgba(244, 235, 255, .98) 333deg,
-            rgba(178, 115, 255, .84) 340deg,
-            rgba(122, 67, 239, .16) 350deg,
-            transparent 360deg);
-        filter: drop-shadow(0 0 4px rgba(158, 92, 255, .96));
-        transform-origin: 50% 50%;
-        will-change: transform;
+        x: 1px;
+        y: 1px;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        rx: 22px;
+        ry: 22px;
+        fill: none;
+        stroke: rgba(196, 148, 255, .98);
+        stroke-width: 1.55px;
+        stroke-linecap: round;
+        stroke-dasharray: 4.5 95.5;
+        stroke-dashoffset: 0;
+        vector-effect: non-scaling-stroke;
+        filter:
+            drop-shadow(0 0 2px rgba(239, 226, 255, .95))
+            drop-shadow(0 0 6px rgba(157, 91, 255, .82));
+        will-change: stroke-dashoffset;
     }
 
     html body .header.is-scrolled .header__edge-light {
-        top: 24px !important;
-        right: -14px !important;
-        left: -14px !important;
-        height: 70px !important;
-        opacity: .82;
-    }
-}
-
-@media (min-width: 1180px) and (max-width: 1400px) {
-    html body .header:not(.is-scrolled) .header__edge-light {
-        left: 160px !important;
+        opacity: .86;
     }
 }
 
