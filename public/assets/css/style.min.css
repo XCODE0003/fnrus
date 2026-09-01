@@ -32011,11 +32011,11 @@ html body .header .header__search-reset-btn {
     html body .header .header__edge-light {
         position: absolute !important;
         z-index: 4 !important;
-        top: 24px !important;
-        right: -14px !important;
-        left: -14px !important;
+        top: 30px !important;
+        right: 0 !important;
+        left: 174px !important;
         display: block !important;
-        height: 70px !important;
+        height: 58px !important;
         padding: 1px;
         overflow: hidden !important;
         border-radius: 999px;
@@ -32057,6 +32057,10 @@ html body .header .header__search-reset-btn {
     }
 
     html body .header.is-scrolled .header__edge-light {
+        top: 24px !important;
+        right: -14px !important;
+        left: -14px !important;
+        height: 70px !important;
         opacity: .86;
     }
 
@@ -32068,7 +32072,13 @@ html body .header .header__search-reset-btn {
     }
 
     html body .header.is-scrolled .header__logo img {
-        transform: scale(.92) !important;
+        transform: scale(.82) !important;
+    }
+}
+
+@media (min-width: 1180px) and (max-width: 1400px) {
+    html body .header:not(.is-scrolled) .header__edge-light {
+        left: 160px !important;
     }
 }
 
