@@ -89,6 +89,36 @@
         observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
     }
 
+    function initEdgeLight(header, reducedMotion) {
+        var runner = header.querySelector('.header__edge-light-runner');
+        if (!runner || reducedMotion) return;
+
+        if (window.gsap) {
+            var orbit = window.gsap.to(runner, {
+                rotation: 360,
+                duration: 7.5,
+                ease: 'none',
+                repeat: -1,
+                transformOrigin: '50% 50%'
+            });
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) orbit.pause();
+                else orbit.resume();
+            });
+            return;
+        }
+
+        runner.animate([
+            { transform: 'rotate(0deg)' },
+            { transform: 'rotate(360deg)' }
+        ], {
+            duration: 7500,
+            iterations: Infinity,
+            easing: 'linear'
+        });
+    }
+
     function init() {
         var header = document.querySelector('.header');
         if (!header) return;
@@ -97,6 +127,7 @@
         markCurrentMenuItem(header);
         revealHeader(header, reducedMotion);
         initMobileMenuMotion(header.querySelector('.header__menu'), reducedMotion);
+        initEdgeLight(header, reducedMotion);
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
