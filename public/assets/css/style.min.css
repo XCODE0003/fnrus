@@ -12734,6 +12734,25 @@ html.ios .js-carousel {
     }
 }
 
+/* v4.26.1: final cascade for touch rails and mobile profile/modal bounds */
+@media (max-width:1023px){
+  html body .game-list__rail.carousel-rail::before,html body .game-list__rail.carousel-rail::after,html body .game-cheats__rail.carousel-rail::before,html body .game-cheats__rail.carousel-rail::after{display:none!important}
+  html body .game-list__rail .game-cheats-slider,html body .game-cheats__rail .game-cheats-slider{overflow:hidden!important;-webkit-mask-image:none!important;mask-image:none!important;scroll-snap-type:none!important;touch-action:pan-y}
+  html body .game-list__rail .game-cheats-slider .swiper-wrapper,html body .game-cheats__rail .game-cheats-slider .swiper-wrapper{transform:none;width:max-content!important;min-width:max-content!important;gap:14px!important;padding-right:24px!important}
+}
+@media (max-width:599px){
+  html body .game-list__rail .game-cheats-slider .swiper-slide,html body .game-list__rail .game-cheats-slider .game-card,html body .game-cheats__rail .game-cheats-slider .swiper-slide,html body .game-cheats__rail .game-cheats-slider .game-card{flex:0 0 min(calc(100vw - 64px),348px)!important;width:min(calc(100vw - 64px),348px)!important;max-width:min(calc(100vw - 64px),348px)!important;min-width:min(calc(100vw - 64px),348px)!important}
+  html body .profile__tabs__choose,html body .profile__tabs__choose .profile__tabs__scroll-container{width:100%!important;max-width:100%!important;overflow:visible!important}
+  html body .profile__tabs__choose__inner{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%!important;min-width:0!important;gap:0!important}
+  html body .profile__tabs__choose__btn{min-width:0!important;margin:0!important;padding:0 5px 16px!important;font-size:clamp(12px,3.25vw,15px)!important;line-height:1.2;white-space:normal!important;text-align:center}
+  html body .profile__tabs__choose__btn:last-child{padding-right:5px!important}.profile__tabs__choose__btn:last-child::after{right:5px!important}
+  html body:has(.popup._active){overflow:hidden!important}
+  html body .popup--pay .popup__wrapper{min-height:100dvh;max-height:100dvh!important;padding:max(8px,env(safe-area-inset-top)) 0 max(8px,env(safe-area-inset-bottom))!important;box-sizing:border-box;overflow:hidden!important}
+  html body .popup--pay .popup__inner{width:100%!important;max-width:100%!important;max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;padding:0!important;overflow:hidden!important}
+  html body .popup--pay #body{width:100%!important;max-width:none!important;max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;box-sizing:border-box;overflow-y:auto!important;overscroll-behavior:contain}
+}
+@media (min-width:600px) and (max-width:1023px){html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .swiper-slide,html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .game-card{flex:0 0 calc(50vw - 46px)!important;width:calc(50vw - 46px)!important;max-width:calc(50vw - 46px)!important;min-width:calc(50vw - 46px)!important}}
+
 /* ============ Terminal state (paid/cancelled/expired) ============ */
 .pay-terminal {
     display: flex;
@@ -29439,6 +29458,135 @@ button,.btn{white-space:normal}
     }
 }
 
+/* ===================================================================== */
+/* v4.26.0: stable mobile/iPad rails and profile/mobile modal geometry   */
+/* ===================================================================== */
+@media (max-width: 1023px) {
+    /* Swiper owns the movement; the rail clips only the viewport edge. */
+    html body .game-list__rail.carousel-rail,
+    html body .game-cheats__rail.carousel-rail {
+        overflow: hidden !important;
+    }
+    html body .game-list__rail.carousel-rail::before,
+    html body .game-list__rail.carousel-rail::after,
+    html body .game-cheats__rail.carousel-rail::before,
+    html body .game-cheats__rail.carousel-rail::after {
+        display: none !important;
+    }
+    html body .game-list__rail .game-cheats-slider,
+    html body .game-cheats__rail .game-cheats-slider {
+        overflow: hidden !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        scroll-snap-type: none !important;
+        touch-action: pan-y;
+    }
+    html body .game-list__rail .game-cheats-slider .swiper-wrapper,
+    html body .game-cheats__rail .game-cheats-slider .swiper-wrapper {
+        transform: none;
+        width: max-content !important;
+        min-width: max-content !important;
+        gap: 14px !important;
+        padding-right: 24px !important;
+    }
+}
+
+@media (max-width: 599px) {
+    html body .game-list > .content:not(.game-list__head),
+    html body .game-cheats__slider-container > .content:not(.game-list__head) {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    html body .game-list__rail .game-cheats-slider,
+    html body .game-cheats__rail .game-cheats-slider {
+        padding: 0 0 12px var(--game-gutter, 18px) !important;
+        scroll-padding: 0 !important;
+    }
+    html body .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list__rail .game-cheats-slider .game-card,
+    html body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider .game-card {
+        flex: 0 0 min(calc(100vw - 64px), 348px) !important;
+        width: min(calc(100vw - 64px), 348px) !important;
+        max-width: min(calc(100vw - 64px), 348px) !important;
+        min-width: min(calc(100vw - 64px), 348px) !important;
+    }
+
+    /* Profile tabs fit the viewport; there is no hidden horizontal tab rail. */
+    html body .profile__tabs__choose,
+    html body .profile__tabs__choose .profile__tabs__scroll-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+    html body .profile__tabs__choose__inner {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100% !important;
+        min-width: 0 !important;
+        gap: 0 !important;
+    }
+    html body .profile__tabs__choose__btn {
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 5px 16px !important;
+        font-size: clamp(12px, 3.25vw, 15px) !important;
+        line-height: 1.2;
+        white-space: normal !important;
+        text-align: center;
+    }
+    html body .profile__tabs__choose__btn:last-child { padding-right: 5px !important; }
+    html body .profile__tabs__choose__btn:last-child::after { right: 5px !important; }
+
+    /* Keep the account block on-grid and restore the missing side breathing room. */
+    html body .profile__main .profile__block,
+    html body .profile__sidebar .profile__identity {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    /* The pay sheet is viewport-fitted; only its content can scroll if a
+       very short device genuinely needs it, never the page behind it. */
+    html body:has(.popup._active) { overflow: hidden !important; }
+    html body .popup--pay .popup__wrapper {
+        min-height: 100dvh;
+        max-height: 100dvh !important;
+        padding: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) !important;
+        box-sizing: border-box;
+        overflow: hidden !important;
+    }
+    html body .popup--pay .popup__inner {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    html body .popup--pay #body {
+        width: 100% !important;
+        max-width: none !important;
+        max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+        box-sizing: border-box;
+        overflow-y: auto !important;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+    html body .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list__rail .game-cheats-slider .game-card,
+    html body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider .game-card {
+        flex: 0 0 min(calc((100vw - 92px) / 2), 420px) !important;
+        width: min(calc((100vw - 92px) / 2), 420px) !important;
+        max-width: min(calc((100vw - 92px) / 2), 420px) !important;
+        min-width: min(calc((100vw - 92px) / 2), 420px) !important;
+    }
+}
+
 /* ==================================================================== */
 /*  v4.23 — reference header geometry + purpose-built mobile home hero   */
 /* ==================================================================== */
@@ -32087,6 +32235,25 @@ html body .header .header__search-reset-btn {
         display: none !important;
     }
 }
+
+/* v4.26.2 final mobile cascade */
+@media (max-width:1023px){
+html body .game-list__rail.carousel-rail::before,html body .game-list__rail.carousel-rail::after,html body .game-cheats__rail.carousel-rail::before,html body .game-cheats__rail.carousel-rail::after{display:none!important}
+html body .game-list__rail .game-cheats-slider,html body .game-cheats__rail .game-cheats-slider{overflow:hidden!important;-webkit-mask-image:none!important;mask-image:none!important;scroll-snap-type:none!important;touch-action:pan-y}
+html body .game-list__rail .game-cheats-slider .swiper-wrapper,html body .game-cheats__rail .game-cheats-slider .swiper-wrapper{transform:none;width:max-content!important;min-width:max-content!important;gap:14px!important;padding-right:24px!important}
+}
+@media (max-width:599px){
+html body .game-list__rail .game-cheats-slider .swiper-slide,html body .game-list__rail .game-cheats-slider .game-card,html body .game-cheats__rail .game-cheats-slider .swiper-slide,html body .game-cheats__rail .game-cheats-slider .game-card{flex:0 0 min(calc(100vw - 64px),348px)!important;width:min(calc(100vw - 64px),348px)!important;max-width:min(calc(100vw - 64px),348px)!important;min-width:min(calc(100vw - 64px),348px)!important}
+html body .profile__tabs__choose,html body .profile__tabs__choose .profile__tabs__scroll-container{width:100%!important;max-width:100%!important;overflow:visible!important}
+html body .profile__tabs__choose__inner{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%!important;min-width:0!important;gap:0!important}
+html body .profile__tabs__choose__btn{min-width:0!important;margin:0!important;padding:0 5px 16px!important;font-size:clamp(12px,3.25vw,15px)!important;line-height:1.2;white-space:normal!important;text-align:center}
+html body .profile__tabs__choose__btn:last-child{padding-right:5px!important}.profile__tabs__choose__btn:last-child::after{right:5px!important}
+html body:has(.popup._active){overflow:hidden!important}
+html body .popup--pay .popup__wrapper{min-height:100dvh;max-height:100dvh!important;padding:max(8px,env(safe-area-inset-top)) 0 max(8px,env(safe-area-inset-bottom))!important;box-sizing:border-box;overflow:hidden!important}
+html body .popup--pay .popup__inner{width:100%!important;max-width:100%!important;max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;padding:0!important;overflow:hidden!important}
+html body .popup--pay #body{width:100%!important;max-width:none!important;max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;box-sizing:border-box;overflow-y:auto!important;overscroll-behavior:contain}
+}
+@media (min-width:600px) and (max-width:1023px){html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .swiper-slide,html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .game-card{flex:0 0 calc(50vw - 46px)!important;width:calc(50vw - 46px)!important;max-width:calc(50vw - 46px)!important;min-width:calc(50vw - 46px)!important}}
 
 @media (prefers-reduced-motion: reduce) {
     html body .catalog-card,
