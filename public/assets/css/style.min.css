@@ -12734,6 +12734,13 @@ html.ios .js-carousel {
     }
 }
 
+/* v4.27.0: match product-page hero clearance to the established inner-page rhythm */
+@media (min-width:1024px) and (max-height:860px){
+    html body main.game > section.game-hero:first-child{
+        padding-top:32px !important;
+    }
+}
+
 /* v4.26.1: final cascade for touch rails and mobile profile/modal bounds */
 @media (max-width:1023px){
   html body .game-list__rail.carousel-rail::before,html body .game-list__rail.carousel-rail::after,html body .game-cheats__rail.carousel-rail::before,html body .game-cheats__rail.carousel-rail::after{display:none!important}
@@ -32237,6 +32244,10 @@ html body .header .header__search-reset-btn {
 }
 
 /* v4.26.2 final mobile cascade */
+/* v4.27.0: match product-page hero clearance to the established inner-page rhythm */
+@media (min-width:1024px) and (max-height:860px){
+    html body main.game > section.game-hero:first-child{ padding-top:32px !important; }
+}
 @media (max-width:1023px){
 html body .game-list__rail.carousel-rail::before,html body .game-list__rail.carousel-rail::after,html body .game-cheats__rail.carousel-rail::before,html body .game-cheats__rail.carousel-rail::after{display:none!important}
 html body .game-list__rail .game-cheats-slider,html body .game-cheats__rail .game-cheats-slider{overflow:hidden!important;-webkit-mask-image:none!important;mask-image:none!important;scroll-snap-type:none!important;touch-action:pan-y}
