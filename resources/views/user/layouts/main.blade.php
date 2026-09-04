@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.27.0';
+    $__cssVer = '4.28.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1059,8 +1059,10 @@
         <button class="btn btn-accent popup__submit-btn" type="button" style="margin-top:20px" onclick="submitReview();return false;">{{ __('site.btn_leave_review') }}</button>
     </div>
 
+    <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
+    <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?70"></script>
+    <script src="/assets/js/scripts.min.js?71"></script>
     <script src="/assets/js/animations.js?v=30"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
@@ -1148,7 +1150,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.8"></script>
+    <script src="/assets/js/app.js?v=6.9"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

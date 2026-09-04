@@ -1859,6 +1859,13 @@ function submitReview() {
             var d = document.createElement('span');
             d.className = 'catalog__dots__dot' + (i === 0 ? ' is-active' : '');
             d.addEventListener('click', function () {
+                /* Swiper game rails are transformed rather than native-scroll
+                   containers. Going through its API keeps dots, arrows and
+                   the active slide in the same state. */
+                if (scroller.swiper) {
+                    scroller.swiper.slideTo(i);
+                    return;
+                }
                 card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             });
             dots.appendChild(d);
