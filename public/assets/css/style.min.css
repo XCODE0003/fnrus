@@ -32313,6 +32313,10 @@ html body .popup--pay #body{width:100%!important;max-width:none!important;max-he
 @media (max-width:599px){
     html body .profile__sidebar .profile__menu{gap:12px!important;padding:12px!important}
     html body .profile__sidebar .profile__identity{gap:12px!important;padding:14px!important}
+    /* The old strip used a vignette mask that faded the first and last labels.
+       Tabs are no longer scrollable, so the fade has no purpose. */
+    html body .profile__tabs__scroll-container{-webkit-mask-image:none!important;mask-image:none!important}
+    html body .profile__main__header{margin-bottom:12px!important}
     /* Keep the familiar underline tabs: no card shadows or edge fades. The
        type is reduced only enough to keep every Russian label inside its cell. */
     html body .profile__tabs__choose{margin-bottom:24px!important}
