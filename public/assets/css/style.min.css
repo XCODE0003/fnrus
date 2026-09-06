@@ -32461,3 +32461,15 @@ html body .popup--pay #body{width:100%!important;max-width:none!important;max-he
     html body .header__edge-light{z-index:0 !important;pointer-events:none !important}
     html body .header__mega{z-index:120 !important;pointer-events:auto !important}
 }
+
+/* A modal freezes <html> at a negative scroll offset. The storefront header
+   is normally absolute, so without this it follows the offset into the page
+   and appears split behind the overlay. Pin only during that lock state. */
+html.scroll-locked .header{
+    position:fixed !important;
+    inset:0 0 auto 0 !important;
+    z-index:10 !important;
+}
+html.scroll-locked .header__container{
+    transform:none !important;
+}
