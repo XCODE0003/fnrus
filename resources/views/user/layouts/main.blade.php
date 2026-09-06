@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.32.0';
+    $__cssVer = '4.33.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1062,7 +1062,7 @@
     <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
     <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?71"></script>
+    <script src="/assets/js/scripts.min.js?72"></script>
     <script src="/assets/js/animations.js?v=30"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
@@ -1301,22 +1301,72 @@
                 }
                 return null;
             }
+            var railLock = new WeakMap();
+
+            function updateSwiperRail(slider) {
+                var swiper = slider && slider.swiper;
+                if (!swiper || swiper.destroyed) return;
+                var arrows = arrowsFor(slider);
+                if (arrows.prev) setArrow(arrows.prev, swiper.isBeginning || swiper.slides.length < 2);
+                if (arrows.next) setArrow(arrows.next, swiper.isEnd || swiper.slides.length < 2);
+            }
+
+            function refreshSwiperRails() {
+                document.querySelectorAll('.game-cheats-slider, .game-cards-slider').forEach(function(slider) {
+                    var swiper = slider.swiper;
+                    if (!swiper || swiper.destroyed) return;
+                    /* The card width comes from CSS below 1024px. Resetting
+                       breakpoint calculations after rotation keeps the rail
+                       touch-draggable and preserves the current card. */
+                    if (window.matchMedia('(max-width: 1023px)').matches) {
+                        swiper.params.slidesPerView = 'auto';
+                        swiper.params.spaceBetween = 16;
+                        swiper.params.allowTouchMove = true;
+                        swiper.params.simulateTouch = true;
+                    }
+                    swiper.update();
+                    updateSwiperRail(slider);
+                });
+            }
+
             document.addEventListener('click', function(e) {
                 var arrow = e.target.closest('.slider-arrows__arrow, .swiper-button-next, .swiper-button-prev, [class*="slider-arrow"]');
                 if (!arrow) return;
                 var slider = sliderFor(arrow);
-                if (!slider || !isNative(slider)) return;  // desktop Swiper-mode: leave to Swiper
+                if (!slider) return;
+
+                /* Desktop keeps the original navigation. On phone and iPad a
+                   single guarded step owns every click, so tapping rapidly
+                   cannot queue competing Swiper transitions. */
+                if (window.matchMedia('(min-width: 1024px)').matches && !isNative(slider)) return;
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                if (arrow.classList.contains('cf-arrow-off')) return; // at the edge
-                if (slider.swiper) { try { slider.swiper.setTranslate(0); } catch (err) {} }
+                if (arrow.classList.contains('cf-arrow-off')) return;
+
+                var isPrev = /prev|left/i.test(arrow.className);
+                var swiper = slider.swiper;
+                if (swiper && !swiper.destroyed && !isNative(slider)) {
+                    if (railLock.get(slider) || swiper.animating) return;
+                    railLock.set(slider, true);
+                    isPrev ? swiper.slidePrev() : swiper.slideNext();
+                    window.setTimeout(function() {
+                        railLock.delete(slider);
+                        updateSwiperRail(slider);
+                    }, Math.max(220, Number(swiper.params.speed) || 360) + 40);
+                    return;
+                }
+
+                if (swiper) { try { swiper.setTranslate(0); } catch (err) {} }
                 var w = slider.querySelector('.swiper-wrapper');
                 if (w) w.style.transform = 'none';
                 var slide = slider.querySelector('.swiper-slide');
                 var pitch = slide ? Math.round(slide.getBoundingClientRect().width) + 16 : Math.round(slider.clientWidth * 0.85);
-                var isPrev = /prev|left/i.test(arrow.className);
                 slider.scrollBy({ left: (isPrev ? -1 : 1) * pitch, behavior: 'smooth' });
             }, true);
+
+            window.addEventListener('resize', function() { window.setTimeout(refreshSwiperRails, 120); }, { passive: true });
+            window.addEventListener('orientationchange', function() { window.setTimeout(refreshSwiperRails, 240); }, { passive: true });
+            window.setTimeout(refreshSwiperRails, 0);
         })();
     </script>
     <script>

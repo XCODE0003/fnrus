@@ -32352,3 +32352,112 @@ html body .popup--pay #body{width:100%!important;max-width:none!important;max-he
     html body .profile__tabs__choose__btn._active::after{border-top:2px solid #8456ff!important}
     html body .profile__tabs__choose__btn:focus-visible{outline:2px solid #a987ff!important;outline-offset:2px}
 }
+
+/* ==================================================================== */
+/* v4.33.0 — iPad rails and inner-page responsive corrections           */
+/* ==================================================================== */
+/* Only the category-page hero used the inherited 100px inner offset.
+   The section keeps its header clearance; the content itself begins 40px in. */
+@media (min-width:1024px){
+    html body main.game > section.game-hero > .game-hero__inner{
+        padding-top:40px !important;
+    }
+}
+
+/* Card sizing belongs to the rail, not to Swiper's breakpoint math.
+   This deliberately leaves a readable next-card preview without turning a
+   768px iPad into a two-card desktop layout. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider,
+    html body .game-cheats__rail .game-cheats-slider{
+        overflow:hidden !important;
+        touch-action:pan-y !important;
+    }
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .swiper-slide,
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .game-card,
+    html body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 min(calc((100vw - 96px) / 2.35), 320px) !important;
+        width:min(calc((100vw - 96px) / 2.35), 320px) !important;
+        min-width:min(calc((100vw - 96px) / 2.35), 320px) !important;
+        max-width:min(calc((100vw - 96px) / 2.35), 320px) !important;
+    }
+
+    /* Profile sidebar stays a compact, two-row summary at iPad widths. */
+    html body .profile__sidebar .profile__identity{
+        display:grid !important;
+        grid-template:"identity" auto "topup" 48px / minmax(0,1fr) !important;
+        gap:12px !important;
+        padding:18px !important;
+    }
+    html body .profile__sidebar .profile__identity__container{
+        grid-area:identity !important;
+        display:grid !important;
+        grid-template-columns:48px minmax(0,1fr) 44px !important;
+        align-items:center !important;
+        min-height:48px !important;
+        margin:0 !important;
+    }
+    html body .profile__sidebar .profile__avatar{width:48px !important;height:48px !important;margin:0 12px 0 0 !important}
+    html body .profile__sidebar .profile__identity__user-info{min-width:0 !important;padding:0 !important}
+    html body .profile__sidebar .profile__identity__exit{position:static !important;right:auto !important;width:44px !important;height:44px !important;margin:0 !important}
+    html body .profile__sidebar .profile__identity__replenishment-btn{grid-area:topup !important;width:100% !important;height:48px !important;margin:0 !important;padding:0 !important}
+    html body .profile__tabs__scroll-container{-webkit-mask-image:none !important;mask-image:none !important}
+    html body .profile__tabs__choose__inner{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;width:100% !important;min-width:0 !important}
+    html body .profile__tabs__choose__btn{min-width:0 !important;padding:0 4px 14px !important;font-size:14px !important;line-height:1.2 !important;white-space:normal !important;text-align:center !important}
+
+    /* Reviews and FAQ should read as one continuous home-page sequence. */
+    main.main .reviews{margin:48px 0 !important}
+    main.main .faq{margin-top:0 !important;padding-top:0 !important}
+    main.main .faq__container{margin-top:32px !important}
+
+    /* The reviews page clears the absolute header once, rather than letting
+       breadcrumbs sit behind the logo. */
+    main.reviews-page{padding-top:128px !important}
+    main.reviews-page > .reviews-page__section:first-of-type{padding-top:0 !important}
+
+    /* History is content at this width, not a disabled horizontal slider. */
+    html body .about-section__history{overflow:visible !important}
+    html body .about-section__history__slider{height:auto !important;min-height:0 !important;overflow:visible !important}
+    html body .about-section__history__slider .swiper-wrapper{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:22px 28px !important;
+        width:100% !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide{
+        display:block !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:auto !important;
+        min-height:108px !important;
+        margin:0 !important;
+        padding-top:18px !important;
+    }
+    html body .about-section__history__slider-btn{display:none !important}
+    html body .about-section__history__slide::before{display:none !important}
+}
+
+@media (max-width:599px){
+    html body .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list__rail .game-cheats-slider .game-card,
+    html body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 min(74vw,296px) !important;
+        width:min(74vw,296px) !important;
+        min-width:min(74vw,296px) !important;
+        max-width:min(74vw,296px) !important;
+    }
+}
+
+/* iPad landscape is visually desktop-sized but still touch-first. Keep the
+   header controls above decorative glass layers after rotation. */
+@media (hover:none) and (pointer:coarse) and (min-width:1024px){
+    html body .header{z-index:60 !important;pointer-events:auto !important}
+    html body .header__container{isolation:isolate !important}
+    html body .header__container > :not(.header__edge-light){position:relative;z-index:2;pointer-events:auto !important}
+    html body .header__edge-light{z-index:0 !important;pointer-events:none !important}
+    html body .header__mega{z-index:120 !important;pointer-events:auto !important}
+}
