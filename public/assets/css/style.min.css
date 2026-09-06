@@ -32313,41 +32313,38 @@ html body .popup--pay #body{width:100%!important;max-width:none!important;max-he
 @media (max-width:599px){
     html body .profile__sidebar .profile__menu{gap:12px!important;padding:12px!important}
     html body .profile__sidebar .profile__identity{gap:12px!important;padding:14px!important}
-    html body .profile__tabs__choose__inner{gap:8px!important}
-    html body .profile__tabs__choose__btn{padding-left:2px!important;padding-right:2px!important}
-
-    /* Compact tab cards mirror the account-menu controls without forcing a
-       horizontal rail. They stay large enough to tap, even when a label wraps. */
-    html body .profile__tabs__choose{margin-bottom:20px!important}
-    html body .profile__tabs__choose::before{display:none!important}
-    html body .profile__tabs__choose__inner{align-items:stretch!important}
+    /* Keep the familiar underline tabs: no card shadows or edge fades. The
+       type is reduced only enough to keep every Russian label inside its cell. */
+    html body .profile__tabs__choose{margin-bottom:24px!important}
+    html body .profile__tabs__choose::before{display:block!important}
+    html body .profile__tabs__choose__inner{gap:0!important;align-items:flex-end!important}
     html body .profile__tabs__choose__btn,
     html body .profile__tabs__choose__btn:not(:last-child){
-        display:flex!important;
-        align-items:center!important;
-        justify-content:center!important;
-        min-height:64px!important;
+        display:block!important;
+        min-width:0!important;
+        min-height:0!important;
         margin:0!important;
-        padding:9px 6px!important;
-        box-sizing:border-box!important;
-        border:1px solid rgba(255,255,255,.11)!important;
-        border-radius:13px!important;
-        background:rgba(27,34,47,.72)!important;
+        padding:0 3px 16px!important;
+        border:0!important;
+        border-radius:0!important;
+        background:transparent!important;
+        box-shadow:none!important;
         color:rgba(255,255,255,.86)!important;
-        font-size:clamp(12px,3.1vw,14px)!important;
-        font-weight:600!important;
-        line-height:1.18!important;
+        font-size:clamp(11px,3vw,13px)!important;
+        font-weight:500!important;
+        line-height:1.2!important;
         white-space:normal!important;
+        overflow-wrap:anywhere!important;
         text-align:center!important;
-        cursor:pointer;
-        transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease,color .2s ease!important;
+        transition:color .2s ease!important;
     }
-    html body .profile__tabs__choose__btn::after{display:none!important}
+    html body .profile__tabs__choose__btn:last-child{padding-right:3px!important}
+    html body .profile__tabs__choose__btn::after{display:block!important}
     html body .profile__tabs__choose__btn._active{
-        border-color:rgba(132,86,255,.72)!important;
-        background:rgba(96,62,178,.17)!important;
+        background:transparent!important;
+        box-shadow:none!important;
         color:#fff!important;
-        box-shadow:inset 0 1px 0 rgba(201,180,255,.10),0 8px 18px -15px rgba(132,86,255,.95)!important;
     }
+    html body .profile__tabs__choose__btn._active::after{border-top:2px solid #8456ff!important}
     html body .profile__tabs__choose__btn:focus-visible{outline:2px solid #a987ff!important;outline-offset:2px}
 }
