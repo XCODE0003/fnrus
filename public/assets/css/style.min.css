@@ -32474,6 +32474,53 @@ html.scroll-locked .header__container{
     transform:none !important;
 }
 
+/* The iPad history uses a two-column grid, so one full-width timeline would
+   leave a misleading divider between unrelated rows. Restore the missing
+   markers as two short rails: one rail connects each pair of dates. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .about-section__history__slider::before{display:none !important}
+    html body .about-section__history__slide{
+        padding:20px 12px 8px !important;
+    }
+    html body .about-section__history__slide .point{
+        position:absolute !important;
+        top:0 !important;
+        left:0 !important;
+        width:10px !important;
+        height:10px !important;
+        margin:0 !important;
+        border:0 !important;
+        border-radius:50% !important;
+        background:#a98aff !important;
+        box-shadow:0 0 0 3px #171d28,0 0 10px rgba(169,138,255,.45) !important;
+        z-index:2 !important;
+    }
+    html body .about-section__history__slide:not(:last-child)::before{
+        content:"" !important;
+        display:block !important;
+        position:absolute !important;
+        top:4px !important;
+        left:5px !important;
+        width:calc(100% + 28px) !important;
+        height:2px !important;
+        border:0 !important;
+        border-radius:999px !important;
+        background:linear-gradient(90deg,rgba(132,86,255,.6),rgba(132,86,255,.25)) !important;
+        pointer-events:none !important;
+    }
+    html body .about-section__history__slide:nth-child(even)::before{display:none !important}
+    html body .about-section__history__slide .point::before,
+    html body .about-section__history__slide .point::after{display:none !important}
+
+    /* iPad Safari adds .ios to <html>; this deliberately outranks its older
+       mobile rule that hid every connector. */
+    html.ios body .about-section__history__slide::before{
+        content:"" !important;
+        display:block !important;
+    }
+    html.ios body .about-section__history__slide:nth-child(even)::before{display:none !important}
+}
+
 /* iPad landscape shares the desktop header layout, but can arrive here with
    touch media features that differ between Safari and DevTools. Give every
    control an explicit interaction layer above the decorative rail regardless
