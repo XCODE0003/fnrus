@@ -32473,3 +32473,34 @@ html.scroll-locked .header{
 html.scroll-locked .header__container{
     transform:none !important;
 }
+
+/* iPad landscape shares the desktop header layout, but can arrive here with
+   touch media features that differ between Safari and DevTools. Give every
+   control an explicit interaction layer above the decorative rail regardless
+   of the reported pointer type. */
+@media (min-width:1180px) and (max-width:1400px){
+    html body .header,
+    html body .header .header__container{
+        isolation:isolate !important;
+        pointer-events:auto !important;
+    }
+    html body .header .header__logo,
+    html body .header .header__menu,
+    html body .header .header__lang,
+    html body .header .header__search,
+    html body .header .header__login,
+    html body .header .header__hamburger{
+        position:relative !important;
+        z-index:5 !important;
+        pointer-events:auto !important;
+    }
+    html body .header .header__menu__item,
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__pill,
+    html body .header .header__lang .select__selected,
+    html body .header .header__search__input,
+    html body .header .header__login{
+        pointer-events:auto !important;
+    }
+    html body .header .header__mega{z-index:20 !important;pointer-events:auto !important}
+}
