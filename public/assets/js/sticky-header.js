@@ -13,6 +13,14 @@
     var compact = false;
 
     function update(){
+        /* A modal fixes <html> and temporarily changes pageYOffset. That is
+           not user scrolling, so keep the exact header state visible behind
+           the overlay until the original scroll position is restored. */
+        if (document.documentElement.classList.contains('scroll-locked')) {
+            ticking = false;
+            return;
+        }
+
         var y = window.pageYOffset || document.documentElement.scrollTop;
         var nextCompact = compact ? y > EXIT_AT : y > ENTER_AT;
 

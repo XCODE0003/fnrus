@@ -32470,9 +32470,6 @@ html.scroll-locked .header{
     inset:0 0 auto 0 !important;
     z-index:10 !important;
 }
-html.scroll-locked .header__container{
-    transform:none !important;
-}
 
 /* The iPad history uses a two-column grid, so one full-width timeline would
    leave a misleading divider between unrelated rows. Restore the missing
