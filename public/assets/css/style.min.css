@@ -32619,28 +32619,36 @@ html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide
 @media (max-width:599px){
     html body .game-list__rail .game-cheats-slider.game-rail--native,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native{--rail-gutter:var(--game-gutter,20px);padding-left:var(--rail-gutter) !important}
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider.game-rail--native .game-card,
+    html body .game-cheats__slider-container .carousel-rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__slider-container .carousel-rail .game-cheats-slider.game-rail--native .game-card,
     html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide,
     html body .game-list__rail .game-cheats-slider.game-rail--native .game-card,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
-        flex:0 0 min(74vw,296px) !important;
-        width:min(74vw,296px) !important;
-        min-width:min(74vw,296px) !important;
-        max-width:min(74vw,296px) !important;
+        flex:0 0 min(70vw,272px) !important;
+        width:min(70vw,272px) !important;
+        min-width:min(70vw,272px) !important;
+        max-width:min(70vw,272px) !important;
     }
 }
 
 @media (min-width:600px) and (max-width:1179px){
     html body .game-list__rail .game-cheats-slider.game-rail--native,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native{--rail-gutter:40px;padding-left:var(--rail-gutter) !important}
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider.game-rail--native .game-card,
+    html body .game-cheats__slider-container .carousel-rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__slider-container .carousel-rail .game-cheats-slider.game-rail--native .game-card,
     html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide,
     html body .game-list__rail .game-cheats-slider.game-rail--native .game-card,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
     html body .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
-        flex:0 0 clamp(270px,calc(42.5vw - 41px),320px) !important;
-        width:clamp(270px,calc(42.5vw - 41px),320px) !important;
-        min-width:clamp(270px,calc(42.5vw - 41px),320px) !important;
-        max-width:clamp(270px,calc(42.5vw - 41px),320px) !important;
+        flex:0 0 clamp(250px,34vw,280px) !important;
+        width:clamp(250px,34vw,280px) !important;
+        min-width:clamp(250px,34vw,280px) !important;
+        max-width:clamp(250px,34vw,280px) !important;
     }
     html body .game-list__rail .catalog__dots,
     html body .game-cheats__rail .catalog__dots{
