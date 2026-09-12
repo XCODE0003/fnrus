@@ -61,6 +61,7 @@
                     <div class="swiper-wrapper">
                         <div class="swiper-slide about-section__history__slide">
                             <div class="point"></div>
+                            <span class="about-section__history__connector" aria-hidden="true"></span>
                             <p class="years">2023-2024</p>
                             <p class="record">{{ __('site.about_history_updates') }}</p>
                             <p class="small-text">{{ __('site.about_history_updates_text') }}</p>
@@ -73,6 +74,7 @@
                         </div>
                         <div class="swiper-slide about-section__history__slide">
                             <div class="point"></div>
+                            <span class="about-section__history__connector" aria-hidden="true"></span>
                             <p class="years">2021-2022</p>
                             <p class="record">{{ __('site.about_history_first_website') }}</p>
                             <p class="small-text">{{ __('site.about_history_first_website_text') }}</p>
