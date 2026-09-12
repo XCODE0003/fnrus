@@ -57,7 +57,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.36.0';
+    $__cssVer = '4.37.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1062,7 +1062,7 @@
     <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
     <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?75"></script>
+    <script src="/assets/js/scripts.min.js?76"></script>
     <script src="/assets/js/animations.js?v=30"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
@@ -1302,6 +1302,38 @@
                 return null;
             }
             var railLock = new WeakMap();
+            var railTargetIndex = new WeakMap();
+            var railTargetTimer = new WeakMap();
+
+            function clearRailTarget(slider) {
+                railTargetIndex.delete(slider);
+                var timer = railTargetTimer.get(slider);
+                if (timer) window.clearTimeout(timer);
+                railTargetTimer.delete(slider);
+            }
+
+            function slideScrollLeft(slider, slide) {
+                var railRect = slider.getBoundingClientRect();
+                var slideRect = slide.getBoundingClientRect();
+                var inset = parseFloat(getComputedStyle(slider).paddingLeft) || 0;
+                return Math.max(0, Math.min(
+                    slider.scrollWidth - slider.clientWidth,
+                    slider.scrollLeft + slideRect.left - railRect.left - inset
+                ));
+            }
+
+            function nearestSlideIndex(slider, slides) {
+                var best = 0;
+                var bestDistance = Infinity;
+                slides.forEach(function(slide, index) {
+                    var distance = Math.abs(slideScrollLeft(slider, slide) - slider.scrollLeft);
+                    if (distance < bestDistance) {
+                        best = index;
+                        bestDistance = distance;
+                    }
+                });
+                return best;
+            }
 
             function updateSwiperRail(slider) {
                 var swiper = slider && slider.swiper;
@@ -1359,10 +1391,32 @@
                 if (swiper) { try { swiper.setTranslate(0); } catch (err) {} }
                 var w = slider.querySelector('.swiper-wrapper');
                 if (w) w.style.transform = 'none';
-                var slide = slider.querySelector('.swiper-slide');
-                var pitch = slide ? Math.round(slide.getBoundingClientRect().width) + 16 : Math.round(slider.clientWidth * 0.85);
-                slider.scrollBy({ left: (isPrev ? -1 : 1) * pitch, behavior: 'smooth' });
+                var slides = Array.prototype.slice.call(slider.querySelectorAll('.swiper-slide'));
+                if (!slides.length) return;
+
+                /* Keep a logical destination while smooth scrolling is in
+                   flight.  Every rapid tap advances that destination instead
+                   of measuring an intermediate scrollLeft and accumulating a
+                   crooked half-card offset. */
+                var current = railTargetIndex.has(slider)
+                    ? railTargetIndex.get(slider)
+                    : nearestSlideIndex(slider, slides);
+                var next = Math.max(0, Math.min(slides.length - 1, current + (isPrev ? -1 : 1)));
+                railTargetIndex.set(slider, next);
+                slider.scrollTo({ left: slideScrollLeft(slider, slides[next]), behavior: 'smooth' });
+
+                var oldTimer = railTargetTimer.get(slider);
+                if (oldTimer) window.clearTimeout(oldTimer);
+                railTargetTimer.set(slider, window.setTimeout(function() {
+                    clearRailTarget(slider);
+                    update(slider);
+                }, 480));
             }, true);
+
+            document.addEventListener('pointerdown', function(e) {
+                var slider = e.target.closest('.game-cheats-slider, .game-cards-slider');
+                if (slider) clearRailTarget(slider);
+            }, { passive: true, capture: true });
 
             window.addEventListener('resize', function() { window.setTimeout(refreshSwiperRails, 120); }, { passive: true });
             window.addEventListener('orientationchange', function() { window.setTimeout(refreshSwiperRails, 240); }, { passive: true });

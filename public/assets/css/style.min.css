@@ -32548,3 +32548,229 @@ html.scroll-locked .header{
     }
     html body .header .header__mega{z-index:20 !important;pointer-events:auto !important}
 }
+
+/* ==================================================================== */
+/* v4.37.0 — final viewport ownership for product rails and pay dialog   */
+/* ==================================================================== */
+
+/* The category hero now starts on the same vertical grid as product,
+   about and reviews pages.  The clamp compensates for the two desktop
+   header heights without a jump at the short-viewport breakpoint. */
+@media (min-width:1024px){
+    html body main.game > section.game-hero:first-child{
+        padding-top:calc(var(--header-height) - clamp(56px,3.6vw,69px)) !important;
+    }
+}
+@media (min-width:1180px) and (max-width:1600px){
+    /* The compact desktop header keeps the same 138px variable while the
+       centred content gutter grows with the viewport. Counter that growth so
+       the breadcrumb remains on the same 29px header baseline as a product. */
+    html body main.game > section.game-hero:first-child{
+        padding-top:calc(124.75px - 3.621vw) !important;
+    }
+}
+
+/* iPad reviews previously started at y=0 because the generic
+   html body main:not(.main) rule had higher specificity. */
+@media (min-width:600px) and (max-width:1023px){
+    html body main.reviews-page{padding-top:128px !important}
+    html body main.reviews-page > .reviews-page__section:first-of-type{padding-top:0 !important}
+}
+
+/* Native card rails have one movement owner: scrollLeft.  No Swiper
+   transform, edge vignette or axis lock can intercept a finger swipe. */
+html body .game-list__rail .game-cheats-slider.game-rail--native,
+html body .game-cheats__rail .game-cheats-slider.game-rail--native{
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-x:contain !important;
+    touch-action:pan-x pan-y !important;
+    scroll-snap-type:x proximity !important;
+    scrollbar-width:none !important;
+    -webkit-mask-image:none !important;
+    mask-image:none !important;
+}
+html body .game-list__rail .game-cheats-slider.game-rail--native::-webkit-scrollbar,
+html body .game-cheats__rail .game-cheats-slider.game-rail--native::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important}
+html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-wrapper,
+html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-wrapper{
+    display:flex !important;
+    flex-flow:row nowrap !important;
+    align-items:stretch !important;
+    width:max-content !important;
+    min-width:max-content !important;
+    gap:16px !important;
+    padding-right:var(--rail-gutter,20px) !important;
+    transform:none !important;
+    transition:none !important;
+    will-change:auto !important;
+}
+html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide,
+html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide{
+    margin-right:0 !important;
+    scroll-snap-align:start !important;
+    scroll-snap-stop:normal !important;
+}
+html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide:last-child,
+html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide:last-child{scroll-snap-align:end !important}
+
+@media (max-width:599px){
+    html body .game-list__rail .game-cheats-slider.game-rail--native,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native{--rail-gutter:var(--game-gutter,20px);padding-left:var(--rail-gutter) !important}
+    html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-list__rail .game-cheats-slider.game-rail--native .game-card,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
+        flex:0 0 min(74vw,296px) !important;
+        width:min(74vw,296px) !important;
+        min-width:min(74vw,296px) !important;
+        max-width:min(74vw,296px) !important;
+    }
+}
+
+@media (min-width:600px) and (max-width:1179px){
+    html body .game-list__rail .game-cheats-slider.game-rail--native,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native{--rail-gutter:40px;padding-left:var(--rail-gutter) !important}
+    html body .game-list__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-list__rail .game-cheats-slider.game-rail--native .game-card,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
+        flex:0 0 clamp(270px,calc(42.5vw - 41px),320px) !important;
+        width:clamp(270px,calc(42.5vw - 41px),320px) !important;
+        min-width:clamp(270px,calc(42.5vw - 41px),320px) !important;
+        max-width:clamp(270px,calc(42.5vw - 41px),320px) !important;
+    }
+    html body .game-list__rail .catalog__dots,
+    html body .game-cheats__rail .catalog__dots{
+        padding-left:var(--rail-gutter) !important;
+        padding-right:var(--rail-gutter) !important;
+    }
+}
+
+/* Category rails also carry the legacy .js-carousel class; the old iOS
+   selector includes that extra class and otherwise wins on specificity. */
+@media (max-width:1179px){
+    html body .game-list .game-list__rail .game-cheats-slider.js-carousel.game-rail--native{
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        touch-action:pan-x pan-y !important;
+        -webkit-overflow-scrolling:touch !important;
+        -webkit-mask-image:none !important;
+        mask-image:none !important;
+    }
+}
+@media (min-width:600px) and (max-width:1179px){
+    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider.js-carousel.game-rail--native,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.js-carousel.game-rail--native{
+        --rail-gutter:40px;
+        padding-left:var(--rail-gutter) !important;
+        scroll-padding-left:var(--rail-gutter) !important;
+    }
+}
+
+/* Functional cards use the same touch-first rail at iPad width.  The first
+   card stays on the content gutter; following cards continue past the right
+   edge and remain reachable by touch. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .cheat-functions .func-grid{
+        display:flex !important;
+        flex-flow:row nowrap !important;
+        width:calc(100vw - 40px) !important;
+        max-width:none !important;
+        margin:0 !important;
+        padding:0 40px 10px 0 !important;
+        gap:16px !important;
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        -webkit-overflow-scrolling:touch !important;
+        overscroll-behavior-x:contain !important;
+        touch-action:pan-x pan-y !important;
+        scroll-snap-type:x proximity !important;
+        scrollbar-width:none !important;
+        -webkit-mask-image:none !important;
+        mask-image:none !important;
+    }
+    html body .cheat-functions .func-grid::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important}
+    html body .cheat-functions .func-grid .func-cat{
+        flex:0 0 clamp(250px,36vw,292px) !important;
+        width:clamp(250px,36vw,292px) !important;
+        min-width:clamp(250px,36vw,292px) !important;
+        max-width:clamp(250px,36vw,292px) !important;
+        scroll-snap-align:start !important;
+        scroll-snap-stop:normal !important;
+    }
+    html body .cheat-functions .func-grid .func-cat:last-child{scroll-snap-align:end !important}
+}
+
+/* Keep the already established iPad history grid visible even when cached
+   Swiper inline styles are present. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .about-section__history__slider .swiper-wrapper{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:auto !important;
+        opacity:1 !important;
+        visibility:visible !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide{
+        display:block !important;
+        opacity:1 !important;
+        visibility:visible !important;
+    }
+}
+
+/* At iPad landscape height the complete order fits without a nested panel
+   scrollbar.  The overlay itself remains the only emergency scroll owner on
+   unusually short viewports. */
+@media (min-width:768px) and (max-width:1179px) and (max-height:900px){
+    html body .popup--pay .popup__wrapper{
+        min-height:100dvh !important;
+        max-height:100dvh !important;
+        padding:10px 0 !important;
+        display:flex !important;
+        align-items:center !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+        overscroll-behavior:contain !important;
+    }
+    html body .popup--pay .popup__inner{
+        width:min(600px,calc(100vw - 32px)) !important;
+        max-width:calc(100vw - 32px) !important;
+        max-height:none !important;
+        margin:auto !important;
+        padding:0 !important;
+        overflow:visible !important;
+    }
+    html body .popup--pay #result{width:100% !important;height:auto !important;display:block !important}
+    html body .popup--pay #body{
+        width:100% !important;
+        max-width:none !important;
+        max-height:none !important;
+        padding:36px 28px 24px !important;
+        overflow:visible !important;
+    }
+    html body .popup--pay .popup__close{
+        top:12px !important;
+        right:12px !important;
+        width:36px !important;
+        height:36px !important;
+        min-width:36px !important;
+        min-height:36px !important;
+    }
+    html body .popup--pay > .popup__wrapper .pay-card__title{margin-bottom:14px !important;font-size:22px !important}
+    html body .popup--pay > .popup__wrapper .pay-card__title--sm{margin-bottom:10px !important;font-size:17px !important}
+    html body .popup--pay [data-substep="order"] .pay-fields{gap:7px 10px !important;margin-bottom:8px !important}
+    html body .popup--pay [data-substep="order"] .pay-field{gap:3px !important}
+    html body .popup--pay [data-substep="order"] .pay-field__label{font-size:11px !important;line-height:1.2 !important}
+    html body .popup--pay [data-substep="order"] .pay-field__box{padding:8px 12px !important;border-radius:10px !important;font-size:14px !important;line-height:1.25 !important}
+    html body .popup--pay [data-substep="order"] .pay-timer{margin-bottom:8px !important;font-size:12px !important}
+    html body .popup--pay [data-substep="order"] .pay-note{padding:8px 10px !important;margin-bottom:8px !important;font-size:12px !important;line-height:1.3 !important}
+    html body .popup--pay [data-substep="order"] .pay-actions{gap:6px !important;margin-top:0 !important}
+    html body .popup--pay [data-substep="order"] .pay-actions__row{gap:6px !important}
+    html body .popup--pay [data-substep="order"] .pay-btn{min-height:42px !important;padding:9px 14px !important;font-size:14px !important}
+}
