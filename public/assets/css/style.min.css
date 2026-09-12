@@ -32657,6 +32657,27 @@ html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide
     }
 }
 
+/* Recommendation cards on product pages are denser than catalog cards. */
+@media (max-width:599px){
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
+        flex:0 0 min(64vw,248px) !important;
+        width:min(64vw,248px) !important;
+        min-width:min(64vw,248px) !important;
+        max-width:min(64vw,248px) !important;
+    }
+}
+
+@media (min-width:600px) and (max-width:1179px){
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
+        flex:0 0 clamp(232px,31vw,260px) !important;
+        width:clamp(232px,31vw,260px) !important;
+        min-width:clamp(232px,31vw,260px) !important;
+        max-width:clamp(232px,31vw,260px) !important;
+    }
+}
+
 /* Category rails also carry the legacy .js-carousel class; the old iOS
    selector includes that extra class and otherwise wins on specificity. */
 @media (max-width:1179px){
