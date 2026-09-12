@@ -32407,7 +32407,8 @@ html body .popup--pay #body{width:100%!important;max-width:none!important;max-he
     html body .profile__tabs__choose__btn{min-width:0 !important;padding:0 4px 14px !important;font-size:14px !important;line-height:1.2 !important;white-space:normal !important;text-align:center !important}
 
     /* Reviews and FAQ should read as one continuous home-page sequence. */
-    main.main .reviews{margin:48px 0 !important}
+    main.main .reviews{margin:48px 0 16px !important}
+    main.main .reviews .content > .reviews__all-bottom{margin-bottom:16px !important}
     main.main .faq{margin-top:0 !important;padding-top:0 !important}
     main.main .faq__container{margin-top:32px !important}
 
