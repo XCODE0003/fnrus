@@ -26499,25 +26499,9 @@ html.imgfade img.imgfade-anim{ transition:opacity .5s ease; will-change:opacity;
     }
 }
 
-/* ---- Плавные переходы между страницами (View Transitions API).
-   В Chromium даёт мягкий fade; в Safari/Firefox — обычная навигация (без
-   анимации, ничего не ломается). Шапка снимается отдельным снимком и не
-   мигает/не смещается. ---- */
-@view-transition{ navigation: auto; }
-::view-transition-old(root){ animation: vtFadeOut .20s ease both; }
-::view-transition-new(root){ animation: vtFadeIn .28s ease both; }
-@keyframes vtFadeOut{ to{ opacity:0 } }
-@keyframes vtFadeIn{ from{ opacity:0 } }
-.header{ view-transition-name: site-header; }
-/* Show ONLY the new header snapshot, instantly. Hiding the old one (instead of
-   leaving both at opacity:1) is what prevents the "two headers" double-render
-   during the transition. The header stays put — no fade, no shift, no jerk. */
-::view-transition-group(site-header){ animation:none !important; }
-::view-transition-old(site-header){ animation:none !important; opacity:0 !important; }
-::view-transition-new(site-header){ animation:none !important; opacity:1 !important; }
-@media (prefers-reduced-motion: reduce){
-    ::view-transition-old(root), ::view-transition-new(root){ animation:none !important; }
-}
+/* Cross-document snapshots made card-heavy pages flash/repaint after their
+   real layout was already visible. Navigation is deliberately immediate. */
+@view-transition{ navigation:none; }
 
 /* v4.11.4 — отступ сабтайтла каталога от заголовка (был слишком тесный,
    визуально наезжал на «Выберите свою игру»). */
@@ -32798,4 +32782,258 @@ html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide
     html body .popup--pay [data-substep="order"] .pay-actions{gap:6px !important;margin-top:0 !important}
     html body .popup--pay [data-substep="order"] .pay-actions__row{gap:6px !important}
     html body .popup--pay [data-substep="order"] .pay-btn{min-height:42px !important;padding:9px 14px !important;font-size:14px !important}
+}
+
+/* Reserve the desktop category artwork before the image response arrives.
+   The 3:2 source ratio is shared by the category hero assets. */
+@media (min-width:1024px){
+    html body main.game > .game-hero .game-hero__image{
+        aspect-ratio:3 / 2 !important;
+    }
+    html body main.game > .game-hero .game-hero__image img{
+        width:100% !important;
+        height:100% !important;
+        object-fit:contain !important;
+    }
+}
+
+/* ==================================================================== */
+/* v4.38.0 — one predictable payment-dialog model on every viewport.    */
+/* Phones use a true full-screen sheet; larger screens use a 600px       */
+/* centered window. The overlay is the sole emergency scroll owner.      */
+/* ==================================================================== */
+html body .popup--pay .popup__wrapper{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    min-height:100dvh !important;
+    height:100dvh !important;
+    max-height:100dvh !important;
+    padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom)) !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    overscroll-behavior:contain !important;
+    -webkit-overflow-scrolling:touch;
+}
+html body .popup--pay .popup__inner{
+    flex:0 0 auto !important;
+    width:min(600px,calc(100vw - 32px)) !important;
+    max-width:600px !important;
+    max-height:none !important;
+    margin:auto !important;
+    padding:0 !important;
+    overflow:visible !important;
+    border-radius:20px !important;
+    transform:translateY(12px) scale(.985) !important;
+}
+html body .popup--pay._active .popup__inner{
+    transform:translateY(0) scale(1) !important;
+}
+html body .popup--pay #result{
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+}
+html body .popup--pay #body{
+    display:block;
+    width:100% !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:52px 35px 30px !important;
+    overflow:visible !important;
+    border-radius:20px !important;
+}
+html body .popup--pay .popup__close{
+    top:14px !important;
+    right:14px !important;
+    width:36px !important;
+    height:36px !important;
+    min-width:36px !important;
+    min-height:36px !important;
+}
+
+/* Compact only the dense order screen when height, rather than width, is
+   constrained. It still remains a centered window and never gains a nested
+   scrollbar. */
+@media (min-width:600px) and (max-height:820px){
+    html body .popup--pay .popup__wrapper{
+        padding:10px 16px !important;
+    }
+    html body .popup--pay #body{
+        padding:42px 28px 22px !important;
+    }
+    html body .popup--pay > .popup__wrapper .pay-card__title{
+        margin-bottom:12px !important;
+        font-size:22px !important;
+    }
+    html body .popup--pay > .popup__wrapper .pay-card__title--sm{
+        margin-bottom:9px !important;
+        font-size:17px !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-fields{
+        gap:6px 10px !important;
+        margin-bottom:7px !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-field{gap:3px !important}
+    html body .popup--pay [data-substep="order"] .pay-field__label{
+        font-size:11px !important;
+        line-height:1.2 !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-field__box{
+        padding:7px 12px !important;
+        border-radius:10px !important;
+        font-size:14px !important;
+        line-height:1.25 !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-timer{
+        margin-bottom:7px !important;
+        font-size:12px !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-note{
+        padding:7px 10px !important;
+        margin-bottom:7px !important;
+        font-size:12px !important;
+        line-height:1.3 !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-actions{
+        gap:6px !important;
+        margin-top:0 !important;
+    }
+    html body .popup--pay [data-substep="order"] .pay-actions__row{gap:6px !important}
+    html body .popup--pay [data-substep="order"] .pay-btn{
+        min-height:40px !important;
+        padding:8px 14px !important;
+        font-size:14px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .pay-section{
+        margin-bottom:13px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .pay-section__label{
+        margin-bottom:7px !important;
+        font-size:10px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] #block_tariffs,
+    html body .popup--pay [data-popup-step="1"] .pay-options{
+        gap:6px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] #block_tariffs .input-block__radio-label{
+        min-height:50px !important;
+        padding:10px 16px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .pay-option{
+        min-height:50px !important;
+        padding:9px 16px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .pay-option::before{
+        width:28px !important;
+        height:28px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .pay-promo{
+        min-height:48px !important;
+    }
+    html body .popup--pay [data-popup-step="1"] .legal-consent{
+        margin-top:8px !important;
+        font-size:11px !important;
+        line-height:1.35 !important;
+    }
+    html body .popup--pay [data-popup-step="1"] > .pay-btn{
+        min-height:44px !important;
+        margin-top:6px !important;
+        padding:10px 14px !important;
+        font-size:14px !important;
+    }
+}
+
+@media (max-width:599px){
+    html body .popup--pay{
+        background:#171e2a !important;
+    }
+    html body .popup--pay .popup__wrapper{
+        align-items:stretch !important;
+        justify-content:stretch !important;
+        padding:0 !important;
+        overflow:hidden !important;
+    }
+    html body .popup--pay .popup__inner{
+        flex:1 1 100% !important;
+        width:100% !important;
+        max-width:100% !important;
+        height:100dvh !important;
+        max-height:100dvh !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        border-radius:0 !important;
+        transform:none !important;
+        transition:opacity .22s ease !important;
+    }
+    html body .popup--pay #result{
+        height:100% !important;
+        max-height:100% !important;
+        overflow:hidden !important;
+    }
+    html body .popup--pay #body{
+        display:block;
+        width:100% !important;
+        height:100% !important;
+        min-height:100% !important;
+        max-height:100% !important;
+        padding:max(54px,calc(16px + env(safe-area-inset-top))) 16px max(18px,calc(12px + env(safe-area-inset-bottom))) !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+        overscroll-behavior:contain !important;
+        -webkit-overflow-scrolling:touch;
+        border-radius:0 !important;
+        box-shadow:none !important;
+    }
+    html body .popup--pay #body::before{display:none !important}
+    html body .popup--pay .popup__close{
+        top:max(10px,env(safe-area-inset-top)) !important;
+        right:10px !important;
+    }
+    html body .popup--pay .pay-card__title{
+        margin-bottom:16px !important;
+        font-size:21px !important;
+    }
+}
+
+/* Keep carousel geometry identical before and after JS initialization. */
+@media (min-width:600px) and (max-width:1179px){
+    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider{
+        padding-left:40px !important;
+        scroll-padding-left:40px !important;
+    }
+    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider .game-card,
+    html body .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list__rail .game-cheats-slider .game-card{
+        flex:0 0 clamp(250px,34vw,280px) !important;
+        width:clamp(250px,34vw,280px) !important;
+        min-width:clamp(250px,34vw,280px) !important;
+        max-width:clamp(250px,34vw,280px) !important;
+    }
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 clamp(232px,31vw,260px) !important;
+        width:clamp(232px,31vw,260px) !important;
+        min-width:clamp(232px,31vw,260px) !important;
+        max-width:clamp(232px,31vw,260px) !important;
+    }
+}
+@media (min-width:1180px){
+    html body .game-list__rail .game-cheats-slider .swiper-slide,
+    html body .game-list__rail .game-cheats-slider .game-card,
+    html body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html body .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 290px !important;
+        width:290px !important;
+        min-width:290px !important;
+        max-width:290px !important;
+    }
 }

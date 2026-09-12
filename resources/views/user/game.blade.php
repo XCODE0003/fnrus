@@ -77,7 +77,7 @@
                 </a>
             </div>
             <div class="game-hero__image">
-                <img src="{{ !empty($hero_image) ? '/i'.ltrim($hero_image, '/') : '/assets/img/pubg.webp' }}" alt="" onerror="this.onerror=null;this.src='/assets/img/pubg.webp'">
+                <img src="{{ !empty($hero_image) ? '/i'.ltrim($hero_image, '/') : '/assets/img/pubg.webp' }}" alt="" width="1200" height="800" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='/assets/img/pubg.webp'">
             </div>
         </div>
     </section>

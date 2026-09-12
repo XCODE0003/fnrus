@@ -188,15 +188,8 @@
         }
 
         /* ============================ КАТАЛОГ ======================== */
-        /* Карточки-игры анимируем ТОЛЬКО на десктопе (там это сетка). На
-           мобиле/планшете каталог — горизонтальный скролл-слайдер, и выезд
-           из translateY оставлял зазор сверху карточки, пока она «садится». */
-        if (desktop && q('.catalog')) {
-            // y:0 — чистое затухание без сдвига: карточки в горизонтальном
-            // слайдере (overflow клипает по вертикали) иначе обрезались сверху
-            // во время анимации.
-            reveal('.catalog-card', { y: 0, stagger: 0.06, duration: 0.7, trigger: '.catalog__cards-container' });
-        }
+        /* Карточки каталога всегда видимы сразу. Их stagger/reveal совпадал с
+           пересчётом ширины слайдера и воспринимался как рывок всей страницы. */
 
         /* ===================== ОТЗЫВЫ (главная) ====================== */
         if (q('.reviews')) {
@@ -209,23 +202,15 @@
         }
 
         /* ================= Секции платформ (страница игры) =========== */
-        /* game-card всегда живёт в горизонтальном слайдере — на мобиле/планшете
-           выезд оставлял зазор сверху. Анимируем только на десктопе. */
-        if (desktop) {
-            qa('.game-list, .game-rec').forEach(function (sec) {
-                var cards = sec.querySelectorAll('.game-card, .catalog-card');
-                // y:0 — карточки живут в горизонтальном слайдере; вертикальный
-                // сдвиг обрезался бы верхним краем контейнера.
-                if (cards.length) reveal(cards, { y: 0, stagger: 0.07, trigger: sec });
-            });
-        }
+        /* Товарные карточки также рендерятся сразу: карусель может уточнять
+           размеры при инициализации, поэтому поверх неё не запускаем reveal. */
 
         /* Safety net: un-stick ONLY elements the user can currently see but
            that stayed hidden (rare IO miss). Below-the-fold blocks are left to
            the scroll reveal — we must not pop them in early. */
         setTimeout(function () {
             var vh = window.innerHeight || document.documentElement.clientHeight;
-            qa('.game-rec__title, .game-card, .catalog-card, .s2-card, .reviews .rev-card, .reviews-grid .rev-card, .about-section__stat, .about-contact, .about-section__history__caption, .about-section__history__slide')
+            qa('.game-rec__title, .s2-card, .reviews .rev-card, .reviews-grid .rev-card, .about-section__stat, .about-contact, .about-section__history__caption, .about-section__history__slide')
                 .forEach(function (el) {
                     var r = el.getBoundingClientRect();
                     var inView = r.top < vh && r.bottom > 0;

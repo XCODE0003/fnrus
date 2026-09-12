@@ -49,6 +49,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+    {{-- Critical storefront faces: load them before card/hero layout so a
+         late font swap cannot re-wrap the category intro after first paint. --}}
+    <link rel="preload" href="/assets/fonts/Mazzard/MazzardH-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/Mazzard/MazzardM-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/Mazzard/MazzardM-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=3">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=3">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png?v=3">
@@ -57,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.37.4';
+    $__cssVer = '4.38.0';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -344,7 +350,7 @@
                     <span class="header__edge-light-runner"></span>
                 </span>
                 <a href="/" class="header__logo">
-                    <img src="/assets/img/logo.png" alt="">
+                    <img src="/assets/img/logo.png" alt="" width="320" height="320" fetchpriority="high" decoding="async">
                 </a>
                 <ul class="header__menu">
                     <li class="header__menu__item header__menu__item--dropdown" data-dropdown>
@@ -1062,8 +1068,8 @@
     <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
     <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?76"></script>
-    <script src="/assets/js/animations.js?v=30"></script>
+    <script src="/assets/js/scripts.min.js?77"></script>
+    <script src="/assets/js/animations.js?v=31"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
     <script src="/assets/js/sticky-header.js?v=4" defer></script>
