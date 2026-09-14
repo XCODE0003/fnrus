@@ -30455,7 +30455,6 @@ button,.btn{white-space:normal}
     }
 }
 
-
 /* ==================================================================== */
 /*  Home hero v4.20 — isolated scene based on the supplied RGBA artwork */
 /*  This final layer intentionally outranks the legacy hero declarations. */
@@ -33076,5 +33075,14 @@ html body .popup--pay .popup__close{
         opacity:1 !important;
         visibility:visible !important;
         transform:none !important;
+    }
+}
+
+/* The iPad catalog rail reaches the physical viewport edge. Rounded card
+   corners create a visible notch there, so keep these edge-to-edge tiles
+   square without changing recommendation cards or desktop catalog cards. */
+@media (min-width:600px) and (max-width:1179px){
+    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider .game-card{
+        border-radius:0 !important;
     }
 }
