@@ -648,10 +648,10 @@ function memberOrders() {
                         ? '<span class="status _on-update profile__order-pending">' + (window.lang.order_pending || 'Ожидает оплаты') + '</span>'
                         : '';
                     var lastLink = e.is_pending
-                        ? '<a href="' + e.pay_link + '" class="profile__table__link"></a>'
-                        : '<a href="/delivery/' + e.delivery_hash + '" class="profile__table__link"></a>';
+                        ? '<a href="' + e.pay_link + '" class="profile__table__link" aria-label="' + window.lang.open_order + '"></a>'
+                        : '<a href="/delivery/' + e.delivery_hash + '" class="profile__table__link" aria-label="' + window.lang.open_order + '"></a>';
                     items_html += '<div class="profile__table__row' + (e.is_pending ? ' is-pending' : '') + '">\n' +
-                        '                                <div class="profile__table__col">'+e.id+'</div>\n' +
+                        '                                <div class="profile__table__col"><span class="profile__table__col__col-name">'+window.lang.order_id+'</span><span>'+e.id+'</span></div>\n' +
                         '                                <div class="profile__table__col">\n' +
                         '                                    <div class="profile__orders-table__cheat-card">\n' +
                         '                                        <span>' + e.title + '</span>' + pendingBadge + '\n' +

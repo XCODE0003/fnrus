@@ -81,6 +81,7 @@ return [
     "section_user_orders_table_col_date_buy" => "Дата покупки",
     "section_user_orders_table_col_days" => "Период",
     "section_user_orders_table_col_price" => "Стоимость",
+    "section_user_orders_open" => "Открыть заказ",
 
 
     "section_statuses_caption" => "Статусы <span class=\"section-caption__accent\">читов</span>",

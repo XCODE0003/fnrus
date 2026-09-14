@@ -63,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.38.5';
+    $__cssVer = '4.38.6';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1087,6 +1087,8 @@
             withdrawal_method: @json(__('site.js_withdrawal_method')),
             account_not_connected: @json(__('site.js_account_not_connected')),
             error_occurred: @json(__('site.js_error_occurred')),
+            order_id: @json(__('site.section_user_orders_table_col_id')),
+            open_order: @json(__('site.section_user_orders_open')),
             purchase_date: @json(__('site.section_user_orders_table_col_date_buy')),
             period: @json(__('site.section_user_orders_table_col_days')),
             price: @json(__('site.section_user_orders_table_col_price')),
@@ -1156,7 +1158,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.10"></script>
+    <script src="/assets/js/app.js?v=6.11"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

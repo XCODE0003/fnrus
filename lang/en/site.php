@@ -81,6 +81,7 @@ return [
     "section_user_orders_table_col_date_buy" => "Purchase date",
     "section_user_orders_table_col_days" => "Period",
     "section_user_orders_table_col_price" => "Price",
+    "section_user_orders_open" => "Open order",
 
 
     "section_statuses_caption" => "Cheat <span class=\"section-caption__accent\">statuses</span>",
