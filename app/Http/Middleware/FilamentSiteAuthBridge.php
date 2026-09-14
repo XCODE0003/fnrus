@@ -8,6 +8,7 @@ use Filament\Http\Middleware\Authenticate as FilamentAuthenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Replacement for Filament\Http\Middleware\Authenticate that bridges the
@@ -33,6 +34,9 @@ use Illuminate\Support\Facades\DB;
  */
 class FilamentSiteAuthBridge extends FilamentAuthenticate
 {
+    /** @var array<int, string>|null */
+    private ?array $userColumns = null;
+
     /**
      * @param  array<string>  $guards
      */
@@ -83,14 +87,14 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
         // Match AdminWebGuard exactly: only is_ban + role_id, no is_active gate.
         $minRole = (int) config('admin.min_role_id', 1);
         $row = DB::table('users')
-            ->select('id', 'role_id', 'is_ban', 'admin_blocked_at', 'admin_sessions_revoked_at')
+            ->select($this->adminAccessSelectColumns(includeId: true))
             ->where('id', $userId)
             ->first();
 
         if (! $row
             || (int) $row->is_ban === 1
             // ТЗ §4 — blocked from the panel (storefront account stays usable)
-            || $row->admin_blocked_at !== null
+            || ($row->admin_blocked_at ?? null) !== null
             || (int) $row->role_id < $minRole) {
             $log('role_check_failed', [
                 'user_id' => $userId,
@@ -133,13 +137,13 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
         }
 
         $row = DB::table('users')
-            ->select('role_id', 'is_ban', 'admin_blocked_at', 'admin_sessions_revoked_at')
+            ->select($this->adminAccessSelectColumns())
             ->where('id', $userId)
             ->first();
 
         if (! $row
             || (int) $row->is_ban === 1
-            || $row->admin_blocked_at !== null
+            || ($row->admin_blocked_at ?? null) !== null
             || (int) $row->role_id < (int) config('admin.min_role_id', 1)) {
             return false;
         }
@@ -180,6 +184,13 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
      */
     private function recordAdminLogin(int $userId, Request $request): void
     {
+        // Keep the panel usable while a zero-downtime deploy is between the
+        // PHP release and its schema migration. Session tracking is optional;
+        // authentication itself is not.
+        if (! $this->hasUserColumn('last_admin_login_at')) {
+            return;
+        }
+
         try {
             $last = (int) DB::table('users')->where('id', $userId)->value('last_admin_login_at');
             if ($last > time() - 300) {
@@ -194,6 +205,41 @@ class FilamentSiteAuthBridge extends FilamentAuthenticate
         } catch (\Throwable $e) {
             // never block panel entry on bookkeeping
         }
+    }
+
+    /**
+     * Columns introduced by the admin access-control migration are optional
+     * during deployment. Selecting a not-yet-created column makes every
+     * authenticated Filament request fail with a generic HTTP 500, including
+     * the dashboard. Fall back to the legacy role/ban checks until migration
+     * catches up; the stricter checks activate automatically afterwards.
+     *
+     * @return array<int, string>
+     */
+    private function adminAccessSelectColumns(bool $includeId = false): array
+    {
+        $columns = $includeId ? ['id', 'role_id', 'is_ban'] : ['role_id', 'is_ban'];
+
+        foreach (['admin_blocked_at', 'admin_sessions_revoked_at'] as $column) {
+            if ($this->hasUserColumn($column)) {
+                $columns[] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    private function hasUserColumn(string $column): bool
+    {
+        if ($this->userColumns === null) {
+            try {
+                $this->userColumns = Schema::getColumnListing('users');
+            } catch (\Throwable $e) {
+                $this->userColumns = [];
+            }
+        }
+
+        return in_array($column, $this->userColumns, true);
     }
 
     private function resolveFromJwtCookie(Request $request): int
