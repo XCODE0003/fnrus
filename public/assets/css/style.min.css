@@ -33037,3 +33037,44 @@ html body .popup--pay .popup__close{
         max-width:290px !important;
     }
 }
+
+/* iPadOS adds html.ios, whose legacy full-bleed Swiper selectors are more
+   specific than the tablet history grid above. Keep the history in-card and
+   render all four milestones as two complete rows. */
+@media (min-width:600px) and (max-width:1023px){
+    html.ios body .about-section__history__slider.js-carousel{
+        display:block !important;
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:10px 0 0 !important;
+        overflow:visible !important;
+        scroll-padding:0 !important;
+    }
+    html.ios body .about-section__history__slider.js-carousel .swiper-wrapper{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:22px 28px !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:auto !important;
+        transform:none !important;
+    }
+    html.ios body .about-section__history__slider.js-carousel .about-section__history__slide.swiper-slide{
+        display:block !important;
+        flex:0 0 auto !important;
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:108px !important;
+        margin:0 !important;
+        padding:20px 12px 8px !important;
+        scroll-margin:0 !important;
+        opacity:1 !important;
+        visibility:visible !important;
+        transform:none !important;
+    }
+}
