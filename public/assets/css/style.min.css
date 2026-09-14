@@ -33086,3 +33086,34 @@ html body .popup--pay .popup__close{
         border-radius:0 !important;
     }
 }
+
+/* One spacing owner between home-page sections. Previously the reviews
+   button reserve, section margin and FAQ padding stacked into a large gap. */
+@media (max-width:599px){
+    html body main.main > .reviews{
+        margin:40px 0 0 !important;
+    }
+    html body main.main > .reviews .content > .reviews__all-bottom{
+        margin-bottom:0 !important;
+    }
+    html body main.main > .faq{
+        margin:40px 0 0 !important;
+        padding-top:0 !important;
+    }
+}
+
+@media (min-width:600px) and (max-width:1023px){
+    html body main.main > .section2{
+        margin:48px 0 0 !important;
+    }
+    html body main.main > .reviews{
+        margin:48px 0 0 !important;
+    }
+    html body main.main > .reviews .content > .reviews__all-bottom{
+        margin-bottom:0 !important;
+    }
+    html body main.main > .faq{
+        margin:48px 0 0 !important;
+        padding-top:0 !important;
+    }
+}
