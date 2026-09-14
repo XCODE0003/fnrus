@@ -32604,6 +32604,95 @@ html.scroll-locked .header{
 
 /* Native card rails have one movement owner: scrollLeft.  No Swiper
    transform, edge vignette or axis lock can intercept a finger swipe. */
+/* The root marker is written synchronously in <head>, before the stylesheet
+   is painted.  Give the pre-init rail the exact same geometry as the later
+   element marker so DOMContentLoaded cannot resize cards or move the page. */
+@media (max-width:1179px){
+    html.game-rails-native body .game-list__rail .game-cheats-slider,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider{
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        -webkit-overflow-scrolling:touch !important;
+        overscroll-behavior-x:contain !important;
+        touch-action:pan-x pan-y !important;
+        scroll-snap-type:x proximity !important;
+        scrollbar-width:none !important;
+        -webkit-mask-image:none !important;
+        mask-image:none !important;
+    }
+    html.game-rails-native body .game-list__rail .game-cheats-slider::-webkit-scrollbar,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important}
+    html.game-rails-native body .game-list__rail .game-cheats-slider .swiper-wrapper,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .swiper-wrapper{
+        display:flex !important;
+        flex-flow:row nowrap !important;
+        align-items:stretch !important;
+        width:max-content !important;
+        min-width:max-content !important;
+        gap:16px !important;
+        padding-right:var(--rail-gutter,20px) !important;
+        transform:none !important;
+        transition:none !important;
+        will-change:auto !important;
+    }
+    html.game-rails-native body .game-list__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .swiper-slide{
+        margin-right:0 !important;
+        scroll-snap-align:start !important;
+        scroll-snap-stop:normal !important;
+    }
+}
+@media (max-width:599px){
+    html.game-rails-native body .game-list__rail .game-cheats-slider,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider{
+        --rail-gutter:var(--game-gutter,20px);
+        padding-left:var(--rail-gutter) !important;
+    }
+    html.game-rails-native body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-list > .content:not(.game-list__head) .carousel-rail .game-cheats-slider .game-card,
+    html.game-rails-native body .game-cheats__slider-container .carousel-rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__slider-container .carousel-rail .game-cheats-slider .game-card,
+    html.game-rails-native body .game-list__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-list__rail .game-cheats-slider .game-card,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 min(70vw,272px) !important;
+        width:min(70vw,272px) !important;
+        min-width:min(70vw,272px) !important;
+        max-width:min(70vw,272px) !important;
+    }
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 min(64vw,248px) !important;
+        width:min(64vw,248px) !important;
+        min-width:min(64vw,248px) !important;
+        max-width:min(64vw,248px) !important;
+    }
+}
+@media (min-width:600px) and (max-width:1179px){
+    html.game-rails-native body .game-list__rail .game-cheats-slider,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider{
+        --rail-gutter:40px;
+        padding-left:var(--rail-gutter) !important;
+        scroll-padding-left:var(--rail-gutter) !important;
+    }
+    html.game-rails-native body .game-list__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-list__rail .game-cheats-slider .game-card,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 clamp(250px,34vw,280px) !important;
+        width:clamp(250px,34vw,280px) !important;
+        min-width:clamp(250px,34vw,280px) !important;
+        max-width:clamp(250px,34vw,280px) !important;
+    }
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide,
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .game-card{
+        flex:0 0 clamp(210px,28vw,224px) !important;
+        width:clamp(210px,28vw,224px) !important;
+        min-width:clamp(210px,28vw,224px) !important;
+        max-width:clamp(210px,28vw,224px) !important;
+    }
+}
 html body .game-list__rail .game-cheats-slider.game-rail--native,
 html body .game-cheats__rail .game-cheats-slider.game-rail--native{
     overflow-x:auto !important;
