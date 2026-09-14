@@ -32650,10 +32650,10 @@ html body .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide
 @media (min-width:600px) and (max-width:1179px){
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide,
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .game-card{
-        flex:0 0 clamp(232px,31vw,260px) !important;
-        width:clamp(232px,31vw,260px) !important;
-        min-width:clamp(232px,31vw,260px) !important;
-        max-width:clamp(232px,31vw,260px) !important;
+        flex:0 0 clamp(210px,28vw,224px) !important;
+        width:clamp(210px,28vw,224px) !important;
+        min-width:clamp(210px,28vw,224px) !important;
+        max-width:clamp(210px,28vw,224px) !important;
     }
 }
 
@@ -33020,10 +33020,10 @@ html body .popup--pay .popup__close{
     }
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide,
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .game-card{
-        flex:0 0 clamp(232px,31vw,260px) !important;
-        width:clamp(232px,31vw,260px) !important;
-        min-width:clamp(232px,31vw,260px) !important;
-        max-width:clamp(232px,31vw,260px) !important;
+        flex:0 0 clamp(210px,28vw,224px) !important;
+        width:clamp(210px,28vw,224px) !important;
+        min-width:clamp(210px,28vw,224px) !important;
+        max-width:clamp(210px,28vw,224px) !important;
     }
 }
 @media (min-width:1180px){
