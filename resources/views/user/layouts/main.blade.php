@@ -63,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.38.6';
+    $__cssVer = '4.38.7';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -94,10 +94,10 @@
             /* Chrome/Safari/Edge */
         }
 
-        /* Zoom out to 90% (like one Ctrl+minus) — desktop only.
-           On mobile/tablet content is already small; zooming it breaks
-           viewport math and shifts content. */
-        @media (min-width: 1024px) {
+        /* Keep the compact desktop composition on real mouse-driven screens.
+           iPad Pro reports a 1024px+ viewport too, so width alone used to
+           shrink the entire page to 90% and leave a visible empty strip. */
+        @media (min-width: 1180px) and (hover: hover) and (pointer: fine) {
             body {
                 zoom: 0.9;
             }

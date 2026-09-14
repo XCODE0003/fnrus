@@ -24737,9 +24737,9 @@ html body [class], html body [class] *{ font-family: var(--font-sans) !important
 /* ==================================================================== */
 /*  v3.9.8 — profile top↑ + kill bottom void (zoom) + FAQ heading gap    */
 /* ==================================================================== */
-/* body{zoom:.9} shrinks min-height:100vh to ~90vh → empty strip under the
-   footer. Compensate so the wrapper truly fills the viewport (desktop). */
-@media (min-width:1024px){
+/* body{zoom:.9} shrinks min-height:100vh to ~90vh. Apply its height
+   compensation only where that desktop-only zoom is actually enabled. */
+@media (min-width:1180px) and (hover:hover) and (pointer:fine){
     .wrapper{ min-height:111.2vh !important; }
     .profile{ padding-top:200px !important; }
 }
@@ -25843,12 +25843,12 @@ html::after{
 }
 
 /* ==================================================================== */
-/*  v4.8.7 — at >=1024 body has zoom:.9, which makes plain 100vw fall    */
+/*  v4.8.7 — desktop zoom makes plain 100vw fall short of the real      */
 /*  short of the real viewport (the carousel landed 51px in, not at the  */
 /*  edge). Divide the viewport units by the zoom factor so the full-bleed */
-/*  carousel truly reaches the screen edges on iPad-Pro-class tablets.   */
+/*  carousel still reaches the screen edges on compact desktop windows.  */
 /* ==================================================================== */
-@media (min-width:1024px) and (max-width:1200px){
+@media (min-width:1180px) and (max-width:1200px) and (hover:hover) and (pointer:fine){
     .game-list .game-cheats-slider,
     .game-cheats-slider,
     .game-cards-slider,
