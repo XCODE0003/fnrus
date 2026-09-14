@@ -14,7 +14,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.17.1';
+    $__cssVer = '4.38.5';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -26,6 +26,13 @@
 <body class="pay-page-body">
 
 <div class="pay-page">
+
+    <nav class="pay-page__nav" aria-label="{{ __('site.invoice_back') }}">
+        <a class="pay-page__exit" id="pay-page-exit" href="{{ $return_url ?? '/my/orders' }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>{{ __('site.invoice_back') }}</span>
+        </a>
+    </nav>
 
     {{-- ============ Toast ============ --}}
     <div id="payment-warning" class="pay-toast" role="status" aria-live="polite"></div>
@@ -261,7 +268,9 @@
             expired:   '<svg viewBox="0 0 24 24" fill="none" width="64" height="64"><circle cx="12" cy="12" r="10" stroke="#F39C12" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F39C12" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         };
         var texts = { paid: lang.order_paid, cancelled: lang.order_cancelled, expired: lang.payment_expired };
-        $('.pay-page').html(
+        $('.pay-page .pay-card').remove();
+        $('.pay-page .pay-terminal').remove();
+        $('.pay-page').append(
             '<div class="pay-terminal">' + icons[state] +
             '<p class="pay-terminal__text">' + texts[state] + '</p></div>'
         );

@@ -16,6 +16,13 @@ class Order extends Model
 {
     use HasFactory;
 
+    /**
+     * A pending checkout must never reserve stock indefinitely. Normal orders
+     * expire by expired_at; this fallback also closes legacy/broken rows whose
+     * expiry timestamp was never written correctly.
+     */
+    public const MAX_PENDING_AGE = 86400;
+
     public $timestamps = false;
     protected $table = 'orders';
     protected $fillable = [
@@ -101,10 +108,20 @@ class Order extends Model
      */
     public static function expirePending(?int $buyerId = null)
     {
+        $now = time();
+        $staleCreatedAt = $now - self::MAX_PENDING_AGE;
+
         $query = self::query()
-            ->where('expired_at', '>', 0)
-            ->where('expired_at', '<=', time())
-            ->where('status', 1);
+            ->where('status', 1)
+            ->where(function ($query) use ($now, $staleCreatedAt) {
+                $query->where(function ($expired) use ($now) {
+                    $expired->where('expired_at', '>', 0)
+                        ->where('expired_at', '<=', $now);
+                })->orWhere(function ($stale) use ($staleCreatedAt) {
+                    $stale->where('created_at', '>', 0)
+                        ->where('created_at', '<=', $staleCreatedAt);
+                });
+            });
 
         if ($buyerId !== null) $query->where('bid', $buyerId);
 
@@ -129,8 +146,7 @@ class Order extends Model
             $order = self::whereKey($id)->lockForUpdate()->first();
             if (!$order
                 || (int) $order->status !== 1
-                || (int) $order->expired_at <= 0
-                || (int) $order->expired_at > time()) {
+                || !self::isPendingExpired($order)) {
                 return null;
             }
 
@@ -147,6 +163,16 @@ class Order extends Model
             $order->status = 4;
             return $order;
         });
+    }
+
+    public static function isPendingExpired(self $order, ?int $now = null): bool
+    {
+        $now = $now ?? time();
+        $expiredAt = (int) $order->expired_at;
+        $createdAt = (int) $order->created_at;
+
+        return ($expiredAt > 0 && $expiredAt <= $now)
+            || ($createdAt > 0 && $createdAt <= $now - self::MAX_PENDING_AGE);
     }
 
     public static function getByHash($sid, $hash){

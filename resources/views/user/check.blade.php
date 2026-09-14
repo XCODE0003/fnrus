@@ -311,6 +311,32 @@
             border: 1px solid #FB8C2C;
         }
 
+        .invoice-return-link {
+            position: fixed;
+            top: max(12px, env(safe-area-inset-top));
+            left: max(12px, env(safe-area-inset-left));
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 44px;
+            padding: 9px 15px;
+            border-radius: 12px;
+            background: rgba(23, 30, 42, 0.96);
+            color: #fff;
+            font: 600 15px/1 sans-serif;
+            text-decoration: none;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+        }
+        .invoice-return-link:hover,
+        .invoice-return-link:focus {
+            color: #fff;
+        }
+        .invoice-return-link > span {
+            font-size: 25px;
+            line-height: 0.6;
+        }
+
         @media (max-width: 767px) {
             input[type="text"],
             .input[contenteditable],
@@ -331,6 +357,10 @@
 </head>
 
 <body>
+
+<a href="{{ $return_url ?? '/my/orders' }}" class="invoice-return-link" aria-label="{{ __('site.invoice_back') }}">
+    <span aria-hidden="true">‹</span> {{ __('site.invoice_back') }}
+</a>
 
 <section>
     <div class="my-5 text-center status-wrapper">

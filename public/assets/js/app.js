@@ -622,6 +622,12 @@ function userInfo(callback) {
 
 function memberOrders() {
 
+    function showEmptyOrders() {
+        $('#orders_table .simplebar-content').empty();
+        $('#orders_table').hide();
+        $('#orders_empty').show();
+    }
+
     $.ajax({
         type: "GET",
         url: api_url + '/members/orders',
@@ -666,8 +672,11 @@ function memberOrders() {
                 $('#orders_empty').hide();
                 $('#orders_table').show();
                 $('#orders_table .simplebar-content').html(items_html);
+            } else {
+                showEmptyOrders();
             }
-        }
+        },
+        error: showEmptyOrders
 
     });
 

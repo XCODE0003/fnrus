@@ -63,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.38.4';
+    $__cssVer = '4.38.5';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1156,7 +1156,7 @@
             });
         })();
     </script>
-    <script src="/assets/js/app.js?v=6.9"></script>
+    <script src="/assets/js/app.js?v=6.10"></script>
     <!-- Telegram login via bot deep-link (no widget) -->
     <script>
         (function () {

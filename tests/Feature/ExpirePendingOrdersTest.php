@@ -29,6 +29,7 @@ class ExpirePendingOrdersTest extends TestCase
             $table->unsignedInteger('count_all')->default(0);
             $table->unsignedTinyInteger('status')->default(1);
             $table->unsignedInteger('expired_at')->default(0);
+            $table->unsignedInteger('created_at')->default(0);
         });
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
@@ -89,5 +90,51 @@ class ExpirePendingOrdersTest extends TestCase
         $this->assertSame(0, Artisan::call('orders:expire'));
         $this->assertStringContainsString('Expired 1 pending order(s).', Artisan::output());
         $this->assertSame(4, (int) Order::findOrFail(21)->status);
+    }
+
+    public function test_legacy_pending_order_older_than_one_day_is_expired_without_valid_expiry(): void
+    {
+        Order::query()->insert([
+            'id' => 22,
+            'pid' => 0,
+            'bid' => 30,
+            'count_all' => 0,
+            'status' => 1,
+            'expired_at' => 0,
+            'created_at' => time() - Order::MAX_PENDING_AGE - 1,
+        ]);
+        Order::query()->insert([
+            'id' => 23,
+            'pid' => 0,
+            'bid' => 30,
+            'count_all' => 0,
+            'status' => 1,
+            'expired_at' => 0,
+            'created_at' => time() - 60,
+        ]);
+
+        $expired = Order::expirePending(30);
+
+        $this->assertSame([22], $expired->pluck('id')->map(fn ($id) => (int) $id)->all());
+        $this->assertSame(4, (int) Order::findOrFail(22)->status);
+        $this->assertSame(1, (int) Order::findOrFail(23)->status);
+    }
+
+    public function test_old_pending_order_is_expired_even_with_broken_future_expiry(): void
+    {
+        Order::query()->insert([
+            'id' => 24,
+            'pid' => 0,
+            'bid' => 30,
+            'count_all' => 0,
+            'status' => 1,
+            'expired_at' => time() + Order::MAX_PENDING_AGE,
+            'created_at' => time() - Order::MAX_PENDING_AGE - 1,
+        ]);
+
+        $expired = Order::expirePending(30);
+
+        $this->assertSame([24], $expired->pluck('id')->map(fn ($id) => (int) $id)->all());
+        $this->assertSame(4, (int) Order::findOrFail(24)->status);
     }
 }

@@ -234,7 +234,7 @@ class OrderController extends Controller
                 throw new Exception('Заказ не найден.', 1);
             }
 
-            if ((int) $order->status === 1 && (int) $order->expired_at > 0 && (int) $order->expired_at <= time()) {
+            if ((int) $order->status === 1 && Order::isPendingExpired($order)) {
                 $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
             }
             if ((int) $order->status !== 1) {
@@ -309,7 +309,7 @@ class OrderController extends Controller
             $order = Order::where('sid', $shop->id)->where('id', $request->order_id)->first();
             if (!$order) {throw new Exception('Заказ не найден.', 1);}
 
-            if ((int) $order->status === 1 && (int) $order->expired_at > 0 && (int) $order->expired_at <= time()) {
+            if ((int) $order->status === 1 && Order::isPendingExpired($order)) {
                 $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
             }
 
@@ -1316,5 +1316,4 @@ class OrderController extends Controller
         }
     }
 }
-
 

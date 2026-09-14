@@ -43,12 +43,21 @@ class InvoiceController extends Controller
         $shop = Shop::getDefault();
 
         $order = Order::where('hash', $hash)->first();
-        if(!$order) {return false;}
+        if(!$order) {abort(404);}
+
+        if ((int) $order->status === 1 && Order::isPendingExpired($order)) {
+            $order = Order::expirePendingById((int) $order->id) ?? $order->fresh();
+        }
 
         if($order->status == 1 && $order->expired_at > strtotime('NOW')) {
-            return view('user.invoice', ['title' => $order->title, 'amount' => $order->amount, 'hash' => $hash]);
+            return view('user.invoice', [
+                'title' => $order->title,
+                'amount' => $order->amount,
+                'hash' => $hash,
+                'return_url' => (int) $order->bid > 0 ? '/my/orders' : '/',
+            ]);
         } else {
-            return view('user.check', ['title' => $order->title, 'amount' => $order->amount, 'hash' => $hash, 'status' => $order->status, 'shop_username' => $shop->username, 'expired_at' => $order->expired_at, 'date_now' => strtotime('NOW')]);
+            return view('user.check', ['title' => $order->title, 'amount' => $order->amount, 'hash' => $hash, 'status' => $order->status, 'shop_username' => $shop->username, 'expired_at' => $order->expired_at, 'date_now' => strtotime('NOW'), 'return_url' => (int) $order->bid > 0 ? '/my/orders' : '/']);
         }
     }
 
@@ -75,6 +84,10 @@ class InvoiceController extends Controller
         $o = Order::where('hash', $hash)->where('status', 1)->first();
         if(!$o) {
             return $this->_methodFail($hash, 'Заказ не найден или уже не активен.');
+        }
+        if (Order::isPendingExpired($o)) {
+            Order::expirePendingById((int) $o->id);
+            return $this->_methodFail($hash, 'Срок оплаты заказа истёк.');
         }
 
         $s = Shop::getDefault();
@@ -359,7 +372,7 @@ class InvoiceController extends Controller
             return response()->json(['ok' => 'expired']);
         }
 
-        if($o->status == 1 && $o->expired_at > 0 && $o->expired_at <= time()){
+        if($o->status == 1 && Order::isPendingExpired($o)){
             $o = Order::expirePendingById((int) $o->id) ?? $o->fresh();
             return response()->json(['ok' => 'expired']);
         }
