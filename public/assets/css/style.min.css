@@ -33385,3 +33385,248 @@ html body .popup--pay .popup__close{
         box-sizing:border-box;
     }
 }
+
+/* iPad Pro portrait is exactly 1024px wide. It must keep the compact
+   header's tablet composition instead of squeezing the desktop sidebar and
+   settings form into two unusable columns. */
+@media (min-width:1024px) and (max-width:1179px){
+    html body .profile{
+        padding-top:calc(var(--header-height) + 24px) !important;
+        padding-bottom:48px !important;
+    }
+    html body .profile__container{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) !important;
+        align-items:start !important;
+        gap:20px !important;
+        margin-top:0 !important;
+    }
+    html body .profile__sidebar{
+        position:static !important;
+        top:auto !important;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) minmax(280px,34%) !important;
+        align-items:stretch !important;
+        gap:16px !important;
+        width:100% !important;
+        max-width:none !important;
+        margin:0 !important;
+        padding:0 !important;
+        border:0 !important;
+        border-radius:0 !important;
+        background:transparent !important;
+    }
+    html body .profile__sidebar .profile__menu{
+        grid-column:1 !important;
+        order:0 !important;
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:8px !important;
+        width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:12px !important;
+        border:1px solid rgba(255,255,255,.06) !important;
+        border-radius:18px !important;
+        background:linear-gradient(145deg,rgba(27,35,49,.96),rgba(19,26,38,.98)) !important;
+    }
+    html body .profile__sidebar .profile__menu__item{
+        width:100% !important;
+        min-width:0 !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+    }
+    html body .profile__sidebar .profile__menu__item > a{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        gap:11px !important;
+        width:100% !important;
+        min-height:62px !important;
+        height:100% !important;
+        padding:12px 14px !important;
+        border:1px solid transparent !important;
+        border-radius:12px !important;
+        white-space:normal !important;
+    }
+    html body .profile__sidebar .profile__menu__item._active > a{
+        border-color:rgba(132,86,255,.36) !important;
+        background:rgba(132,86,255,.12) !important;
+    }
+    html body .profile__sidebar .profile__menu__item > a svg{
+        flex:0 0 22px !important;
+        width:22px !important;
+        height:22px !important;
+        margin:0 !important;
+    }
+    html body .profile__sidebar .profile__identity{
+        grid-column:2 !important;
+        order:0 !important;
+        display:grid !important;
+        grid-template:"identity" minmax(54px,1fr) "topup" 48px / minmax(0,1fr) !important;
+        gap:12px !important;
+        width:100% !important;
+        height:100% !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:16px !important;
+        border:1px solid rgba(255,255,255,.06) !important;
+        border-radius:18px !important;
+        background:linear-gradient(145deg,rgba(27,35,49,.96),rgba(19,26,38,.98)) !important;
+    }
+    html body .profile__sidebar .profile__identity__container{
+        grid-area:identity !important;
+        display:grid !important;
+        grid-template-columns:48px minmax(0,1fr) 44px !important;
+        align-items:center !important;
+        gap:12px !important;
+        min-height:48px !important;
+        margin:0 !important;
+    }
+    html body .profile__sidebar .profile__avatar{
+        width:48px !important;
+        height:48px !important;
+        min-width:48px !important;
+        margin:0 !important;
+        padding:5px !important;
+    }
+    html body .profile__sidebar .profile__identity__user-info{
+        min-width:0 !important;
+        padding:0 !important;
+    }
+    html body .profile__sidebar .profile__identity__nickname{
+        margin:0 !important;
+        font-size:15px !important;
+        line-height:1.2 !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+    }
+    html body .profile__sidebar .profile__identity__balance{
+        margin:4px 0 0 !important;
+        font-size:13px !important;
+        line-height:1.2 !important;
+    }
+    html body .profile__sidebar .profile__identity__exit{
+        position:static !important;
+        inset:auto !important;
+        width:44px !important;
+        height:44px !important;
+        min-width:44px !important;
+        margin:0 !important;
+        border-radius:12px !important;
+        background-size:18px !important;
+    }
+    html body .profile__sidebar .profile__identity__replenishment-btn{
+        grid-area:topup !important;
+        width:100% !important;
+        height:48px !important;
+        min-height:48px !important;
+        margin:0 !important;
+        padding:0 16px !important;
+        border-radius:12px !important;
+        font-size:15px !important;
+    }
+    html body .profile__main{
+        width:100% !important;
+        min-width:0 !important;
+        overflow:visible !important;
+        --padding-x:36px !important;
+        --padding-y:32px !important;
+    }
+    html body .profile__main > .profile__block{
+        width:100% !important;
+        margin:0 !important;
+        padding:32px 36px !important;
+        border:1px solid rgba(255,255,255,.05) !important;
+        border-radius:18px !important;
+    }
+    html body .profile__main__header{
+        min-height:32px !important;
+        margin:0 0 24px !important;
+    }
+    html body .profile__tabs__choose{
+        width:100% !important;
+        margin:0 0 28px !important;
+    }
+    html body .profile__tabs__choose::before{
+        left:0 !important;
+        right:0 !important;
+    }
+    html body .profile__tabs__choose__inner{
+        display:grid !important;
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+        width:100% !important;
+        min-width:0 !important;
+    }
+    html body .profile__tabs__choose__btn,
+    html body .profile__tabs__choose__btn:not(:last-child){
+        min-width:0 !important;
+        margin:0 !important;
+        padding:0 8px 18px !important;
+        text-align:center !important;
+        white-space:normal !important;
+    }
+    html body .profile__tabs__choose__btn:last-child{
+        padding-right:8px !important;
+    }
+    html body .profile__tabs__choose__btn:last-child::after{
+        right:0 !important;
+    }
+    html body .profile__tabs__tab{
+        width:100% !important;
+        max-width:none !important;
+    }
+    html body .profile__settings-block_input{
+        width:100% !important;
+        min-width:0 !important;
+        gap:14px !important;
+        padding:16px 18px !important;
+    }
+    html body .profile__settings-block_input .profile__settings-block__text{
+        flex:0 0 190px !important;
+    }
+    html body .profile__settings-block__input{
+        width:auto !important;
+        min-width:160px !important;
+    }
+    html body .profile__settings-block__edit-btn{
+        flex:0 0 124px !important;
+        width:124px !important;
+        min-width:124px !important;
+    }
+}
+
+/* A hidden cancel action must not reserve a 53px column. It returns only
+   while the corresponding field is actually being edited. */
+html body .profile__settings-block__cancel-btn{
+    display:none !important;
+}
+html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
+    display:block !important;
+}
+
+/* Keep the horizontal field row useful on iPad mini instead of reducing the
+   text input to a narrow empty-looking square. */
+@media (min-width:768px) and (max-width:1023px){
+    html body .profile__main{
+        --padding-x:28px !important;
+        --padding-y:28px !important;
+    }
+    html body .profile__main > .profile__block{
+        padding:28px !important;
+    }
+    html body .profile__settings-block_input{
+        gap:12px !important;
+        padding:15px 16px !important;
+    }
+    html body .profile__settings-block_input .profile__settings-block__text{
+        flex:0 0 170px !important;
+    }
+    html body .profile__settings-block__edit-btn{
+        flex:0 0 124px !important;
+        width:124px !important;
+        min-width:124px !important;
+    }
+}
