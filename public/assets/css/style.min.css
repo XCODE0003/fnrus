@@ -7358,9 +7358,12 @@ main.main .section-subcaption {
         font-size: 18px;
     }
 
-    .main-section1__btns,
-    .main-section1__btns .btnheight 62px {
+    .main-section1__btns {
         margin-top: 44px;
+    }
+
+    .main-section1__btns .btn {
+        height: 62px;
     }
 
     .main-section1 #card {
