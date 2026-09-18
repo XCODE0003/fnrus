@@ -32646,6 +32646,296 @@ html.scroll-locked .header{
     }
 }
 
+/* ==================================================================== */
+/*  v4.39.5 — /about history: responsive alternating brand journey      */
+/*  Desktop uses one central chronological spine; tablet/phone collapse  */
+/*  into the same journey vertically instead of drawing broken row rails. */
+/* ==================================================================== */
+html body .about-section__history{
+    --history-accent:#9d78ff;
+    --history-accent-soft:#cbb9ff;
+    position:relative !important;
+    margin:8px 0 24px !important;
+    padding:clamp(28px,3vw,44px) !important;
+    overflow:hidden !important;
+    border:1px solid rgba(174,148,255,.14) !important;
+    border-radius:26px !important;
+    background:
+        radial-gradient(70% 72% at 50% 10%,rgba(132,86,255,.12),transparent 72%),
+        linear-gradient(145deg,#1c2432 0%,#151c28 56%,#131a25 100%) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+html body .about-section__history__caption{
+    position:relative !important;
+    z-index:2 !important;
+    margin:0 0 clamp(28px,3vw,42px) !important;
+    font-family:"Mazzard H",sans-serif !important;
+    font-size:clamp(25px,2.1vw,34px) !important;
+    line-height:1.12 !important;
+    font-weight:700 !important;
+    letter-spacing:-.025em !important;
+    color:#f8f7ff !important;
+}
+html body .about-section__history__slider,
+html.ios body .about-section__history__slider.js-carousel{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+    box-sizing:border-box !important;
+}
+html body .about-section__history__slider::before{
+    display:none !important;
+}
+html body .about-section__history__slider .swiper-wrapper,
+html.ios body .about-section__history__slider.js-carousel .swiper-wrapper{
+    position:relative !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr) !important;
+    grid-template-rows:repeat(4,minmax(118px,auto)) !important;
+    gap:10px 0 !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+}
+html body .about-section__history__slider .swiper-wrapper::before{
+    content:"" !important;
+    position:absolute !important;
+    top:28px !important;
+    bottom:28px !important;
+    left:50% !important;
+    width:2px !important;
+    border-radius:999px !important;
+    background:linear-gradient(180deg,
+        rgba(203,185,255,.18) 0%,
+        rgba(157,120,255,.9) 12%,
+        rgba(132,86,255,.72) 86%,
+        rgba(132,86,255,.12) 100%) !important;
+    box-shadow:0 0 18px rgba(132,86,255,.28) !important;
+    transform:translateX(-50%) !important;
+    pointer-events:none !important;
+}
+html body .about-section__history__slide,
+html body .about-section__history__slide.swiper-slide,
+html.ios body .about-section__history__slider.js-carousel .about-section__history__slide.swiper-slide{
+    position:relative !important;
+    display:block !important;
+    align-self:start !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:118px !important;
+    margin:0 !important;
+    padding:20px 22px !important;
+    overflow:visible !important;
+    border:1px solid rgba(255,255,255,.065) !important;
+    border-radius:17px !important;
+    background:
+        linear-gradient(135deg,rgba(132,86,255,.095),rgba(255,255,255,.025) 58%,rgba(255,255,255,.012)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 14px 35px -30px rgba(0,0,0,.85) !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+}
+html body .about-section__history__slide:nth-child(1){grid-column:1 !important;grid-row:1 !important}
+html body .about-section__history__slide:nth-child(2){grid-column:3 !important;grid-row:2 !important}
+html body .about-section__history__slide:nth-child(3){grid-column:1 !important;grid-row:3 !important}
+html body .about-section__history__slide:nth-child(4){grid-column:3 !important;grid-row:4 !important}
+html body .about-section__history__slide::before{
+    display:none !important;
+}
+html body .about-section__history__slide::after{
+    content:"" !important;
+    position:absolute !important;
+    top:27px !important;
+    width:36px !important;
+    height:1px !important;
+    border:0 !important;
+    background:linear-gradient(90deg,rgba(157,120,255,.25),rgba(157,120,255,.85)) !important;
+    pointer-events:none !important;
+}
+html body .about-section__history__slide:nth-child(odd)::after{right:-36px !important}
+html body .about-section__history__slide:nth-child(even)::after{
+    left:-36px !important;
+    transform:scaleX(-1) !important;
+}
+html body .about-section__history__slide .point{
+    position:absolute !important;
+    top:21px !important;
+    left:auto !important;
+    width:13px !important;
+    height:13px !important;
+    margin:0 !important;
+    border:2px solid #171f2b !important;
+    border-radius:50% !important;
+    background:var(--history-accent) !important;
+    box-shadow:0 0 0 4px rgba(157,120,255,.13),0 0 18px rgba(157,120,255,.58) !important;
+    z-index:3 !important;
+}
+html body .about-section__history__slide:nth-child(odd) .point{right:-43px !important}
+html body .about-section__history__slide:nth-child(even) .point{left:-43px !important}
+html body .about-section__history__slide .point::before,
+html body .about-section__history__slide .point::after{display:none !important}
+html body .about-section__history__connector{display:none !important}
+html body .about-section__history__slide .years{
+    display:inline-flex !important;
+    align-items:center !important;
+    min-height:28px !important;
+    margin:0 0 10px !important;
+    padding:4px 9px !important;
+    border:1px solid rgba(157,120,255,.24) !important;
+    border-radius:8px !important;
+    background:rgba(132,86,255,.1) !important;
+    color:#f6f2ff !important;
+    font-family:"Mazzard H",sans-serif !important;
+    font-size:18px !important;
+    line-height:1 !important;
+    font-weight:700 !important;
+    letter-spacing:-.015em !important;
+}
+html body .about-section__history__slide .record{
+    margin:0 0 6px !important;
+    color:var(--history-accent-soft) !important;
+    font-family:"Mazzard H","Mazzard M",sans-serif !important;
+    font-size:15px !important;
+    line-height:1.35 !important;
+    font-weight:600 !important;
+}
+html body .about-section__history__slide .small-text{
+    max-width:62ch !important;
+    margin:0 !important;
+    color:rgba(235,231,247,.63) !important;
+    font-family:"Mazzard M",sans-serif !important;
+    font-size:13px !important;
+    line-height:1.5 !important;
+    font-weight:500 !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+}
+html body .about-section__history__slider-btn{display:none !important}
+
+@media (min-width:1024px){
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide{
+        width:min(100%,520px) !important;
+        max-width:520px !important;
+    }
+    html body .about-section__history__slide:nth-child(odd){justify-self:end !important}
+    html body .about-section__history__slide:nth-child(even){justify-self:start !important}
+    html body .about-section__history__slide .years{font-size:19px !important}
+    html body .about-section__history__slide .record{font-size:16px !important}
+    html body .about-section__history__slide .small-text{font-size:14px !important}
+}
+
+@media (max-width:1023px){
+    html body .about-section__history{
+        padding:28px !important;
+        border-radius:22px !important;
+    }
+    html body .about-section__history__caption{
+        margin-bottom:26px !important;
+        font-size:26px !important;
+    }
+    html body .about-section__history__slider .swiper-wrapper,
+    html.ios body .about-section__history__slider.js-carousel .swiper-wrapper{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:12px !important;
+        padding-left:36px !important;
+    }
+    html body .about-section__history__slider .swiper-wrapper::before{
+        top:22px !important;
+        bottom:22px !important;
+        left:9px !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide,
+    html.ios body .about-section__history__slider.js-carousel .about-section__history__slide.swiper-slide{
+        flex:0 0 auto !important;
+        width:100% !important;
+        min-height:0 !important;
+        padding:18px 20px !important;
+    }
+    html body .about-section__history__slide::after,
+    html body .about-section__history__slide:nth-child(odd)::after,
+    html body .about-section__history__slide:nth-child(even)::after{
+        top:25px !important;
+        left:-27px !important;
+        right:auto !important;
+        width:27px !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide .point,
+    html body .about-section__history__slide:nth-child(odd) .point,
+    html body .about-section__history__slide:nth-child(even) .point{
+        top:19px !important;
+        left:-34px !important;
+        right:auto !important;
+        grid-column:auto !important;
+        grid-row:auto !important;
+    }
+}
+
+@media (max-width:599px){
+    html body .about-section__history{
+        margin-left:0 !important;
+        margin-right:0 !important;
+        padding:22px 18px 24px !important;
+        border-radius:19px !important;
+    }
+    html body .about-section__history__caption{
+        margin-bottom:22px !important;
+        font-size:23px !important;
+    }
+    html body .about-section__history__slider .swiper-wrapper,
+    html.ios body .about-section__history__slider.js-carousel .swiper-wrapper{
+        gap:10px !important;
+        padding-left:31px !important;
+    }
+    html body .about-section__history__slider .swiper-wrapper::before{left:7px !important}
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide,
+    html.ios body .about-section__history__slider.js-carousel .about-section__history__slide.swiper-slide{
+        padding:16px !important;
+        border-radius:14px !important;
+    }
+    html body .about-section__history__slide::after,
+    html body .about-section__history__slide:nth-child(odd)::after,
+    html body .about-section__history__slide:nth-child(even)::after{
+        top:23px !important;
+        left:-24px !important;
+        right:auto !important;
+        width:24px !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide .point,
+    html body .about-section__history__slide:nth-child(odd) .point,
+    html body .about-section__history__slide:nth-child(even) .point{
+        top:17px !important;
+        left:-31px !important;
+    }
+    html body .about-section__history__slide .years{
+        min-height:26px !important;
+        margin-bottom:8px !important;
+        font-size:16px !important;
+    }
+    html body .about-section__history__slide .record{font-size:14px !important}
+    html body .about-section__history__slide .small-text{font-size:12px !important;line-height:1.5 !important}
+}
+
 @media (min-width:1180px){
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider{
         overflow:clip !important;
@@ -33697,5 +33987,45 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
     html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide:first-child,
     html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide:first-child{
         scroll-margin-left:var(--recommendation-start-gutter,var(--rail-gutter,20px)) !important;
+    }
+}
+
+/* v4.39.5 tablet cascade owner — must stay after legacy iPad timeline rules. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .about-section__history__slider,
+    html.ios body .about-section__history__slider.js-carousel{
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:visible !important;
+    }
+    html body .about-section__history__slider .swiper-wrapper,
+    html.ios body .about-section__history__slider.js-carousel .swiper-wrapper{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:12px !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:auto !important;
+        margin:0 !important;
+        padding:0 0 0 36px !important;
+        transform:none !important;
+    }
+    html body .about-section__history__slide,
+    html body .about-section__history__slide.swiper-slide,
+    html.ios body .about-section__history__slider.js-carousel .about-section__history__slide.swiper-slide{
+        display:block !important;
+        flex:0 0 auto !important;
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        height:auto !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:18px 20px !important;
+        transform:none !important;
     }
 }

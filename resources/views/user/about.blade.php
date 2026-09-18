@@ -57,29 +57,29 @@
             </div>
             <div class="about-section__block about-section__history">
                 <p class="about-section__history__caption">{{ __('site.about_history_title') }} </p>
-                <div class="swiper about-section__history__slider js-carousel" data-carousel="history">
+                <div class="swiper about-section__history__slider js-carousel" data-carousel="history" role="list" aria-label="{{ __('site.about_history_title') }}">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide about-section__history__slide">
+                        <div class="swiper-slide about-section__history__slide" role="listitem">
                             <div class="point"></div>
                             <span class="about-section__history__connector" aria-hidden="true"></span>
                             <p class="years">2023-2024</p>
                             <p class="record">{{ __('site.about_history_updates') }}</p>
                             <p class="small-text">{{ __('site.about_history_updates_text') }}</p>
                         </div>
-                        <div class="swiper-slide about-section__history__slide">
+                        <div class="swiper-slide about-section__history__slide" role="listitem">
                             <div class="point"></div>
                             <p class="years">2022-2023</p>
                             <p class="record">{{ __('site.about_history_expansion') }}</p>
                             <p class="small-text">{{ __('site.about_history_expansion_text') }}</p>
                         </div>
-                        <div class="swiper-slide about-section__history__slide">
+                        <div class="swiper-slide about-section__history__slide" role="listitem">
                             <div class="point"></div>
                             <span class="about-section__history__connector" aria-hidden="true"></span>
                             <p class="years">2021-2022</p>
                             <p class="record">{{ __('site.about_history_first_website') }}</p>
                             <p class="small-text">{{ __('site.about_history_first_website_text') }}</p>
                         </div>
-                        <div class="swiper-slide about-section__history__slide">
+                        <div class="swiper-slide about-section__history__slide" role="listitem">
                             <div class="point"></div>
                             <p class="years">2020-2021</p>
                             <p class="record">{{ __('site.about_history_beginning') }}</p>
