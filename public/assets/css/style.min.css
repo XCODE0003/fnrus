@@ -32645,6 +32645,16 @@ html.scroll-locked .header{
         scroll-snap-stop:normal !important;
     }
 }
+
+@media (min-width:1180px){
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider{
+        overflow:clip !important;
+    }
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-wrapper{
+        padding-left:var(--recommendation-start-gutter,0px) !important;
+        box-sizing:border-box !important;
+    }
+}
 @media (max-width:599px){
     html.game-rails-native body .game-list__rail .game-cheats-slider,
     html.game-rails-native body .game-cheats__rail .game-cheats-slider{
@@ -33634,7 +33644,6 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
     }
 }
 
-
 /* ==================================================================== */
 /*  v4.39.3 — desktop: карусели full-bleed до ОБОИХ краёв экрана,        */
 /*  ПЕРВАЯ карточка стартует ровно от колонки контента (под              */
@@ -33672,5 +33681,21 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         padding-left: 0 !important;
         padding-right: 0 !important;
         box-sizing: border-box !important;
+    }
+}
+
+/* Product recommendations have two deliberate resting positions: the first
+   card begins on the section-title gutter, while every following card snaps
+   to the physical rail edge. Keep the real padding for the first card, but
+   do not let scroll-padding pull later cards back onto that gutter. */
+@media (max-width:1179px){
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native{
+        padding-left:var(--recommendation-start-gutter,var(--rail-gutter,20px)) !important;
+        scroll-padding-left:0 !important;
+    }
+    html.game-rails-native body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider .swiper-slide:first-child,
+    html body .game-cheats__slider-container .game-cheats__rail .game-cheats-slider.game-rail--native .swiper-slide:first-child{
+        scroll-margin-left:var(--recommendation-start-gutter,var(--rail-gutter,20px)) !important;
     }
 }

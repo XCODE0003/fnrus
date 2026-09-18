@@ -63,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.39.3';
+    $__cssVer = '4.39.4';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -1068,7 +1068,7 @@
     <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
     <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?79"></script>
+    <script src="/assets/js/scripts.min.js?80"></script>
     <script src="/assets/js/animations.js?v=31"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
@@ -1289,10 +1289,23 @@
                 if (off) { btn.setAttribute('aria-disabled', 'true'); }
                 else { btn.removeAttribute('aria-disabled'); btn.removeAttribute('tabindex'); }
             }
+            function syncRecommendationStart(el) {
+                if (!isGame(el) || !isNative(el) || !isRecommendationRail(el)) return;
+                var heading = el.closest('.game-cheats__slider-container').querySelector('.section-caption');
+                if (!heading) return;
+                var previousGutter = parseFloat(el.style.getPropertyValue('--recommendation-start-gutter')) || 0;
+                var atStart = el.scrollLeft <= previousGutter + 2;
+                var gutter = Math.max(0, heading.getBoundingClientRect().left - el.getBoundingClientRect().left);
+                el.style.setProperty('--recommendation-start-gutter', gutter + 'px');
+                if (atStart) el.scrollLeft = 0;
+            }
             function bind(el) {
+                syncRecommendationStart(el);
                 update(el);
                 el.addEventListener('scroll', function() { update(el); }, { passive: true });
-                window.addEventListener('resize', function() { setTimeout(function(){ update(el); }, 50); }, { passive: true });
+                window.addEventListener('resize', function() {
+                    setTimeout(function(){ syncRecommendationStart(el); update(el); }, 50);
+                }, { passive: true });
             }
             function init() {
                 document.querySelectorAll('.func-grid, .game-cheats-slider, .game-cards-slider').forEach(bind);
@@ -1320,14 +1333,43 @@
                 railTargetTimer.delete(slider);
             }
 
+            function isRecommendationRail(slider) {
+                return !!slider.closest('.game-cheats__slider-container');
+            }
+
+            function gameRailSwiper(slider) {
+                return slider && (slider.__gameRailSwiper || slider.swiper);
+            }
+
             function slideScrollLeft(slider, slide) {
                 var railRect = slider.getBoundingClientRect();
                 var slideRect = slide.getBoundingClientRect();
-                var inset = parseFloat(getComputedStyle(slider).paddingLeft) || 0;
+                var firstSlide = slider.querySelector('.swiper-slide');
+                /* Only the first recommendation keeps the content gutter.
+                   Every following card snaps to the physical rail edge. */
+                var inset = isRecommendationRail(slider) && slide !== firstSlide
+                    ? 0
+                    : (parseFloat(getComputedStyle(slider).paddingLeft) || 0);
                 return Math.max(0, Math.min(
                     slider.scrollWidth - slider.clientWidth,
                     slider.scrollLeft + slideRect.left - railRect.left - inset
                 ));
+            }
+
+            function nearestDesktopRecommendationIndex(slider, slides) {
+                var heading = slider.closest('.game-cheats__slider-container').querySelector('.section-caption');
+                var headingLeft = heading ? heading.getBoundingClientRect().left : slider.getBoundingClientRect().left;
+                var best = 0;
+                var bestDistance = Infinity;
+                slides.forEach(function(slide, index) {
+                    var destination = index === 0 ? headingLeft : 0;
+                    var distance = Math.abs(slide.getBoundingClientRect().left - destination);
+                    if (distance < bestDistance) {
+                        best = index;
+                        bestDistance = distance;
+                    }
+                });
+                return best;
             }
 
             function nearestSlideIndex(slider, slides) {
@@ -1344,7 +1386,7 @@
             }
 
             function updateSwiperRail(slider) {
-                var swiper = slider && slider.swiper;
+                var swiper = gameRailSwiper(slider);
                 if (!swiper || swiper.destroyed) return;
                 var arrows = arrowsFor(slider);
                 if (arrows.prev) setArrow(arrows.prev, swiper.isBeginning || swiper.slides.length < 2);
@@ -1353,7 +1395,7 @@
 
             function refreshSwiperRails() {
                 document.querySelectorAll('.game-cheats-slider, .game-cards-slider').forEach(function(slider) {
-                    var swiper = slider.swiper;
+                    var swiper = gameRailSwiper(slider);
                     if (!swiper || swiper.destroyed) return;
                     /* The card width comes from CSS below 1024px. Resetting
                        breakpoint calculations after rotation keeps the rail
@@ -1378,13 +1420,67 @@
                 /* Desktop keeps the original navigation. On phone and iPad a
                    single guarded step owns every click, so tapping rapidly
                    cannot queue competing Swiper transitions. */
-                if (window.matchMedia('(min-width: 1024px)').matches && !isNative(slider)) return;
+                var desktopRecommendation = window.matchMedia('(min-width: 1180px)').matches
+                    && !isNative(slider)
+                    && isRecommendationRail(slider);
+                if (window.matchMedia('(min-width: 1024px)').matches && !isNative(slider) && !desktopRecommendation) return;
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 if (arrow.classList.contains('cf-arrow-off')) return;
 
                 var isPrev = /prev|left/i.test(arrow.className);
-                var swiper = slider.swiper;
+                var swiper = gameRailSwiper(slider);
+                if (desktopRecommendation && swiper && !swiper.destroyed) {
+                    if (railLock.get(slider) || swiper.animating) return;
+                    var desktopSlides = Array.prototype.slice.call(slider.querySelectorAll('.swiper-slide'));
+                    if (!desktopSlides.length) return;
+                    var desktopCurrent = railTargetIndex.has(slider)
+                        ? railTargetIndex.get(slider)
+                        : nearestDesktopRecommendationIndex(slider, desktopSlides);
+                    var desktopNext = Math.max(0, Math.min(
+                        desktopSlides.length - 1,
+                        desktopCurrent + (isPrev ? -1 : 1)
+                    ));
+                    if (desktopNext === desktopCurrent) return;
+
+                    var heading = slider.closest('.game-cheats__slider-container').querySelector('.section-caption');
+                    var destinationLeft = desktopNext === 0 && heading
+                        ? heading.getBoundingClientRect().left
+                        : 0;
+                    var destinationTranslate = swiper.translate
+                        + destinationLeft
+                        - desktopSlides[desktopNext].getBoundingClientRect().left;
+
+                    var desktopDuration = Math.max(220, Number(swiper.params.speed) || 360);
+                    if (desktopNext !== 0) {
+                        destinationTranslate = Math.max(
+                            swiper.maxTranslate(),
+                            Math.min(swiper.minTranslate(), destinationTranslate)
+                        );
+                    }
+                    railTargetIndex.set(slider, desktopNext);
+                    railLock.set(slider, true);
+                    /* translateTo() can leave Swiper.animating stuck when the
+                       wrapper's transition is overridden by the rail CSS.
+                       Drive the single transition directly and release it on
+                       our own deterministic timer. */
+                    swiper.setTransition(desktopDuration);
+                    swiper.setTranslate(destinationTranslate);
+                    swiper.updateProgress(destinationTranslate);
+                    swiper.updateActiveIndex(desktopNext);
+                    swiper.updateSlidesClasses();
+
+                    var desktopTimer = railTargetTimer.get(slider);
+                    if (desktopTimer) window.clearTimeout(desktopTimer);
+                    railTargetTimer.set(slider, window.setTimeout(function() {
+                        swiper.animating = false;
+                        swiper.setTransition(0);
+                        railLock.delete(slider);
+                        clearRailTarget(slider);
+                        updateSwiperRail(slider);
+                    }, desktopDuration + 40));
+                    return;
+                }
                 if (swiper && !swiper.destroyed && !isNative(slider)) {
                     if (railLock.get(slider) || swiper.animating) return;
                     railLock.set(slider, true);
