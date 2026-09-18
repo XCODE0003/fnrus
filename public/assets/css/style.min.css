@@ -33633,3 +33633,36 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         min-width:124px !important;
     }
 }
+
+
+/* ==================================================================== */
+/*  v4.39.0 — desktop: карусели уходят за ПРАВЫЙ край экрана.            */
+/*  Левый край ленты остаётся привязан к колонке .content (первая        */
+/*  карточка никогда не обрезана), лента расширяется до правого края     */
+/*  viewport и чуть дальше — последняя карточка визуально уходит за      */
+/*  экран. vw делим на zoom body (0.9) на десктопах ≥1180 с мышью:       */
+/*  обычный 100vw при zoom не дотягивает до края (см. v4.8.7).           */
+/*  Отменяет v4.11.13, который полностью выключал full-bleed на ≥1024.   */
+/* ==================================================================== */
+@media (min-width: 1024px) and (max-width: 1179px),
+       (min-width: 1180px) and (hover: none) {
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider {
+        width: calc((100% + 100vw) / 2 + 30px) !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (min-width: 1180px) and (hover: hover) and (pointer: fine) {
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider {
+        width: calc((100% + 100vw / 0.9) / 2 + 30px) !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
