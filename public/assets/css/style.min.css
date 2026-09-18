@@ -33636,10 +33636,11 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
 
 
 /* ==================================================================== */
-/*  v4.39.1 — desktop: карусели full-bleed до ОБОИХ краёв экрана.        */
-/*  Лента растягивается на весь viewport (слева и справа), карточки      */
-/*  идут от левого края с небольшим gutter'ом 24px и уходят за правый    */
-/*  край. vw делим на zoom body (0.9) на десктопах ≥1180 с мышью:        */
+/*  v4.39.2 — desktop: карусели full-bleed до ОБОИХ краёв экрана,        */
+/*  но ПЕРВАЯ карточка стартует ровно от колонки контента (под           */
+/*  заголовком), дальше карточки улетают за оба края при скролле.        */
+/*  padding-left = гаттер контента = (viewport - content)/2.             */
+/*  vw делим на zoom body (0.9) на десктопах ≥1180 с мышью:              */
 /*  обычный 100vw при zoom не дотягивает до края (см. v4.8.7).           */
 /*  Отменяет v4.11.13, который полностью выключал full-bleed на ≥1024.   */
 /*  overflow-x:clip на html/body уже глобален — гор. скролла не будет.   */
@@ -33653,7 +33654,7 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         max-width: none !important;
         margin-left: calc(50% - 50vw) !important;
         margin-right: calc(50% - 50vw) !important;
-        padding-left: 24px !important;
+        padding-left: calc((100vw - 100%) / 2) !important;
         padding-right: 24px !important;
         box-sizing: border-box !important;
     }
@@ -33667,7 +33668,7 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         max-width: none !important;
         margin-left: calc(50% - 50vw / 0.9) !important;
         margin-right: calc(50% - 50vw / 0.9) !important;
-        padding-left: 24px !important;
+        padding-left: calc((100vw / 0.9 - 100%) / 2) !important;
         padding-right: 24px !important;
         box-sizing: border-box !important;
     }
