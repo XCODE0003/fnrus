@@ -34186,3 +34186,61 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         font-size:15px !important;
     }
 }
+
+/* v4.39.8 — stable desktop navigation hover.
+   Hover/current states must never change the link box or introduce a filled
+   pill. Feedback is limited to white text and a restrained violet glow. */
+@media (min-width:1180px) and (hover:hover) and (pointer:fine){
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__pill,
+    html body .header .header__menu__item > a:hover,
+    html body .header .header__menu__pill:hover,
+    html body .header .header__menu__item > a:focus-visible,
+    html body .header .header__menu__pill:focus-visible,
+    html body .header .header__menu__item.is-current > a,
+    html body .header .header__menu__item.is-current > .header__menu__pill,
+    html body .header .header__menu__item--dropdown.is-open > .header__menu__pill{
+        box-sizing:border-box !important;
+        height:42px !important;
+        min-height:42px !important;
+        max-height:42px !important;
+        border-color:transparent !important;
+        background:transparent !important;
+        box-shadow:none !important;
+        transform:none !important;
+    }
+
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__pill{
+        text-shadow:none;
+        transition:color .2s ease,text-shadow .24s ease !important;
+    }
+
+    html body .header .header__menu__item > a:hover,
+    html body .header .header__menu__pill:hover,
+    html body .header .header__menu__item > a:focus-visible,
+    html body .header .header__menu__pill:focus-visible,
+    html body .header .header__menu__item.is-current > a,
+    html body .header .header__menu__item.is-current > .header__menu__pill,
+    html body .header .header__menu__item--dropdown.is-open > .header__menu__pill{
+        color:#fff !important;
+        text-shadow:0 0 7px rgba(255,255,255,.24),0 0 16px rgba(151,91,255,.72) !important;
+    }
+
+    html body .header .header__menu__item:not(.is-current) > a:hover::after,
+    html body .header .header__menu__item:not(.is-current) > .header__menu__pill:hover::after{
+        opacity:0 !important;
+        transform:scaleX(.35) !important;
+    }
+
+    html body .header .header__menu__item > a:focus-visible,
+    html body .header .header__menu__pill:focus-visible{
+        outline:0 !important;
+    }
+
+    html body .header .header__menu__item > a:focus-visible::after,
+    html body .header .header__menu__pill:focus-visible::after{
+        opacity:1 !important;
+        transform:scaleX(1) !important;
+    }
+}
