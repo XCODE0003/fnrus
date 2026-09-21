@@ -1068,7 +1068,7 @@
     <script src="/assets/libs/jquery/jquery.min.js?v=3.4.1"></script>
     <script src="/assets/libs/Swiper/swiper-bundle.min.js?v=9.1.0"></script>
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
-    <script src="/assets/js/scripts.min.js?80"></script>
+    <script src="/assets/js/scripts.min.js?81"></script>
     <script src="/assets/js/animations.js?v=31"></script>
     <script src="/assets/js/header-motion.js?v=9"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
