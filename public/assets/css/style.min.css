@@ -34220,10 +34220,30 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         height:42px !important;
         min-height:42px !important;
         max-height:42px !important;
-        border-color:transparent !important;
         background:transparent !important;
         box-shadow:none !important;
         transform:none !important;
+    }
+
+    /* Legacy desktop hover selectors remove the anchor border entirely.
+       The resting state still has a transparent 1px border, so each hover
+       used to shrink the link by 2 layout pixels and pull every later item
+       to the left. Keep the border geometry stable in every link state. */
+    html body .header .header__menu__item > a,
+    html body .header .header__menu__item > a:hover,
+    html body .header .header__menu__item > a:focus-visible,
+    html body .header .header__menu__item.is-current > a{
+        border:1px solid transparent !important;
+    }
+
+    /* The catalog trigger is intentionally borderless; it must stay
+       borderless while hovered/open so its width is equally stable. */
+    html body .header .header__menu__pill,
+    html body .header .header__menu__pill:hover,
+    html body .header .header__menu__pill:focus-visible,
+    html body .header .header__menu__item.is-current > .header__menu__pill,
+    html body .header .header__menu__item--dropdown.is-open > .header__menu__pill{
+        border:0 !important;
     }
 
     html body .header .header__menu__item > a,
