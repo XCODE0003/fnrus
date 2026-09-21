@@ -28008,6 +28008,53 @@ html.imgfade .game-hero__image img{
     }
 }
 
+/* ==================================================================== */
+/* v4.39.7 — profile balance action: composed account card on touch UI  */
+/* ==================================================================== */
+/* The top-up action is the primary CTA of the account summary. Keep the
+   existing button/JS contract, but give it its own light, depth and states. */
+.profile__identity__replenishment-btn{
+    position:relative !important;
+    isolation:isolate;
+    overflow:hidden;
+    border:1px solid rgba(197,172,255,.34) !important;
+    background:
+        linear-gradient(100deg,#7446f4 0%,#8854ff 48%,#713de9 100%) !important;
+    color:#fff !important;
+    box-shadow:
+        0 16px 32px -18px rgba(116,64,255,.95),
+        0 5px 14px -8px rgba(154,112,255,.9),
+        inset 0 1px 0 rgba(255,255,255,.22) !important;
+    text-shadow:0 1px 1px rgba(18,10,46,.35);
+}
+.profile__identity__replenishment-btn::before{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    inset:0;
+    background:
+        radial-gradient(70% 130% at 12% 0%,rgba(255,255,255,.23),transparent 58%),
+        linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);
+    pointer-events:none;
+}
+.profile__identity__replenishment-btn:hover{
+    background:
+        linear-gradient(100deg,#8152ff 0%,#945fff 48%,#7c49f3 100%) !important;
+    box-shadow:
+        0 18px 38px -17px rgba(116,64,255,1),
+        0 7px 18px -8px rgba(170,129,255,.95),
+        inset 0 1px 0 rgba(255,255,255,.26) !important;
+}
+.profile__identity__replenishment-btn:active{
+    box-shadow:
+        0 9px 22px -15px rgba(116,64,255,.9),
+        inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+.profile__identity__replenishment-btn:focus-visible{
+    outline:2px solid #c5adff !important;
+    outline-offset:3px !important;
+}
+
 /* ===================================================================== */
 /*  v4.13.11 — screenshot QA: typography, header, footer, support/about  */
 /* ===================================================================== */
@@ -34029,5 +34076,113 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         margin:0 !important;
         padding:18px 20px !important;
         transform:none !important;
+    }
+}
+
+/* v4.39.7 account-card geometry must be the last profile tablet owner. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .profile__sidebar .profile__identity{
+        position:relative !important;
+        grid-template:"identity" 64px "topup" 60px / minmax(0,1fr) !important;
+        align-items:stretch !important;
+        align-self:auto !important;
+        height:auto !important;
+        min-height:0 !important;
+        gap:18px !important;
+        padding:22px !important;
+        overflow:visible !important;
+        border:1px solid rgba(158,117,255,.14) !important;
+        border-radius:20px !important;
+        background:radial-gradient(90% 130% at 0% 0%,rgba(113,75,191,.09),transparent 60%),linear-gradient(145deg,rgba(25,33,47,.98),rgba(17,24,36,.99)) !important;
+        box-shadow:0 22px 54px -42px rgba(102,62,220,.85),inset 0 1px 0 rgba(255,255,255,.04) !important;
+    }
+    html body .profile__sidebar .profile__identity__container{
+        grid-template-columns:64px minmax(0,1fr) 48px !important;
+        gap:14px !important;
+        min-height:64px !important;
+        height:64px !important;
+        margin:0 !important;
+    }
+    html body .profile__sidebar .profile__avatar{
+        width:64px !important;
+        height:64px !important;
+        min-width:64px !important;
+        margin:0 !important;
+        padding:7px !important;
+        border-width:2px !important;
+        box-shadow:0 0 0 5px rgba(132,86,255,.07),0 0 22px -12px rgba(132,86,255,.95);
+    }
+    html body .profile__sidebar .profile__identity__nickname{
+        margin:0 !important;
+        color:#fff !important;
+        font-size:17px !important;
+        font-weight:600 !important;
+        line-height:1.2 !important;
+    }
+    html body .profile__sidebar .profile__identity__balance{
+        margin:5px 0 0 !important;
+        color:rgba(255,255,255,.88) !important;
+        font-size:14px !important;
+        font-weight:500 !important;
+        line-height:1.15 !important;
+    }
+    html body .profile__sidebar .profile__identity__exit{
+        width:48px !important;
+        height:48px !important;
+        min-width:48px !important;
+        min-height:48px !important;
+        border:1px solid rgba(255,255,255,.045) !important;
+        border-radius:12px !important;
+        background-color:#202837 !important;
+        background-size:19px !important;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 12px 24px -20px rgba(0,0,0,.9);
+    }
+    html body .profile__sidebar .profile__identity__exit:hover{
+        background-color:#293346 !important;
+    }
+    html body .profile__sidebar .profile__identity__replenishment-btn{
+        height:60px !important;
+        min-height:60px !important;
+        padding:0 22px !important;
+        border-radius:15px !important;
+        font-size:18px !important;
+        font-weight:600 !important;
+        line-height:1.15 !important;
+    }
+}
+
+@media (max-width:599px){
+    html body .profile__sidebar .profile__identity{
+        gap:14px !important;
+        padding:16px !important;
+    }
+    html body .profile__sidebar .profile__identity__container{
+        grid-template-columns:48px minmax(0,1fr) 44px !important;
+        min-height:48px !important;
+        height:48px !important;
+        margin:0 !important;
+        gap:12px !important;
+    }
+    html body .profile__sidebar .profile__avatar{
+        width:48px !important;
+        height:48px !important;
+        min-width:48px !important;
+        margin:0 !important;
+        padding:5px !important;
+    }
+    html body .profile__sidebar .profile__identity__nickname{
+        font-size:15px !important;
+        font-weight:600 !important;
+    }
+    html body .profile__sidebar .profile__identity__balance{
+        margin-top:4px !important;
+        color:rgba(255,255,255,.86) !important;
+        font-size:13px !important;
+    }
+    html body .profile__sidebar .profile__identity__replenishment-btn{
+        height:52px !important;
+        min-height:52px !important;
+        border-radius:14px !important;
+        font-size:15px !important;
     }
 }
