@@ -34021,6 +34021,22 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         padding-right: 0 !important;
         box-sizing: border-box !important;
     }
+
+    /* Swiper owns desktop movement through translate3d. The legacy native
+       scroll owner left overflow-x:auto + mandatory snap enabled here, so
+       the browser immediately scrolled by the same amount as
+       slidesOffsetBefore and cancelled the intended content-column gutter.
+       Keep native scrolling on touch breakpoints only; on pointer desktops
+       the first card now rests exactly under the platform heading. */
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider {
+        overflow-x: hidden !important;
+        -webkit-scroll-snap-type: none !important;
+        scroll-snap-type: none !important;
+        scroll-padding-left: 0 !important;
+        scroll-padding-right: 0 !important;
+    }
 }
 
 /* Product recommendations have two deliberate resting positions: the first
