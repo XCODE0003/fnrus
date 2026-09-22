@@ -34354,4 +34354,8 @@ html body:has(main.main) .footer{
         scroll-padding-left:0 !important;
         scroll-padding-inline-start:0 !important;
     }
+    html body .cheat-functions .func-grid .func-cat:first-child{
+        scroll-margin-left:var(--func-rail-gutter) !important;
+        scroll-margin-inline-start:var(--func-rail-gutter) !important;
+    }
 }
