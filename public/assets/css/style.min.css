@@ -34271,3 +34271,65 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
         transform:scaleX(1) !important;
     }
 }
+
+/* ==================================================================== */
+/* v4.39.12 — one visible vertical rhythm for every home-page block.     */
+/*                                                                         */
+/* Older rules split the distance between section margins, section        */
+/* padding and button/card reserves. The numbers looked similar in CSS,   */
+/* but the visible gaps differed by more than 60px on an iPad. Keep one   */
+/* spacing owner here and make every section end at its last visible item. */
+/* ==================================================================== */
+html body:has(main.main){
+    --home-section-gap:120px;
+    --home-s2-overhang:28px;
+}
+
+@media (max-width:1279px){
+    html body:has(main.main){ --home-section-gap:80px; }
+}
+
+@media (max-width:1023px){
+    html body:has(main.main){ --home-section-gap:48px; }
+}
+
+@media (max-width:599px){
+    html body:has(main.main){
+        --home-section-gap:40px;
+        --home-s2-overhang:14px;
+    }
+}
+
+/* The badge is the first visible element of each block. Do not combine a
+   section margin with another top padding. */
+html body main.main > .catalog,
+html body main.main > .section2,
+html body main.main > .reviews,
+html body main.main > .faq,
+html body main.main > .support{
+    margin:var(--home-section-gap) 0 0 !important;
+    padding-top:0 !important;
+}
+
+/* End every block on its last visible control/content edge. */
+html body main.main > .catalog{
+    padding-bottom:0 !important;
+}
+html body main.main > .catalog .catalog__more-wrap{
+    padding-bottom:0 !important;
+}
+html body main.main > .section2{
+    padding-bottom:var(--home-s2-overhang) !important;
+}
+html body main.main > .reviews .content > .reviews__all-bottom{
+    margin-bottom:0 !important;
+}
+html body main.main > .faq,
+html body main.main > .support{
+    padding-bottom:0 !important;
+}
+
+/* The footer is the final home-page block and follows the same rhythm. */
+html body:has(main.main) .footer{
+    padding-top:var(--home-section-gap) !important;
+}
