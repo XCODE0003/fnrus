@@ -7,10 +7,12 @@
     var header = document.querySelector('.header');
     if (!header) return;
 
+    var root = document.documentElement;
     var ENTER_AT = 40;
     var EXIT_AT = 12;
     var ticking = false;
-    var compact = false;
+    var compact = header.classList.contains('is-scrolled');
+    var initialStateSettled = false;
 
     function update(){
         /* A modal fixes <html> and temporarily changes pageYOffset. That is
@@ -39,5 +41,30 @@
         }
     }, { passive: true });
 
-    update();
+    function settleInitialState(){
+        if (initialStateSettled) return;
+        initialStateSettled = true;
+
+        /* Scroll restoration is completed around pageshow. Sample it for two
+           consecutive frames while CSS transitions are disabled, then hand
+           control back to the normal animated scroll state. */
+        requestAnimationFrame(function(){
+            update();
+            requestAnimationFrame(function(){
+                update();
+                root.classList.remove('header-state-restoring');
+                root.classList.remove('header-initial-scrolled');
+            });
+        });
+    }
+
+    window.addEventListener('pageshow', settleInitialState, { once: true });
+    if (document.readyState === 'complete') settleInitialState();
+
+    /* Do not overwrite the state restored synchronously in <head> with the
+       temporary scrollY=0 some browsers expose before pageshow. */
+    if (!root.classList.contains('header-state-restoring') ||
+        (window.pageYOffset || document.documentElement.scrollTop) > 0) {
+        update();
+    }
 })();

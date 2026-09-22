@@ -34359,3 +34359,13 @@ html body:has(main.main) .footer{
         scroll-margin-inline-start:var(--func-rail-gutter) !important;
     }
 }
+
+/* v4.39.16 — browser reload may restore scrollY after deferred scripts run.
+   The previous scroll state is applied while the header markup is parsed;
+   transitions stay off until sticky-header confirms the restored position. */
+html.header-state-restoring body .header,
+html.header-state-restoring body .header *,
+html.header-state-restoring body .header *::before,
+html.header-state-restoring body .header *::after{
+    transition:none !important;
+}

@@ -23,7 +23,10 @@
     }
 
     function revealHeader(header, reducedMotion) {
-        if (reducedMotion) return;
+        /* The header must be visible in its final restored-scroll state on the
+           first paint. sticky-header removes this marker only after the
+           browser has restored scrollY; normal interaction motion remains. */
+        if (reducedMotion || document.documentElement.classList.contains('header-state-restoring')) return;
 
         if (window.gsap) {
             window.gsap.fromTo(header,

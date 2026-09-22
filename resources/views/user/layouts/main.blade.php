@@ -6,7 +6,7 @@
 
     {{-- Image load-in: mark <html> early so images start hidden before JS
          wires the fade. Safety timeout reveals everything if JS stalls. --}}
-    <script>(function(){var d=document.documentElement;d.className+=' imgfade';if(window.matchMedia&&window.matchMedia('(max-width:1179px)').matches)d.className+=' game-rails-native';setTimeout(function(){d.className=d.className.replace(/\bimgfade\b/,'');},5000);})();</script>
+    <script>(function(){var d=document.documentElement,k='fnrus-header-scroll:'+location.pathname+location.search;d.className+=' imgfade header-state-restoring';if(window.matchMedia&&window.matchMedia('(max-width:1179px)').matches)d.className+=' game-rails-native';try{var n=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0],r=n?n.type==='reload'||n.type==='back_forward':performance.navigation&&performance.navigation.type===1;if(r&&Number(sessionStorage.getItem(k))>40)d.className+=' header-initial-scrolled';addEventListener('pagehide',function(){sessionStorage.setItem(k,String(window.pageYOffset||d.scrollTop||0));});}catch(e){}setTimeout(function(){d.className=d.className.replace(/\bimgfade\b/,'');},5000);})();</script>
 
     @php
     $_isHome = Route::currentRouteName() === 'home';
@@ -63,7 +63,7 @@
 @php
     // Prefer the minified build (php artisan assets:build) when it is present;
     // fall back to the hand-edited source so local editing keeps working.
-    $__cssVer = '4.39.15';
+    $__cssVer = '4.39.16';
     $__cssFile = file_exists(public_path('assets/css/style.build.css'))
         ? 'assets/css/style.build.css'
         : 'assets/css/style.min.css';
@@ -345,6 +345,7 @@
 
     <div class="wrapper">
         <header class="header">
+            <script>(function(h,d){if(d.classList.contains('header-initial-scrolled'))h.classList.add('is-scrolled');})(document.currentScript.parentElement,document.documentElement);</script>
             <div class="content header__container">
                 <span class="header__edge-light" aria-hidden="true">
                     <span class="header__edge-light-runner"></span>
@@ -1070,9 +1071,9 @@
     <script src="/assets/libs/gsap/gsap.min.js?v=3"></script>
     <script src="/assets/js/scripts.min.js?81"></script>
     <script src="/assets/js/animations.js?v=31"></script>
-    <script src="/assets/js/header-motion.js?v=9"></script>
+    <script src="/assets/js/header-motion.js?v=10"></script>
     <script src="/assets/js/bg-fx.js?v=10" defer></script>
-    <script src="/assets/js/sticky-header.js?v=4" defer></script>
+    <script src="/assets/js/sticky-header.js?v=5" defer></script>
     <script>
         window.lang = {
             my_profile: @json(__('site.section_user_menu_profile')),
