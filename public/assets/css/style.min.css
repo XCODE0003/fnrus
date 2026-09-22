@@ -34336,3 +34336,22 @@ html body main.main > .support{
 html body:has(main.main) .footer{
     padding-top:var(--home-section-gap) !important;
 }
+
+/* v4.39.14 — iPad functional rail reaches the physical viewport edges.
+   The first card still begins on the 40px content gutter, while cards that
+   are swiped away disappear behind the screen edge instead of being cut at
+   the inner content-column boundary. */
+@media (min-width:600px) and (max-width:1023px){
+    html body .cheat-functions .func-grid{
+        --func-rail-gutter:40px;
+        box-sizing:border-box !important;
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:calc(50% - 50vw) !important;
+        margin-right:calc(50% - 50vw) !important;
+        padding-left:var(--func-rail-gutter) !important;
+        padding-right:var(--func-rail-gutter) !important;
+        scroll-padding-left:0 !important;
+        scroll-padding-inline-start:0 !important;
+    }
+}
