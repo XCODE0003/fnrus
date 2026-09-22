@@ -34283,6 +34283,7 @@ html body .profile__settings-block_edit .profile__settings-block__cancel-btn{
 html body:has(main.main){
     --home-section-gap:120px;
     --home-s2-overhang:28px;
+    --home-faq-overhang:18px;
 }
 
 @media (max-width:1279px){
@@ -34324,7 +34325,9 @@ html body main.main > .section2{
 html body main.main > .reviews .content > .reviews__all-bottom{
     margin-bottom:0 !important;
 }
-html body main.main > .faq,
+html body main.main > .faq{
+    padding-bottom:var(--home-faq-overhang) !important;
+}
 html body main.main > .support{
     padding-bottom:0 !important;
 }
