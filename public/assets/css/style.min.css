@@ -33565,15 +33565,6 @@ html body .popup--pay .popup__close{
     }
 }
 
-/* The iPad catalog rail reaches the physical viewport edge. Rounded card
-   corners create a visible notch there, so keep these edge-to-edge tiles
-   square without changing recommendation cards or desktop catalog cards. */
-@media (min-width:600px) and (max-width:1179px){
-    html body .game-list > .content:not(.game-list__head) .game-list__rail .game-cheats-slider .game-card{
-        border-radius:0 !important;
-    }
-}
-
 /* One spacing owner between home-page sections. Previously the reviews
    button reserve, section margin and FAQ padding stacked into a large gap. */
 @media (max-width:599px){
