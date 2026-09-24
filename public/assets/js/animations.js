@@ -197,7 +197,11 @@
         }
 
         /* ============================== FAQ ========================== */
-        if (q('.faq')) {
+        /* v4.39.17 — reveal только на главной: на внутренних страницах
+           (инструкция, игра и т.п.) аккордеоны показываем сразу, без
+           скролл-анимации — иначе при пропуске триггера FAQ выглядел
+           пустым («фигня с факью»). */
+        if (q('main.main') && q('.faq')) {
             reveal('.faq__container .accordion', { y: 18, stagger: 0.06, duration: 0.6, trigger: '.faq__container' });
         }
 
@@ -210,7 +214,7 @@
            the scroll reveal — we must not pop them in early. */
         setTimeout(function () {
             var vh = window.innerHeight || document.documentElement.clientHeight;
-            qa('.game-rec__title, .s2-card, .reviews .rev-card, .reviews-grid .rev-card, .about-section__stat, .about-contact, .about-section__history__caption, .about-section__history__slide')
+            qa('.game-rec__title, .s2-card, .reviews .rev-card, .reviews-grid .rev-card, .about-section__stat, .about-contact, .about-section__history__caption, .about-section__history__slide, .faq__container .accordion')
                 .forEach(function (el) {
                     var r = el.getBoundingClientRect();
                     var inView = r.top < vh && r.bottom > 0;

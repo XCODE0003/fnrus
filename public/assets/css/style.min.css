@@ -34369,3 +34369,49 @@ html.header-state-restoring body .header *::before,
 html.header-state-restoring body .header *::after{
     transition:none !important;
 }
+
+/* ==================================================================== */
+/*  v4.39.17 — ПК и планшет (≥1024): свайпер-ленты СТРОГО шириной        */
+/*  с контейнером .content — без full-bleed до краёв экрана. Отменяет    */
+/*  для ≥1024 слои v4.39.3 / v4.39.1 / v4.8.6 / v4.8.7 (при равной       */
+/*  специфичности поздний слой выигрывает). Слои <1024 (мобильные и      */
+/*  планшетные портретные: v4.39.14, v4.8.6 768–1023, v4.16.6) НЕ        */
+/*  тронуты — там ленты по-прежнему уходят за края как раньше.           */
+/* ==================================================================== */
+@media (min-width: 1024px) {
+    .game-list .game-cheats-slider,
+    .game-cheats-slider,
+    .game-cards-slider,
+    .func-grid {
+        width: auto !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        -webkit-mask-image: none !important;
+                mask-image: none !important;
+        overflow-x: hidden !important;
+        -webkit-scroll-snap-type: none !important;
+                scroll-snap-type: none !important;
+        scroll-padding-left: 0 !important;
+        scroll-padding-right: 0 !important;
+    }
+}
+
+/* ==================================================================== */
+/*  v4.39.17b/c — поддержка («Онлайн 24/7», контакты) на внутренних      */
+/*  страницах (инструкция, доставка и т.п.) висела вплотную к футеру.    */
+/*  Раньше весь отступ давал v4.15.7 (padding-bottom:64px у main +        */
+/*  обнуление margin/padding последней секции) — этого визуально мало.   */
+/*  Поднимаем отступ контента до футера до 110px (ПК) / 56px (мобайл).   */
+/*  Главная (main.main) не трогаем — её ритм настроен отдельными слоями.  */
+/* ==================================================================== */
+.wrapper > main:not(.main) {
+    padding-bottom: 110px !important;
+}
+@media (max-width: 599px) {
+    .wrapper > main:not(.main) {
+        padding-bottom: 56px !important;
+    }
+}
