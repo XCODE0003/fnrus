@@ -34415,3 +34415,24 @@ html.header-state-restoring body .header *::after{
         padding-bottom: 56px !important;
     }
 }
+
+/* ==================================================================== */
+/*  v4.39.18 — главная: секция поддержки («Онлайн 24/7», контакты)      */
+/*  имеет padding-bottom:0, весь воздух до футера давал padding-top     */
+/*  футера через --home-section-gap (40–120px по адаптивам) —           */
+/*  визуально секция висела вплотную к футеру. Поднимаем: 140px на     */
+/*  десктопе, 80px на телефоне; планшетные диапазоны не трогаем.        */
+/* ==================================================================== */
+html body:has(main.main) .footer {
+    padding-top: 100px !important;
+}
+@media (min-width: 1180px) {
+    html body:has(main.main) .footer {
+        padding-top: 140px !important;
+    }
+}
+@media (max-width: 599px) {
+    html body:has(main.main) .footer {
+        padding-top: 80px !important;
+    }
+}
