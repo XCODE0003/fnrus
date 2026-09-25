@@ -461,9 +461,21 @@ Route::get('/my/referral', function () {
 $legacyAdminEnabled = filter_var(env('LEGACY_ADMIN_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
 
 if (! $legacyAdminEnabled) {
-    Route::any(config('admin.prefix', 'admin') . '/{any?}', function () {
-        return redirect('/' . trim((string) config('filament.path', 'admin'), '/'));
-    })->where('any', '.*');
+    // Redirect legacy /<prefix>/* links to the Filament panel. The panel
+    // path is declared on the panel itself (->path() in AdminPanelProvider),
+    // NOT in a config file, so config('filament.path') always falls back to
+    // 'admin' here and sent admins to the blocked legacy path (404). Read the
+    // same env the provider uses. Also skip the catch-all entirely when the
+    // legacy prefix equals the panel path — otherwise it shadows the panel's
+    // own routes (login page 302 → /admin → 404, panel unreachable).
+    $filamentPath = trim((string) env('FILAMENT_PATH', 'xoalfjamapfn/admin'), '/');
+    $legacyPrefix = trim((string) config('admin.prefix', 'admin'), '/');
+
+    if ($legacyPrefix !== '' && $legacyPrefix !== $filamentPath) {
+        Route::any($legacyPrefix . '/{any?}', function () use ($filamentPath) {
+            return redirect('/' . $filamentPath);
+        })->where('any', '.*');
+    }
 }
 
 if ($legacyAdminEnabled) {

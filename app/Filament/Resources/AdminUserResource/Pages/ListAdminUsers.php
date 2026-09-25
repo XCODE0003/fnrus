@@ -24,23 +24,23 @@ class ListAdminUsers extends ListRecords
             'admins' => Tab::make('Администраторы')
                 ->icon('heroicon-o-shield-check')
                 ->badge(fn () => User::where('role_id', '>=', $mainRole)->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('role_id', '>=', $mainRole)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('role_id', '>=', $mainRole)),
 
             'moderators' => Tab::make('Модераторы')
                 ->icon('heroicon-o-user-group')
                 ->badge(fn () => User::where('role_id', '>=', $minRole)->where('role_id', '<', $mainRole)->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->where('role_id', '>=', $minRole)->where('role_id', '<', $mainRole)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('role_id', '>=', $minRole)->where('role_id', '<', $mainRole)),
 
             'visited' => Tab::make('Заходили в админку')
                 ->icon('heroicon-o-clock')
                 ->badge(fn () => User::whereNotNull('last_admin_login_at')->count())
-                ->modifyQueryUsing(fn (Builder $q) => $q->whereNotNull('last_admin_login_at')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('last_admin_login_at')),
 
             'blocked' => Tab::make('Заблокированные')
                 ->icon('heroicon-o-lock-closed')
                 ->badge(fn () => User::whereNotNull('admin_blocked_at')->count())
                 ->badgeColor('danger')
-                ->modifyQueryUsing(fn (Builder $q) => $q->whereNotNull('admin_blocked_at')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('admin_blocked_at')),
 
             'all' => Tab::make('Все')->icon('heroicon-o-bars-3'),
         ];
