@@ -30,7 +30,7 @@
                             <div class="accordion__header__btn"></div>
                         </div>
                         <div class="accordion__body">
-                            <p class="accordion__body__content">{!! $f->localized_answer !!}</p>
+                            <div class="accordion__body__content">{!! $f->localized_answer !!}</div>
                         </div>
                     </div>
                 @endforeach
